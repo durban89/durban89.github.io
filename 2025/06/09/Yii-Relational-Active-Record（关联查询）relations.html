@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Yii Relational Active Record（关联查询）relations | Gowhich - Dapeng&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Yii">
+    <meta name="description" content="在使用关联AR之前，首先要在数据库中建立关联的数据表之间的主键-外键关联，AR需要通过分析数据库中的定义数据表关联的元信息，来决定如何连接数据。 如何声明关联在使用AR进行关联查询之前，我们需要告诉AR各个AR类之间有怎样的关联。AR类之间的关联直接反映着数据库中这个类所代表的数据表之间的关联。从关系数据库的角度来说，两个数据表A，B之间可能的关联有三种：一对多，一对一，多对多。而在AR中，关联有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Yii Relational Active Record（关联查询）relations">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html">
+<meta property="og:site_name" content="Gowhich - Dapeng&#39;s Blog">
+<meta property="og:description" content="在使用关联AR之前，首先要在数据库中建立关联的数据表之间的主键-外键关联，AR需要通过分析数据库中的定义数据表关联的元信息，来决定如何连接数据。 如何声明关联在使用AR进行关联查询之前，我们需要告诉AR各个AR类之间有怎样的关联。AR类之间的关联直接反映着数据库中这个类所代表的数据表之间的关联。从关系数据库的角度来说，两个数据表A，B之间可能的关联有三种：一对多，一对一，多对多。而在AR中，关联有">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-09T04:03:20.000Z">
+<meta property="article:modified_time" content="2025-06-09T04:16:04.813Z">
+<meta property="article:author" content="dapeng">
+<meta property="article:tag" content="Yii">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Dapeng&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">dapeng</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Yii Relational Active Record（关联查询）relations</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Yii Relational Active Record（关联查询）relations</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-09T04:03:20.000Z" itemprop="datePublished" class="page-time">
+  2025-06-09
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1"><span class="post-toc-number">1.</span> <span class="post-toc-text">如何声明关联</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2"><span class="post-toc-number">2.</span> <span class="post-toc-text">关联查询</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3"><span class="post-toc-number">3.</span> <span class="post-toc-text">关联查询选项</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4"><span class="post-toc-number">4.</span> <span class="post-toc-text">为字段名消除歧义</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5"><span class="post-toc-number">5.</span> <span class="post-toc-text">动态关联查询选项</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6"><span class="post-toc-number">6.</span> <span class="post-toc-text">关联查询的性能</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7"><span class="post-toc-number">7.</span> <span class="post-toc-text">统计查询</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8"><span class="post-toc-number">8.</span> <span class="post-toc-text">关联查询命名空间</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Yii-Relational-Active-Record（关联查询）relations"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Yii Relational Active Record（关联查询）relations</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-09 12:03:20" datetime="2025-06-09T04:03:20.000Z"  itemprop="datePublished">2025-06-09</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>在使用关联AR之前，首先要在数据库中建立关联的数据表之间的主键-外键关联，AR需要通过分析数据库中的定义数据表关联的元信息，来决定如何连接数据。</p>
+<h3 id="1"><a href="#1" class="headerlink" title="如何声明关联"></a><a href="#1">如何声明关联</a></h3><p>在使用AR进行关联查询之前，我们需要告诉AR各个AR类之间有怎样的关联。<br>AR类之间的关联直接反映着数据库中这个类所代表的数据表之间的关联。从关系数据库的角度来说，两个数据表A，B之间可能的关联有三种：一对多，一对一，多对多。而在AR中，关联有以下四种：<br><code>BELONGS_TO</code>: 如果数据表A和B的关系是一对多，那我们就说B属于A（B belongs to A）。<br><code>HAS_MANY</code>: 如果数据表A和B的关系是多对一，那我们就说B有多个A（B has many A）。<br><code>HAS_ONE</code>: 这是‘HAS_MANY’关系中的一个特例，当A最多有一个的时候，我们说B有一个A （B has one A）。<br><code>MANY_MANY</code>: 这个相当于关系数据库中的多对多关系。因为绝大多数关系数据库并不直接支持多对多的关系，这时通常都需要一个单独的关联表，把多对多的关系分解为两个一对<br>多的关系。用AR的方式去理解的话，我们可以认为 MANY_MANY关系是由BELONGS_TO和HAS_MANY组成的。<br>在AR中声明关联，是通过覆盖（Override）父类CActiveRecord中的relations()方法来实现的。这个方法返回一个包含了关系定义的数组，数组中的每一组键值代表一个关联：<br><code>&#39;VarName&#39;=&gt;array(&#39;RelationType&#39;, &#39;ClassName&#39;, &#39;ForeignKey&#39;, ...additional options)</code><br>这里的VarName是这个关联的名称；<br>RelationType指定了这个关联的类型，有四个常量代表了四种关联的类型：<code>self::BELONGS_TO</code>，<code>self::HAS_ONE</code>，<code>self::HAS_MANY</code>和<code>self::MANY_MANY</code><br>ClassName是这个关系关联到的AR类的类名；<br>ForeignKey指定了这个关联是通过哪个外键联系起来的。后面的additional<br>options可以加入一些额外的设置，后面会做介绍。</p>
+<p>下面的代码演示了如何定义User和Post之间的关联。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span> <span class="keyword">extends</span> <span class="title">CActiveRecord</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">relations</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> [</span><br><span class="line">            <span class="string">&#x27;author&#x27;</span> =&gt; [</span><br><span class="line">                <span class="built_in">self</span>::<span class="variable constant_">BELONGS_TO</span>,</span><br><span class="line">                <span class="string">&#x27;User&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;authorID&#x27;</span>,</span><br><span class="line">            ],</span><br><span class="line">            <span class="string">&#x27;categories&#x27;</span> =&gt; [</span><br><span class="line">                <span class="built_in">self</span>::<span class="variable constant_">MANY_MANY</span>,</span><br><span class="line">                <span class="string">&#x27;Category&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;PostCategory(postID, categoryID)&#x27;</span>,</span><br><span class="line">            ],</span><br><span class="line">        ];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">CActiveRecord</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">relations</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> [</span><br><span class="line">            <span class="string">&#x27;posts&#x27;</span> =&gt; [</span><br><span class="line">                <span class="built_in">self</span>::<span class="variable constant_">HAS_MANY</span>,</span><br><span class="line">                <span class="string">&#x27;Post&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;authorID&#x27;</span>,</span><br><span class="line">            ],</span><br><span class="line">            <span class="string">&#x27;profile&#x27;</span> =&gt; [</span><br><span class="line">                <span class="built_in">self</span>::<span class="variable constant_">HAS_ONE</span>,</span><br><span class="line">                <span class="string">&#x27;Profile&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;ownerID&#x27;</span>,</span><br><span class="line">            ],</span><br><span class="line">        ];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>说明: 有时外键可能由两个或更多字段组成，在这里可以将多个字段名由逗号或空格分隔，一并写在这里。对于多对多的关系，关联表必须在外键中注明，例如在Post类的categories关联中，外键就需要写成PostCategory(postID, categoryID)。<br>在AR类中声明关联时，每个关联会作为一个属性添加到AR类中，属性名就是关联的名称。在进行关联查询时，这些属性就会被设置为关联到的AR类的实例，例如在查询取得一个Post实例时，它的$author属性就是代表Post作者的一个User类的实例。</p>
+<h3 id="2"><a href="#2" class="headerlink" title="关联查询"></a><a href="#2">关联查询</a></h3><p>进行关联查询最简单的方式就是访问一个关联AR对象的某个关联属性。如果这个属性之前没有被访问过，这时就会启动一个关联查询，<br>通过当前AR对象的主键连接相关的表，来取得关联对象的值，然后将这些数据保存在对象的属性中。这种方式叫做“延迟加载”，也就是只有等到访问到某个属性时，<br>才会真正到数据库中把这些关联的数据取出来。下面的例子描述了延迟加载的过程：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// retrieve the post whose ID is 10</span></span><br><span class="line"><span class="variable">$post</span>=<span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findByPk</span>(<span class="number">10</span>);</span><br><span class="line"><span class="comment">// retrieve the post&#x27;s author: a relational query will be performed here</span></span><br><span class="line"><span class="variable">$author</span>=<span class="variable">$post</span>-&gt;author;</span><br></pre></td></tr></table></figure>
+
+<p>在不同的关联情况下，如果没有查询到结果，其返回的值也不同：BELONGS_TO 和 HAS_ONE 关联，无结果时返回null; HAS_MANY 和 MANY_MANY, 无结果时返回空数组。<br>延迟加载方法使用非常方便，但在某些情况下并不高效。例如，若我们要取得N个post的作者信息，使用延迟方法将执行N次连接查询。此时我们应当使用所谓的急切加载方法。<br>急切加载方法检索主要的 AR 实例及其相关的 AR 实例. 这通过使用 with() 方法加上 find 或 findAll 方法完成。例如，<br><code>$posts=Post::model()-&gt;with(&#39;author&#39;)-&gt;findAll();</code><br>上面的代码将返回一个由 Post 实例组成的数组. 不同于延迟加载方法，每个Post 实例中的author 属性在我们访问此属性之前已经被关联的User 实例填充。<br>不是为每个post 执行一个连接查询, 急切加载方法在一个单独的连接查询中取出所有的 post 以及它们的author!<br>我们可以在with()方法中指定多个关联名字。例如, 下面的代码将取回 posts 以及它们的作者和分类:</p>
+<p><code>$posts=Post::model()-&gt;with(&#39;author&#39;,&#39;categories&#39;)-&gt;findAll();</code><br>我们也可以使用嵌套的急切加载。不使用一个关联名字列表, 我们将关联名字以分层的方式传递到 with() 方法, 如下,</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$posts</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">with</span>(</span><br><span class="line">    <span class="string">&#x27;author.profile&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;author.posts&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;categories&#x27;</span></span><br><span class="line">)-&gt;<span class="title function_ invoke__">findAll</span>();</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码将取回所有的 posts 以及它们的作者和分类。它也将取出每个作者的profile和 posts.<br>急切加载也可以通过指定 CDbCriteria::with 属性被执行, 如下:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$criteria</span> = <span class="keyword">new</span> <span class="title class_">CDbCriteria</span>;</span><br><span class="line"><span class="variable">$criteria</span>-&gt;with = [</span><br><span class="line">    <span class="string">&#x27;author.profile&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;author.posts&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;categories&#x27;</span>,</span><br><span class="line">];</span><br><span class="line"><span class="variable">$posts</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findAll</span>(<span class="variable">$criteria</span>);</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$posts</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findAll</span>([<span class="string">&#x27;with&#x27;</span> =&gt; [<span class="string">&#x27;author.profile&#x27;</span>, <span class="string">&#x27;author.posts&#x27;</span>, <span class="string">&#x27;categories&#x27;</span>]];</span><br></pre></td></tr></table></figure>
+
+<h3 id="3"><a href="#3" class="headerlink" title="关联查询选项"></a><a href="#3">关联查询选项</a></h3><p>之前我们提到额外的参数可以被指定在关联声明中。这些选项，指定为 name-value 对，被用来定制关联查询。它们被概述如下：</p>
+<blockquote>
+<p>select: 为关联 AR 类查询的字段列表。默认是 ‘*’, 意味着所有字段。查询的字段名字可用别名表达式来消除歧义（例如：COUNT(??.name) AS nameCount）。<br>condition: WHERE 子语句。默认为空。注意, 列要使用别名引用（例如：??.id&#x3D;10）。<br>params: 被绑定到 SQL 语句的参数. 应当为一个由 name-value 对组成的数组（）。<br>on: ON 子语句. 这里指定的条件将使用 and 操作符被追加到连接条件中。此选项中的字段名应被消除歧义。此选项不适用于 MANY_MANY 关联。<br>order: ORDER BY 子语句。默认为空。注意, 列要使用别名引用（例如：??.age DESC）。<br>with: 应当和此对象一同载入的子关联对象列表. 注意, 不恰当的使用可能会形成一个无穷的关联循环。<br>joinType: 此关联的连接类型。默认是 LEFT OUTER JOIN。<br>aliasToken：列前缀占位符。默认是“??.”。<br>alias: 关联的数据表的别名。默认是 null, 意味着表的别名和关联的名字相同。<br>together: 是否关联的数据表被强制与主表和其他表连接。此选项只对于HAS_MANY 和 MANY_MANY 关联有意义。若此选项被设置为 false, ……(此处原文出错!).默认为空。此选项中的字段名以被消除歧义。<br>having: HAVING 子语句。默认是空。注意, 列要使用别名引用。<br>index: 返回的数组索引类型。确定返回的数组是关键字索引数组还是数字索引数组。不设置此选项, 将使用数字索引数组。此选项只对于HAS_MANY 和 MANY_MANY 有意义</p>
+</blockquote>
+<p>此外, 下面的选项在延迟加载中对特定关联是可用的:</p>
+<blockquote>
+<p>group: GROUP BY子句。默认为空。注意, 列要使用别名引用(例如：??.age)。 本选项仅应用于HAS_MANY 和 MANY_MANY 关联。<br>having: HAVING子句。默认为空。注意, 列要使用别名引用(例如：??.age)。本选项仅应用于HAS_MANY 和 MANY_MANY 关联。<br>limit: 限制查询的行数。本选项不能用于BELONGS_TO关联。<br>offset: 偏移。本选项不能用于BELONGS_TO关联。</p>
+</blockquote>
+<p>下面我们改变在 User 中的 posts 关联声明,通过使用上面的一些选项:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">CActiveRecord</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">relations</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> [</span><br><span class="line">            <span class="string">&#x27;posts&#x27;</span> =&gt; [<span class="built_in">self</span>::<span class="variable constant_">HAS_MANY</span>, <span class="string">&#x27;Post&#x27;</span>, <span class="string">&#x27;author_id&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;order&#x27;</span> =&gt; <span class="string">&#x27;posts.create_time DESC&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;with&#x27;</span> =&gt; <span class="string">&#x27;categories&#x27;</span>,</span><br><span class="line">            ],</span><br><span class="line">            <span class="string">&#x27;profile&#x27;</span> =&gt; [<span class="built_in">self</span>::<span class="variable constant_">HAS_ONE</span>, <span class="string">&#x27;Profile&#x27;</span>, <span class="string">&#x27;owner_id&#x27;</span>],</span><br><span class="line">        ];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在若我们访问 $author-&gt;posts, 我们将得到用户的根据发表时间降序排列的 posts. 每个 post 实例也载入了它的分类。</p>
+<h3 id="4"><a href="#4" class="headerlink" title="为字段名消除歧义"></a><a href="#4">为字段名消除歧义</a></h3><p>当一个字段的名字出现在被连接在一起的两个或更多表中，需要消除歧义(disambiguated)。可以通过使用表的别名作为字段名的前缀实现。<br>在关联AR查询中，主表的别名确定为 t，而一个关联表的别名和相应的关联的名字相同(默认情况下)。 例如，在下面的语句中，Post 的别名是 t ，而 Comment 的别名是 comments:<br><code>$posts=Post::model()-&gt;with(&#39;comments&#39;)-&gt;findAll();</code><br>现在假设 Post 和 Comment 都有一个字段 create_time , 我们希望取出 posts 及它们的 comments,<br>排序方式是先根据 posts 的创建时间,然后根据 comment 的创建时间。<br>我们需要消除create_time 字段的歧义，如下:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$posts</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()</span><br><span class="line">    -&gt;<span class="title function_ invoke__">with</span>(<span class="string">&#x27;comments&#x27;</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">findAll</span>([</span><br><span class="line">        <span class="string">&#x27;order&#x27;</span> =&gt; <span class="string">&#x27;t.create_time, comments.create_time&#x27;</span>;,</span><br><span class="line">    ]);</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下,Yii 自动为每个关联表产生一个表别名，我们必须使用此前缀 ??. 来指向这个自动产生的别名。 主表的别名是表自身的名字。</p>
+<h3 id="5"><a href="#5" class="headerlink" title="动态关联查询选项"></a><a href="#5">动态关联查询选项</a></h3><p>我们使用 with()和 with 均可使用动态关联查询选项。 动态选项将覆盖在 relations() 方法中指定的已存在的选项。<br>例如，使用上面的 User 模型， 若我们想要使用急切加载方法以升序来取出属于一个作者的 posts(关联中的order 选项指定为降序)， 我们可以这样做:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">User</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">with</span>(</span><br><span class="line">    [</span><br><span class="line">        <span class="string">&#x27;posts&#x27;</span> =&gt; [</span><br><span class="line">            <span class="string">&#x27;order&#x27;</span> =&gt; <span class="string">&#x27;posts.create_time ASC&#x27;</span>,</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&#x27;profile&#x27;</span>,</span><br><span class="line">    ]</span><br><span class="line">)-&gt;<span class="title function_ invoke__">findAll</span>();</span><br></pre></td></tr></table></figure>
+<p>动态查询选项也可以在使用延迟加载方法时使用以执行关联查询。 要这样做，我们应当调用一个方法，它的名字和关联的名字相同，并传递动态查询选项 作为此方法的参数。例如，下面的代码返回一个用户的 status 为 1 的 posts :</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$user</span> = <span class="title class_">User</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findByPk</span>(<span class="number">1</span>);</span><br><span class="line"><span class="variable">$posts</span> = <span class="variable">$user</span>-&gt;<span class="title function_ invoke__">posts</span>([<span class="string">&#x27;condition&#x27;</span> =&gt; <span class="string">&#x27;status=1&#x27;</span>]);</span><br></pre></td></tr></table></figure>
+
+<h3 id="6"><a href="#6" class="headerlink" title="关联查询的性能"></a><a href="#6">关联查询的性能</a></h3><p>如上所述，急切加载方法主要用于当我们需要访问许多关联对象时。 通过连接所有所需的表它产生一个大而复杂的 SQL 语句。<br>一个大的 SQL 语句在许多情况下是首选的。然而在一些情况下它并不高效。考虑一个例子，若我们需要找出最新的文章以及它们的评论。<br>假设每个文章有 10 条评论，使用一个大的 SQL  语句，我们将取回很多多余的 post<br>数据， 因为每个post 将被它的每条评论反复使用。现在让我们尝试另外的方法：我们首先查询最新的文章，<br>然后查询它们的评论。用新的方法，我们需要执行执行两条 SQL 语句。有点是在查询结果中没有多余的数据。<br>因此哪种方法更加高效？没有绝对的<br>答案。执行一条大的 SQL 语句也许更加高效，因为它需要更少的花销来解析和执行 SQL 语句。另一方面，使用单条 SQL语句，我们得到更多冗余的数据，因此需要更多时间来阅读和处理它们。<br>因为这个原因，Yii 提供了 together 查询选项以便我们在需要时选择两种方法之一。<br>默认下， Yii 使用第一种方式，即产生一个单独的 SQL语句来执行急切加载。我们可以在关联声明中设置 together 选项为 false 以便一些表被连接在单独的 SQL语句中。<br>例如，为了使用第二种方法来查询最新的文章及它们的评论，我们可以在 Post 类中声明 comments 关联如下,</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">relations</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        <span class="string">&#x27;comments&#x27;</span> =&gt; [<span class="built_in">self</span>::<span class="variable constant_">HAS_MANY</span>, <span class="string">&#x27;Comment&#x27;</span>, <span class="string">&#x27;post_id&#x27;</span>, <span class="string">&#x27;together&#x27;</span> =&gt; <span class="literal">false</span>],</span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们执行急切加载时，我们也可以动态地设置此选项:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$posts</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">with</span>([<span class="string">&#x27;comments&#x27;</span> =&gt; [<span class="string">&#x27;together&#x27;</span> =&gt; <span class="literal">false</span>]])-&gt;<span class="title function_ invoke__">findAll</span>();</span><br></pre></td></tr></table></figure>
+
+<h3 id="7"><a href="#7" class="headerlink" title="统计查询"></a><a href="#7">统计查询</a></h3><p>除了上面描述的关联查询，Yii 也支持所谓的统计查询(或聚合查询)。 它指的是检索关联对象的聚合信息，例如每个 post的评论的数量，每个产品的平均等级等。<br>统计查询只被 HAS_MANY(例如，一个 post 有很多评论) 或 MANY_MANY (例如，一个 post 属于很多分类和一个 category 有很多 post) 关联对象执行。<br>执行统计查询非常类似于之前描述的关联查询。我们首先需要在 CActiveRecord 的 relations() 方法中声明统计查询。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span> <span class="keyword">extends</span> <span class="title">CActiveRecord</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">relations</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> [</span><br><span class="line">            <span class="string">&#x27;commentCount&#x27;</span> =&gt; [<span class="built_in">self</span>::<span class="variable constant_">STAT</span>, <span class="string">&#x27;Comment&#x27;</span>, <span class="string">&#x27;post_id&#x27;</span>],</span><br><span class="line">            <span class="string">&#x27;categoryCount&#x27;</span> =&gt; [<span class="built_in">self</span>::<span class="variable constant_">STAT</span>, <span class="string">&#x27;Category&#x27;</span>, <span class="string">&#x27;post_category(post_id,category_id)&#x27;</span>],</span><br><span class="line">        ];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上面，我们声明了两个统计查询：commentCount 计算属于一个 post 的评论的数量，categoryCount 计算一个 post所属分类的数量。<br>注意 Post 和 Comment 之间的关联类型是 HAS_MANY， 而 Post 和 Category 之间的关联类型是 MANY_MANY (使用连接表 PostCategory)。<br>如我们所看到的，声明非常类似于之间小节中的关联。唯一的不同是这里的关联类型是STAT。<br>有了上面的声明，我们可以检索使用表达式 $post-&gt;commentCount 检索一个 post 的评论的数量。<br>当我们首次访问此属性，一个 SQL 语句将被隐含地执行并检索 对应的结果。我们已经知道，这是所谓的 lazy loading方法。若我们需要得到多个post 的评论数目，我们也可以使用 eager loading 方法:<br><code>$posts=Post::model()-&gt;with(&#39;commentCount&#39;, &#39;categoryCount&#39;)-&gt;findAll();</code><br>上面的语句将执行三个 SQL 语句以取回所有的 post 及它们的评论数目和分类数目。使用延迟加载方法， 若有 N 个 post ,我们使用 2<em>N+1 条 SQL 查询完成。<br>默认情况下，一个统计查询将计算 COUNT 表达式(and thus the comment count and category countin the above example).<br>当我们在 relations()中声明它时，通过 指定额外的选项，可以定制它。可用的选项简介如下。<br>select: 统计表达式。默认是 COUNT(</em>)，意味着子对象的个数。<br>defaultValue: 没有接收一个统计查询结果时被赋予的值。例如，若一个 post 没有任何评论，它的 commentCount 将接收此值。此选项的默认值是 0。<br>condition: WHERE 子语句。默认是空。<br>params: 被绑定到产生的SQL 语句中的参数。它应当是一个 name-value 对组成的数组。<br>order: ORDER BY 子语句。默认是空。<br>group: GROUP BY 子语句。默认是空。<br>having: HAVING 子语句。默认是空。</p>
+<h3 id="8"><a href="#8" class="headerlink" title="关联查询命名空间"></a><a href="#8">关联查询命名空间</a></h3><p>关联查询也可以和 命名空间一起执行。有两种形式。第一种形式，命名空间被应用到主模型。第二种形式，命名空间被应用到关联模型。<br>下面的代码展示了如何应用命名空间到主模型。<br><code>$posts=Post::model()-&gt;published()-&gt;recently()-&gt;with(&#39;comments&#39;)-&gt;findAll();</code><br>这非常类似于非关联的查询。唯一的不同是我们在命名空间后使用了 with() 调用。 此查询应当返回最近发布的 post和它们的评论。<br>下面的代码展示了如何应用命名空间到关联模型。<br><code>$posts=Post::model()-&gt;with(&#39;comments:recently:approved&#39;)-&gt;findAll();</code><br>上面的查询将返回所有的 post 及它们审核后的评论。注意 comments 指的是关联名字，而 recently 和 approved 指的是 在 Comment 模型类中声明的命名空间。关联名字和命名空间应当由冒号分隔。<br>命名空间也可以在 CActiveRecord::relations() 中声明的关联规则的 with 选项中指定。在下面的例子中， 若我们访问 $user-&gt;posts，它将返回此post 的所有审核后的评论。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">CActiveRecord</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">relations</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> [</span><br><span class="line">            <span class="string">&#x27;posts&#x27;</span> =&gt; [<span class="built_in">self</span>::<span class="variable constant_">HAS_MANY</span>, <span class="string">&#x27;Post&#x27;</span>, <span class="string">&#x27;author_id&#x27;</span>, <span class="string">&#x27;with&#x27;</span> =&gt; <span class="string">&#x27;comments:approved&#x27;</span>],</span><br><span class="line">        ];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意: 应用到关联模型的命名空间必须在 CActiveRecord::scopes 中指定。结果，它们不能被参数化。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-09T04:16:04.813Z" itemprop="dateUpdated">2025-06-09 12:16:04</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="dapeng">
+            dapeng
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Yii/" rel="tag">Yii</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html&title=《Yii Relational Active Record（关联查询）relations》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html&title=《Yii Relational Active Record（关联查询）relations》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Yii Relational Active Record（关联查询）relations》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/09/PHP%E4%B8%8B%E8%BD%BD%E8%BF%9C%E7%A8%8B%E5%9B%BE%E7%89%87%E7%9A%84%E6%96%B9%E6%B3%95.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">PHP下载远程图片的方法</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>dapeng &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html&title=《Yii Relational Active Record（关联查询）relations》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html&title=《Yii Relational Active Record（关联查询）relations》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Yii Relational Active Record（关联查询）relations》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/09/Yii-Relational-Active-Record%EF%BC%88%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2%EF%BC%89relations.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
