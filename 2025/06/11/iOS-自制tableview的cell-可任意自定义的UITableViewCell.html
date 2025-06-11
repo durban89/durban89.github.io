@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>iOS 自制tableview的cell-可任意自定义的UITableViewCell | Gowhich - Dapeng&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="iOS">
+    <meta name="description" content="UITableView的强大更多程度上来自于可以任意自定义 UITableViewCell单元格。通常，UITableView中的Cell是动态的，在使用过程中，会创建一个Cell池，根据每个cell的高 度（即tableView:heightForRowAtIndexPath:返回值），以及屏幕高度计算屏幕中可显示几个cell。而进行自定义 TableViewCell无非是采用代码实现或采用IB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 自制tableview的cell-可任意自定义的UITableViewCell">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html">
+<meta property="og:site_name" content="Gowhich - Dapeng&#39;s Blog">
+<meta property="og:description" content="UITableView的强大更多程度上来自于可以任意自定义 UITableViewCell单元格。通常，UITableView中的Cell是动态的，在使用过程中，会创建一个Cell池，根据每个cell的高 度（即tableView:heightForRowAtIndexPath:返回值），以及屏幕高度计算屏幕中可显示几个cell。而进行自定义 TableViewCell无非是采用代码实现或采用IB">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-11T06:00:35.000Z">
+<meta property="article:modified_time" content="2025-06-11T06:06:21.789Z">
+<meta property="article:author" content="dapeng">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Dapeng&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">dapeng</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">iOS 自制tableview的cell-可任意自定义的UITableViewCell</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">iOS 自制tableview的cell-可任意自定义的UITableViewCell</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-11T06:00:35.000Z" itemprop="datePublished" class="page-time">
+  2025-06-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1"><span class="post-toc-number">1.</span> <span class="post-toc-text">如何动态调整Cell高度</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2"><span class="post-toc-number">2.</span> <span class="post-toc-text">如何用图片自定义Table Separeator分割线</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3"><span class="post-toc-number">3.</span> <span class="post-toc-text">自定义首行Cell与其上面导航栏间距</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-iOS-自制tableview的cell-可任意自定义的UITableViewCell"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">iOS 自制tableview的cell-可任意自定义的UITableViewCell</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-11 14:00:35" datetime="2025-06-11T06:00:35.000Z"  itemprop="datePublished">2025-06-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>UITableView的强大更多程度上来自于可以任意自定义 UITableViewCell单元格。通常，UITableView中的Cell是动态的，在使用过程中，会创建一个Cell池，根据每个cell的高 度（即tableView:heightForRowAtIndexPath:返回值），以及屏幕高度计算屏幕中可显示几个cell。而进行自定义 TableViewCell无非是采用代码实现或采用IB编辑nib文件来实现两种方式，本文主要收集代码的方式实现各种cell自定义。</p>
+<h3 id="1"><a href="#1" class="headerlink" title="如何动态调整Cell高度"></a><a href="#1">如何动态调整Cell高度</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">NSString</span> *CellIdentifier = <span class="string">@&quot;Cell&quot;</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">UITableViewCell</span> *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];</span><br><span class="line">    <span class="keyword">if</span> (cell == <span class="literal">nil</span>) &#123;</span><br><span class="line">        cell = [[[<span class="built_in">UITableViewCell</span> alloc] initWithFrame:<span class="built_in">CGRectZero</span> reuseIdentifier:CellIdentifier] autorelease];</span><br><span class="line">        <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] initWithFrame:<span class="built_in">CGRectZero</span>];</span><br><span class="line">        label.tag = <span class="number">1</span>;</span><br><span class="line">        label.lineBreakMode = <span class="built_in">UILineBreakModeWordWrap</span>;</span><br><span class="line">        label.highlightedTextColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">        label.numberOfLines = <span class="number">0</span>;</span><br><span class="line">        label.opaque = <span class="literal">NO</span>; <span class="comment">// 选中Opaque表示视图后面的任何内容都不应该绘制</span></span><br><span class="line">        label.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br><span class="line">        [cell.contentView addSubview:label];</span><br><span class="line">        [label release];</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">UILabel</span> *label = (<span class="built_in">UILabel</span> *)[cell viewWithTag:<span class="number">1</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *text;</span><br><span class="line">    text = [textArray objectAtIndex:indexPath.row];</span><br><span class="line">    <span class="built_in">CGRect</span> cellFrame = [cell frame];</span><br><span class="line">    cellFrame.origin = <span class="built_in">CGPointMake</span>(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"> </span><br><span class="line">    label.text = text;</span><br><span class="line">    <span class="built_in">CGRect</span> rect = <span class="built_in">CGRectInset</span>(cellFrame, <span class="number">2</span>, <span class="number">2</span>);</span><br><span class="line">    label.frame = rect;</span><br><span class="line">    [label sizeToFit];</span><br><span class="line">    <span class="keyword">if</span> (label.frame.size.height &gt; <span class="number">46</span>) &#123;</span><br><span class="line">        cellFrame.size.height = <span class="number">50</span> + label.frame.size.height - <span class="number">46</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        cellFrame.size.height = <span class="number">50</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    [cell setFrame:cellFrame];</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> cell;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UITableViewCell</span> *cell = [<span class="keyword">self</span> tableView:tableView cellForRowAtIndexPath:indexPath];</span><br><span class="line">    <span class="keyword">return</span> cell.frame.size.height;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2"><a href="#2" class="headerlink" title="如何用图片自定义Table Separeator分割线"></a><a href="#2">如何用图片自定义Table Separeator分割线</a></h3><p>一般地，利用类似<code>[tableView setSeparatorColor:[UIColor redColor]];</code>语句即可修改cell中间分割线的颜色。那又如何用一个图片作为分割线背景呢？可以尝试如下：<br>方法一：<br>先设置cell separatorColor为clear，然后把图片做的分割线添加到自定义的custom cell上。<br>方法二：<br>在cell里添加一个像素的imageView后将图片载入进，之后设置<code>tableView.separatorStyle = UITableViewCellSeparatorStyleNone</code></p>
+<h3 id="3"><a href="#3" class="headerlink" title="自定义首行Cell与其上面导航栏间距"></a><a href="#3">自定义首行Cell与其上面导航栏间距</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tableView.tableHeaderView = [[[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">5</span>,<span class="number">20</span>)] autorelease];</span><br></pre></td></tr></table></figure>
+
+<p>自定义UITableViewCell的accessory样式</p>
+<p>默认的accessoryType属性有四种取值：</p>
+<ul>
+<li>UITableViewCellAccessoryNone</li>
+<li>UITableViewCellAccessoryDisclosureIndicator</li>
+<li>UITableViewCellAccessoryDetailDisclosureButton</li>
+<li>UITableViewCellAccessoryCheckmark</li>
+</ul>
+<p>如果想使用自定义附件按钮的其他样式，则需使用UITableView的accessoryView属性来指定。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIButton</span> *button;</span><br><span class="line"><span class="keyword">if</span>(isEditableOrNot) &#123;</span><br><span class="line">    <span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;delete.png&quot;</span>];</span><br><span class="line">    button = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeCustom</span>];</span><br><span class="line">    <span class="built_in">CGRect</span> frame = <span class="built_in">CGRectMake</span>(<span class="number">0.0</span>,<span class="number">0.0</span>,image.size.width,image.size.height);</span><br><span class="line">    button.frame = frame;</span><br><span class="line">    [button setBackgroundImage:image forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">    button.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br><span class="line">    cell.accessoryView = button;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    button = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeCustom</span>];</span><br><span class="line">    button.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br><span class="line">    cell.accessoryView = button;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码仅仅是定义了附件按钮两种状态下的样式，问题是现在这个自定义附件按钮的事件仍不可用。即事件还无法传递到 <code>UITableViewDelegate</code>的<code>accessoryButtonTappedForRowWithIndexPath</code>方法上。当我们在上述代码 中在加入以下语句：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[button addTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(btnClicked:event:) forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br></pre></td></tr></table></figure>
+
+<p>虽然可以捕捉到每个附件按钮的点击事件，但我们还无法进行区别到底是哪一行的附件按钮发生了点击动作！因为addTarget:方法最多允许传递两个参 数：target和event，这两个参数都有各自的用途了（target指向事件委托对象，event指向所发生的事件）。看来只依靠Cocoa框架已 经无法做到了。<br>但我们还是可以利用event参数，在自定义的btnClicked方法中判断出事件发生在UITableView的哪一个cell上。因为UITableView有一个很关键的方法indexPathForRowAtPoint，可以根据触摸发生的位置，返回触摸发生在哪一个cell的indexPath。而且通过event对象，正好也可以获得每个触摸在视图中的位置。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 检查用户点击按钮时的位置，并转发事件到对应的accessory tapped事件</span></span><br><span class="line">- (<span class="type">void</span>)btnClicked:(<span class="type">id</span>)sender event:(<span class="type">id</span>)event</span><br><span class="line">&#123;</span><br><span class="line">     <span class="built_in">NSSet</span> *touches = [event allTouches];</span><br><span class="line">     <span class="built_in">UITouch</span> *touch = [touches anyObject];</span><br><span class="line">     <span class="built_in">CGPoint</span> currentTouchPosition = [touch locationInView:<span class="keyword">self</span>.tableView];</span><br><span class="line">     <span class="built_in">NSIndexPath</span> *indexPath = [<span class="keyword">self</span>.tableView indexPathForRowAtPoint:currentTouchPosition];</span><br><span class="line">     <span class="keyword">if</span>(indexPath != <span class="literal">nil</span>)</span><br><span class="line">     &#123;</span><br><span class="line">         [<span class="keyword">self</span> tableView:<span class="keyword">self</span>.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，UITableView的accessoryButtonTappedForRowWithIndexPath方法会被触发，并且获得一个indexPath参数。通过这个indexPath参数，我们即可区分到底哪一行的附件按钮发生了触摸事件。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)tableView:(<span class="built_in">UITableView</span> *)tableView accessoryButtonTappedForRowWithIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span>  *idx = indexPath.row;</span><br><span class="line">   <span class="comment">//这里加入自己的逻辑</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>摘自：<a target="_blank" rel="noopener" href="http://www.cnblogs.com/ownerblood/archive/2012/08/02/2620173.html">http://www.cnblogs.com/ownerblood/archive/2012/08/02/2620173.html</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-11T06:06:21.789Z" itemprop="dateUpdated">2025-06-11 14:06:21</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="dapeng">
+            dapeng
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/" rel="tag">iOS</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html&title=《iOS 自制tableview的cell-可任意自定义的UITableViewCell》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html&title=《iOS 自制tableview的cell-可任意自定义的UITableViewCell》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《iOS 自制tableview的cell-可任意自定义的UITableViewCell》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/11/iOS-UITableViewCell%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AE%BE%E7%BD%AE.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">iOS UITableViewCell的基本设置</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/11/iOS-fonts%E5%AD%97%E4%BD%93%E7%B1%BB%E5%9E%8B.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">iOS fonts字体类型</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>dapeng &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html&title=《iOS 自制tableview的cell-可任意自定义的UITableViewCell》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html&title=《iOS 自制tableview的cell-可任意自定义的UITableViewCell》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《iOS 自制tableview的cell-可任意自定义的UITableViewCell》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

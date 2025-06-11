@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>CentOS FTP服务（vsftpd）配置 | Gowhich - Dapeng&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="CentOS,Linux">
+    <meta name="description" content="安装一般在CentOS上都自动安装了vsftd，若没有安装则可以使用以下步骤进行安装 123yum -y install vsftpdtouch &#x2F;var&#x2F;log&#x2F;vsftpd.log # 创建vsftp的日志文件  在CentOS中，这样就可以完成了一个简单的匿名FTP的搭建。你可以通过访问ftp:&#x2F;&#x2F;yourip 来进行，不过这个FTP没有任何权限。 基于匿名的FTP架设参考其他关于Vsftp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS FTP服务（vsftpd）配置">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html">
+<meta property="og:site_name" content="Gowhich - Dapeng&#39;s Blog">
+<meta property="og:description" content="安装一般在CentOS上都自动安装了vsftd，若没有安装则可以使用以下步骤进行安装 123yum -y install vsftpdtouch &#x2F;var&#x2F;log&#x2F;vsftpd.log # 创建vsftp的日志文件  在CentOS中，这样就可以完成了一个简单的匿名FTP的搭建。你可以通过访问ftp:&#x2F;&#x2F;yourip 来进行，不过这个FTP没有任何权限。 基于匿名的FTP架设参考其他关于Vsftp">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-11T03:39:24.000Z">
+<meta property="article:modified_time" content="2025-06-11T03:48:11.337Z">
+<meta property="article:author" content="dapeng">
+<meta property="article:tag" content="CentOS">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Dapeng&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">dapeng</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">CentOS FTP服务（vsftpd）配置</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">CentOS FTP服务（vsftpd）配置</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-11T03:39:24.000Z" itemprop="datePublished" class="page-time">
+  2025-06-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1"><span class="post-toc-number">1.</span> <span class="post-toc-text">安装</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2"><span class="post-toc-number">2.</span> <span class="post-toc-text">基于匿名的FTP架设</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3"><span class="post-toc-number">3.</span> <span class="post-toc-text">启动vsftp服务器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-1"><span class="post-toc-number">4.</span> <span class="post-toc-text">常见错误：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-1"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">553 Could not create file</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-2"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">500 OOPS: bad bool value in config file for: write_enable</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-CentOS-FTP服务（vsftpd）配置"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">CentOS FTP服务（vsftpd）配置</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-11 11:39:24" datetime="2025-06-11T03:39:24.000Z"  itemprop="datePublished">2025-06-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="1"><a href="#1" class="headerlink" title="安装"></a><a href="#1">安装</a></h2><p>一般在CentOS上都自动安装了vsftd，若没有安装则可以使用以下步骤进行安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum -y install vsftpd</span><br><span class="line"></span><br><span class="line">touch /var/log/vsftpd.log # 创建vsftp的日志文件</span><br></pre></td></tr></table></figure>
+
+<p>在CentOS中，这样就可以完成了一个简单的匿名FTP的搭建。你可以通过访问<a href="ftp://yourip/">ftp://yourip</a> 来进行，不过这个FTP没有任何权限。</p>
+<h2 id="2"><a href="#2" class="headerlink" title="基于匿名的FTP架设"></a><a href="#2">基于匿名的FTP架设</a></h2><p>参考其他关于Vsftpd的CentOS FTP服务配置文章。</p>
+<p>3.基于虚拟用户的FTP架设</p>
+<p>所谓虚拟用户就是没有使用真实的帐户，只是通过某种手段达到映射帐户和设置权限的目的。</p>
+<p>1）我们在&#x2F;etc&#x2F;vsftpd&#x2F;vsftpd.conf中做如下CentOS FTP服务配置：</p>
+<p>anonymous_enable&#x3D;NO 设定不允许匿名访问</p>
+<p>chroot_list_enable&#x3D;YES 使用户不能离开主目录</p>
+<p>xferlog_file&#x3D;&#x2F;var&#x2F;log&#x2F;vsftpd.log 设定vsftpd的服务日志保存路径。注意，该文件默认不存在。必须要手动touch出来</p>
+<p>ascii_upload_enable&#x3D;YES</p>
+<p>ascii_download_enable&#x3D;YES 设定支持ASCII模式的上传和下载功能。</p>
+<p>local_enable&#x3D;YES 设定本地用户可以访问。注：如使用虚拟宿主用户，在该项目设定为NO的情况下所有虚拟用户将无法访问。</p>
+<p>pam_service_name&#x3D;vsftpd PAM认证文件名。PAM将根据&#x2F;etc&#x2F;pam.d&#x2F;vsftpd进行认证</p>
+<p>以下这些是关于Vsftpd虚拟用户支持的重要CentOS FTP服务配置项目。默认vsftpd.conf中不包含这些设定项目，需要自己手动添加CentOS FTP服务配置。</p>
+<p>guest_enable&#x3D;YES 设定启用虚拟用户功能。</p>
+<p>guest_username&#x3D;ftp 指定虚拟用户的宿主用户。-CentOS中已经有内置的ftp用户了</p>
+<p>user_config_dir&#x3D;&#x2F;etc&#x2F;vsftpd&#x2F;vuser_conf 设定虚拟用户个人vsftp的CentOS FTP服务文件存放路径。存放虚拟用户个性的CentOS FTP服务文件(配置文件名&#x3D;虚拟用户名)</p>
+<p>2）创建chroot list，将用户ftp加入其中：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">touch</span> /etc/vsftpd/chroot_list</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> ftp &gt;&gt; /etc/vsftpd/chroot_list</span><br></pre></td></tr></table></figure>
+
+<p>3）进行认证：</p>
+<p>首先，安装Berkeley DB工具，很多人找不到db_load的问题就是没有安装这个包。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install db4 db4-utils</span><br></pre></td></tr></table></figure>
+
+<p>然后，创建用户密码文本&#x2F;etc&#x2F;vsftpd&#x2F;vuser_passwd.txt ，注意奇行是用户名，偶行是密码</p>
+<p>ftpuser1<br>ftppass1<br>ftpuser2<br>ftppass2</p>
+<p>接着，生成虚拟用户认证的db文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db_load -T -t <span class="built_in">hash</span> -f /etc/vsftpd/vuser_passwd.txt /etc/vsftpd/vuser_passwd.db</span><br></pre></td></tr></table></figure>
+
+<p>随后，编辑认证文件&#x2F;etc&#x2F;pam.d&#x2F;vsftpd，全部注释掉原来语句<br>再增加以下两句</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">auth required pam_userdb.so db=/etc/vsftpd/vuser_passwd</span><br><span class="line">account required pam_userdb.so db=/etc/vsftpd/vuser_passwd</span><br></pre></td></tr></table></figure>
+
+<p>最后，创建虚拟用户个性CentOS FTP服务文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /etc/vsftpd/vuser_conf/</span><br><span class="line">vi /etc/vsftpd/vuser_conf/ftpuser1</span><br></pre></td></tr></table></figure>
+
+<p>内容如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">local_root=/opt/var/ftp1 虚拟用户的根目录(根据实际修改)</span><br><span class="line">write_enable=YES 可写</span><br><span class="line">anon_umask=022 掩码</span><br><span class="line">anon_world_readable_only=NO</span><br><span class="line">anon_upload_enable=YES</span><br><span class="line">anon_mkdir_write_enable=YES</span><br><span class="line">anon_other_write_enable=YES</span><br></pre></td></tr></table></figure>
+
+<h2 id="3"><a href="#3" class="headerlink" title="启动vsftp服务器"></a><a href="#3">启动vsftp服务器</a></h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> /opt/var/ftp/ftpuser1</span><br><span class="line"><span class="built_in">chmod</span> 777 /opt/var/ftp/ftpuser1</span><br><span class="line">service vsftpd start</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-1"><a href="#1-1" class="headerlink" title="常见错误："></a><a href="#1-1">常见错误：</a></h2><h3 id="1-1"><a href="#1-1" class="headerlink" title="553 Could not create file"></a><a href="#1-1">553 Could not create file</a></h3><p>一般都是SELinux的问题，设置SELinux的一个值，重启服务器即可。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setsebool -P ftpd_disable_trans 1</span><br><span class="line">service vsftpd restart</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2"><a href="#1-2" class="headerlink" title="500 OOPS: bad bool value in config file for: write_enable"></a><a href="#1-2">500 OOPS: bad bool value in config file for: write_enable</a></h3><p>注意你的CentOS FTP服务文件中保证每一行最后没有任何空格，一般出错就是在多余的空格上。<br>更改端口号：listen_port&#x3D;端口号 （需要自己添加）<br>欢迎信息：ftpd_banner&#x3D;欢迎信息<br>=&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>权限问题：<br>当virtual_use_local_privs&#x3D;YES时，虚拟用户和本地用户有相同的权限；<br>当virtual_use_local_privs&#x3D;NO时，虚拟用户和匿名用户有相同的权限，默认是NO。<br>当virtual_use_local_privs&#x3D;YES，write_enable&#x3D;YES时，虚拟用户具有写权限（上传、下载、删除、重命名）。<br>当virtual_use_local_privs&#x3D;NO，write_enable&#x3D;YES，anon_world_readable_only&#x3D;YES，<br>anon_upload_enable&#x3D;YES时，虚拟用户不能浏览目录，只能上传文件，无其他权限。<br>当virtual_use_local_privs&#x3D;NO，write_enable&#x3D;YES，anon_world_readable_only&#x3D;NO，<br>anon_upload_enable&#x3D;NO时，虚拟用户只能下载文件，无其他权限。<br>当virtual_use_local_privs&#x3D;NO，write_enable&#x3D;YES，anon_world_readable_only&#x3D;NO，<br>anon_upload_enable&#x3D;YES时，虚拟用户只能上传和下载文件，无其他权限。<br>当virtual_use_local_privs&#x3D;NO，write_enable&#x3D;YES，anon_world_readable_only&#x3D;NO，<br>anon_mkdir_write_enable&#x3D;YES时，虚拟用户只能下载文件和创建文件夹，无其他权限。<br>当virtual_use_local_privs&#x3D;NO，write_enable&#x3D;YES，anon_world_readable_only&#x3D;NO，<br>anon_other_write_enable&#x3D;YES时，虚拟用户只能下载、删除和重命名文件，无其他权限。<br>一些RadHat版本是默认打开SeLinux的。这个东西有加强安全性的同时很讨厌，比如让配置好的vsftpd无法正常登录。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#setsebool -P ftpd_disable_trans 1</span></span><br></pre></td></tr></table></figure>
+
+<p>重启FTP服务~<br><strong>IP限制的方法</strong></p>
+<p>vsftpd中的配置需要 tcp_wrappers&#x3D;YES</p>
+<p>&#x2F;etc&#x2F;hosts.allow 中加入允许的IP</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vsftpd : IP1 IP2 : allow</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;etc&#x2F;hosts.deny 中屏蔽所有IP</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vsftpd : ALL : deny</span><br></pre></td></tr></table></figure>
+
+<p>重启服务 <code>service xinetd restart</code> （此服务应该开机启动！）</p>
+<p>来源：<a target="_blank" rel="noopener" href="http://blog.sina.com.cn/s/blog/_50e52c230100l9sx.html">http://blog.sina.com.cn/s/blog\_50e52c230100l9sx.html</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-11T03:48:11.337Z" itemprop="dateUpdated">2025-06-11 11:48:11</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="dapeng">
+            dapeng
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CentOS/" rel="tag">CentOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html&title=《CentOS FTP服务（vsftpd）配置》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html&title=《CentOS FTP服务（vsftpd）配置》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CentOS FTP服务（vsftpd）配置》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/11/%E7%BC%96%E8%AF%91%E9%94%99%E8%AF%AFerror.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">编译错误error</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/11/iOS-UIButton%E5%AD%A6%E4%B9%A0.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">iOS UIButton学习</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>dapeng &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html&title=《CentOS FTP服务（vsftpd）配置》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html&title=《CentOS FTP服务（vsftpd）配置》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《CentOS FTP服务（vsftpd）配置》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/11/CentOS-FTP%E6%9C%8D%E5%8A%A1%EF%BC%88vsftpd%EF%BC%89%E9%85%8D%E7%BD%AE.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

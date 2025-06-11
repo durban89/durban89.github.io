@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>iOS 调试 解决EXC_BAD_ACCESS错误 | Gowhich - Dapeng&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="iOS">
+    <meta name="description" content="做iOS 程序开发时经常用遇到 EXC_BAD_ACCESS 错误导致 Crash，出现这种错误时一般 Xcode 不会给我们太多的信息来定位错误来源，只是在应用 Delegate 上留下像Thread 1: Program received signal:”EXC_BAD_ACCESS”，让问题无从找起。 比如你对已释放的对象发送消息时就会出现，EXC_BAD_ACCESS，再如release">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS 调试 解决EXC_BAD_ACCESS错误">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html">
+<meta property="og:site_name" content="Gowhich - Dapeng&#39;s Blog">
+<meta property="og:description" content="做iOS 程序开发时经常用遇到 EXC_BAD_ACCESS 错误导致 Crash，出现这种错误时一般 Xcode 不会给我们太多的信息来定位错误来源，只是在应用 Delegate 上留下像Thread 1: Program received signal:”EXC_BAD_ACCESS”，让问题无从找起。 比如你对已释放的对象发送消息时就会出现，EXC_BAD_ACCESS，再如release">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-11T03:27:11.000Z">
+<meta property="article:modified_time" content="2025-06-11T03:29:12.798Z">
+<meta property="article:author" content="dapeng">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Dapeng&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">dapeng</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">iOS 调试 解决EXC_BAD_ACCESS错误</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">iOS 调试 解决EXC_BAD_ACCESS错误</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-11T03:27:11.000Z" itemprop="datePublished" class="page-time">
+  2025-06-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-iOS-调试-解决EXC_BAD_ACCESS错误"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">iOS 调试 解决EXC_BAD_ACCESS错误</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-11 11:27:11" datetime="2025-06-11T03:27:11.000Z"  itemprop="datePublished">2025-06-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>做iOS 程序开发时经常用遇到 EXC_BAD_ACCESS 错误导致 Crash，出现这种错误时一般 Xcode 不会给我们太多的信息来定位错误来源，只是在应用 Delegate 上留下像Thread 1: Program received signal:”EXC_BAD_ACCESS”，让问题无从找起。</p>
+<p>比如你对已释放的对象发送消息时就会出现，EXC_BAD_ACCESS，再如release 的对象再 release，release 那些autorelease 的对象等也会报这样的错。默认设置下 Xcode 不会给你定位具体是哪一行代码，不该去使用已释放的对象，或者release 用错了。</p>
+<p>比如下面这段代码：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)drawRect:(<span class="built_in">CGRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> setClearsContextBeforeDrawing: <span class="literal">YES</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextRef</span> context = <span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//画背景线条------------------</span></span><br><span class="line">    <span class="built_in">CGColorRef</span> backColorRef = [<span class="built_in">UIColor</span> blackColor].CGColor;</span><br><span class="line">    <span class="built_in">CGFloat</span> backLineWidth = <span class="number">2.</span>f;</span><br><span class="line">    <span class="built_in">CGFloat</span> backMiterLimit = <span class="number">0.</span>f;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineWidth</span>(context, backLineWidth);<span class="comment">//主线宽度</span></span><br><span class="line">    <span class="built_in">CGContextSetMiterLimit</span>(context, backMiterLimit);<span class="comment">//投影角度  </span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetShadowWithColor</span>(context, <span class="built_in">CGSizeMake</span>(<span class="number">3</span>, <span class="number">5</span>), <span class="number">8</span>, backColorRef);<span class="comment">//设置双条线 </span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineJoin</span>(context, kCGLineJoinRound);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineCap</span>(context, kCGLineCapRound );</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetBlendMode</span>(context, kCGBlendModeNormal);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetStrokeColorWithColor</span>(context, [<span class="built_in">UIColor</span> whiteColor].CGColor);</span><br><span class="line">  </span><br><span class="line">    <span class="built_in">CGFloat</span> x = <span class="keyword">self</span>.charW;</span><br><span class="line">    <span class="built_in">CGFloat</span> y = <span class="keyword">self</span>.chartH;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//绘制纵向的坐标线 和 值</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;vDesc.count; i++) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">CGPoint</span> bPoint = <span class="built_in">CGPointMake</span>(<span class="number">30</span>, y);</span><br><span class="line">        <span class="built_in">CGPoint</span> ePoint = <span class="built_in">CGPointMake</span>(x, y);</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">30</span>, <span class="number">30</span>)];</span><br><span class="line">        <span class="comment">//纵坐标起始点的y坐标</span></span><br><span class="line">        <span class="comment">//纵坐标起始点的x坐标</span></span><br><span class="line">        <span class="type">int</span> vX = <span class="number">15</span>;</span><br><span class="line">        <span class="type">int</span> vY = <span class="number">30</span>;</span><br><span class="line">        [label setCenter:<span class="built_in">CGPointMake</span>(bPoint.x-vX, bPoint.y-vY)];</span><br><span class="line">        </span><br><span class="line">        [label setTextAlignment:<span class="built_in">NSTextAlignmentCenter</span>];</span><br><span class="line">        [label setBackgroundColor:[<span class="built_in">UIColor</span> clearColor]];</span><br><span class="line">        [label setTextColor:[<span class="built_in">UIColor</span> whiteColor]];</span><br><span class="line">        [label setText:[vDesc objectAtIndex:i]];</span><br><span class="line">        [<span class="keyword">self</span> addSubview:label];</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">CGContextMoveToPoint</span>(context, bPoint.x, bPoint.y<span class="number">-30</span>);</span><br><span class="line">        <span class="built_in">CGContextAddLineToPoint</span>(context, ePoint.x, ePoint.y<span class="number">-30</span>);</span><br><span class="line">        </span><br><span class="line">        y -= <span class="number">50</span>;<span class="comment">//间隔</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//绘制横向的坐标线 和 值</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;array.count<span class="number">-1</span>; i++) &#123;</span><br><span class="line">        <span class="comment">//横向值的y坐标</span></span><br><span class="line">        <span class="built_in">CGFloat</span> hY = chartH - <span class="number">20</span>;</span><br><span class="line">        <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(i*vInterval+<span class="number">10</span>, hY, <span class="number">60</span>, <span class="number">30</span>)];</span><br><span class="line">        label.transform = <span class="built_in">CGAffineTransformMakeRotation</span>(<span class="number">0.5</span>);</span><br><span class="line">        [label setTextAlignment:<span class="built_in">NSTextAlignmentCenter</span>];</span><br><span class="line">        [label setBackgroundColor:[<span class="built_in">UIColor</span> clearColor]];</span><br><span class="line">        [label setTextColor:[<span class="built_in">UIColor</span> whiteColor]];</span><br><span class="line">        label.numberOfLines = <span class="number">1</span>;</span><br><span class="line">        label.adjustsFontSizeToFitWidth = <span class="literal">YES</span>;</span><br><span class="line">        label.minimumScaleFactor = <span class="number">1.0</span>f;</span><br><span class="line">        [label setText:[hDesc objectAtIndex:i]];</span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span> addSubview:label];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">//画点线条------------------</span></span><br><span class="line">    <span class="built_in">CGColorRef</span> pointColorRef = [<span class="built_in">UIColor</span> colorWithRed:<span class="number">24.0</span>f/<span class="number">255.0</span>f green:<span class="number">116.0</span>f/<span class="number">255.0</span>f blue:<span class="number">205.0</span>f/<span class="number">255.0</span>f alpha:<span class="number">1.0</span>].CGColor;</span><br><span class="line">    <span class="built_in">CGFloat</span> pointLineWidth = <span class="number">1.5</span>f;</span><br><span class="line">    <span class="built_in">CGFloat</span> pointMiterLimit = <span class="number">5.0</span>f;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineWidth</span>(context, pointLineWidth);<span class="comment">//主线宽度</span></span><br><span class="line">    <span class="built_in">CGContextSetMiterLimit</span>(context, pointMiterLimit);<span class="comment">//投影角度  </span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetShadowWithColor</span>(context, <span class="built_in">CGSizeMake</span>(<span class="number">3</span>, <span class="number">5</span>), <span class="number">8</span>, pointColorRef);<span class="comment">//设置双条线 </span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineJoin</span>(context, kCGLineJoinRound);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineCap</span>(context, kCGLineCapRound );</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetBlendMode</span>(context, kCGBlendModeNormal);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetStrokeColorWithColor</span>(context, [<span class="built_in">UIColor</span> whiteColor].CGColor);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//绘图</span></span><br><span class="line">	<span class="built_in">CGPoint</span> p1 = [[array objectAtIndex:<span class="number">0</span>] <span class="built_in">CGPointValue</span>];</span><br><span class="line">    <span class="comment">//坐标的基础坐标 y值</span></span><br><span class="line">    <span class="type">int</span> yBase = chartH - <span class="number">30</span>;</span><br><span class="line">	<span class="built_in">CGContextMoveToPoint</span>(context, <span class="number">30</span>, yBase);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i&lt;[array count]; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		p1 = [[array objectAtIndex:i] <span class="built_in">CGPointValue</span>];</span><br><span class="line">        <span class="built_in">CGPoint</span> goPoint = <span class="built_in">CGPointMake</span>(p1.x<span class="number">-20</span>, yBase-p1.y*vInterval/<span class="number">20</span>);</span><br><span class="line">		<span class="built_in">CGContextAddLineToPoint</span>(context, goPoint.x, goPoint.y);;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//添加触摸点</span></span><br><span class="line">        <span class="built_in">UIButton</span> *bt = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeCustom</span>];</span><br><span class="line">        </span><br><span class="line">        [bt setBackgroundColor:[<span class="built_in">UIColor</span> redColor]];</span><br><span class="line">        </span><br><span class="line">        [bt setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">10</span>)];</span><br><span class="line">        </span><br><span class="line">        [bt setCenter:goPoint];</span><br><span class="line">        </span><br><span class="line">        [bt addTarget:<span class="keyword">self</span> </span><br><span class="line">               action:<span class="keyword">@selector</span>(btAction:) </span><br><span class="line">     forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span> addSubview:bt];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">CGContextStrokePath</span>(context);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码就会出现EXC_BAD_ACCESS 错误：<br>错误提示是：</p>
+<blockquote>
+<p>CoreGraphics&#96;CGColorGetAlpha:<br>0x31c1d780: vmov.i32d0, #0x0<br>0x31c1d784: cmp  r0, #0<br>0x31c1d786: itttt ne<br>0x31c1d788: ldrne r1, [r0, #28]<br>0x31c1d78a: addne.wr0, r0, r1, lsl #2<br>0x31c1d78e: ldrne r0, [r0, #28]&lt;-<br>0x31c1d790: vmovne d0, r0, r0<br>0x31c1d794: vmov  r0, s0<br>0x31c1d798: bx   lr<br>0x31c1d79a: nop</p>
+</blockquote>
+<p>会定位到红色的那一行，这个实在是让人头痛，不过还是有解决办法的。</p>
+<p>NSZombieEnabled环境变量可以帮我们的忙，就是当 设置NSZombieEnabled环境变量后，一个对象销毁时会被转化为_NSZombie，设置NSZombieEnabled后，当你向一个已经释 放的对象发送消息，这个对象就不会向之前那样Crash或者产生一个难以理解的行为，而是放出一个错误消息，然后以一种可预测的可以产生debug断点的 方式消失， 因此我们就可以找到具体或者大概是哪个对象被错误的释放了。</p>
+<p>对 Xcode 设置了NSZombieEnabled 之后，</p>
+<p>错误提示是：</p>
+<blockquote>
+<p>*** -[Not A Type retain]: message sent to deallocated instance 0x2009b480</p>
+</blockquote>
+<p>应该是内存泄露的问题。</p>
+<p>修改代码后，代码如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)drawRect:(<span class="built_in">CGRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> setClearsContextBeforeDrawing: <span class="literal">YES</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextRef</span> context = <span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//画背景线条------------------</span></span><br><span class="line"><span class="comment">//    CGColorRef backColorRef = [UIColor blackColor].CGColor;</span></span><br><span class="line">    <span class="built_in">CGColorRef</span> backColorRef = (__bridge <span class="built_in">CGColorRef</span>)([<span class="built_in">UIColor</span> blackColor]);</span><br><span class="line">    <span class="built_in">CGFloat</span> backLineWidth = <span class="number">2.</span>f;</span><br><span class="line">    <span class="built_in">CGFloat</span> backMiterLimit = <span class="number">0.</span>f;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineWidth</span>(context, backLineWidth);<span class="comment">//主线宽度</span></span><br><span class="line">    <span class="built_in">CGContextSetMiterLimit</span>(context, backMiterLimit);<span class="comment">//投影角度  </span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetShadowWithColor</span>(context, <span class="built_in">CGSizeMake</span>(<span class="number">3</span>, <span class="number">5</span>), <span class="number">8</span>, backColorRef);<span class="comment">//设置双条线 </span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineJoin</span>(context, kCGLineJoinRound);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineCap</span>(context, kCGLineCapRound );</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetBlendMode</span>(context, kCGBlendModeNormal);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetStrokeColorWithColor</span>(context, [<span class="built_in">UIColor</span> whiteColor].CGColor);</span><br><span class="line">  </span><br><span class="line">    <span class="built_in">CGFloat</span> x = <span class="keyword">self</span>.charW;</span><br><span class="line">    <span class="built_in">CGFloat</span> y = <span class="keyword">self</span>.chartH;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//绘制纵向的坐标线 和 值</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;vDesc.count; i++) &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">CGPoint</span> bPoint = <span class="built_in">CGPointMake</span>(<span class="number">30</span>, y);</span><br><span class="line">        <span class="built_in">CGPoint</span> ePoint = <span class="built_in">CGPointMake</span>(x, y);</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">30</span>, <span class="number">30</span>)];</span><br><span class="line">        <span class="comment">//纵坐标起始点的y坐标</span></span><br><span class="line">        <span class="comment">//纵坐标起始点的x坐标</span></span><br><span class="line">        <span class="type">int</span> vX = <span class="number">15</span>;</span><br><span class="line">        <span class="type">int</span> vY = <span class="number">30</span>;</span><br><span class="line">        [label setCenter:<span class="built_in">CGPointMake</span>(bPoint.x-vX, bPoint.y-vY)];</span><br><span class="line">        </span><br><span class="line">        [label setTextAlignment:<span class="built_in">NSTextAlignmentCenter</span>];</span><br><span class="line">        [label setBackgroundColor:[<span class="built_in">UIColor</span> clearColor]];</span><br><span class="line">        [label setTextColor:[<span class="built_in">UIColor</span> whiteColor]];</span><br><span class="line">        [label setText:[vDesc objectAtIndex:i]];</span><br><span class="line">        [<span class="keyword">self</span> addSubview:label];</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">CGContextMoveToPoint</span>(context, bPoint.x, bPoint.y<span class="number">-30</span>);</span><br><span class="line">        <span class="built_in">CGContextAddLineToPoint</span>(context, ePoint.x, ePoint.y<span class="number">-30</span>);</span><br><span class="line">        </span><br><span class="line">        y -= <span class="number">50</span>;<span class="comment">//间隔</span></span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//绘制横向的坐标线 和 值</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>; i&lt;array.count<span class="number">-1</span>; i++) &#123;</span><br><span class="line">        <span class="comment">//横向值的y坐标</span></span><br><span class="line">        <span class="built_in">CGFloat</span> hY = chartH - <span class="number">20</span>;</span><br><span class="line">        <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(i*vInterval+<span class="number">10</span>, hY, <span class="number">60</span>, <span class="number">30</span>)];</span><br><span class="line">        label.transform = <span class="built_in">CGAffineTransformMakeRotation</span>(<span class="number">0.5</span>);</span><br><span class="line">        [label setTextAlignment:<span class="built_in">NSTextAlignmentCenter</span>];</span><br><span class="line">        [label setBackgroundColor:[<span class="built_in">UIColor</span> clearColor]];</span><br><span class="line">        [label setTextColor:[<span class="built_in">UIColor</span> whiteColor]];</span><br><span class="line">        label.numberOfLines = <span class="number">1</span>;</span><br><span class="line">        label.adjustsFontSizeToFitWidth = <span class="literal">YES</span>;</span><br><span class="line">        label.minimumScaleFactor = <span class="number">1.0</span>f;</span><br><span class="line">        [label setText:[hDesc objectAtIndex:i]];</span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span> addSubview:label];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">//画点线条------------------</span></span><br><span class="line"><span class="comment">//    CGColorRef pointColorRef = [UIColor colorWithRed:24.0f/255.0f green:116.0f/255.0f blue:205.0f/255.0f alpha:1.0].CGColor;</span></span><br><span class="line">    <span class="built_in">CGColorRef</span> pointColorRef = (__bridge <span class="built_in">CGColorRef</span>)[<span class="built_in">UIColor</span> colorWithRed:<span class="number">24.0</span>f/<span class="number">255.0</span>f green:<span class="number">116.0</span>f/<span class="number">255.0</span>f blue:<span class="number">205.0</span>f/<span class="number">255.0</span>f alpha:<span class="number">1.0</span>];</span><br><span class="line">    <span class="built_in">CGFloat</span> pointLineWidth = <span class="number">1.5</span>f;</span><br><span class="line">    <span class="built_in">CGFloat</span> pointMiterLimit = <span class="number">5.0</span>f;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineWidth</span>(context, pointLineWidth);<span class="comment">//主线宽度</span></span><br><span class="line">    <span class="built_in">CGContextSetMiterLimit</span>(context, pointMiterLimit);<span class="comment">//投影角度  </span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetShadowWithColor</span>(context, <span class="built_in">CGSizeMake</span>(<span class="number">3</span>, <span class="number">5</span>), <span class="number">8</span>, pointColorRef);<span class="comment">//设置双条线 </span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineJoin</span>(context, kCGLineJoinRound);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetLineCap</span>(context, kCGLineCapRound );</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetBlendMode</span>(context, kCGBlendModeNormal);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextSetStrokeColorWithColor</span>(context, [<span class="built_in">UIColor</span> whiteColor].CGColor);</span><br><span class="line"></span><br><span class="line">	<span class="comment">//绘图</span></span><br><span class="line">	<span class="built_in">CGPoint</span> p1 = [[array objectAtIndex:<span class="number">0</span>] <span class="built_in">CGPointValue</span>];</span><br><span class="line">    <span class="comment">//坐标的基础坐标 y值</span></span><br><span class="line">    <span class="type">int</span> yBase = chartH - <span class="number">30</span>;</span><br><span class="line">	<span class="built_in">CGContextMoveToPoint</span>(context, <span class="number">30</span>, yBase);</span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i&lt;[array count]; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		p1 = [[array objectAtIndex:i] <span class="built_in">CGPointValue</span>];</span><br><span class="line">        <span class="built_in">CGPoint</span> goPoint = <span class="built_in">CGPointMake</span>(p1.x<span class="number">-20</span>, yBase-p1.y*vInterval/<span class="number">20</span>);</span><br><span class="line">		<span class="built_in">CGContextAddLineToPoint</span>(context, goPoint.x, goPoint.y);;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//添加触摸点</span></span><br><span class="line">        <span class="built_in">UIButton</span> *bt = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeCustom</span>];</span><br><span class="line">        </span><br><span class="line">        [bt setBackgroundColor:[<span class="built_in">UIColor</span> redColor]];</span><br><span class="line">        </span><br><span class="line">        [bt setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">10</span>, <span class="number">10</span>)];</span><br><span class="line">        </span><br><span class="line">        [bt setCenter:goPoint];</span><br><span class="line">        </span><br><span class="line">        [bt addTarget:<span class="keyword">self</span> </span><br><span class="line">               action:<span class="keyword">@selector</span>(btAction:) </span><br><span class="line">     forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span> addSubview:bt];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">CGContextStrokePath</span>(context);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一切正常了。成功了！</p>
+<p>如何设置 NSZombieEnabled 呢，在 Xcode3 和 Xcode4 下设置不一样，Xcode4 下设置很简单。</p>
+<p><strong>Xcode3 下 NSZombieEnabled 设置方法如下：</strong>  </p>
+<ul>
+<li>在XCode左边那个Groups&amp; Files栏中找到Executables，双击其中的一项，或者右键Get Info；  </li>
+<li>切换到Arguments  </li>
+<li>这里一共有两个框，在下面那个Variables to be set in theenvironment:点+号添加一项，Name里填NSZombieEnabled，Value填Yes，要保证前面的钩是选中的。<br><strong>Xcode4 下设置 NSZombieEnabled 的方法：</strong><br>你可以点击 Xcode4 菜单 Product -&gt; Edit Scheme-&gt; Arguments, 然后将点击”加号”, 将 NSZombieEnabled 参数加到Environment Variables 窗口中, 后面的数值写上 ”YES”.<br>或者在 Xcode4 菜单 Product -&gt; EditScheme -&gt; Diagnostics 设置窗口中直接勾上Enable ZombieObjects 即可，Xcode 可用 cmd＋shift＋&lt; 进到这个窗口。</li>
+</ul>
+<hr>
+<p>讲Cocoa技术十分专业的网站之一，下面的链接详细讲了讲NSZombieEnable的原理。<a target="_blank" rel="noopener" href="http://www.cocoadev.com/index.pl?NSZombieEnabled">http://www.cocoadev.com/index.pl?NSZombieEnabled</a><br>苹果官方的Mac OS X Debugging Magic,详细讲述了最为一个高级苹果程序员应该具备的调试技巧 <a target="_blank" rel="noopener" href="http://developer.apple.com/library/mac/#technotes/tn2004/tn2124.html">http://developer.apple.com/library/mac/#technotes/tn2004/tn2124.html</a><br>其实还可以在Instruments中开启NSZombie选项，这样就可以在Instruments中直接查看crash时候的callstack了：<a target="_blank" rel="noopener" href="http://www.markj.net/iphone-memory-debug-nszombie/">http://www.markj.net/iphone-memory-debug-nszombie/</a><br>最后提醒NSZombieEnabled只能在调试的时候使用，千万不要忘记在产品发布的时候去掉，因为NSZombieEnabled不会真正去释放dealloc对象的内存，一直开启后果可想而知，自重！</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-11T03:29:12.798Z" itemprop="dateUpdated">2025-06-11 11:29:12</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="dapeng">
+            dapeng
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/" rel="tag">iOS</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html&title=《iOS 调试 解决EXC_BAD_ACCESS错误》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html&title=《iOS 调试 解决EXC_BAD_ACCESS错误》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《iOS 调试 解决EXC_BAD_ACCESS错误》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/11/iOS-Objective-C-EXC_BAD_ACCESS%E9%97%AE%E9%A2%98.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">iOS Objective-C EXC_BAD_ACCESS问题</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/11/iOS-NSDateFormatter%E6%A0%BC%E5%BC%8F%E8%AF%A6%E7%BB%86%E5%88%97%E8%A1%A8.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">iOS NSDateFormatter格式详细列表</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>dapeng &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html&title=《iOS 调试 解决EXC_BAD_ACCESS错误》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html&title=《iOS 调试 解决EXC_BAD_ACCESS错误》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《iOS 调试 解决EXC_BAD_ACCESS错误》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/11/iOS-%E8%B0%83%E8%AF%95-%E8%A7%A3%E5%86%B3EXC_BAD_ACCESS%E9%94%99%E8%AF%AF.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
