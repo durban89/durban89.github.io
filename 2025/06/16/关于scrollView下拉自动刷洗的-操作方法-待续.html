@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>关于scrollView下拉自动刷洗的 操作方法（待续） | Gowhich - Dapeng&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="iOS">
+    <meta name="description" content="关于scrollView下拉自动刷洗的 操作方法，这个我最近由于做应用需要用到，找了几个版本的示例，自己根据原理试着自己做了一个，还是有点问题，先贴到这里，有时间再看看 testRefreshViewViewController.h 12345678910111213141516171819&#x2F;&#x2F;&#x2F;&#x2F;  testRefreshViewViewController.h&#x2F;&#x2F;  testRefreshVi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于scrollView下拉自动刷洗的 操作方法（待续）">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html">
+<meta property="og:site_name" content="Gowhich - Dapeng&#39;s Blog">
+<meta property="og:description" content="关于scrollView下拉自动刷洗的 操作方法，这个我最近由于做应用需要用到，找了几个版本的示例，自己根据原理试着自己做了一个，还是有点问题，先贴到这里，有时间再看看 testRefreshViewViewController.h 12345678910111213141516171819&#x2F;&#x2F;&#x2F;&#x2F;  testRefreshViewViewController.h&#x2F;&#x2F;  testRefreshVi">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-16T06:38:22.000Z">
+<meta property="article:modified_time" content="2025-06-16T07:19:43.776Z">
+<meta property="article:author" content="dapeng">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Dapeng&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">dapeng</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/custom"  >
+                <i class="icon icon-lg icon-link"></i>
+                测试
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">关于scrollView下拉自动刷洗的 操作方法（待续）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">关于scrollView下拉自动刷洗的 操作方法（待续）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-16T06:38:22.000Z" itemprop="datePublished" class="page-time">
+  2025-06-16
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-关于scrollView下拉自动刷洗的-操作方法-待续"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">关于scrollView下拉自动刷洗的 操作方法（待续）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-16 14:38:22" datetime="2025-06-16T06:38:22.000Z"  itemprop="datePublished">2025-06-16</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>关于scrollView下拉自动刷洗的 操作方法，这个我最近由于做应用需要用到，找了几个版本的示例，自己根据原理试着自己做了一个，还是有点问题，先贴到这里，有时间再看看</p>
+<p>testRefreshViewViewController.h</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  testRefreshViewViewController.h</span></span><br><span class="line"><span class="comment">//  testRefreshView</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-6-11.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 walkerfree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;RefreshView.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">testRefreshViewViewController</span> : <span class="title">UIViewController</span>&lt;<span class="title">RefreshViewDelegate</span>, <span class="title">UIScrollViewDelegate</span>&gt;</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIScrollView</span> *scrollView;</span><br><span class="line">    RefreshView *refreshView;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UIScrollView</span> *scrollView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>testRefreshViewViewController.m</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  testRefreshViewViewController.m</span></span><br><span class="line"><span class="comment">//  testRefreshView</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-6-11.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 walkerfree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;testRefreshViewViewController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">testRefreshViewViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">testRefreshViewViewController</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> scrollView = _scrollView;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> RefreshView</span></span><br><span class="line">-(<span class="type">void</span>) startLoading</span><br><span class="line">&#123;</span><br><span class="line">    [refreshView startLoading];</span><br><span class="line">    <span class="comment">//模拟3秒钟后停止</span></span><br><span class="line">    [<span class="keyword">self</span> performSelector:<span class="keyword">@selector</span>(stopLoading) withObject:<span class="literal">nil</span> afterDelay:<span class="number">3</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) stopLoading</span><br><span class="line">&#123;</span><br><span class="line">    [refreshView stopLoading];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) refresh</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> startLoading];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//刚拖动的时候</span></span><br><span class="line">- (<span class="type">void</span>)scrollViewWillBeginDragging:(<span class="built_in">UIScrollView</span> *)scrollView_</span><br><span class="line">&#123;</span><br><span class="line">    [refreshView scrollViewWillBeginDragging:scrollView_];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//拖动过程中</span></span><br><span class="line">-(<span class="type">void</span>) scrollViewDidScroll:(<span class="built_in">UIScrollView</span> *)scrollView_</span><br><span class="line">&#123;</span><br><span class="line">    [refreshView scrollViewDidScroll:scrollView_];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//拖动结束后</span></span><br><span class="line">- (<span class="type">void</span>)scrollViewDidEndDragging:(<span class="built_in">UIScrollView</span> *)scrollView_ willDecelerate:(<span class="type">BOOL</span>)decelerate</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;here&quot;</span>);</span><br><span class="line">    [refreshView scrollViewDidEndDragging:scrollView_ willDecelerate:decelerate];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - RefreshViewDelegate</span></span><br><span class="line">- (<span class="type">void</span>)refreshViewDidCallBack &#123;</span><br><span class="line">    [<span class="keyword">self</span> refresh];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">	<span class="built_in">NSArray</span> *nils = [[<span class="built_in">NSBundle</span> mainBundle] loadNibNamed:<span class="string">@&quot;RefreshView&quot;</span> owner:<span class="keyword">self</span> options:<span class="literal">nil</span>];</span><br><span class="line">    refreshView = [nils objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    _scrollView.contentSize = <span class="built_in">CGSizeMake</span>(<span class="number">320</span>, <span class="number">460</span>);</span><br><span class="line">    _scrollView.contentInset = <span class="built_in">UIEdgeInsetsMake</span>(REFRESH_HEADER_HEIGHT, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"><span class="comment">//    _scrollView.backgroundColor = [UIColor blueColor];</span></span><br><span class="line">    </span><br><span class="line">    [refreshView setupWithOwner:_scrollView delegate:<span class="keyword">self</span>];</span><br><span class="line">    [<span class="keyword">self</span> refresh];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> didReceiveMemoryWarning];</span><br><span class="line">    <span class="comment">// Dispose of any resources that can be recreated.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//-(void) start</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>里面有个文件是：</p>
+<p>RefreshView.h</p>
+<p>这个文件来自于cocoachina，地址：<del><a target="_blank" rel="noopener" href="http://www.cocoachina.com/bbs/read.php?tid=90232&fpage=3">http://www.cocoachina.com/bbs/read.php?tid=90232&amp;fpage=3</a></del></p>
+<p>需要的可以自己去下载一下</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-16T07:19:43.776Z" itemprop="dateUpdated">2025-06-16 15:19:43</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="dapeng">
+            dapeng
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/" rel="tag">iOS</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html&title=《关于scrollView下拉自动刷洗的 操作方法（待续）》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html&title=《关于scrollView下拉自动刷洗的 操作方法（待续）》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《关于scrollView下拉自动刷洗的 操作方法（待续）》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/16/Objective-C-%E5%AD%97%E7%AC%A6%E4%B8%B2NSString%E4%B8%AD%E5%8E%BB%E6%8E%89%E7%A9%BA%E6%A0%BC.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Objective-C 字符串NSString中去掉空格</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>dapeng &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html&title=《关于scrollView下拉自动刷洗的 操作方法（待续）》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html&title=《关于scrollView下拉自动刷洗的 操作方法（待续）》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《关于scrollView下拉自动刷洗的 操作方法（待续）》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/16/%E5%85%B3%E4%BA%8EscrollView%E4%B8%8B%E6%8B%89%E8%87%AA%E5%8A%A8%E5%88%B7%E6%B4%97%E7%9A%84-%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95-%E5%BE%85%E7%BB%AD.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
