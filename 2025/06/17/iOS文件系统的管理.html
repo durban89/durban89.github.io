@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>iOS文件系统的管理 | Gowhich - Dapeng&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="iOS">
+    <meta name="description" content="用于执行一般的文件系统操作 (reading and writing is done via NSData, et. al.). 主要功能包括： 从一个文件中读取数据； 向一个文件中写入数据； 删除文件； 复制文件； 移动文件； 比较两个文件的内容； 测试文件的存在性； 读取&#x2F;更改文件的属性… … Just alloc&#x2F;init an instance and start pe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS文件系统的管理">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html">
+<meta property="og:site_name" content="Gowhich - Dapeng&#39;s Blog">
+<meta property="og:description" content="用于执行一般的文件系统操作 (reading and writing is done via NSData, et. al.). 主要功能包括： 从一个文件中读取数据； 向一个文件中写入数据； 删除文件； 复制文件； 移动文件； 比较两个文件的内容； 测试文件的存在性； 读取&#x2F;更改文件的属性… … Just alloc&#x2F;init an instance and start pe">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-17T08:46:14.000Z">
+<meta property="article:modified_time" content="2025-06-17T09:12:42.696Z">
+<meta property="article:author" content="dapeng">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Dapeng&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">dapeng</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">iOS文件系统的管理</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">iOS文件系统的管理</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-17T08:46:14.000Z" itemprop="datePublished" class="page-time">
+  2025-06-17
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#0-1"><span class="post-toc-number">1.</span> <span class="post-toc-text">常见的NSFileManager处理文件的方法如下：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#0-2"><span class="post-toc-number">2.</span> <span class="post-toc-text">常见的NSFileManager处理目录的方法如下：</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1%E3%80%81%E6%96%87%E4%BB%B6%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="post-toc-number">3.</span> <span class="post-toc-text">1、文件的创建</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2%E3%80%81%E5%AF%B9%E6%96%87%E4%BB%B6%E9%87%8D%E5%91%BD%E5%90%8D"><span class="post-toc-number">4.</span> <span class="post-toc-text">2、对文件重命名</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3%E3%80%81%E5%88%A0%E9%99%A4%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6"><span class="post-toc-number">5.</span> <span class="post-toc-text">3、删除一个文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4%E3%80%81%E5%88%A0%E9%99%A4%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%89%80%E6%9C%89%E6%96%87%E4%BB%B6"><span class="post-toc-number">6.</span> <span class="post-toc-text">4、删除目录下所有文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5%E3%80%81%E5%88%A4%E6%96%AD%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8"><span class="post-toc-number">7.</span> <span class="post-toc-text">5、判断文件是否存在</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-iOS文件系统的管理"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">iOS文件系统的管理</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-17 16:46:14" datetime="2025-06-17T08:46:14.000Z"  itemprop="datePublished">2025-06-17</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>用于执行一般的文件系统操作 (reading and writing is done via NSData, et. al.).</p>
+<p>主要功能包括：</p>
+<p><strong>从一个文件中读取数据；</strong></p>
+<p><strong>向一个文件中写入数据；</strong></p>
+<p><strong>删除文件；</strong></p>
+<p><strong>复制文件；</strong></p>
+<p><strong>移动文件；</strong></p>
+<p><strong>比较两个文件的内容；</strong></p>
+<p><strong>测试文件的存在性；</strong></p>
+<p><strong>读取&#x2F;更改文件的属性… …</strong></p>
+<p>Just alloc&#x2F;init an instance and start performing operations. Thread safe.</p>
+<h3 id="0-1"><a href="#0-1" class="headerlink" title="常见的NSFileManager处理文件的方法如下："></a><a href="#0-1">常见的NSFileManager处理文件的方法如下：</a></h3><p><strong>NSFileManager *fileManager &#x3D; [[NSFileManager alloc]init]; &#x2F;&#x2F;最好不要用defaultManager。</strong><br><strong>NSData *myData &#x3D; [fileManager contentsAtPath:path]; &#x2F;&#x2F; 从一个文件中读取数据</strong><br><strong>[fileManager createFileAtPath:path contents:myData attributes:dict];&#x2F;&#x2F;向一个文件中写入数据，属性字典允许你制定要创建</strong><br><strong>[fileManager removeItemAtPath:path error:err];</strong><br><strong>[fileManager moveItemAtPath:path toPath:path2 error:err];</strong><br><strong>[fileManager copyItemAtPath:path toPath:path2 error:err];</strong><br><strong>[fileManager contentsEqualAtPath:path andPath:path2];</strong><br><strong>[fileManager fileExistsAtPath:path]; … …</strong></p>
+<h3 id="0-2"><a href="#0-2" class="headerlink" title="常见的NSFileManager处理目录的方法如下："></a><a href="#0-2">常见的NSFileManager处理目录的方法如下：</a></h3><p><strong>[fileManager currentDirectoryPath];</strong><br><strong>[fileManager changeCurrentDirectoryPath:path];</strong><br><strong>[fileManager copyItemAtPath:path toPath:path2 error:err];</strong><br><strong>[fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:err];</strong><br><strong>[fileManager fileExistsAtPath:path isDirectory:YES];</strong><br><strong>[fileManager enumeratorAtPath:path]; &#x2F;&#x2F;获取目录的内容列表。一次可以枚举指定目录中的每个文件。 … …</strong><br><strong>Has a delegate with lots of “should” methods (to do an operation or proceed after an error).</strong><br><strong>And plenty more. Check out the documentation.</strong></p>
+<h3 id="1、文件的创建"><a href="#1、文件的创建" class="headerlink" title="1、文件的创建"></a>1、<a href="#1">文件的创建</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">IBAction</span>) CreateFile&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//对于错误信息</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSError</span> *error;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建文件管理器</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSFileManager</span> *fileMgr = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//指向文件目录</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *documentsDirectory= [<span class="built_in">NSHomeDirectory</span>() stringByAppendingPathComponent:<span class="string">@&quot;Documents&quot;</span>];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建一个目录</span></span><br><span class="line"></span><br><span class="line">    [[<span class="built_in">NSFileManager</span> defaultManager]   createDirectoryAtPath: [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@/myFolder&quot;</span>, <span class="built_in">NSHomeDirectory</span>()] attributes:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// File we want to create in the documents directory我们想要创建的文件将会出现在文件目录中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Result is: /Documents/file1.txt结果为：/Documents/file1.txt</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *filePath= [documentsDirectory</span><br><span class="line"></span><br><span class="line">    stringByAppendingPathComponent:<span class="string">@&quot;file2.txt&quot;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//需要写入的字符串</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *str= <span class="string">@&quot;iPhoneDeveloper Tips\nhttp://iPhoneDevelopTips,com&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//写入文件</span></span><br><span class="line"></span><br><span class="line">    [str writeToFile:filePath atomically:<span class="literal">YES</span> encoding:<span class="built_in">NSUTF8StringEncoding</span> error:&amp;error];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//显示文件目录的内容</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Documentsdirectory: %@&quot;</span>,[fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&amp;error]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、对文件重命名"><a href="#2、对文件重命名" class="headerlink" title="2、对文件重命名"></a>2、<a href="#2">对文件重命名</a></h3><p>对一个文件重命名,想要重命名一个文件，我们需要把文件移到一个新的路径下。下面的代码创建了我们所期望的目标文件的路径，然后请求移动文件以及在移动之后显示文件目录。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//通过移动该文件对文件重命名</span></span><br><span class="line"><span class="built_in">NSString</span> *filePath2= [documentsDirectory</span><br><span class="line">stringByAppendingPathComponent:<span class="string">@&quot;file2.txt&quot;</span>];</span><br><span class="line"><span class="comment">//判断是否移动</span></span><br><span class="line"><span class="keyword">if</span> ([fileMgr moveItemAtPath:filePath toPath:filePath2 error:&amp;error] != <span class="literal">YES</span>)</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Unable to move file: %@&quot;</span>, [error localizedDescription]);</span><br><span class="line"><span class="comment">//显示文件目录的内容</span></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Documentsdirectory: %@&quot;</span>,</span><br><span class="line">[fileMgr contentsOfDirectoryAtPath:documentsDirectoryerror:&amp;error]);</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、删除一个文件"><a href="#3、删除一个文件" class="headerlink" title="3、删除一个文件"></a>3、<a href="#3">删除一个文件</a></h3><p>为了使这个技巧完整，让我们再一起看下如何删除一个文件：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在filePath2中判断是否删除这个文件</span></span><br><span class="line"><span class="keyword">if</span> ([fileMgr removeItemAtPath:filePath2 error:&amp;error] != <span class="literal">YES</span>)</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Unable to delete file: %@&quot;</span>, [error localizedDescription]);</span><br><span class="line"><span class="comment">//显示文件目录的内容</span></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Documentsdirectory: %@&quot;</span>,</span><br><span class="line">[fileMgr contentsOfDirectoryAtPath:documentsDirectoryerror:&amp;error]);</span><br></pre></td></tr></table></figure>
+
+<p>一旦文件被删除了，正如你所预料的那样，文件目录就会被自动清空：<br>这些示例能教你的，仅仅只是文件处理上的一些皮毛。想要获得更全面、详细的讲解，你就需要掌握NSFileManager文件的知识。</p>
+<h3 id="4、删除目录下所有文件"><a href="#4、删除目录下所有文件" class="headerlink" title="4、删除目录下所有文件"></a>4、<a href="#4">删除目录下所有文件</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取文件路径</span></span><br><span class="line">- (<span class="built_in">NSString</span> *)attchmentFolder&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *document = [<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) objectAtIndex:<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *path = [document stringByAppendingPathComponent:<span class="string">@&quot;Attchments&quot;</span>];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSFileManager</span> *manager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(![manager contentsOfDirectoryAtPath:path error:<span class="literal">nil</span>])&#123;</span><br><span class="line"></span><br><span class="line">        [manager createDirectoryAtPath:path withIntermediateDirectories:<span class="literal">NO</span> attributes:<span class="literal">nil</span> error:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> path;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>–清除附件</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">BOOL</span> result = [[<span class="built_in">NSFileManager</span> defaultManager] removeItemAtPath:[[MOPAppDelegate instance] attchmentFolder] error:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、判断文件是否存在"><a href="#5、判断文件是否存在" class="headerlink" title="5、判断文件是否存在"></a>5、<a href="#5">判断文件是否存在</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *filePath = [<span class="keyword">self</span> dataFilePath];</span><br><span class="line"><span class="keyword">if</span> ([[<span class="built_in">NSFileManager</span> defaultManager]fileExistsAtPath:filePath]) </span><br><span class="line">｛</span><br><span class="line">  <span class="comment">//do some thing</span></span><br><span class="line">｝</span><br><span class="line"></span><br><span class="line">-(<span class="built_in">NSString</span> *)dataFilePath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *paths = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>);</span><br><span class="line">    <span class="built_in">NSString</span> *documentDirectory = [paths objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">return</span> [documentDirectory stringByAppendingPathComponent:<span class="string">@&quot;data.plist&quot;</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>常用路径工具函数</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> * <span class="built_in">NSUserName</span>（）； 返回当前用户的登录名 </span><br><span class="line"><span class="built_in">NSString</span> * <span class="built_in">NSFullUserName</span>（）； 返回当前用户的完整用户名 </span><br><span class="line"><span class="built_in">NSString</span> * <span class="built_in">NSHomeDirectory</span>（）； 返回当前用户主目录的路径 </span><br><span class="line"><span class="built_in">NSString</span> * <span class="built_in">NSHomeDirectoryForUser</span>（）； 返回用户user的主目录 </span><br><span class="line"><span class="built_in">NSString</span> * <span class="built_in">NSTemporaryDirectory</span>（）； 返回可用于创建临时文件的路径目录</span><br></pre></td></tr></table></figure>
+
+<p>常用路径工具方法</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-（<span class="built_in">NSString</span> *） pathWithComponents：components    根据components（<span class="built_in">NSArray</span>对象）中元素构造有效路径 </span><br><span class="line">-（<span class="built_in">NSArray</span> *）pathComponents                                          析构路径，获取路径的各个部分 </span><br><span class="line">-（<span class="built_in">NSString</span> *）lastPathComponent                                       提取路径的最后一个组成部分 </span><br><span class="line">-（<span class="built_in">NSString</span> *）pathExtension                                           路径扩展名 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByAppendingPathComponent：path                    将path添加到现有路径末尾 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByAppendingPathExtension：ext           将拓展名添加的路径最后一个组成部分 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByDeletingPathComponent                           删除路径的最后一个部分 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByDeletingPathExtension                           删除路径的最后一个部分 的扩展名 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByExpandingTildeInPath          将路径中的代字符扩展成用户主目录（~）或指定用户主目录（~user） </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByResolvingSymlinksInPath                         尝试解析路径中的符号链接 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByStandardizingPath            通过尝试解析~、..、.、和符号链接来标准化路径</span><br></pre></td></tr></table></figure>
+
+<p>使用路径NSPathUtilities.h</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tempdir = <span class="built_in">NSTemporaryDirectory</span>(); 临时文件的目录名 </span><br><span class="line">path = [fm currentDirectoryPath];</span><br><span class="line">[path lastPathComponent]; 从路径中提取最后一个文件名 </span><br><span class="line">fullpath = [path stringByAppendingPathComponent:fname];将文件名附加到路劲的末尾 </span><br><span class="line">extenson = [fullpath pathExtension]; 路径名的文件扩展名 </span><br><span class="line">homedir = <span class="built_in">NSHomeDirectory</span>();用户的主目录 </span><br><span class="line">component = [homedir pathComponents];  路径的每个部分</span><br></pre></td></tr></table></figure>
+
+<p>NSProcessInfo类：允许你设置或检索正在运行的应用程序的各种类型信息</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">（<span class="built_in">NSProcessInfo</span> *）processInfo                                  返回当前进程的信息</span><br><span class="line">-（<span class="built_in">NSArray</span>*）arguments                                           以<span class="built_in">NSString</span>对象数字的形式返回当前进程的参数</span><br><span class="line">-（<span class="built_in">NSDictionary</span> *）environment                                   返回变量/值对词典。描述当前的环境变量</span><br><span class="line">-（<span class="type">int</span>）processIdentity                                          返回进程标识</span><br><span class="line">-（<span class="built_in">NSString</span> *）processName                                       返回进程名称</span><br><span class="line">-（<span class="built_in">NSString</span> *）globallyUniqueString   每次调用该方法都会返回不同的单值字符串，可以用这个字符串生成单值临时文件名   </span><br><span class="line">-（<span class="built_in">NSString</span> *）hostname                                          返回主机系统的名称 </span><br><span class="line">-（<span class="type">unsigned</span> <span class="type">int</span>）operatingSystem                                 返回表示操作系统的数字 </span><br><span class="line">-（<span class="built_in">NSString</span> *）operatingSystemName                                     返回操作系统名称 </span><br><span class="line">-（<span class="built_in">NSString</span> *）operatingSystemVersionString                                     返回操作系统当前版本</span><br><span class="line">-（<span class="type">void</span>）setProcessName：（<span class="built_in">NSString</span> *）name                                将当前进程名称设置为name</span><br></pre></td></tr></table></figure>
+
+<p>NSFileHandle类允许更有效地使用文件。</p>
+<p>可以实现如下功能：</p>
+<p>1、打开一个文件，执行读、写或更新（读写）操作；</p>
+<p>2、在文件中查找指定位置；</p>
+<p>3、从文件中读取特定数目的字节，或将特定数目的字节写入文件中</p>
+<p>另外，NSFileHandle类提供的方法也可以用于各种设备或套接字。一般而言，我们处理文件时都要经历以下三个步骤：</p>
+<p>1、打开文件，获取一个NSFileHandle对象（以便在后面的I&#x2F;O操作中引用该文件）。</p>
+<p>2、对打开文件执行I&#x2F;O操作。</p>
+<p>3、关闭文件。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSFileHandle</span> *fileHandle = [[<span class="built_in">NSFileHandle</span> alloc]init]; </span><br><span class="line">fileHandle = [<span class="built_in">NSFileHandle</span> fileHandleForReadingAtPath:path]; <span class="comment">//打开一个文件准备读取</span></span><br><span class="line">fileHandle = [<span class="built_in">NSFileHandle</span> fileHandleForWritingAtPath:path]; </span><br><span class="line">fileHandle = [<span class="built_in">NSFileHandle</span> fileHandleForUpdatingAtPath:path]; </span><br><span class="line">fileData = [fileHandle availableData]; <span class="comment">// 从设备或者通道返回可用的数据 </span></span><br><span class="line">fileData = [fileHandle readDataToEndOfFile]; </span><br><span class="line">[fileHandle writeData:fileData]; <span class="comment">//将NSData数据写入文件 </span></span><br><span class="line">[fileHandle closeFile]; <span class="comment">//关闭文件 ... ...</span></span><br></pre></td></tr></table></figure>
+
+<p>注：NSFileHandle类没有提供创建文件的功能，所以必须使用NSFileManager来创建文件</p>
+<p>参考：<a target="_blank" rel="noopener" href="http://blog.csdn.net/zhuzhihai1988/article/details/7904333">http://blog.csdn.net/zhuzhihai1988/article/details/7904333</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-17T09:12:42.696Z" itemprop="dateUpdated">2025-06-17 17:12:42</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="dapeng">
+            dapeng
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/" rel="tag">iOS</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html&title=《iOS文件系统的管理》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html&title=《iOS文件系统的管理》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《iOS文件系统的管理》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/17/nodejs%E4%B8%ADexpress%E7%9A%84-Error--Cannot-find-module-jade-%E9%94%99%E8%AF%AF.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">nodejs中express的“Error: Cannot find module &#39;jade&#39;”错误</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/17/iOS%E4%B8%AD%E6%95%B0%E5%AD%97%E7%9A%84%E6%A0%BC%E5%BC%8F%E5%8C%96-NSNumberFormatter.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">iOS中数字的格式化 NSNumberFormatter</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>dapeng &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html&title=《iOS文件系统的管理》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html&title=《iOS文件系统的管理》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《iOS文件系统的管理》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/17/iOS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
