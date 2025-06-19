@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Linux下 命令行或者crontab 按日期删除文件 | Gowhich - Dapeng&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Linux">
+    <meta name="description" content="关于linux下按照日期删除文件，用的最多的方式就是使用find命令 操作就是这样的：（这个是我的删除session文件的命令，你可以直接运行，也可以放在crontab中运行） 1find &#x2F;tmp&#x2F;session -mtime +1 -type f -exec rm -rf &#123;&#125; \;   find相关参数　-amin&lt;分钟&gt; 　查找在指定时间曾被存取过的文件或目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux下 命令行或者crontab 按日期删除文件">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html">
+<meta property="og:site_name" content="Gowhich - Dapeng&#39;s Blog">
+<meta property="og:description" content="关于linux下按照日期删除文件，用的最多的方式就是使用find命令 操作就是这样的：（这个是我的删除session文件的命令，你可以直接运行，也可以放在crontab中运行） 1find &#x2F;tmp&#x2F;session -mtime +1 -type f -exec rm -rf &#123;&#125; \;   find相关参数　-amin&lt;分钟&gt; 　查找在指定时间曾被存取过的文件或目">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-19T05:54:47.000Z">
+<meta property="article:modified_time" content="2025-06-19T06:02:28.726Z">
+<meta property="article:author" content="dapeng">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Dapeng&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">dapeng</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Linux下 命令行或者crontab 按日期删除文件</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Linux下 命令行或者crontab 按日期删除文件</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-19T05:54:47.000Z" itemprop="datePublished" class="page-time">
+  2025-06-19
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-Linux下-命令行或者crontab-按日期删除文件"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Linux下 命令行或者crontab 按日期删除文件</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-19 13:54:47" datetime="2025-06-19T05:54:47.000Z"  itemprop="datePublished">2025-06-19</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>关于linux下按照日期删除文件，用的最多的方式就是使用find命令</p>
+<p>操作就是这样的：（这个是我的删除session文件的命令，你可以直接运行，也可以放在crontab中运行）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /tmp/session -mtime +1 -<span class="built_in">type</span> f -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>find相关参数<br>　-amin&lt;分钟&gt; 　查找在指定时间曾被存取过的文件或目录，单位以分钟计算。<br>　-anewer&lt;参考文件或目录&gt; 　查找其存取时间较指定文件或目录的存取时间更接近现在的文件或目录。<br>　-atime&lt;24小时数&gt; 　查找在指定时间曾被存取过的文件或目录，单位以24小时计算。<br>　-cmin&lt;分钟&gt; 　查找在指定时间之时被更改的文件或目录。<br>　-cnewer&lt;参考文件或目录&gt; 　查找其更改时间较指定文件或目录的更改时间更接近现在的文件或目录。<br>　-ctime&lt;24小时数&gt; 　查找在指定时间之时被更改的文件或目录，单位以24小时计算。<br>　-daystart 　从本日开始计算时间。<br>　-depth 　从指定目录下最深层的子目录开始查找。<br>　-expty 　寻找文件大小为0 Byte的文件，或目录下没有任何子目录或文件的空目录。<br>　-exec&lt;执行指令&gt; 　假设find指令的回传值为True，就执行该指令。<br>　-false 　将find指令的回传值皆设为False。<br>　-fls&lt;列表文件&gt; 　此参数的效果和指定”-ls”参数类似，但会把结果保存为指定的列表文件。<br>　-follow 　排除符号连接。<br>　-fprint&lt;列表文件&gt; 　此参数的效果和指定”-print”参数类似，但会把结果保存成指定的列表文件。<br>　-fprint0&lt;列表文件&gt; 　此参数的效果和指定”-print0”参数类似，但会把结果保存成指定的列表文件。<br>　-fprintf&lt;列表文件&gt;&lt;输出格式&gt; 　此参数的效果和指定”-printf”参数类似，但会把结果保存成指定的列表文件。<br>　-fstype&lt;文件系统类型&gt; 　只寻找该文件系统类型下的文件或目录。<br>　-gid&lt;群组识别码&gt; 　查找符合指定之群组识别码的文件或目录。<br>　-group&lt;群组名称&gt; 　查找符合指定之群组名称的文件或目录。<br>　-help或–help 　在线帮助。<br>　-ilname&lt;范本样式&gt; 　此参数的效果和指定”-lname”参数类似，但忽略字符大小写的差别。<br>　-iname&lt;范本样式&gt; 　此参数的效果和指定”-name”参数类似，但忽略字符大小写的差别。<br>　-inum&lt;inode编号&gt; 　查找符合指定的inode编号的文件或目录。<br>　-ipath&lt;范本样式&gt; 　此参数的效果和指定”-ipath”参数类似，但忽略字符大小写的差别。<br>　-iregex&lt;范本样式&gt; 　此参数的效果和指定”-regexe”参数类似，但忽略字符大小写的差别。<br>　-links&lt;连接数目&gt; 　查找符合指定的硬连接数目的文件或目录。<br>　-iname&lt;范本样式&gt; 　指定字符串作为寻找符号连接的范本样式。<br>　-ls 　假设find指令的回传值为True，就将文件或目录名称列出到标准输出。<br>　-maxdepth&lt;目录层级&gt; 　设置最大目录层级。<br>　-mindepth&lt;目录层级&gt; 　设置最小目录层级。<br>　-mmin&lt;分钟&gt; 　查找在指定时间曾被更改过的文件或目录，单位以分钟计算。<br>　-mount 　此参数的效果和指定”-xdev”相同。<br>　-mtime&lt;24小时数&gt; 　查找在指定时间曾被更改过的文件或目录，单位以24小时计算。<br>　-name&lt;范本样式&gt; 　指定字符串作为寻找文件或目录的范本样式。<br>　-newer&lt;参考文件或目录&gt; 　查找其更改时间较指定文件或目录的更改时间更接近现在的文件或目录。<br>　-nogroup 　找出不属于本地主机群组识别码的文件或目录。<br>　-noleaf 　不去考虑目录至少需拥有两个硬连接存在。<br>　-nouser 　找出不属于本地主机用户识别码的文件或目录。<br>　-ok&lt;执行指令&gt; 　此参数的效果和指定”-exec”参数类似，但在执行指令之前会先询问用户，若回答”y”或”Y”，则放弃执行指令。<br>　-path&lt;范本样式&gt; 　指定字符串作为寻找目录的范本样式。<br>　-perm&lt;权限数值&gt; 　查找符合指定的权限数值的文件或目录。<br>　-print 　假设find指令的回传值为True，就将文件或目录名称列出到标准输出。格式为每列一个名称，每个名称之前皆有”.&#x2F;“字符串。<br>　-print0 　假设find指令的回传值为True，就将文件或目录名称列出到标准输出。格式为全部的名称皆在同一行。<br>　-printf&lt;输出格式&gt; 　假设find指令的回传值为True，就将文件或目录名称列出到标准输出。格式可以自行指定。<br>　-prune 　不寻找字符串作为寻找文件或目录的范本样式。<br>　-regex&lt;范本样式&gt; 　指定字符串作为寻找文件或目录的范本样式。<br>　-size&lt;文件大小&gt; 　查找符合指定的文件大小的文件。<br>　-true 　将find指令的回传值皆设为True。<br>　-typ&lt;文件类型&gt; 　只寻找符合指定的文件类型的文件。<br>　-uid&lt;用户识别码&gt; 　查找符合指定的用户识别码的文件或目录。<br>　-used&lt;日数&gt; 　查找文件或目录被更改之后在指定时间曾被存取过的文件或目录，单位以日计算。<br>　-user&lt;拥有者名称&gt; 　查找符合指定的拥有者名称的文件或目录。<br>　-version或–version 　显示版本信息。<br>　-xdev 　将范围局限在先行的文件系统中。<br>　-xtype&lt;文件类型&gt; 　此参数的效果和指定”-type”参数类似，差别在于它针对符号连接检查。</p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-19T06:02:28.726Z" itemprop="dateUpdated">2025-06-19 14:02:28</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="dapeng">
+            dapeng
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html&title=《Linux下 命令行或者crontab 按日期删除文件》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html&title=《Linux下 命令行或者crontab 按日期删除文件》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Linux下 命令行或者crontab 按日期删除文件》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/19/Linux%E4%B8%AD-%E5%9C%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%AD-%E6%88%96%E8%80%85-%E5%9C%A8crontab%E4%B8%AD-%E5%88%A0%E9%99%A4%E6%8C%87%E5%AE%9A%E6%97%A5%E6%9C%9F%E4%B9%8B%E5%89%8D%E7%9A%84%E6%96%87%E4%BB%B6.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Linux中 在命令行中 或者 在crontab中 删除指定日期之前的文件</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/19/PHP%E5%A4%A7%E9%87%8FSession%E7%9A%84%E6%95%A3%E5%88%97%E5%8F%8A%E8%BF%87%E6%9C%9F%E5%9B%9E%E6%94%B6.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">PHP大量Session的散列及过期回收</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>dapeng &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html&title=《Linux下 命令行或者crontab 按日期删除文件》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html&title=《Linux下 命令行或者crontab 按日期删除文件》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Linux下 命令行或者crontab 按日期删除文件》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/19/Linux%E4%B8%8B-%E5%91%BD%E4%BB%A4%E8%A1%8C%E6%88%96%E8%80%85crontab-%E6%8C%89%E6%97%A5%E6%9C%9F%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
