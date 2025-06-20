@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法） | Gowhich - Dapeng&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="iOS">
+    <meta name="description" content="对于提交的苹果官方的app，在审核的时候会给我们一些crash文件，对于这些有用的文件，里面是关于我们的bug的一些信息，那么该如何去调试呢第一步：在任意目录创建一个目录，用来调试crash，我这里创建一个crash目录第二步：将之前Archive的文件copy到crash目录里面 其中包括两个文件.app和.app.dSYM 如果找不到的话可以按照下面的步骤进行 先到Organizer 1，找到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法）">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html">
+<meta property="og:site_name" content="Gowhich - Dapeng&#39;s Blog">
+<meta property="og:description" content="对于提交的苹果官方的app，在审核的时候会给我们一些crash文件，对于这些有用的文件，里面是关于我们的bug的一些信息，那么该如何去调试呢第一步：在任意目录创建一个目录，用来调试crash，我这里创建一个crash目录第二步：将之前Archive的文件copy到crash目录里面 其中包括两个文件.app和.app.dSYM 如果找不到的话可以按照下面的步骤进行 先到Organizer 1，找到">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-20T03:50:43.000Z">
+<meta property="article:modified_time" content="2025-06-20T03:57:04.048Z">
+<meta property="article:author" content="dapeng">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Dapeng&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">dapeng</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法）</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法）</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-20T03:50:43.000Z" itemprop="datePublished" class="page-time">
+  2025-06-20
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-苹果官方-Crash文件分析方法--iOS系统Crash文件分析方法"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法）</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-20 11:50:43" datetime="2025-06-20T03:50:43.000Z"  itemprop="datePublished">2025-06-20</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>对于提交的苹果官方的app，在审核的时候会给我们一些crash文件，对于这些有用的文件，里面是关于我们的bug的一些信息，那么该如何去调试呢<br>第一步：在任意目录创建一个目录，用来调试crash，我这里创建一个crash目录<br>第二步：将之前Archive的文件copy到crash目录里面</p>
+<p>其中包括两个文件.app和.app.dSYM</p>
+<p>如果找不到的话可以按照下面的步骤进行</p>
+<p>先到Organizer</p>
+<p>1，找到提交那个时刻的Archive文件，选中，show in Finder</p>
+<p>2，然后到达这里，然后再选中红色区域，会出现3中所示的提示</p>
+<p>3，ok显示包内容，然后自己找找吧，肯定会有的</p>
+<p>copy就好了</p>
+<p>第三步：将symbolicatecrash工具copy到crash目录</p>
+<p>找不到这个文件可以去</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/PrivateFrameworks/DTDeviceKit.framework/Versions/A/Resources</span><br></pre></td></tr></table></figure>
+
+<p>这里看看，应该就会有了。</p>
+<p>第四步：将要调试的crash文件copy到crash目录</p>
+<p>这个crash文件，这里是来自苹果官方的，其实有时候也是来自其他的用户的电脑上的。<br>第五步：通过命令进行测试<br>打开终端，转到crash目录<br>执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./symbolicatecrash ./2013-08-16-035933_DLiPad.crash ./appname.app.dSYM &gt; symbol.crash</span><br><span class="line"><span class="built_in">cat</span> ./symbol.crash</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">Incident Identifier: 5434D911-E207-4D79-9139-40EA4EA76B45</span><br><span class="line">CrashReporter Key:   d11ed3a4adbb0d9ca4d6016e73e439640f95f289</span><br><span class="line">Hardware Model:      xxx</span><br><span class="line">Process:         appname [8158]</span><br><span class="line">Path:            /var/mobile/Applications/2AB1E8EB-6ECE-44F4-8195-4042339DD359/appname.app/appname</span><br><span class="line">Identifier:      appname</span><br><span class="line">Version:         ??? (???)</span><br><span class="line">Code Type:       ARM (Native)</span><br><span class="line">Parent Process:  launchd [1]</span><br><span class="line"></span><br><span class="line">Date/Time:       2013-08-16 03:59:33.513 +0800</span><br><span class="line">OS Version:      iOS 6.1.3 (10B329)</span><br><span class="line">Report Version:  104</span><br><span class="line"></span><br><span class="line">Exception Type:  EXC_CRASH (SIGABRT)</span><br><span class="line">Exception Codes: 0x0000000000000000, 0x0000000000000000</span><br><span class="line">Crashed Thread:  0</span><br><span class="line"></span><br><span class="line">Last Exception Backtrace:</span><br><span class="line">0   CoreFoundation                    0x3126029e 0x3119e000 + 795294</span><br><span class="line">1   libobjc.A.dylib               0x3910497a 0x390fc000 + 35194</span><br><span class="line">2   UIKit                         0x333f537c 0x33065000 + 3736444</span><br><span class="line">3   UIKit                         0x3323758e 0x33065000 + 1910158</span><br><span class="line">4   UIKit                         0x330c079c 0x33065000 + 374684</span><br><span class="line">5   UIKit                         0x33068c34 0x33065000 + 15412</span><br><span class="line">6   UIKit                         0x330686c8 0x33065000 + 14024</span><br><span class="line">7   UIKit                         0x33068116 0x33065000 + 12566</span><br><span class="line">8   GraphicsServices                  0x34d5c59e 0x34d56000 + 26014</span><br><span class="line">9   GraphicsServices                  0x34d5c1ce 0x34d56000 + 25038</span><br><span class="line">10  CoreFoundation                    0x3123516e 0x3119e000 + 618862</span><br><span class="line">11  CoreFoundation                    0x31235112 0x3119e000 + 618770</span><br><span class="line">12  CoreFoundation                    0x31233f94 0x3119e000 + 614292</span><br><span class="line">13  CoreFoundation                    0x311a6eb8 0x3119e000 + 36536</span><br><span class="line">14  CoreFoundation                    0x311a6d44 0x3119e000 + 36164</span><br><span class="line">15  UIKit                         0x330bf480 0x33065000 + 369792</span><br><span class="line">16  UIKit                         0x330bc2fc 0x33065000 + 357116</span><br><span class="line">17  appname                            0x000cf358 0xce000 + 4952</span><br><span class="line">18  libdyld.dylib                 0x3953bb1c 0x3953a000 + 6940</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Thread 0 name:  Dispatch queue: com.apple.main-thread</span><br><span class="line">Thread 0 Crashed:</span><br><span class="line">0   libsystem_kernel.dylib            0x39602350 __pthread_kill + 8</span><br><span class="line">1   libsystem_c.dylib             0x3957911e pthread_kill + 54</span><br><span class="line">2   libsystem_c.dylib             0x395b596e abort + 90</span><br><span class="line">3   libc++abi.dylib               0x38b53d4a abort_message + 70</span><br><span class="line">4   libc++abi.dylib               0x38b50ff4 default_terminate() + 20</span><br><span class="line">5   libobjc.A.dylib               0x39104a74 _objc_terminate() + 144</span><br><span class="line">6   libc++abi.dylib               0x38b51078 safe_handler_caller(void (*)()) + 76</span><br><span class="line">7   libc++abi.dylib               0x38b51110 std::terminate() + 16</span><br><span class="line">8   libc++abi.dylib               0x38b52594 __cxa_rethrow + 84</span><br><span class="line">9   libobjc.A.dylib               0x391049cc objc_exception_rethrow + 8</span><br><span class="line">10  CoreFoundation                    0x311a6f1c CFRunLoopRunSpecific + 452</span><br><span class="line">11  CoreFoundation                    0x311a6d44 CFRunLoopRunInMode + 100</span><br><span class="line">12  UIKit                         0x330bf480 -[UIApplication _run] + 664</span><br><span class="line">13  UIKit                         0x330bc2fc UIApplicationMain + 1116</span><br><span class="line">14  appname                                0x000cf358 0xce000 + 4952</span><br><span class="line">15  libdyld.dylib                 0x3953bb1c start + 0</span><br><span class="line"></span><br><span class="line">Thread 1:</span><br><span class="line">0   libsystem_kernel.dylib            0x39602d98 __workq_kernreturn + 8</span><br><span class="line">1   libsystem_c.dylib             0x39550cf6 _pthread_workq_return + 14</span><br><span class="line">2   libsystem_c.dylib             0x39550a12 _pthread_wqthread + 362</span><br><span class="line">3   libsystem_c.dylib             0x395508a0 start_wqthread + 4</span><br><span class="line"></span><br><span class="line">Thread 2 name:  Dispatch queue: com.apple.libdispatch-manager</span><br><span class="line">Thread 2:</span><br><span class="line">0   libsystem_kernel.dylib            0x395f2648 kevent64 + 24</span><br><span class="line">1   libdispatch.dylib             0x39522974 _dispatch_mgr_invoke + 792</span><br><span class="line">2   libdispatch.dylib             0x39522654 _dispatch_mgr_thread$VARIANT<span class="variable">$mp</span> + 32</span><br><span class="line"></span><br><span class="line">Thread 3:</span><br><span class="line">0   libsystem_kernel.dylib            0x39602d98 __workq_kernreturn + 8</span><br><span class="line">1   libsystem_c.dylib             0x39550cf6 _pthread_workq_return + 14</span><br><span class="line">2   libsystem_c.dylib             0x39550a12 _pthread_wqthread + 362</span><br><span class="line">3   libsystem_c.dylib             0x395508a0 start_wqthread + 4</span><br><span class="line"></span><br><span class="line">Thread 4 name:  WebThread</span><br><span class="line">Thread 4:</span><br><span class="line">0   libsystem_kernel.dylib            0x395f1eb4 mach_msg_trap + 20</span><br><span class="line">1   libsystem_kernel.dylib            0x395f2048 mach_msg + 36</span><br><span class="line">2   CoreFoundation                    0x31235040 __CFRunLoopServiceMachPort + 124</span><br><span class="line">3   CoreFoundation                    0x31233d9e __CFRunLoopRun + 878</span><br><span class="line">4   CoreFoundation                    0x311a6eb8 CFRunLoopRunSpecific + 352</span><br><span class="line">5   CoreFoundation                    0x311a6d44 CFRunLoopRunInMode + 100</span><br><span class="line">6   WebCore                       0x37196500 RunWebThread(void*) + 440</span><br><span class="line">7   libsystem_c.dylib             0x3955b30e _pthread_start + 306</span><br><span class="line">8   libsystem_c.dylib             0x3955b1d4 thread_start + 4</span><br><span class="line"></span><br><span class="line">Thread 0 crashed with ARM Thread State (32-bit):</span><br><span class="line">    r0: 0x00000000    r1: 0x00000000      r2: 0x00000000      r3: 0x3b0f8534</span><br><span class="line">    r4: 0x00000006    r5: 0x3b0f8b88      r6: 0x1d844f24      r7: 0x2fd329f4</span><br><span class="line">    r8: 0x1d844f00    r9: 0x00000300     r10: 0x334de04b     r11: 0x1c535350</span><br><span class="line">    ip: 0x00000148    sp: 0x2fd329e8      lr: 0x39579123      pc: 0x39602350</span><br><span class="line">  cpsr: 0x00000010</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+
+<p>再执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dwarfdump --lookup 0x000cf358 --<span class="built_in">arch</span> armv7 appname.app.dSYM/</span><br></pre></td></tr></table></figure>
+
+<p>关键是在这里<code>0x000cf358</code>，他是来自这里的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">0   libsystem_kernel.dylib            0x39602350 __pthread_kill + 8</span><br><span class="line">1   libsystem_c.dylib             0x3957911e pthread_kill + 54</span><br><span class="line">2   libsystem_c.dylib             0x395b596e abort + 90</span><br><span class="line">3   libc++abi.dylib               0x38b53d4a abort_message + 70</span><br><span class="line">4   libc++abi.dylib               0x38b50ff4 default_terminate() + 20</span><br><span class="line">5   libobjc.A.dylib               0x39104a74 _objc_terminate() + 144</span><br><span class="line">6   libc++abi.dylib               0x38b51078 safe_handler_caller(void (*)()) + 76</span><br><span class="line">7   libc++abi.dylib               0x38b51110 std::terminate() + 16</span><br><span class="line">8   libc++abi.dylib               0x38b52594 __cxa_rethrow + 84</span><br><span class="line">9   libobjc.A.dylib               0x391049cc objc_exception_rethrow + 8</span><br><span class="line">10  CoreFoundation                    0x311a6f1c CFRunLoopRunSpecific + 452</span><br><span class="line">11  CoreFoundation                    0x311a6d44 CFRunLoopRunInMode + 100</span><br><span class="line">12  UIKit                         0x330bf480 -[UIApplication _run] + 664</span><br><span class="line">13  UIKit                         0x330bc2fc UIApplicationMain + 1116</span><br><span class="line">14  应用的名称                                0x000cf358 0xce000 + 4952</span><br><span class="line">15  libdyld.dylib                 0x3953bb1c start + 0</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">----------------------------------------------------------------------</span><br><span class="line"> File: appname.app.dSYM/Contents/Resources/DWARF/appname (armv7)</span><br><span class="line">----------------------------------------------------------------------</span><br><span class="line">Looking up address: <span class="number">0x00000000000cf358</span> <span class="keyword">in</span> .debug_info... found!</span><br><span class="line"></span><br><span class="line"><span class="number">0x0015d390</span>:</span><br><span class="line"> Compile Unit: length = <span class="number">0x00001fc6</span>  version = <span class="number">0x0002</span>  abbr_offset = </span><br><span class="line"><span class="number">0x00000000</span>  addr_size = <span class="number">0x04</span>  (next CU at <span class="number">0x0015f35a</span>)</span><br><span class="line"></span><br><span class="line"><span class="number">0x0015d39b</span>: TAG_compile_unit [<span class="number">1</span>] *</span><br><span class="line">             AT_producer( <span class="string">&quot;Apple LLVM version 4.2 (clang-425.0.24) (based on LLVM 3.2svn)&quot;</span> )</span><br><span class="line">             AT_language( DW_LANG_ObjC )</span><br><span class="line">             AT_name( <span class="string">&quot;/Users/zhy/Downloads/ios/xxx/xxx/library/ASIHttpRequest/ASIDownloadCache.m&quot;</span> )</span><br><span class="line">             AT_low_pc( <span class="number">0x000ccfc0</span> )</span><br><span class="line">             AT_stmt_list( <span class="number">0x0002cf0b</span> )</span><br><span class="line">             AT_comp_dir( <span class="string">&quot;/Users/zhy/Downloads/ios/vlink_app_xunyi&quot;</span> )</span><br><span class="line">             AT_APPLE_major_runtime_vers( <span class="number">0x02</span> )</span><br><span class="line"></span><br><span class="line"><span class="number">0x0015dd38</span>:     TAG_subprogram [<span class="number">53</span>] *</span><br><span class="line">                 AT_name( <span class="string">&quot;-[ASIDownloadCache isCachedDataCurrentForRequest:]&quot;</span> )</span><br><span class="line">                 AT_decl_file( <span class="string">&quot;/Users/zhy/Downloads/ios/xxx/xxx/library/ASIHttpRequest/ASIDownloadCache.m&quot;</span> )</span><br><span class="line">                 AT_decl_line( <span class="number">315</span> )</span><br><span class="line">                 AT_prototyped( <span class="number">0x01</span> )</span><br><span class="line">                 AT_type( &#123;<span class="number">0x0015d490</span>&#125; ( <span class="type">BOOL</span> ) )</span><br><span class="line">                 AT_APPLE_isa( <span class="number">0x01</span> )</span><br><span class="line">                 AT_low_pc( <span class="number">0x000cf278</span> )</span><br><span class="line">                 AT_high_pc( <span class="number">0x000cf9e2</span> )</span><br><span class="line">                 AT_frame_base( r7 )</span><br><span class="line">                 AT_object_pointer( &#123;<span class="number">0x0015dd54</span>&#125; )</span><br><span class="line"></span><br><span class="line"><span class="number">0x0015dd86</span>:         TAG_lexical_block [<span class="number">10</span>] *</span><br><span class="line">                     AT_low_pc( <span class="number">0x000cf2ca</span> )</span><br><span class="line">                     AT_high_pc( <span class="number">0x000cf9de</span> )</span><br><span class="line">Line table dir : <span class="string">&#x27;/Users/zhy/Downloads/ios/xxx/xxx/library/ASIHttpRequest&#x27;</span></span><br><span class="line">Line table file: <span class="string">&#x27;ASIDownloadCache.m&#x27;</span> line <span class="number">320</span>, column <span class="number">3</span> with start address <span class="number">0x00000000000cf340</span></span><br><span class="line"></span><br><span class="line">Looking up address: <span class="number">0x00000000000cf358</span> <span class="keyword">in</span> .debug_frame... found!</span><br><span class="line"></span><br><span class="line"><span class="number">0x00007290</span>: FDE</span><br><span class="line">        length: <span class="number">0x0000000c</span></span><br><span class="line">   <span class="built_in">CIE_pointer</span>: <span class="number">0x00000000</span></span><br><span class="line">    start_addr: <span class="number">0x000cf278</span> -[ASIDownloadCache isCachedDataCurrentForRequest:]</span><br><span class="line">    range_size: <span class="number">0x0000076a</span> (end_addr = <span class="number">0x000cf9e2</span>)</span><br><span class="line">  Instructions: <span class="number">0x000cf278</span>: <span class="built_in">CFA</span>=<span class="number">4294967295</span>+<span class="number">4294967295</span></span><br></pre></td></tr></table></figure>
+
+<p>到这里就知道问题所在了吧</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Line table <span class="built_in">dir</span> : <span class="string">&#x27;/Users/zhy/Downloads/ios/xxx/xxx/library/ASIHttpRequest&#x27;</span></span><br><span class="line">Line table file: <span class="string">&#x27;ASIDownloadCache.m&#x27;</span> line 320, column 3 with start address 0x00000000000cf340</span><br></pre></td></tr></table></figure>
+
+<p>如果有多个crash文件的话，可以重复操作一遍就好了。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-20T03:57:04.048Z" itemprop="dateUpdated">2025-06-20 11:57:04</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="dapeng">
+            dapeng
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/" rel="tag">iOS</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html&title=《苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法）》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html&title=《苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法）》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法）》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/20/Django%E5%88%86%E9%A1%B5%E5%A4%84%E7%90%86.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Django分页处理</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/20/Django%E5%88%9B%E5%BB%BA%E7%99%BB%E5%BD%95%E5%92%8C%E6%B3%A8%E5%86%8C-%E6%B3%A8%E9%94%80.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Django创建登录和注册，注销</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>dapeng &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html&title=《苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法）》 — Gowhich - Dapeng's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html&title=《苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法）》 — Gowhich - Dapeng's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《苹果官方 Crash文件分析方法 （iOS系统Crash文件分析方法）》 — Gowhich - Dapeng's Blog&url=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/20/%E8%8B%B9%E6%9E%9C%E5%AE%98%E6%96%B9-Crash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95--iOS%E7%B3%BB%E7%BB%9FCrash%E6%96%87%E4%BB%B6%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
