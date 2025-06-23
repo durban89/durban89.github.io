@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>redis-cli 命令总结 | Gowhich - Durban&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Redis">
+    <meta name="description" content="Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。 官网命令列表：http:&#x2F;&#x2F;redis.io&#x2F;commands （英文） 连接操作相关的命令quit：关闭连接（connection） auth：简单密码认证 对valu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis-cli 命令总结">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html">
+<meta property="og:site_name" content="Gowhich - Durban&#39;s Blog">
+<meta property="og:description" content="Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。 官网命令列表：http:&#x2F;&#x2F;redis.io&#x2F;commands （英文） 连接操作相关的命令quit：关闭连接（connection） auth：简单密码认证 对valu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-23T07:27:39.000Z">
+<meta property="article:modified_time" content="2025-06-23T07:34:13.519Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Durban&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">durban</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">redis-cli 命令总结</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">redis-cli 命令总结</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-23T07:27:39.000Z" itemprop="datePublished" class="page-time">
+  2025-06-23
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1"><span class="post-toc-number">1.</span> <span class="post-toc-text">连接操作相关的命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2"><span class="post-toc-number">2.</span> <span class="post-toc-text">对value操作的命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3"><span class="post-toc-number">3.</span> <span class="post-toc-text">对String操作的命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4"><span class="post-toc-number">4.</span> <span class="post-toc-text">对List操作的命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5"><span class="post-toc-number">5.</span> <span class="post-toc-text">对Set操作的命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#6"><span class="post-toc-number">6.</span> <span class="post-toc-text">对zset（sorted set）操作的命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#7"><span class="post-toc-number">7.</span> <span class="post-toc-text">对Hash操作的命令</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#8"><span class="post-toc-number">8.</span> <span class="post-toc-text">持久化</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#9"><span class="post-toc-number">9.</span> <span class="post-toc-text">远程服务控制</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-redis-cli-命令总结"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">redis-cli 命令总结</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-23 15:27:39" datetime="2025-06-23T07:27:39.000Z"  itemprop="datePublished">2025-06-23</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>Redis提供了丰富的命令（command）对数据库和各种数据类型进行操作，这些command可以在Linux终端使用。在编程时，比如使用Redis 的Java语言包，这些命令都有对应的方法。下面将Redis提供的命令做一总结。</p>
+<p>官网命令列表：<a target="_blank" rel="noopener" href="http://redis.io/commands">http://redis.io/commands</a> （英文）</p>
+<h3 id="1"><a href="#1" class="headerlink" title="连接操作相关的命令"></a><a href="#1">连接操作相关的命令</a></h3><p>quit：关闭连接（connection）</p>
+<p>auth：简单密码认证</p>
+<h3 id="2"><a href="#2" class="headerlink" title="对value操作的命令"></a><a href="#2">对value操作的命令</a></h3><p>exists(key)：确认一个key是否存在</p>
+<p>del(key)：删除一个key</p>
+<p>type(key)：返回值的类型</p>
+<p>keys(pattern)：返回满足给定pattern的所有key</p>
+<p>randomkey：随机返回key空间的一个key</p>
+<p>rename(oldname, newname)：将key由oldname重命名为newname，若newname存在则删除newname表示的key</p>
+<p>dbsize：返回当前数据库中key的数目</p>
+<p>expire：设定一个key的活动时间（s）</p>
+<p>ttl：获得一个key的活动时间</p>
+<p>select(index)：按索引查询</p>
+<p>move(key, dbindex)：将当前数据库中的key转移到有dbindex索引的数据库</p>
+<p>flushdb：删除当前选择数据库中的所有key</p>
+<p>flushall：删除所有数据库中的所有key</p>
+<h3 id="3"><a href="#3" class="headerlink" title="对String操作的命令"></a><a href="#3">对String操作的命令</a></h3><p>set(key, value)：给数据库中名称为key的string赋予值value</p>
+<p>get(key)：返回数据库中名称为key的string的value</p>
+<p>getset(key, value)：给名称为key的string赋予上一次的value</p>
+<p>mget(key1, key2,…, key N)：返回库中多个string（它们的名称为key1，key2…）的value</p>
+<p>setnx(key, value)：如果不存在名称为key的string，则向库中添加string，名称为key，值为value</p>
+<p>setex(key, time, value)：向库中添加string（名称为key，值为value）同时，设定过期时间time</p>
+<p>mset(key1, value1, key2, value2,…key N, value N)：同时给多个string赋值，名称为key i的string赋值value i</p>
+<p>msetnx(key1, value1, key2, value2,…key N, value N)：如果所有名称为key i的string都不存在，则向库中添加string，名称key i赋值为value i</p>
+<p>incr(key)：名称为key的string增1操作</p>
+<p>incrby(key, integer)：名称为key的string增加integer</p>
+<p>decr(key)：名称为key的string减1操作</p>
+<p>decrby(key, integer)：名称为key的string减少integer</p>
+<p>append(key, value)：名称为key的string的值附加value</p>
+<p>substr(key, start, end)：返回名称为key的string的value的子串</p>
+<h3 id="4"><a href="#4" class="headerlink" title="对List操作的命令"></a><a href="#4">对List操作的命令</a></h3><p>rpush(key, value)：在名称为key的list尾添加一个值为value的元素</p>
+<p>lpush(key, value)：在名称为key的list头添加一个值为value的 元素</p>
+<p>llen(key)：返回名称为key的list的长度</p>
+<p>lrange(key, start, end)：返回名称为key的list中start至end之间的元素（下标从0开始，下同）</p>
+<p>ltrim(key, start, end)：截取名称为key的list，保留start至end之间的元素</p>
+<p>lindex(key, index)：返回名称为key的list中index位置的元素</p>
+<p>lset(key, index, value)：给名称为key的list中index位置的元素赋值为value</p>
+<p>lrem(key, count, value)：删除count个名称为key的list中值为value的元素。count为0，删除所有值为value的元素，count&gt;0从 头至尾删除count个值为value的元素，count&lt;0从尾到头删除|count|个值为value的元素。 lpop(key)：返回并删除名称为key的list中的首元素 rpop(key)：返回并删除名称为key的list中的尾元素 blpop(key1, key2,… key N, timeout)：lpop命令的block版本。即当timeout为0时，若遇到名称为key i的list不存在或该list为空，则命令结束。如果timeout&gt;0，则遇到上述情况时，等待timeout秒，如果问题没有解决，则对 keyi+1开始的list执行pop操作。</p>
+<p>brpop(key1, key2,… key N, timeout)：rpop的block版本。参考上一命令。</p>
+<p>rpoplpush(srckey, dstkey)：返回并删除名称为srckey的list的尾元素，并将该元素添加到名称为dstkey的list的头部</p>
+<h3 id="5"><a href="#5" class="headerlink" title="对Set操作的命令"></a><a href="#5">对Set操作的命令</a></h3><p>sadd(key, member)：向名称为key的set中添加元素member</p>
+<p>srem(key, member) ：删除名称为key的set中的元素member</p>
+<p>spop(key) ：随机返回并删除名称为key的set中一个元素</p>
+<p>smove(srckey, dstkey, member) ：将member元素从名称为srckey的集合移到名称为dstkey的集合</p>
+<p>scard(key) ：返回名称为key的set的基数</p>
+<p>sismember(key, member) ：测试member是否是名称为key的set的元素</p>
+<p>sinter(key1, key2,…key N) ：求交集</p>
+<p>sinterstore(dstkey, key1, key2,…key N) ：求交集并将交集保存到dstkey的集合</p>
+<p>sunion(key1, key2,…key N) ：求并集</p>
+<p>sunionstore(dstkey, key1, key2,…key N) ：求并集并将并集保存到dstkey的集合</p>
+<p>sdiff(key1, key2,…key N) ：求差集</p>
+<p>sdiffstore(dstkey, key1, key2,…key N) ：求差集并将差集保存到dstkey的集合</p>
+<p>smembers(key) ：返回名称为key的set的所有元素</p>
+<p>srandmember(key) ：随机返回名称为key的set的一个元素</p>
+<h3 id="6"><a href="#6" class="headerlink" title="对zset（sorted set）操作的命令"></a><a href="#6">对zset（sorted set）操作的命令</a></h3><p>zadd(key, score, member)：向名称为key的zset中添加元素member，score用于排序。如果该元素已经存在，则根据score更新该元素的顺序。</p>
+<p>zrem(key, member) ：删除名称为key的zset中的元素member</p>
+<p>zincrby(key, increment, member) ：如果在名称为key的zset中已经存在元素member，则该元素的score增加increment；否则向集合中添加该元素，其score的值为increment</p>
+<p>zrank(key, member) ：返回名称为key的zset（元素已按score从小到大排序）中member元素的rank（即index，从0开始），若没有member元素，返回“nil”</p>
+<p>zrevrank(key, member) ：返回名称为key的zset（元素已按score从大到小排序）中member元素的rank（即index，从0开始），若没有member元素，返回“nil”</p>
+<p>zrange(key, start, end)：返回名称为key的zset（元素已按score从小到大排序）中的index从start到end的所有元素</p>
+<p>zrevrange(key, start, end)：返回名称为key的zset（元素已按score从大到小排序）中的index从start到end的所有元素</p>
+<p>zrangebyscore(key, min, max)：返回名称为key的zset中score &gt;&#x3D; min且score &lt;&#x3D; max的所有元素 zcard(key)：返回名称为key的zset的基数 zscore(key, element)：返回名称为key的zset中元素element的score zremrangebyrank(key, min, max)：删除名称为key的zset中rank &gt;&#x3D; min且rank &lt;&#x3D; max的所有元素 zremrangebyscore(key, min, max) ：删除名称为key的zset中score &gt;&#x3D; min且score &lt;&#x3D; max的所有元素</p>
+<p>zunionstore &#x2F; zinterstore(dstkeyN, key1,…,keyN, WEIGHTS w1,…wN, AGGREGATE SUM|MIN|MAX)：对N个zset求并集和交集，并将最后的集合保存在dstkeyN中。对于集合中每一个元素的score，在进行 AGGREGATE运算前，都要乘以对于的WEIGHT参数。如果没有提供WEIGHT，默认为1。默认的AGGREGATE是SUM，即结果集合中元素 的score是所有集合对应元素进行SUM运算的值，而MIN和MAX是指，结果集合中元素的score是所有集合对应元素中最小值和最大值。</p>
+<h3 id="7"><a href="#7" class="headerlink" title="对Hash操作的命令"></a><a href="#7">对Hash操作的命令</a></h3><p>hset(key, field, value)：向名称为key的hash中添加元素field&lt;—&gt;value</p>
+<p>hget(key, field)：返回名称为key的hash中field对应的value</p>
+<p>hmget(key, field1, …,field N)：返回名称为key的hash中field i对应的value</p>
+<p>hmset(key, field1, value1,…,field N, value N)：向名称为key的hash中添加元素field i&lt;—&gt;value i</p>
+<p>hincrby(key, field, integer)：将名称为key的hash中field的value增加integer</p>
+<p>hexists(key, field)：名称为key的hash中是否存在键为field的域</p>
+<p>hdel(key, field)：删除名称为key的hash中键为field的域</p>
+<p>hlen(key)：返回名称为key的hash中元素个数</p>
+<p>hkeys(key)：返回名称为key的hash中所有键</p>
+<p>hvals(key)：返回名称为key的hash中所有键对应的value</p>
+<p>hgetall(key)：返回名称为key的hash中所有的键（field）及其对应的value</p>
+<h3 id="8"><a href="#8" class="headerlink" title="持久化"></a><a href="#8">持久化</a></h3><p>save：将数据同步保存到磁盘</p>
+<p>bgsave：将数据异步保存到磁盘</p>
+<p>lastsave：返回上次成功将数据保存到磁盘的Unix时戳</p>
+<p>shundown：将数据同步保存到磁盘，然后关闭服务</p>
+<h3 id="9"><a href="#9" class="headerlink" title="远程服务控制"></a><a href="#9">远程服务控制</a></h3><p>info：提供服务器的信息和统计</p>
+<p>monitor：实时转储收到的请求</p>
+<p>slaveof：改变复制策略设置</p>
+<p>config：在运行时配置Redis服务器</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-23T07:34:13.519Z" itemprop="dateUpdated">2025-06-23 15:34:13</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="durban">
+            durban
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/" rel="tag">Redis</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html&title=《redis-cli 命令总结》 — Gowhich - Durban's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html&title=《redis-cli 命令总结》 — Gowhich - Durban's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《redis-cli 命令总结》 — Gowhich - Durban's Blog&url=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/23/MySQL-%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE-Delete-%E8%AF%AD%E5%8F%A5--Truncate-%E8%AF%AD%E5%8F%A5.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">MySQL 删除数据 Delete 语句 、Truncate 语句</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/23/iOS-Interface-Orientation%E5%AD%A6%E4%B9%A0.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">iOS Interface Orientation学习</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>durban &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html&title=《redis-cli 命令总结》 — Gowhich - Durban's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html&title=《redis-cli 命令总结》 — Gowhich - Durban's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《redis-cli 命令总结》 — Gowhich - Durban's Blog&url=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/23/redis-cli-%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

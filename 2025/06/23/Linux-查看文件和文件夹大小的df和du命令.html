@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Linux 查看文件和文件夹大小的df和du命令 | Gowhich - Durban&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Linux">
+    <meta name="description" content="当磁盘大小超过标准时会有报警提示，这时如果掌握df和du命令是非常明智的选择。 df可以查看一级文件夹大小、使用比例、档案系统及其挂入点，但对文件却无能为力。 du可以查看文件及文件夹的大小。 两者配合使用，非常有效。比如用df查看哪个一级目录过大，然后用df查看文件夹或文件的大小，如此便可迅速确定症结。 下面分别简要介绍df命令可以显示目前所有文件系统的可用空间及使用情形请看下列这个例子： 12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 查看文件和文件夹大小的df和du命令">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html">
+<meta property="og:site_name" content="Gowhich - Durban&#39;s Blog">
+<meta property="og:description" content="当磁盘大小超过标准时会有报警提示，这时如果掌握df和du命令是非常明智的选择。 df可以查看一级文件夹大小、使用比例、档案系统及其挂入点，但对文件却无能为力。 du可以查看文件及文件夹的大小。 两者配合使用，非常有效。比如用df查看哪个一级目录过大，然后用df查看文件夹或文件的大小，如此便可迅速确定症结。 下面分别简要介绍df命令可以显示目前所有文件系统的可用空间及使用情形请看下列这个例子： 12">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-23T07:49:18.000Z">
+<meta property="article:modified_time" content="2025-06-23T08:21:00.304Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Durban&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">durban</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Linux 查看文件和文件夹大小的df和du命令</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Linux 查看文件和文件夹大小的df和du命令</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-23T07:49:18.000Z" itemprop="datePublished" class="page-time">
+  2025-06-23
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1"><span class="post-toc-number">1.</span> <span class="post-toc-text">下面分别简要介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-1"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">df命令可以显示目前所有文件系统的可用空间及使用情形</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-2"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">du查询文件或文件夹的磁盘使用空间</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Linux-查看文件和文件夹大小的df和du命令"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Linux 查看文件和文件夹大小的df和du命令</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-23 15:49:18" datetime="2025-06-23T07:49:18.000Z"  itemprop="datePublished">2025-06-23</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>当磁盘大小超过标准时会有报警提示，这时如果掌握df和du命令是非常明智的选择。</p>
+<p>df可以查看一级文件夹大小、使用比例、档案系统及其挂入点，但对文件却无能为力。</p>
+<p>du可以查看文件及文件夹的大小。</p>
+<p>两者配合使用，非常有效。比如用df查看哪个一级目录过大，然后用df查看文件夹或文件的大小，如此便可迅速确定症结。</p>
+<h2 id="1"><a href="#1" class="headerlink" title="下面分别简要介绍"></a><a href="#1">下面分别简要介绍</a></h2><h3 id="1-1"><a href="#1-1" class="headerlink" title="df命令可以显示目前所有文件系统的可用空间及使用情形"></a><a href="#1-1">df命令可以显示目前所有文件系统的可用空间及使用情形</a></h3><p>请看下列这个例子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[xx@xx]:~/php-oauth/itv_data_control$ <span class="built_in">df</span> -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/sda1        64G   11G   50G  17% /</span><br><span class="line">udev            367M  4.0K  367M   1% /dev</span><br><span class="line">tmpfs           150M  4.2M  146M   3% /run</span><br><span class="line">none            5.0M     0  5.0M   0% /run/lock</span><br><span class="line">none            374M     0  374M   0% /run/shm</span><br><span class="line">none            4.0T     0  4.0T   0% /media/psf</span><br></pre></td></tr></table></figure>
+
+<p>参数 -h 表示使用「Human-readable」的输出，也就是在档案系统大小使用 GB、MB 等易读的格式。</p>
+<p>上面的命令输出的第一个字段（Filesystem）及最后一个字段（Mounted on）分别是档案系统及其挂入点。我们可以看到 &#x2F;dev&#x2F;sda1 这个分割区被挂在根目录下。</p>
+<p>接下来的四个字段 Size、Used、Avail、及 Use% 分别是该分割区的容量、已使用的大小、剩下的大小、及使用的百分比。 FreeBSD下，当硬盘容量已满时，您可能会看到已使用的百分比超过 100%，因为 FreeBSD 会留一些空间给 root，让 root 在档案系统满时，还是可以写东西到该档案系统中，以进行管理。</p>
+<h3 id="1-2"><a href="#1-2" class="headerlink" title="du查询文件或文件夹的磁盘使用空间"></a><a href="#1-2">du查询文件或文件夹的磁盘使用空间</a></h3><p>如果当前目录下文件和文件夹很多，使用不带参数du的命令，可以循环列出所有文件和文件夹所使用的空间。这对查看究竟是那个地方过大是不利的，所以得指定深入目录的层数，参数：–max-depth&#x3D;，这是个极为有用的参数！如下，注意使用“*”，可以得到文件的使用空间大小.</p>
+<p><strong>提醒</strong>：一向命令比linux复杂的FreeBSD，它的du命令指定深入目录的层数却是比linux简化，为 -d。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[xx@xx]:~/php-oauth/itv_data_control$ <span class="built_in">du</span> -h --max-depth=1 /home</span><br><span class="line">2.6G	/home/davidzhang</span><br><span class="line">2.6G	/home</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[xx@xx]:~/vlinkage_itv_data$ <span class="built_in">du</span> -h --max-depth=1 /home/davidzhang/vlinkage_itv_data/*</span><br><span class="line">13M	/home/davidzhang/vlinkage_itv_data/文广快照.tsv</span><br><span class="line">7.0M	/home/davidzhang/vlinkage_itv_data/深圳IP快照.tsv</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[xx@xx]:~/vlinkage_itv_data$ <span class="built_in">du</span> -h --max-depth=1 /home/davidzhang/vlinkage_itv_data/</span><br><span class="line">20M	/home/davidzhang/vlinkage_itv_data/</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是，看见一个针对du和df命令异同的文章：《du df 差异导致文件系统误报解决》。</p>
+<p>du 统计文件大小相加</p>
+<p>df  统计数据块使用情况</p>
+<p>如果有一个进程在打开一个大文件的时候,这个大文件直接被rm 或者mv掉，则du会更新统计数值，df不会更新统计数值,还是认为空间没有释放。直到这个打开大文件的进程被Kill掉。</p>
+<p>如此一来在定期删除 &#x2F;var&#x2F;spool&#x2F;clientmqueue下面的文件时，如果没有杀掉其进程，那么空间一直没有释放。</p>
+<p>使用下面的命令杀掉进程之后，系统恢复。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fuser -u /var/spool/clientmqueue</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-23T08:21:00.304Z" itemprop="dateUpdated">2025-06-23 16:21:00</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="durban">
+            durban
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html&title=《Linux 查看文件和文件夹大小的df和du命令》 — Gowhich - Durban's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html&title=《Linux 查看文件和文件夹大小的df和du命令》 — Gowhich - Durban's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Linux 查看文件和文件夹大小的df和du命令》 — Gowhich - Durban's Blog&url=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/23/PHP%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BD%BF%E7%94%A8%E8%AF%A6%E8%A7%A3.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">PHP正则表达式使用详解</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/23/%E4%BD%BF%E7%94%A8JS%E5%9C%A8textarea%E5%9C%A8%E5%85%89%E6%A0%87%E5%A4%84%E6%8F%92%E5%85%A5%E5%86%85%E5%AE%B9.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">使用JS在textarea在光标处插入内容</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>durban &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html&title=《Linux 查看文件和文件夹大小的df和du命令》 — Gowhich - Durban's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html&title=《Linux 查看文件和文件夹大小的df和du命令》 — Gowhich - Durban's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Linux 查看文件和文件夹大小的df和du命令》 — Gowhich - Durban's Blog&url=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/23/Linux-%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%92%8C%E6%96%87%E4%BB%B6%E5%A4%B9%E5%A4%A7%E5%B0%8F%E7%9A%84df%E5%92%8Cdu%E5%91%BD%E4%BB%A4.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>PHP中Push(推送)技术的探讨 | Gowhich - Durban&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="PHP">
+    <meta name="description" content="随着人们对Web即时应用需求的不断上升，Server Push(推送)技术在聊天、消息提醒尤其是社交网络等方面开始兴起，成为实时应用的数据流核心。这篇日志试图探讨的便是各种适合于PHP的Push的实现方式以及其优劣。 什么是Server Push想象在聊天应用中，如果使用传统的ajax来承担消息的传入，那么一般是通过每隔一定时间拉取一次信息的方式实现，但是其实这种方式有大量查询是浪费的。聊天等We">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP中Push(推送)技术的探讨">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html">
+<meta property="og:site_name" content="Gowhich - Durban&#39;s Blog">
+<meta property="og:description" content="随着人们对Web即时应用需求的不断上升，Server Push(推送)技术在聊天、消息提醒尤其是社交网络等方面开始兴起，成为实时应用的数据流核心。这篇日志试图探讨的便是各种适合于PHP的Push的实现方式以及其优劣。 什么是Server Push想象在聊天应用中，如果使用传统的ajax来承担消息的传入，那么一般是通过每隔一定时间拉取一次信息的方式实现，但是其实这种方式有大量查询是浪费的。聊天等We">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-23T08:26:40.000Z">
+<meta property="article:modified_time" content="2025-06-23T09:18:08.383Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="PHP">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Durban&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">durban</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">PHP中Push(推送)技术的探讨</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">PHP中Push(推送)技术的探讨</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-23T08:26:40.000Z" itemprop="datePublished" class="page-time">
+  2025-06-23
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1"><span class="post-toc-number">1.</span> <span class="post-toc-text">什么是Server Push</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2"><span class="post-toc-number">2.</span> <span class="post-toc-text">如何实现Push</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3"><span class="post-toc-number">3.</span> <span class="post-toc-text">结束语</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4"><span class="post-toc-number">4.</span> <span class="post-toc-text">相关阅读</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-PHP中Push-推送-技术的探讨"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">PHP中Push(推送)技术的探讨</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-23 16:26:40" datetime="2025-06-23T08:26:40.000Z"  itemprop="datePublished">2025-06-23</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>随着人们对Web即时应用需求的不断上升，Server Push(推送)技术在聊天、消息提醒尤其是社交网络等方面开始兴起，成为实时应用的数据流核心。这篇日志试图探讨的便是各种适合于PHP的Push的实现方式以及其优劣。</p>
+<h3 id="1"><a href="#1" class="headerlink" title="什么是Server Push"></a><a href="#1">什么是Server Push</a></h3><p>想象在聊天应用中，如果使用传统的ajax来承担消息的传入，那么一般是通过每隔一定时间拉取一次信息的方式实现，但是其实这种方式有大量查询是浪费的。聊天等Web应用更需要服务器在特定时间来主动告知前端有新的消息(Push)，而不是前端每时每刻问服务器：“来消息了吗？”(Pull)。这也正是为什么这个技术常被叫做反向ajax。</p>
+<p>其他别名：Comet，反向Ajax</p>
+<h3 id="2"><a href="#2" class="headerlink" title="如何实现Push"></a><a href="#2">如何实现Push</a></h3><p>其实所谓的推送技术也没有多么复杂，目前从大类上有3种，一种仍然建立在ajax基础上，还有一种建立在框架基础上，最后一种抛弃了传统的HTTP协议，使用Flash或者HTML5的WebSockets技术。接下来将对这三种类别产生的不同的方式进行探讨。</p>
+<ol>
+<li>Ajax 长轮询</li>
+</ol>
+<p>Ajax长轮询从本质上来说仍然是一种pull，但是实时性较高，无用请求减少很多，是一种不错的Push实现方案。不过它只减少了网络上的无谓消耗。</p>
+<p>核心: 客户端发起一个ajax请求，服务端将请求搁置(pending)或者说挂起，直到到了超时时间(timeout)或需要推送时返回；客户端则等待ajax返回后处理数据，再发起下一个ajax请求。</p>
+<p>优点: 兼容性较高，实现简单</p>
+<p>缺点: 对于php这种语言来说，如果要做到实时，那么服务端就要承受大得多的压力，因为搁置到什么时候往往是不确定的，这就要php脚本每次搁置都进行一个while循环。<br>当然，如果服务器刷新每秒级，那尚可接受，只是实时性上退化了。</p>
+<p>注意: 浏览器有连接数限制。我得出的结论是如果当前页面上有一个ajax请求处于等待返回状态，那么其他ajax请求都会被搁置(Chrome, Firefox已测)。似乎跟页面标记有关，一个规范的HTML可以同时有多个请求。如果页面有一般ajax需求怎么办？解决方法是开个框架，框架中使在另一个域名下进行Comet长轮询，需要注意跨域问题。</p>
+<p>PHP实现:<a target="_blank" rel="noopener" href="http://tech.techweb.com.cn/thread-439108-1-1.html">Jquery+php实现comet</a></p>
+<p>相关:<a target="_blank" rel="noopener" href="http://blog.csdn.net/zabcd117/article/details/2061669">Ajax跨域和js跨域解决方案</a></p>
+<ol start="2">
+<li>Frame 长连接</li>
+</ol>
+<p>受到ajax启发，出现了框架下的长连接。</p>
+<p>核心: Frame中发起一个普通请求，服务器将其搁置；需要推送时输出直接执行<br>脚本，然后继续保持连接。如果担心超时问题可以改成框架论询。</p>
+<p>优点: 与1一样具有高兼容特性</p>
+<p>缺点: 最大的问题是如果框架在载入，那么浏览器就好一直显示“载入中”，这就弱爆了(解决方法参见文末的相关阅读资源)。同样服务器也要能hold住大量循环……另外，是否有同域连接限制没测试。</p>
+<ol start="3">
+<li>Flash&#x2F;HTML5 WebSockets</li>
+</ol>
+<p>用flash来发起WebSockets，秒杀前面一切问题。</p>
+<p>优点: 标准化, RealTime, Push</p>
+<p>缺点: 服务器需要能应对WebSockets；还有如果既没有Flash又不支持HTML5的怎么办？</p>
+<p>PHP实现:<a target="_blank" rel="noopener" href="http://net.tutsplus.com/tutorials/javascript-ajax/start-using-html5-websockets-today/">Start Using HTML5 WebSockets Today</a></p>
+<ol start="4">
+<li>使用兼容封装层(socket.io)</li>
+</ol>
+<p>以上每种方法都有优劣，那么终极解决方案便是合在一起！能WebSockets时候就WebSockets，不支持HTML5特性就退化到Flash，没有Flash则退化到Ajax长轮询。这也是我的Rainbowfish所采用的方式。</p>
+<p>优点: 高度封装，编写非常容易，几乎不需要关心如何去实现的。实时，超低负载，高并发。</p>
+<p>缺点: 其实算不上缺点，socket.io的服务器端要求是node.js，而不是php。</p>
+<p>个人看法: 如果你是独立主机，能运行程序，那么socket.io配合node.js是个非常高效的选择。为什么呢？因为它还可以避免php的服务端高负载。</p>
+<p>Rainbowfish的消息系统通过这种方式实现: 所有客户端都通过socket.io挂在nodejs服务器上(注意: 只是挂着，不需要任何循环，因为它是事件驱动的)；需要推送消息了，服务器就与nodejs通信(比如访问某个地址来实现)，告诉它推送什么消息到哪里；nodejs收到推送信号后，则通过socket.io实时传输数据给浏览器。这个其实也是一条单向的路，因为nodejs服务器不具备与php通信的能力，实际上也不需要，网页上直接连php就可以了。</p>
+<h3 id="3"><a href="#3" class="headerlink" title="结束语"></a><a href="#3">结束语</a></h3><p>事实上，第一个方法(Ajax Long Pull)是一个不错的方法，只是如果使用php完成的话服务器负载上有点大，但这其实是通病；而最后列举的socket.io方案完全避免了这个问题，因为它属于另一种架构，并且这种组合也可以配合几乎所有的脚本语言实现push。</p>
+<p>对于实时性要求非常高的应用，或许使用php实现实时部分并不是一个好的选择，将会面临非常大的服务器负载(可以通过编写支持等待事件的扩展来解决这个问题)；如果只是消息提示等，则可以调整服务器上刷新的间隔降低到秒的级别，负载尚可接受。不过无论哪种用途，配合那些非阻塞语言或许才是最好的选择。</p>
+<h3 id="4"><a href="#4" class="headerlink" title="相关阅读"></a><a href="#4">相关阅读</a></h3><p><a target="_blank" rel="noopener" href="http://www.zeitoun.net/articles/comet_and_php/start">How to implement COMET with PHP</a></p>
+<p><a target="_blank" rel="noopener" href="http://net.tutsplus.com/tutorials/javascript-ajax/start-using-html5-websockets-today/">Start Using HTML5 WebSockets Today</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Comet_%28programming%29">Comet(Wikipedia)</a></p>
+<p><a target="_blank" rel="noopener" href="http://blog.csdn.net/zabcd117/article/details/2061669">Ajax跨域和js跨域解决方案</a></p>
+<p><a target="_blank" rel="noopener" href="http://tech.techweb.com.cn/thread-439108-1-1.html">Jquery+php实现comet</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-23T09:18:08.383Z" itemprop="dateUpdated">2025-06-23 17:18:08</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="durban">
+            durban
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PHP/" rel="tag">PHP</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html&title=《PHP中Push(推送)技术的探讨》 — Gowhich - Durban's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html&title=《PHP中Push(推送)技术的探讨》 — Gowhich - Durban's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《PHP中Push(推送)技术的探讨》 — Gowhich - Durban's Blog&url=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/23/jQuery%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E5%85%A8%E8%A7%A3%E6%9E%90.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">jQuery插件开发全解析</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">iOS Push机制</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>durban &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html&title=《PHP中Push(推送)技术的探讨》 — Gowhich - Durban's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html&title=《PHP中Push(推送)技术的探讨》 — Gowhich - Durban's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《PHP中Push(推送)技术的探讨》 — Gowhich - Durban's Blog&url=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

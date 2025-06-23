@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>iOS Push机制 | Gowhich - Durban&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="iOS">
+    <meta name="description" content="今天看了一下关于IOS的Push的机制，对于初学者我看了一下，顺便在自己的博客中进行记录一下 Push机制的介绍iPhone 对于应用程序在后台运行有诸多限制（除非你越狱）。因此，当用户切换到其他程序后，原先的程序无法保持运行状态。对于那些需要保持持续连接状态的应用程序（比如社区网络应用），将不能收到实时的信息。 为解决这一限制，苹果推出了APNs（苹果推送通知服务）。APNs 允许设备与苹果的推">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Push机制">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html">
+<meta property="og:site_name" content="Gowhich - Durban&#39;s Blog">
+<meta property="og:description" content="今天看了一下关于IOS的Push的机制，对于初学者我看了一下，顺便在自己的博客中进行记录一下 Push机制的介绍iPhone 对于应用程序在后台运行有诸多限制（除非你越狱）。因此，当用户切换到其他程序后，原先的程序无法保持运行状态。对于那些需要保持持续连接状态的应用程序（比如社区网络应用），将不能收到实时的信息。 为解决这一限制，苹果推出了APNs（苹果推送通知服务）。APNs 允许设备与苹果的推">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-23T08:26:36.000Z">
+<meta property="article:modified_time" content="2025-06-23T08:46:59.291Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Durban&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">durban</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">iOS Push机制</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">iOS Push机制</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-23T08:26:36.000Z" itemprop="datePublished" class="page-time">
+  2025-06-23
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1"><span class="post-toc-number">1.</span> <span class="post-toc-text">Push机制的介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2"><span class="post-toc-number">2.</span> <span class="post-toc-text">Push机制的使用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3"><span class="post-toc-number">3.</span> <span class="post-toc-text">Push故障排除</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4"><span class="post-toc-number">4.</span> <span class="post-toc-text">Demo示例代码打包在如下文件中</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#5"><span class="post-toc-number">5.</span> <span class="post-toc-text">服务器端步骤</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-iOS-Push机制"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">iOS Push机制</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-23 16:26:36" datetime="2025-06-23T08:26:36.000Z"  itemprop="datePublished">2025-06-23</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>今天看了一下关于IOS的Push的机制，对于初学者我看了一下，顺便在自己的博客中进行记录一下</p>
+<h3 id="1"><a href="#1" class="headerlink" title="Push机制的介绍"></a><a href="#1">Push机制的介绍</a></h3><p>iPhone 对于应用程序在后台运行有诸多限制（除非你越狱）。因此，当用户切换到其他程序后，原先的程序无法保持运行状态。对于那些需要保持持续连接状态的应用程序（比如社区网络应用），将不能收到实时的信息。</p>
+<p>为解决这一限制，苹果推出了APNs（苹果推送通知服务）。APNs 允许设备与苹果的推送通知服务器保持常连接状态。当你想发送一个推送通知给某个用户的iPhone上的应用程序时，你可以使用 APNs 发送一个推送消息给目标设备上已安装的某个应用程序。</p>
+<p>Push机制的类型：</p>
+<p>四种：徽章、提示框、声音和横幅</p>
+<p>Push机制的4个组件</p>
+<p><em><strong>Provider</strong></em></p>
+<p><em><strong>APNS</strong></em></p>
+<p><em><strong>iPhone设备</strong></em></p>
+<p><em><strong>Client App</strong></em></p>
+<p>其中APNS（Apple Push Notification Service）是由苹果提供的消息推送服务中心，所有的消息都经由这里转发给相应的设备。</p>
+<p>Provider和Device与APNS进行通信时，时建立在SSL&#x2F;TLS安全连接之上的。如下面的两个图所示（TSL的建立过程）</p>
+<p>Provider与APNS之间的通信还需要—–DeviceToken</p>
+<p>DeviceToken是设备令牌，有APNS生成，并返回给设备，再由设备提供给Provider。</p>
+<h3 id="2"><a href="#2" class="headerlink" title="Push机制的使用"></a><a href="#2">Push机制的使用</a></h3><p>Push通知的使用可以分为以下几个步骤。其中前4个步骤相当于准备工作，也非常重要。</p>
+<p>接下来，我们就一个步骤一个步骤的进行讲解。</p>
+<p>a 证书请求：</p>
+<p>证书请求制作的目的是为了获取ssl证书。通过在“钥匙串访问”程序中来创建证书请求，具体的操作过程，建议大家看看本文开头给出的视频连接。</p>
+<p>b 创建appid</p>
+<p>appid在制作ssl证书和profile文件会用到。具体创建过程看如下图（建议大家看看本文开头给出的视频连接。）</p>
+<p>登录网站<a target="_blank" rel="noopener" href="https://developer.apple.com/devcenter/ios/">https://developer.apple.com/devcenter/ios/</a></p>
+<p>c 生成ssl证书</p>
+<p>ssl证书的一个主要作用就是运行程序接收从apns发送过来的消息</p>
+<p>具体生成过程，看下面的图，当然，这里也建议观看本文开头给出的视频</p>
+<p>d 创建profile文件</p>
+<p>profile文件的主要作用是运行程序可以被安装在手机上（push测试需要在真机上进行）</p>
+<h3 id="3"><a href="#3" class="headerlink" title="Push故障排除"></a><a href="#3">Push故障排除</a></h3><h3 id="4"><a href="#4" class="headerlink" title="Demo示例代码打包在如下文件中"></a><a href="#4">Demo示例代码打包在如下文件中</a></h3><p><a target="_blank" rel="noopener" href="http://gowhich.com/resource#tab-IOS">PushMeBaby.rar</a></p>
+<p><a target="_blank" rel="noopener" href="http://gowhich.com/resource#tab-IOS">PushClient.rar</a></p>
+<p><a target="_blank" rel="noopener" href="http://gowhich.com/resource#tab-IOS">apn.rar</a></p>
+<p>参考地址：<a target="_blank" rel="noopener" href="http://www.devdiv.com/iOS_iPhone-_ios_push_-thread-130543-1-1.html">http://www.devdiv.com/iOS_iPhone-_ios_push_-thread-130543-1-1.html</a></p>
+<p>DevDiv视频地址：<a target="_blank" rel="noopener" href="http://www.devdiv.com/article-4042-1.html">http://www.devdiv.com/article-4042-1.html</a></p>
+<p>Youku视频地址：<a target="_blank" rel="noopener" href="http://v.youku.com/v_show/id_XNDI5ODExNzMy.html">http://v.youku.com/v_show/id_XNDI5ODExNzMy.html</a></p>
+<h3 id="5"><a href="#5" class="headerlink" title="服务器端步骤"></a><a href="#5">服务器端步骤</a></h3><p>生成app在服务端需要的许可证</p>
+<p>1）进入Provisioning Portal, 下载Certificates在development下的证书。</p>
+<p>2） 找到需要测试的app id,然后enable它在development下的Apple Push Notification service: Development Push SSL Certificate。需要输入1）中的签名证书才可以生成一个aps_developer_identity.cer.</p>
+<ol start="3">
+<li>双击aps_developer_identity.cer，会打开系统的key chain.</li>
+</ol>
+<p>在My certificates下找到Apple Development Push Services。需要为certificate和它之下的private key各自export出一个.p12文件。(会出现设置密码过程)</p>
+<p>4）需要将上面的2个.p12文件转成.pem格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -clcerts -nokeys -out cert.pem -<span class="keyword">in</span> cert.p12</span><br><span class="line">openssl pkcs12 -nocerts -out key.pem -<span class="keyword">in</span> key.p12</span><br></pre></td></tr></table></figure>
+
+<p>5）如果需要对 key不进行加密：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -<span class="keyword">in</span> key.pem -out key.unencrypted.pem</span><br></pre></td></tr></table></figure>
+
+<p>6）然后就可以 合并两个.pem文件, 这个ck.pem就是服务端需要的证书了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> cert.pem key.unencrypted.pem &gt; ck.pem</span><br></pre></td></tr></table></figure>
+
+<p>4个pem，另外加上php文件，打包放到服务器上</p>
+<p><a target="_blank" rel="noopener" href="http://gowhich.com/resource#tab-IOS">apn_pem.zip</a></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-23T08:46:59.291Z" itemprop="dateUpdated">2025-06-23 16:46:59</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="durban">
+            durban
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS/" rel="tag">iOS</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html&title=《iOS Push机制》 — Gowhich - Durban's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html&title=《iOS Push机制》 — Gowhich - Durban's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《iOS Push机制》 — Gowhich - Durban's Blog&url=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">PHP中Push(推送)技术的探讨</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/23/TextMate-Key.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">TextMate Key</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>durban &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html&title=《iOS Push机制》 — Gowhich - Durban's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html&title=《iOS Push机制》 — Gowhich - Durban's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《iOS Push机制》 — Gowhich - Durban's Blog&url=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/23/iOS-Push%E6%9C%BA%E5%88%B6.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
