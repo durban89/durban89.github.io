@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-40032119-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+
+    
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE ) | Gowhich - Durban&#39;s Blog | 成为全栈开发的必经之路</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="MySQL">
+    <meta name="description" content="INSERT语法 1234INSERT [LOW_PRIORITY | DELAYED | HIGH_PRIORITY] [IGNORE]       [INTO] tbl_name [(col_name,...)]       VALUES (&#123;expr | DEFAULT&#125;,...),(...),...       [ ON DUPLICATE KEY UPDATE col">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )">
+<meta property="og:url" content="https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html">
+<meta property="og:site_name" content="Gowhich - Durban&#39;s Blog">
+<meta property="og:description" content="INSERT语法 1234INSERT [LOW_PRIORITY | DELAYED | HIGH_PRIORITY] [IGNORE]       [INTO] tbl_name [(col_name,...)]       VALUES (&#123;expr | DEFAULT&#125;,...),(...),...       [ ON DUPLICATE KEY UPDATE col">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-24T03:24:31.000Z">
+<meta property="article:modified_time" content="2025-06-24T03:50:17.588Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+    
+        <link rel="alternate" type="application/atom+xml" title="Gowhich - Durban&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">durban</h5>
+          <a href="mailto:durban.zhang@gmail.com" title="durban.zhang@gmail.com" class="mail">durban.zhang@gmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/durban89" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2025-06-24T03:24:31.000Z" itemprop="datePublished" class="page-time">
+  2025-06-24
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、DELAYED 的使用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、IGNORE的使用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、ON DUPLICATE KEY UPDATE的使用</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-MySQL-Insert的几点操作-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2025-06-24 11:24:31" datetime="2025-06-24T03:24:31.000Z"  itemprop="datePublished">2025-06-24</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>INSERT语法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> [LOW_PRIORITY <span class="operator">|</span> DELAYED <span class="operator">|</span> HIGH_PRIORITY] [IGNORE]</span><br><span class="line">       [<span class="keyword">INTO</span>] tbl_name [(col_name,...)]</span><br><span class="line">       <span class="keyword">VALUES</span> (&#123;expr <span class="operator">|</span> <span class="keyword">DEFAULT</span>&#125;,...),(...),...</span><br><span class="line">       [ <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> col_name<span class="operator">=</span>expr, ... ]</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> [LOW_PRIORITY <span class="operator">|</span> DELAYED <span class="operator">|</span> HIGH_PRIORITY] [IGNORE]</span><br><span class="line">       [<span class="keyword">INTO</span>] tbl_name</span><br><span class="line">       <span class="keyword">SET</span> col_name<span class="operator">=</span>&#123;expr <span class="operator">|</span> <span class="keyword">DEFAULT</span>&#125;, ...</span><br><span class="line">       [ <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> col_name<span class="operator">=</span>expr, ... ]</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> [LOW_PRIORITY <span class="operator">|</span> HIGH_PRIORITY] [IGNORE]</span><br><span class="line">       [<span class="keyword">INTO</span>] tbl_name [(col_name,...)]</span><br><span class="line">       <span class="keyword">SELECT</span> ...</span><br><span class="line">       [ <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> col_name<span class="operator">=</span>expr, ... ]</span><br></pre></td></tr></table></figure>
+
+<h2 id="1"><a href="#1" class="headerlink" title="一、DELAYED 的使用"></a><a href="#1">一、DELAYED 的使用</a></h2><p>使用延迟插入操作</p>
+<p>DELAYED调节符应用于INSERT和REPLACE语句。当DELAYED插入操作到达的时候，</p>
+<p>服务器把数据行放入一个队列中，并立即给客户端返回一个状态信息，这样客户</p>
+<p>端就可以在数据表被真正地插入记录之前继续进行操作了。如果读取者从该数据</p>
+<p>表中读取数据，队列中的数据就会被保持着，直到没有读取者为止。接着服务器</p>
+<p>开始插入延迟数据行（delayed-row）队列中的数据行。在插入操作的同时，服务器</p>
+<p>还要检查是否有新的读取请求到达和等待。如果有，延迟数据行队列就被挂起，</p>
+<p>允许读取者继续操作。当没有读取者的时候，服务器再次开始插入延迟的数据行。</p>
+<p>这个过程一直进行，直到队列空了为止。</p>
+<p>几点要注意事项：</p>
+<p>INSERT DELAYED应该仅用于指定值清单的INSERT语句。服务器忽略用于INSERT DELAYED…SELECT语句的DELAYED。</p>
+<p>服务器忽略用于INSERT DELAYED…ON DUPLICATE UPDATE语句的DELAYED。</p>
+<p>因为在行被插入前，语句立刻返回，所以您不能使用LAST_INSERT_ID()来获取AUTO_INCREMENT值。AUTO_INCREMENT值可能由语句生成。</p>
+<p>对于SELECT语句，DELAYED行不可见，直到这些行确实被插入了为止。</p>
+<p>DELAYED在从属复制服务器中被忽略了，因为DELAYED不会在从属服务器中产生与主服务器不一样的数据。</p>
+<p>注意，目前在队列中的各行只保存在存储器中，直到它们被插入到表中为止。这意味着，如果您强行中止了mysqld（例如，使用kill -9）</p>
+<p>或者如果mysqld意外停止，则所有没有被写入磁盘的行都会丢失。</p>
+<h2 id="2"><a href="#2" class="headerlink" title="二、IGNORE的使用"></a><a href="#2">二、IGNORE的使用</a></h2><p>IGNORE是MySQL相对于标准SQL的扩展。如果在新表中有重复关键字，</p>
+<p>或者当STRICT模式启动后出现警告，则使用IGNORE控制ALTER TABLE的运行。</p>
+<p>如果没有指定IGNORE，当重复关键字错误发生时，复制操作被放弃，返回前一步骤。</p>
+<p>如果指定了IGNORE，则对于有重复关键字的行，只使用第一行，其它有冲突的行被删除。</p>
+<p>并且，对错误值进行修正，使之尽量接近正确值。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> ignore <span class="keyword">into</span> tb(...) <span class="keyword">value</span>(...)</span><br></pre></td></tr></table></figure>
+
+<p>这样不用校验是否存在了，有则忽略，无则添加</p>
+<h2 id="3"><a href="#3" class="headerlink" title="三、ON DUPLICATE KEY UPDATE的使用"></a><a href="#3">三、ON DUPLICATE KEY UPDATE的使用</a></h2><p>如果您指定了ON DUPLICATE KEY UPDATE，并且插入行后会导致在一个UNIQUE索引或PRIMARY KEY中出现重复值，则执行旧行UPDATE。例如，如果列a被定义为UNIQUE，并且包含值1，则以下两个语句具有相同的效果：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT INTO</span> <span class="keyword">table</span> (a,b,c) <span class="keyword">VALUES</span> (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> c<span class="operator">=</span>c<span class="operator">+</span><span class="number">1</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">UPDATE</span> <span class="keyword">table</span> <span class="keyword">SET</span> c<span class="operator">=</span>c<span class="operator">+</span><span class="number">1</span> <span class="keyword">WHERE</span> a<span class="operator">=</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果行作为新记录被插入，则受影响行的值为1；</p>
+<p>如果原有的记录被更新，则受影响行的值为2。</p>
+<p>注释：如果列b也是唯一列，则INSERT与此UPDATE语句相当：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">UPDATE</span> <span class="keyword">table</span> <span class="keyword">SET</span> c<span class="operator">=</span>c<span class="operator">+</span><span class="number">1</span> <span class="keyword">WHERE</span> a<span class="operator">=</span><span class="number">1</span> <span class="keyword">OR</span> b<span class="operator">=</span><span class="number">2</span> LIMIT <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果a&#x3D;1 OR b&#x3D;2与多个行向匹配，则只有一个行被更新。通常，您应该尽量避免对带有多个唯一关键字的表使用ON DUPLICATE KEY子句。</p>
+<p>您可以在UPDATE子句中使用VALUES(col_name)函数从INSERT…UPDATE语句的INSERT部分引用列值。换句话说，如果没有发生重复关键字冲突，则UPDATE子句中的VALUES(col_name)可以引用被插入的col_name的值。本函数特别适用于多行插入。VALUES()函数只在INSERT…UPDATE语句中有意义，其它时候会返回NULL。</p>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT INTO</span> <span class="keyword">table</span> (a,b,c) <span class="keyword">VALUES</span> (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>),(<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>)</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> c<span class="operator">=</span><span class="keyword">VALUES</span>(a)<span class="operator">+</span><span class="keyword">VALUES</span>(b);</span><br></pre></td></tr></table></figure>
+
+<p>本语句与以下两个语句作用相同：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT INTO</span> <span class="keyword">table</span> (a,b,c) <span class="keyword">VALUES</span> (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> c<span class="operator">=</span><span class="number">3</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT INTO</span> <span class="keyword">table</span> (a,b,c) <span class="keyword">VALUES</span> (<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>)</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> c<span class="operator">=</span><span class="number">9</span>;</span><br></pre></td></tr></table></figure>
+
+<p>当您使用ON DUPLICATE KEY UPDATE时，DELAYED选项被忽略。</p>
+<p>总结：</p>
+<p><em><strong>DELAYED</strong></em>做为快速插入，并不是很关心失效性，提高插入性能。</p>
+<p><em><strong>IGNORE</strong></em>只关注主键对应记录是不存在，无则添加，有则忽略。</p>
+<p><em><strong>ON DUPLICATE KEY UPDATE</strong></em> 在添加时操作，关注非主键列，注意与ignore的区别。有则更新指定列，无则添加。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2025-06-24T03:50:17.588Z" itemprop="dateUpdated">2025-06-24 11:50:17</time>
+</span><br>
+
+
+        
+        永久链接：<a href="/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html" target="_blank" rel="external">https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html</a>
+        
+    </div>
+    
+    <footer>
+        <a href="https://blog.gowhich.com">
+            <img src="/img/avatar.jpg" alt="durban">
+            durban
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html&title=《MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )》 — Gowhich - Durban's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html&title=《MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )》 — Gowhich - Durban's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )》 — Gowhich - Durban's Blog&url=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2025/06/24/%E6%80%BB%E7%BB%93%E9%98%90%E8%BF%B0Cocos2d-X%E4%B8%8ECocos2d-iphone%E5%8C%BA%E5%88%AB.html" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">总结阐述Cocos2d-X与Cocos2d-iphone区别</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2025/06/24/%E5%88%9D%E8%AF%95-asp-net-Mac%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%BC%80%E5%8F%91-web%E5%BA%94%E7%94%A8%E7%A4%BA%E4%BE%8B.html" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">初试 ASP.NET Mac环境下开发 web应用示例</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.png" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.png" data-alipay="/img/alipay.png">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>durban &copy; 2014 - 2025</span>
+            <span>
+                
+                <a href="http://www.miitbeian.gov.cn/" target="_blank">蒙ICP备18003023号-4</a><br>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html&title=《MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )》 — Gowhich - Durban's Blog&pic=https://blog.gowhich.com/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html&title=《MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )》 — Gowhich - Durban's Blog&source=我的日志也许是你的小巨人" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )》 — Gowhich - Durban's Blog&url=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html&via=https://blog.gowhich.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
