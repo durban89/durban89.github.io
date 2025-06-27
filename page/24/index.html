@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">533</span>
+          <span class="site-state-item-count">534</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">70</span>
+        <span class="site-state-item-count">71</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,95 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/QeePHP-memcache%E7%9A%84session%E5%AD%98%E5%82%A8%E8%AE%BE%E7%BD%AE.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/20/QeePHP-memcache%E7%9A%84session%E5%AD%98%E5%82%A8%E8%AE%BE%E7%BD%AE.html" class="post-title-link" itemprop="url">QeePHP memcache的session存储设置</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-20 09:51:54 / 修改时间：09:58:36" itemprop="dateCreated datePublished" datetime="2025-06-20T09:51:54+08:00">2025-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>关于session的memcache的存储，原因为什么要使用它。要看你的项目的需求，网站访问量大的话，默认使用session的文件存储，会导致一个问题就是用户登录不了，原始是，session文件的大量生成，导致读取文件出现问题，就是IO的问题，这时候我们可以考虑使用memcache，还有另外一种是mysql的使用方式。但是目前对于我的这个项目还打不到这种需求，so，还是使用memcache吧。</p>
+<p>目前又因为我的项目是使用Qeephp，哈哈，估计现在使用的人少了，不过这里还是说一下，使用他如何进行配置吧。</p>
+<p>用过qee的都知道，qee有个文件叫做myapp的文件，ok，解决的问题的办法就在这里。</p>
+<p>代码如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 打开 session</span></span><br><span class="line"><span class="keyword">if</span> (Q::<span class="title function_ invoke__">ini</span>(<span class="string">&#x27;runtime_session_start&#x27;</span>))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line">	<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br><span class="line">	<span class="title function_ invoke__">session_start</span>();</span><br><span class="line">	            </span><br><span class="line">	<span class="comment">// #IFDEF DEBUG</span></span><br><span class="line">	<span class="title class_">QLog</span>::<span class="title function_ invoke__">log</span>(<span class="string">&#x27;session_start()&#x27;</span>, <span class="title class_">QLog</span>::<span class="variable constant_">DEBUG</span>);</span><br><span class="line">	<span class="title class_">QLog</span>::<span class="title function_ invoke__">log</span>(<span class="string">&#x27;session_id: &#x27;</span> . <span class="title function_ invoke__">session_id</span>(), <span class="title class_">QLog</span>::<span class="variable constant_">DEBUG</span>);</span><br><span class="line">	<span class="comment">// #ENDIF</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实就是在打开session的地方加上了关于session的存储设置</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>memcache考虑的还是蛮周到。</p>
+<p>关于memcache的安装，请使用站内搜索</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1284,95 +1373,6 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;% ifequal variable True %&#125;   </span><br><span class="line"></span><br><span class="line">&#123;% ifequal variable [1, 2, 3,]%&#125;   </span><br><span class="line"></span><br><span class="line">&#123;% ifequal variable &#123;<span class="string">&#x27;key&#x27;</span>: <span class="string">&#x27;value&#x27;</span>&#125; %&#125;</span><br></pre></td></tr></table></figure>
 
 <p>如果你需要测试某个变量是true或false，用</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E6%B1%89%E5%AD%97%E8%BD%AC%E6%8B%BC%E9%9F%B3-%E7%B9%81%E4%BD%93%E5%AD%97-%E5%8A%A0%E9%9F%B3%E6%A0%87%E7%9A%84.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/%E6%B1%89%E5%AD%97%E8%BD%AC%E6%8B%BC%E9%9F%B3-%E7%B9%81%E4%BD%93%E5%AD%97-%E5%8A%A0%E9%9F%B3%E6%A0%87%E7%9A%84.html" class="post-title-link" itemprop="url">汉字转拼音 繁体字 加音标的</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-19 13:54:24 / 修改时间：14:20:30" itemprop="dateCreated datePublished" datetime="2025-06-19T13:54:24+08:00">2025-06-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>今天分享一个可以将汉字转为拼音的 而且也可以加音标的类，</p>
-<p>这个要感谢，那些巨人的肩膀啊</p>
-<p>代码如下：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;BASE_PATH&#x27;</span>, <span class="title function_ invoke__">dirname</span>(<span class="keyword">__FILE__</span>));</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Tpinyin</span> </span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$dict</span> = <span class="keyword">array</span>();</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$dictfile</span> = <span class="string">&#x27;pylib.gif&#x27;</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$dictoffs</span> = <span class="number">244</span>;</span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$tune</span> = <span class="keyword">array</span>();</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$charset</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$maxlength</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$fp</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;dictfile = BASE_PATH . <span class="string">&#x27;/&#x27;</span>. <span class="variable language_">$this</span>-&gt;dictfile;</span><br><span class="line">        <span class="variable">$fp</span> = <span class="title function_ invoke__">fopen</span>(<span class="variable">$this</span>-&gt;dictfile, <span class="string">&#x27;rb&#x27;</span>);</span><br><span class="line">        <span class="title function_ invoke__">fread</span>(<span class="variable">$fp</span>, <span class="number">41</span>);</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;dict[] = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;,&#x27;</span>, <span class="title function_ invoke__">fread</span>(<span class="variable">$fp</span>, <span class="number">57</span>));</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;dict[] = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;,&#x27;</span>, <span class="title function_ invoke__">fread</span>(<span class="variable">$fp</span>, <span class="number">146</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">settune</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="variable">$tune</span> = <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">&#x27;a&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="string">&quot;\x01\x01&quot;</span>,<span class="string">&quot;\x00\xe1&quot;</span>,<span class="string">&quot;\x01\xce&quot;</span>,<span class="string">&quot;\x00\xe0&quot;</span>,),</span><br><span class="line">            <span class="string">&#x27;e&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="string">&quot;\x01\x13&quot;</span>,<span class="string">&quot;\x00\xe9&quot;</span>,<span class="string">&quot;\x01\x1b&quot;</span>,<span class="string">&quot;\x00\xe8&quot;</span>,),</span><br><span class="line">            <span class="string">&#x27;i&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="string">&quot;\x01\x2b&quot;</span>,<span class="string">&quot;\x00\xed&quot;</span>,<span class="string">&quot;\x01\xd0&quot;</span>,<span class="string">&quot;\x00\xec&quot;</span>,),</span><br><span class="line">            <span class="string">&#x27;o&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="string">&quot;\x01\x4d&quot;</span>,<span class="string">&quot;\x00\xf3&quot;</span>,<span class="string">&quot;\x01\xd2&quot;</span>,<span class="string">&quot;\x00\xf2&quot;</span>,),</span><br><span class="line">            <span class="string">&#x27;u&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="string">&quot;\x01\x6b&quot;</span>,<span class="string">&quot;\x00\xfa&quot;</span>,<span class="string">&quot;\x01\xd4&quot;</span>,<span class="string">&quot;\x00\xf9&quot;</span>,),</span><br><span class="line">            <span class="string">&#x27;v&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="string">&quot;\x01\xd6&quot;</span>,<span class="string">&quot;\x01\xd8&quot;</span>,<span class="string">&quot;\x01\xda&quot;</span>,<span class="string">&quot;\x01\xdc&quot;</span>,),</span><br><span class="line">            );</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable">$tune</span> <span class="keyword">as</span> <span class="variable">$k</span>=&gt;<span class="variable">$r</span>)</span><br><span class="line">            <span class="keyword">foreach</span>(<span class="variable">$r</span> <span class="keyword">as</span> <span class="variable">$i</span>=&gt;<span class="variable">$v</span>)</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;tune[<span class="variable">$k</span>][<span class="variable">$i</span>] = <span class="title function_ invoke__">mb_convert_encoding</span>(<span class="variable">$v</span>, <span class="variable">$this</span>-&gt;charset, <span class="string">&#x27;UCS-2&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">pinyin</span>(<span class="params"><span class="variable">$str</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;charset = <span class="title function_ invoke__">mb_check_encoding</span>(<span class="variable">$str</span>, <span class="string">&#x27;UTF-8&#x27;</span>) ? <span class="string">&#x27;UTF-8&#x27;</span> : <span class="string">&#x27;GBK&#x27;</span>;</span><br><span class="line">    <span class="comment">//    $this-&gt;settune();//是否加音标</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;fp = <span class="title function_ invoke__">fopen</span>(<span class="variable">$this</span>-&gt;dictfile, <span class="string">&#x27;rb&#x27;</span>);</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;maxlength = <span class="title function_ invoke__">filesize</span>(<span class="variable">$this</span>-&gt;dictfile);</span><br><span class="line">        <span class="variable">$str</span> = <span class="title function_ invoke__">mb_convert_encoding</span>(<span class="variable">$str</span>, <span class="string">&quot;UCS-2&quot;</span>, <span class="string">&quot;UTF-8, GBK&quot;</span>);</span><br><span class="line">        <span class="variable">$t</span> = <span class="title function_ invoke__">array_map</span>(<span class="keyword">array</span>(<span class="variable">$this</span>, <span class="string">&#x27;pinyin_back&#x27;</span>), <span class="title function_ invoke__">str_split</span>(<span class="variable">$str</span>, <span class="number">2</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">join</span>(<span class="string">&#x27;&#x27;</span>, <span class="variable">$t</span>); <span class="comment">//连接成串，要不要自己决定</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">pinyin_back</span>(<span class="params"><span class="variable">$ch</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="title function_ invoke__">ord</span>(<span class="variable">$ch</span>&#123;<span class="number">0</span>&#125;) == <span class="number">0</span>) <span class="keyword">return</span> <span class="variable">$ch</span>&#123;<span class="number">1</span>&#125;;</span><br><span class="line">        <span class="variable">$o</span> = <span class="title function_ invoke__">hexdec</span>(<span class="title function_ invoke__">bin2hex</span>(<span class="variable">$ch</span>)) - <span class="number">0x4e00</span>;</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable">$o</span> &lt; <span class="number">0</span> || <span class="variable">$o</span> &gt;= <span class="variable language_">$this</span>-&gt;maxlength) <span class="keyword">return</span> <span class="title function_ invoke__">mb_convert_encoding</span>(<span class="variable">$ch</span>, <span class="variable">$this</span>-&gt;charset, <span class="string">&#x27;UCS-2&#x27;</span>);</span><br><span class="line">        <span class="title function_ invoke__">fseek</span>(<span class="variable">$this</span>-&gt;fp, <span class="variable">$o</span>*<span class="number">2</span> + <span class="variable">$this</span>-&gt;dictoffs);</span><br><span class="line">        <span class="variable">$x</span> = <span class="title function_ invoke__">sprintf</span>(<span class="string">&#x27;%05d&#x27;</span>, <span class="title function_ invoke__">current</span>(<span class="title function_ invoke__">unpack</span>(<span class="string">&#x27;S&#x27;</span>, <span class="title function_ invoke__">fread</span>(<span class="variable">$this</span>-&gt;fp, <span class="number">2</span>))));</span><br><span class="line">        <span class="variable">$t</span> = <span class="variable language_">$this</span>-&gt;dict[<span class="number">0</span>][<span class="title function_ invoke__">substr</span>(<span class="variable">$x</span>, <span class="number">0</span>, <span class="number">2</span>)+<span class="number">0</span>] . <span class="variable language_">$this</span>-&gt;dict[<span class="number">1</span>][<span class="title function_ invoke__">substr</span>(<span class="variable">$x</span>, <span class="number">2</span>, <span class="number">2</span>)+<span class="number">0</span>];</span><br><span class="line">        <span class="variable">$n</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$x</span>, -<span class="number">1</span>) - <span class="number">1</span>;</span><br><span class="line">        <span class="variable">$s</span> = <span class="variable">$t</span>;</span><br><span class="line">        <span class="keyword">foreach</span>(<span class="variable language_">$this</span>-&gt;tune <span class="keyword">as</span> <span class="variable">$k</span>=&gt;<span class="variable">$v</span>) &#123;</span><br><span class="line">            <span class="variable">$s</span> = <span class="title function_ invoke__">str_replace</span>(<span class="variable">$k</span>, <span class="variable">$v</span>[<span class="variable">$n</span>], <span class="variable">$s</span>);</span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$s</span> != <span class="variable">$t</span>) <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;<span class="subst">$s</span>&quot;</span>;<span class="comment">//加了个空格，要不要自己决定</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个文件是需要一个库的，但是那位大神将库放在了图片里面，我觉得很牛叉，于是就这样用了，呵呵</p>
-<p>使用方式如下</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$p</span> = <span class="keyword">new</span> <span class="title class_">Tpinyin</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$p</span>-&gt;<span class="title function_ invoke__">pinyin</span>(<span class="string">&#x27;惘&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>结果自己试试就知道了。</p>
-<p>如果想控制音标的话，可以考虑是不是加载这个函数settune，有加的话，就会有音标的。</p>
 
       
     </div>
