@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">605</span>
+          <span class="site-state-item-count">664</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">83</span>
+        <span class="site-state-item-count">102</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/24/%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90-Python-Web-%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6-Bottle.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Python-%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%B8%AD-%E4%B8%80%E4%B8%AA%E6%98%9F-%E5%92%8C-%E4%B8%A4%E4%B8%AA%E6%98%9F-%E7%9A%84%E4%BD%9C%E7%94%A8%E5%92%8C%E5%8C%BA%E5%88%AB.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/24/%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90-Python-Web-%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6-Bottle.html" class="post-title-link" itemprop="url">[深度分析] Python Web 开发框架 Bottle</a>
+          <a href="/2025/06/25/Python-%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%B8%AD-%E4%B8%80%E4%B8%AA%E6%98%9F-%E5%92%8C-%E4%B8%A4%E4%B8%AA%E6%98%9F-%E7%9A%84%E4%BD%9C%E7%94%A8%E5%92%8C%E5%8C%BA%E5%88%AB.html" class="post-title-link" itemprop="url">Python 函数参数中*（一个星）和**（两个星）的作用和区别</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-24 11:24:13 / 修改时间：11:56:15" itemprop="dateCreated datePublished" datetime="2025-06-24T11:24:13+08:00">2025-06-24</time>
+      <time title="创建时间：2025-06-25 10:09:26 / 修改时间：10:23:17" itemprop="dateCreated datePublished" datetime="2025-06-25T10:09:26+08:00">2025-06-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,176 +294,588 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><span class="exturl" data-url="aHR0cDovL2JvdHRsZXB5Lm9yZy9kb2NzL2Rldi1jbi8=">Bottle<i class="fa fa-external-link-alt"></i></span>是一个非常精致的WSGI框架，它提供了 Python Web开发中需要的基本支持：URL路由，Request&#x2F;Response对象封装，模板支持，与WSGI服务器集成支持。整个框架的全部代码约有 2000行，它的核心部分没有其他任何依赖，只要有Python环境就可以运行。</p>
-<p>Bottle适用于小型的Web开发，在应用程序规模比较小的情况下可以实现快速开发。但是由于自身功能所限，对于大型的Web程序，Bottle的功能略显不足，程序员需要手动管理模块、数据库、配置等等，与Pylons等框架相比Bottle的优势就难以体现出来了。</p>
-<h2 id="1"><a href="#1" class="headerlink" title="快速入门"></a><a href="#1">快速入门</a></h2><p>通过一个简单的、典型的例子描述Bottle的使用：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> bottle <span class="keyword">import</span> Bottle, run, mako_view, request</span><br><span class="line"></span><br><span class="line">myapp = Bottle()</span><br><span class="line"></span><br><span class="line"><span class="meta">@myapp.get(<span class="params"><span class="string">&#x27;/hello/:name/:count#\\d+#&#x27;</span></span>)</span></span><br><span class="line"><span class="meta">@mako_view(<span class="params"><span class="string">&#x27;hello&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hello</span>(<span class="params">name, count</span>):</span><br><span class="line">    ip = request.environ.get(<span class="string">&#x27;REMOTE_ADDR&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">dict</span>(n=name, c=<span class="built_in">int</span>(count), ip=ip)</span><br><span class="line"></span><br><span class="line">run(app=myapp)</span><br></pre></td></tr></table></figure>
+          <p>一直对python函数中的参数有个迷惑，最近在学习中，发现了“在函数中接收元组和列表”的是时候明白了其代表的意思</p>
+<p>一个星（*）：表示接收的参数作为元组来处理</p>
+<p>两个星（**）：表示接收的参数作为字典来处理</p>
+<p>在这里举个例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#!-*- coding=utf-8 -*-</span></span><br><span class="line"><span class="comment">#!Filename: powersum.py</span></span><br><span class="line">__author__ = <span class="string">&#x27;Durban Zhang&#x27;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">powersum</span>(<span class="params">power, *args</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;Return the sum of each argument raised to specified power.&#x27;&#x27;&#x27;</span></span><br><span class="line">    total = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> args:</span><br><span class="line">        total += <span class="built_in">pow</span>(i, power)</span><br><span class="line">    <span class="keyword">return</span> total</span><br><span class="line"><span class="built_in">print</span> powersum(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line"><span class="built_in">print</span> powersum(<span class="number">2</span>,<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
 
-<p>我们创建一个Bottle对象，通过decorator配置一条路由记录。Bottle的url映射支持具名参数，“&#x2F;hello&#x2F;:name&#x2F;:count#\d+#” 格式的参数，可以匹配&#x2F;hello&#x2F;(.+?)&#x2F;(\d+?)的 URL。在方法体中，通过environ字典获得客户端IP，这个操作和其他WSGI框架是一致的。接着通过一个字典类型将Model数据传递给 View。View模板通过decorator定义，采用mako模板引擎实现，模板名为hello，他表示在当前目录下一个名叫hello.tpl的文 件。</p>
-<h2 id="2"><a href="#2" class="headerlink" title="剖析"></a><a href="#2">剖析</a></h2><p>Bottle主要可以分成4个模块：</p>
-<p><em><strong>Router和WSGI Application</strong></em></p>
-<p><em><strong>Request和Response, Web helpers</strong></em></p>
-<p><em><strong>Template Adapters</strong></em></p>
-<p><em><strong>WSGI Server Adapters</strong></em></p>
-<h2 id="3"><a href="#3" class="headerlink" title="Router和WSGI Application"></a><a href="#3">Router和WSGI Application</a></h2><p>一个Bottle对象是一个标准的WSGI App，这使他可以与很多WSGI Server集成。每个app下管理一个Router用于针对URL映射到handler方法。根据Python decorator的特性，路由规则是在程序启动时自动执行的。</p>
-<p>Bottle的route方法用于注册handler到router中。除此以外，还有很多function currying帮助您简单地路由GET &#x2F; POST 等特定HTTP方法。</p>
-<p>Bottle最近以来支持了hook，可以注册一些方法在每个请求之前、或之后执行。</p>
-<p>当接受一个HTTP请求时，WSGI Server会调用WSGI App的wsgi方法。它的流程是：</p>
+<p>得到的结果是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">davidzhang@192:~/python/python_project/other_example$ ./powersum.py </span><br><span class="line">25</span><br><span class="line">100</span><br></pre></td></tr></table></figure>
+
+<p>实现参数动态化方法的不错实例</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS-%E4%B8%BAUINavigationBar%E8%AE%BE%E7%BD%AE%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/iOS-%E4%B8%BAUINavigationBar%E8%AE%BE%E7%BD%AE%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87.html" class="post-title-link" itemprop="url">iOS 为UINavigationBar设置背景图片</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 09:58:07 / 修改时间：09:58:33" itemprop="dateCreated datePublished" datetime="2025-06-25T09:58:07+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>ios开发中，对于如何设置UINavigationBar的背景图片的设置，我搜索到了如下的一些代码</p>
+<p><em><strong>第一种方法：针对局部NavigationBar进行背景更改的方法：</strong></em></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> version = [[[<span class="built_in">UIDevice</span> currentDevice] systemVersion] floatValue];</span><br><span class="line"><span class="built_in">UIImage</span> *backgroundImage = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;myBackgroundImage.png&quot;</span>];</span><br><span class="line"><span class="keyword">if</span> (version &gt;= <span class="number">5.0</span>) &#123;</span><br><span class="line">    [<span class="keyword">self</span>.navigationController.navigationBar setBackgroundImage:backgroundImage forBarMetrics:<span class="built_in">UIBarMetricsDefault</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span>.navigationController.navigationBar insertSubview:[[[<span class="built_in">UIImageView</span> alloc] initWithImage:backgroundImage] autorelease] atIndex:<span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em><strong>第二种方法：全局更改NavigationBar背景的方法:</strong></em></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIImage</span> *)barBackground</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;topNavigationBar.png&quot;</span>];</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="type">void</span>)didMoveToSuperview</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//iOS5 only</span></span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span> respondsToSelector:<span class="keyword">@selector</span>(setBackgroundImage:forBarMetrics:)])</span><br><span class="line">    &#123;</span><br><span class="line">        [<span class="keyword">self</span> setBackgroundImage:[<span class="keyword">self</span> barBackground] forBarMetrics:<span class="built_in">UIBarMetricsDefault</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//this doesn&#x27;t work on iOS5 but is needed for iOS4 and earlier</span></span><br><span class="line">- (<span class="type">void</span>)drawRect:(<span class="built_in">CGRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//draw image</span></span><br><span class="line">    [[<span class="keyword">self</span> barBackground] drawInRect:rect];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>在iPhone开发中, 有时候我们想给导航条添加背景图片, 实现多样化的导航条效果, 用其他方法往往无法达到理想的效果, 经过网上搜索及多次实验, 确定如下最佳实现方案:</p>
+<p><em><strong>第三种方法：为UINavigatonBar增加如下Category:</strong></em></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UINavigationBar</span> (<span class="title">CustomImage</span>)</span></span><br><span class="line">- (<span class="type">void</span>)drawRect:(<span class="built_in">CGRect</span>)rect &#123;</span><br><span class="line"><span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageNamed: <span class="string">@&quot;NavigationBar.png&quot;</span>];</span><br><span class="line">[image drawInRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="keyword">self</span>.frame.size.width, <span class="keyword">self</span>.frame.size.height)];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>例如, 在我的项目中, 添加如下代码:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* input: The image and a tag to later identify the view */</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UINavigationBar</span> (<span class="title">CustomImage</span>)</span></span><br><span class="line">- (<span class="type">void</span>)drawRect:(<span class="built_in">CGRect</span>)rect &#123;</span><br><span class="line"><span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageNamed: <span class="string">@&quot;title_bg.png&quot;</span>];</span><br><span class="line">[image drawInRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="keyword">self</span>.frame.size.width, <span class="keyword">self</span>.frame.size.height)];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FriendsPageViewController</span></span></span><br><span class="line"><span class="comment">// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.</span></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad &#123;</span><br><span class="line"><span class="keyword">self</span>.navigationBar.tintColor = [<span class="built_in">UIColor</span> purpleColor];</span><br><span class="line">[<span class="keyword">self</span> initWithRootViewController:[[RegPageViewController alloc] init]];</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E5%9C%A8%E5%AF%BC%E8%88%AA%E6%A0%8F%E5%A4%84%E6%B7%BB%E5%8A%A0SearchBar.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/iOS-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E5%9C%A8%E5%AF%BC%E8%88%AA%E6%A0%8F%E5%A4%84%E6%B7%BB%E5%8A%A0SearchBar.html" class="post-title-link" itemprop="url">iOS 简单实现在导航栏处添加SearchBar</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 09:58:04 / 修改时间：09:58:57" itemprop="dateCreated datePublished" datetime="2025-06-25T09:58:04+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>导航栏出添加搜索框，应该是大多数app应用中需要使用的，这里简单展示一下添加的方法</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGRect</span> mainViewBounds = <span class="keyword">self</span>.navigationController.view.bounds;</span><br><span class="line">customSearchBar = [[<span class="built_in">UISearchBar</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="built_in">CGRectGetMinX</span>(mainViewBounds),</span><br><span class="line">                                                            <span class="built_in">CGRectGetMinY</span>(mainViewBounds) + <span class="number">44.0</span>,</span><br><span class="line">                                                            <span class="keyword">self</span>.navigationController.view.bounds.size.width,</span><br><span class="line">                                                            <span class="number">40</span>)];</span><br><span class="line">customSearchBar.delegate = <span class="keyword">self</span>;</span><br><span class="line">customSearchBar.showsCancelButton = <span class="literal">YES</span>;</span><br><span class="line">[<span class="keyword">self</span>.navigationController.view addSubview: customSearchBar];</span><br><span class="line"><span class="built_in">CGRect</span> viewBounds = <span class="keyword">self</span>.navigationController.view.bounds;</span><br><span class="line">[<span class="keyword">self</span>.view setFrame:<span class="built_in">CGRectMake</span>(<span class="built_in">CGRectGetMinX</span>(viewBounds),</span><br><span class="line">                               <span class="built_in">CGRectGetMinY</span>(viewBounds) + <span class="number">40</span>,</span><br><span class="line">                               <span class="built_in">CGRectGetWidth</span>(viewBounds),</span><br><span class="line">                               <span class="built_in">CGRectGetHeight</span>(viewBounds) - <span class="number">128</span>)];</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Python%E4%B8%AD%E7%9A%84%E5%82%A8%E5%AD%98%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/Python%E4%B8%AD%E7%9A%84%E5%82%A8%E5%AD%98%E5%99%A8%E7%9A%84%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">Python中的储存器的使用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 09:58:00 / 修改时间：09:59:54" itemprop="dateCreated datePublished" datetime="2025-06-25T09:58:00+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>python中这个储存器功能，还是蛮特别的</p>
+<p>dump函数，实现了存储，load实现了读取，Objective-C语言的encode和php的数组序列化是差不多的</p>
+<p>gowhich邀您看看下面简单的实例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#!-*- coding=utf-8 -*-</span></span><br><span class="line"><span class="comment">#!Filename: pickling</span></span><br><span class="line">__author__ = <span class="string">&#x27;Durban Zhang&#x27;</span></span><br><span class="line"><span class="keyword">import</span> cPickle <span class="keyword">as</span> p</span><br><span class="line">shoplistfile = <span class="string">&#x27;shoplist.data&#x27;</span></span><br><span class="line">shoplist = [<span class="string">&#x27;apple&#x27;</span>,<span class="string">&#x27;banana&#x27;</span>,<span class="string">&#x27;carrot&#x27;</span>]</span><br><span class="line">f = file(shoplistfile, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">p.dump(shoplist, f)</span><br><span class="line">f.close()</span><br><span class="line"><span class="keyword">del</span> shoplist</span><br><span class="line">f = file(shoplistfile)</span><br><span class="line">storedlist = p.load(f)</span><br><span class="line"><span class="built_in">print</span> storedlist</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Python-%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E5%92%8C%E8%AF%BB%E5%8F%96%E6%93%8D%E4%BD%9C.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/Python-%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E5%92%8C%E8%AF%BB%E5%8F%96%E6%93%8D%E4%BD%9C.html" class="post-title-link" itemprop="url">Python 文件写入和读取操作</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 09:57:57 / 修改时间：10:00:24" itemprop="dateCreated datePublished" datetime="2025-06-25T09:57:57+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>python的文件写入和读取操作，是python自身携带的功能，不需要其他的import</p>
+<p>简单的演示了写入和读取的操作</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#!-*- coding=utf-8 -*-</span></span><br><span class="line"><span class="comment">#!Filename: using_file.py</span></span><br><span class="line">__author__ = <span class="string">&#x27;Durban Zhang&#x27;</span></span><br><span class="line">poem = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">Programming is fun When the work is done</span></span><br><span class="line"><span class="string">if you wanna make your work also fun:</span></span><br><span class="line"><span class="string">use Python!</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line">f = file(<span class="string">&#x27;poem.txt&#x27;</span>,<span class="string">&#x27;w&#x27;</span>)</span><br><span class="line">f.write(poem)</span><br><span class="line">f.close()</span><br><span class="line">f = file(<span class="string">&#x27;poem.txt&#x27;</span>)</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    line = f.readline()</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(line) == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="built_in">print</span> line, <span class="comment">#消除自动换行</span></span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+
+<p>读取的操作中使用了，readline的函数，还有消除自动换行的特殊用法</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Python-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/Python-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1.html" class="post-title-link" itemprop="url">Python 面向对象</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 09:57:54 / 修改时间：10:00:56" itemprop="dateCreated datePublished" datetime="2025-06-25T09:57:54+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>python的面向对象中，关于继承这一块，使用起来与其他的语言大概木有什么区别，但是使用起来让人觉的很爽，一起看看其中的区别吧</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#!-*- coding=utf-8 -*-</span></span><br><span class="line"><span class="comment">#!Filename: using_file.py</span></span><br><span class="line">__author__ = <span class="string">&#x27;Durban Zhang&#x27;</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SchoolMember</span>:</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;Represents any school member&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,name,age</span>):</span><br><span class="line">        <span class="variable language_">self</span>.name = name</span><br><span class="line">        <span class="variable language_">self</span>.age = age</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;Initialized SchoolMember: %s&#x27;</span> % <span class="variable language_">self</span>.name</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">tell</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;Tell my detail &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;Name: &quot;%s&quot; Age: &quot;%d&quot;&#x27;</span> % (<span class="variable language_">self</span>.name, <span class="variable language_">self</span>.age)</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Teacher</span>(<span class="title class_ inherited__">SchoolMember</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;Represents a teacher&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age, salary</span>):</span><br><span class="line">        SchoolMember.__init__(<span class="variable language_">self</span>,name,age)</span><br><span class="line">        <span class="variable language_">self</span>.salary = salary</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;Initialized Teacher %s :&#x27;</span> % <span class="variable language_">self</span>.name</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">tell</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;Teacher Tell &#x27;&#x27;&#x27;</span></span><br><span class="line">        SchoolMember.tell(<span class="variable language_">self</span>)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;Salary : &quot;%d&quot;&#x27;</span> % <span class="variable language_">self</span>.salary</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Student</span>(<span class="title class_ inherited__">SchoolMember</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;Represents a students&#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, name, age, marks</span>):</span><br><span class="line">        SchoolMember.__init__(<span class="variable language_">self</span>,name,age)</span><br><span class="line">        <span class="variable language_">self</span>.marks = marks</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;Initialized Student %s :&#x27;</span> % <span class="variable language_">self</span>.name</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">tell</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;Student tell&#x27;&#x27;&#x27;</span></span><br><span class="line">        SchoolMember.tell(<span class="variable language_">self</span>)</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;Marks: &quot;%d&quot;&#x27;</span> % <span class="variable language_">self</span>.marks</span><br><span class="line">t = Teacher(<span class="string">&#x27;Durban&#x27;</span>,<span class="number">40</span>,<span class="number">50000</span>)</span><br><span class="line">s = Student(<span class="string">&#x27;David&#x27;</span>,<span class="number">20</span>,<span class="number">100</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="comment">#print a blank line</span></span><br><span class="line">members = [t, s]</span><br><span class="line"><span class="keyword">for</span> member <span class="keyword">in</span> members:</span><br><span class="line">    member.tell()</span><br></pre></td></tr></table></figure>
+
+<p>要继承的类放在类的后面的圆括号中，对于要继承的父类，要在子类的init方法中调用父类的init方法。嘿嘿，是不是很简单</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/UIImage-%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86-%E6%88%AA%E5%9B%BE-%E7%BC%A9%E6%94%BE-%E8%AE%BE%E5%AE%9A%E5%A4%A7%E5%B0%8F-%E5%AD%98%E5%82%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/UIImage-%E5%9B%BE%E7%89%87%E5%A4%84%E7%90%86-%E6%88%AA%E5%9B%BE-%E7%BC%A9%E6%94%BE-%E8%AE%BE%E5%AE%9A%E5%A4%A7%E5%B0%8F-%E5%AD%98%E5%82%A8.html" class="post-title-link" itemprop="url">UIImage 图片处理：截图，缩放，设定大小，存储</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 09:57:50 / 修改时间：10:02:20" itemprop="dateCreated datePublished" datetime="2025-06-25T09:57:50+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>图片的处理大概分 截图(capture),  缩放(scale), 设定大小(resize),  存储(save)</p>
+<p>1.等比率缩放</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIImage</span> *)scaleImage:(<span class="built_in">UIImage</span> *)image toScale:(<span class="type">float</span>)scaleSize</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContext</span>(<span class="built_in">CGSizeMake</span>(image.size.width * scaleSize, image.size.height * scaleSize);</span><br><span class="line">    [image drawInRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, image.size.width * scaleSize, image.size.height * scaleSize)];</span><br><span class="line">    <span class="built_in">UIImage</span> *scaledImage = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="keyword">return</span> scaledImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.自定长宽</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIImage</span> *)reSizeImage:(<span class="built_in">UIImage</span> *)image toSize:(<span class="built_in">CGSize</span>)reSize</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContext</span>(<span class="built_in">CGSizeMake</span>(reSize.width, reSize.height));</span><br><span class="line">    [image drawInRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, reSize.width, reSize.height)];</span><br><span class="line">    <span class="built_in">UIImage</span> *reSizeImage = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="keyword">return</span> reSizeImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.处理某个特定View</p>
+<p>只要是继承UIView的object 都可以处理</p>
+<p>必须先import QuzrtzCore.framework</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="built_in">UIImage</span>*)captureView:(<span class="built_in">UIView</span> *)theView</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGRect</span> rect = theView.frame;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContext</span>(rect.size);</span><br><span class="line">    <span class="built_in">CGContextRef</span> context = <span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line">    [theView.layer renderInContext:context];</span><br><span class="line">    <span class="built_in">UIImage</span> *img = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="keyword">return</span> img;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4.储存图片</p>
+<p>储存图片这里分成储存到app的文件里和储存到手机的图片库里</p>
 <ol>
-<li>根据标准的WSGI接口规范，从WSGI environ中生成一个Request对象，初始化一个response对象。</li>
-<li>在寻找方法之前，实际上Bottle会自动执行您注册的<code>before_hook</code>。（<code>Bottle._add_hook_wrapper</code>）</li>
-<li>根据request.path的URL在router中寻找对应的handler方法（Bottle.match_url, Router.match）。这一步中除了找到合适的handler方法，还要负责提取url中的具名参数，将结果以tuple的形式返回。</li>
-<li>以返回的方法和参数，执行handler，获得返回值。</li>
-<li>执行所有的after_hooks。</li>
-<li>根据返回的不同类型，写入Response的头部。在这一步，Bottle还会应用一些filter，在Bottle中，filter是用于处理 handler返回类型的。例如，一个典型的filter即内置的dict2json，他将handler返回的dict类型自动换成 json。（<code>Bottle._cast</code>）</li>
-<li>根据返回的HTTP状态码，对handler返回对象进行处理。调用WSGI Server的start_response方法将返回对象写给客户端。</li>
+<li>储存到app的文件里</li>
 </ol>
-<h2 id="4"><a href="#4" class="headerlink" title="Request和Response, Web helpers"></a><a href="#4">Request和Response, Web helpers</a></h2><p>Bottle对HTTP的请求和响应封装了Request和Response对象。它采用threadlocal的方式，由Bottle app管理生命周期。您可以在声明handler方法时不必像Java Servlet那样将他们以参数传入，这样增加了方法设计的灵活性，也使得单元测试变得相对轻松。</p>
-<p>Request对象是对WSGI environ属性的封装，可以从中取得的属性取决于WSGI Server对<span class="exturl" data-url="aHR0cHM6Ly93d3cucHl0aG9uLm9yZy9kZXYvcGVwcy9wZXAtMDMzMy8jZW52aXJvbi12YXJpYWJsZXM=">PEP333<i class="fa fa-external-link-alt"></i></span>的实现。</p>
-<p>关于Request API，可以参考<span class="exturl" data-url="aHR0cDovL2JvdHRsZS5wYXdzLmRlL2RvY3MvZGV2L2FwaS5odG1sI2JvdHRsZS5SZXF1ZXN0">文档<i class="fa fa-external-link-alt"></i></span></p>
-<p>类似的，可以参考<span class="exturl" data-url="aHR0cDovL2JvdHRsZS5wYXdzLmRlL2RvY3MvZGV2L2FwaS5odG1sI2JvdHRsZS5SZXNwb25zZQ==">Response API<i class="fa fa-external-link-alt"></i></span>了解如何对HTTP响应进行操作</p>
-<p>和很多Web框架一样，你不必手动去设置HTTP重定向，helper方法会简化这些操作：<code>abort</code>, <code>redirect</code>, <code>static_file</code>。当然，你也可以自己创建一些helper。</p>
-<h2 id="5"><a href="#5" class="headerlink" title="Template Adapters"></a><a href="#5">Template Adapters</a></h2><p>template方法用于渲染视图，您可以使用不同的模板实现：<code>mako</code>, <code>jinja2</code>, <code>cheetah</code>, <code>simpletal</code>以及Bottle自己的简单实现。</p>
-<p>view作为一个decorator可以简化模板的选择。与route类似，作者也提供了一些function currying来支持mako_view这样简便的写法。</p>
-<h2 id="6"><a href="#6" class="headerlink" title="Server Adapters"></a><a href="#6">Server Adapters</a></h2><p>Bottle的Server Adapters简直可以说是WSGI Server的博览会，从这里您可以了解目前比较流行的WSGI实现：</p>
-<ul>
-<li>flup</li>
-<li>wsgiref</li>
-<li>cherrypy</li>
-<li>paste</li>
-<li>fapws3</li>
-<li>tornado</li>
-<li>Google Appengine</li>
-<li>twisted</li>
-<li>diesel</li>
-<li>meinheld</li>
-<li>gunicorn</li>
-<li>eventlet</li>
-<li>gevent</li>
-<li>rocket</li>
-</ul>
-<p>当然，这些不是全部，如果要使用不在其中的WSGI Server，您只需实现一个ServerAdapter的run方法即可，需要做的就是将Bottle app传给server并启动它。</p>
-<p>内置的run方法用于启动服务，您还可以指定一个reloader参数使Bottle在后台检查源文件的修改情况，实现热加载。</p>
-<p>除了run方式的启动，由于Bottle app本身就是一个符合标准的WSGI app，所以也可以通过一些服务器特有的方式启动服务，例如gunicorn：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gunicorn -w 2 -D -b 127.0.0.1:18080 module:app</span><br></pre></td></tr></table></figure>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *path = [[<span class="built_in">NSHomeDirectory</span>()stringByAppendingPathComponent:<span class="string">@&quot;Documents&quot;</span>]stringByAppendingPathComponent:<span class="string">@&quot;image.png&quot;</span>];</span><br><span class="line">[<span class="built_in">UIImagePNGRepresentation</span>(image) writeToFile:pathatomically:<span class="literal">YES</span>];</span><br></pre></td></tr></table></figure>
 
-<h2 id="7"><a href="#7" class="headerlink" title="实战Middlewares"></a><a href="#7">实战Middlewares</a></h2><p>Middleware是WSGI的重要概念<span class="exturl" data-url="aHR0cDovL3d3dy5weXRob24ub3JnL2Rldi9wZXBzL3BlcC0wMzMz">http://www.python.org/dev/peps/pep-0333<i class="fa fa-external-link-alt"></i></span> &#x2F;#middleware-components-that-play-both-sides 借助一些成熟的middleware可以添加一些Bottle目前不具备的功能：没错，Session。</p>
-<p>Session Middleware最著名的选择叫做Beaker，要其用Beaker，只需要一个装饰器模式的App声明即可，您可以参考Beaker的<span class="exturl" data-url="aHR0cDovL2JlYWtlci5ncm9vdmllLm9yZy9jb25maWd1cmF0aW9uLmh0bWw=">文档<i class="fa fa-external-link-alt"></i></span>.</p>
-<p>Pylons以使用Middleware著称，而除了Routing这样核心的Middleware，包括Beaker和Authkit都可以应用在Bottle程序上。</p>
-<h2 id="8"><a href="#8" class="headerlink" title="App Mounting"></a><a href="#8">App Mounting</a></h2><p>Bottle的App提供一个很有用的mount方法帮助你将Web应用模块化。您可以将一个Bottle App挂载到一个父App上的某个路径，以父App启动后，父App可以为子App在一个路径下提供路由。</p>
-<p>不过你会遇到这样的问题：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">child = Bottle()</span><br><span class="line"><span class="meta">@child.get(<span class="params"><span class="string">&quot;/&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hello</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;hello world&quot;</span></span><br><span class="line"></span><br><span class="line">parent = Bottle()</span><br><span class="line">parent.mount(child, <span class="string">&quot;/child&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>把要处理的图片, 以image.png名称存到app home下的Documents目录里</p>
+<p>2)储存到手机的图片库里(必须在真机使用，模拟器无法使用)</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGImageRef</span> screen = <span class="built_in">UIGetScreenImage</span>();</span><br><span class="line"><span class="built_in">UIImage</span>* image = [<span class="built_in">UIImage</span> imageWithCGImage:screen];</span><br><span class="line"><span class="built_in">CGImageRelease</span>(screen);</span><br><span class="line"><span class="built_in">UIImageWriteToSavedPhotosAlbum</span>(image, <span class="keyword">self</span>, <span class="literal">nil</span>, <span class="literal">nil</span>);</span><br><span class="line"><span class="built_in">UIGetScreenImage</span>(); <span class="comment">// 原来是private(私有)api, 用来截取整个画面,不过SDK 4.0后apple就开放了</span></span><br></pre></td></tr></table></figure>
 
-<p>很自然的，您希望打开浏览器访问<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4MDAwL2NoaWxkJUU1JThGJUFGJUU4JTgzJUJEJUU3JTlDJThCJUU1JTg4JUIwaGVsbG8=">http://localhost:8000/child可能看到hello<i class="fa fa-external-link-alt"></i></span> world，然后却得到404.这个问题不难察觉，于是访问<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4MDAwL2NoaWxkLyVFRiVCQyU4QyVFNSVCNyVBNSVFNCVCRCU5QyVFNiVBRCVBMyVFNSVCOCVCOCVFMyU4MCU4Mg==">http://localhost:8000/child/，工作正常。<i class="fa fa-external-link-alt"></i></span></p>
-<p>我曾给作者提过这个问题<span class="exturl" data-url="aHR0cDovL2dpdGh1Yi5jb20vZGVmbnVsbC9ib3R0bGUvaXNzdWVzI2lzc3VlLzg4JUVGJUJDJThDJUVGJUJDJTg4JUU4JUExJUE1JUU0JUI4JTgw">http://github.com/defnull/bottle/issues#issue/88，（补一<i class="fa fa-external-link-alt"></i></span> 句，Bottle的作者少有的Nice，对你提出的问题他通常都会认真解答），作者提了一个重定向的方式，不过还是没有决定把它直接加进mount方法 里。</p>
-<p>那么，我们需要一个新的mount来支持<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4MDAwL2NoaWxk">http://localhost:8000/child<i class="fa fa-external-link-alt"></i></span></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">mount</span>(<span class="params">parent, child, path</span>):</span><br><span class="line">    parent.mount(child, path)</span><br><span class="line"><span class="meta">    @parent.get(<span class="params">path</span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">redir</span>():</span><br><span class="line">        redirect(path+<span class="string">&quot;/&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<p>以下代码用到了Quartz Framework 和 Core Graphics Framework. 在workspace的framework目录里添加这两个framework.在UIKit里，图像类UIImage和CGImageRef的画图操作都是通过Graphics Context来完成。Graphics Context封装了变换的参数，使得在不同的坐标系里操作图像非常方便。缺点就是，获取图像的数据不是那么方便。下面会给出获取数据区的代码。</p>
+<ol>
+<li>从UIView中获取图像相当于窗口截屏。</li>
+</ol>
+<p>(ios提供全局的全屏截屏函数UIGetScreenView(). 如果需要特定区域的图像，可以crop一下)</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGImageRef</span> screen = <span class="built_in">UIGetScreenImage</span>();</span><br><span class="line"><span class="built_in">UIImage</span>* image = [<span class="built_in">UIImage</span> imageWithCGImage:screen];</span><br></pre></td></tr></table></figure>
 
-<h2 id="9"><a href="#9" class="headerlink" title="Google AppEngine"></a><a href="#9">Google AppEngine</a></h2><p>因为有WSGI标准，你可以用Bottle开发Google AppEngine程序。您只需要在handler文件中加入这样的代码即可：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> google.appengine.ext.webapp.util <span class="keyword">import</span> run_wsgi_app</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    run_wsgi_app(my_bottle_app)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>对于特定UIView的截屏。</li>
+</ol>
+<p>（可以把当前View的layer，输出到一个ImageContext中，然后利用这个ImageContext得到UIImage）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="built_in">UIImage</span>*)captureView: (<span class="built_in">UIView</span> *)theView</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGRect</span> rect = theView.frame;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContext</span>(rect.size);</span><br><span class="line">    <span class="built_in">CGContextRef</span> context =<span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line">    [theView.layer renderInContext:context];</span><br><span class="line">    <span class="built_in">UIImage</span> *img = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="keyword">return</span> img;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>依赖？Bottle本身是self-contained，不过你可能还需要一个强大一些的模板引擎来完成你的应用，比如Mako。这样，你需要把依赖和自己的程序一起上传到GAE。对于Mako来说，除了它自己，还依赖marksave，别忘了它。</p>
-<p>以上就是我对Bottle的理解和使用心得，希望您在合适的场景下使用Bottle，只有这样，才能感受到这个框架所带来的乐趣。</p>
+<ol start="3">
+<li>如果需要裁剪指定区域。</li>
+</ol>
+<p>（可以path &amp; clip，以下例子是建一个200x200的图像上下文，再截取出左上角）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIGraphicsBeginImageContext</span>(<span class="built_in">CGMakeSize</span>(<span class="number">200</span>,<span class="number">200</span>));</span><br><span class="line"><span class="built_in">CGContextRefcontext</span>=<span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line"><span class="built_in">UIGraphicsPushContext</span>(context);</span><br><span class="line"><span class="comment">// ...把图写到context中，省略[indent]CGContextBeginPath();</span></span><br><span class="line"><span class="built_in">CGContextAddRect</span>(<span class="built_in">CGMakeRect</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">100</span>,<span class="number">100</span>));</span><br><span class="line"><span class="built_in">CGContextClosePath</span>();[/indent]<span class="built_in">CGContextDrawPath</span>();</span><br><span class="line"><span class="built_in">CGContextFlush</span>(); <span class="comment">// 强制执行上面定义的操作</span></span><br><span class="line"><span class="built_in">UIImage</span>* image = <span class="built_in">UIGraphicGetImageFromCurrentImageContext</span>();</span><br><span class="line"><span class="built_in">UIGraphicsPopContext</span>();</span><br></pre></td></tr></table></figure>
 
-      
-    </div>
+<ol start="4">
+<li>存储图像。</li>
+</ol>
+<p>（分别存储到home目录文件和图片库文件。）</p>
+<p>存储到目录文件是这样</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *path = [[<span class="built_in">NSHomeDirectory</span>() stringByAppendingPathComponent:<span class="string">@&quot;Documents&quot;</span>] stringByAppendingPathComponent:<span class="string">@&quot;image.png&quot;</span>];</span><br><span class="line">[<span class="built_in">UIImagePNGRepresentation</span>(image) writeToFile:path atomically:<span class="literal">YES</span>];</span><br></pre></td></tr></table></figure>
 
-    
-    
-    
+<p>若要存储到图片库里面</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIImageWriteToSavedPhotosAlbum</span>(image, <span class="literal">nil</span>, <span class="literal">nil</span>, <span class="literal">nil</span>);</span><br></pre></td></tr></table></figure>
 
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+<ol start="5">
+<li>互相转换UImage和CGImage。</li>
+</ol>
+<p>（UImage封装了CGImage, 互相转换很容易）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIImage</span>* imUI=<span class="literal">nil</span>;</span><br><span class="line"><span class="built_in">CGImageRef</span> imCG=<span class="literal">nil</span>;</span><br><span class="line">imUI = [<span class="built_in">UIImage</span> initWithCGImage:imCG];</span><br><span class="line">imCG = imUI.CGImage;</span><br></pre></td></tr></table></figure>
 
+<ol start="6">
+<li>从CGImage上获取图像数据区。</li>
+</ol>
+<p>（在apple dev上有QA, 不过好像还不支持ios）</p>
+<p>下面给出一个在ios上反色的例子</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">id</span>)invertContrast:(<span class="built_in">UIImage</span>*)img</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGImageRef</span> inImage = img.CGImage;</span><br><span class="line">    <span class="built_in">CGContextRef</span> ctx;</span><br><span class="line">    <span class="built_in">CFDataRef</span> m_DataRef;</span><br><span class="line">    m_DataRef = <span class="built_in">CGDataProviderCopyData</span>(<span class="built_in">CGImageGetDataProvider</span>(inImage));</span><br><span class="line">    <span class="type">int</span> width = <span class="built_in">CGImageGetWidth</span>( inImage );</span><br><span class="line">    <span class="type">int</span> height = <span class="built_in">CGImageGetHeight</span>( inImage );</span><br><span class="line">    <span class="type">int</span> bpc = <span class="built_in">CGImageGetBitsPerComponent</span>(inImage);</span><br><span class="line">    <span class="type">int</span> bpp = <span class="built_in">CGImageGetBitsPerPixel</span>(inImage);</span><br><span class="line">    <span class="type">int</span> bpl = <span class="built_in">CGImageGetBytesPerRow</span>(inImage);</span><br><span class="line">    <span class="built_in">UInt8</span> * m_PixelBuf = (<span class="built_in">UInt8</span> *) <span class="built_in">CFDataGetBytePtr</span>(m_DataRef);</span><br><span class="line">    <span class="type">int</span> length = <span class="built_in">CFDataGetLength</span>(m_DataRef);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;len %d&quot;</span>, length);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;width=%d, height=%d&quot;</span>, width, height);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;1=%d, 2=%d, 3=%d&quot;</span>, bpc, bpp,bpl);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> index = <span class="number">0</span>; index &lt; length; index += <span class="number">4</span>)</span><br><span class="line">    &#123; </span><br><span class="line">        m_PixelBuf[index + <span class="number">0</span>] = <span class="number">255</span> - m_PixelBuf[index + <span class="number">0</span>];<span class="comment">// b</span></span><br><span class="line">        m_PixelBuf[index + <span class="number">1</span>] = <span class="number">255</span> - m_PixelBuf[index + <span class="number">1</span>];<span class="comment">// g</span></span><br><span class="line">        m_PixelBuf[index + <span class="number">2</span>] = <span class="number">255</span> - m_PixelBuf[index + <span class="number">2</span>];<span class="comment">// r</span></span><br><span class="line">    &#125;</span><br><span class="line">    ctx = <span class="built_in">CGBitmapContextCreate</span>(m_PixelBuf, width, height, bpb, bpl, <span class="built_in">CGImageGetColorSpace</span>( inImage ), kCGImageAlphaPremultipliedFirst );</span><br><span class="line">    <span class="built_in">CGImageRef</span> imageRef = <span class="built_in">CGBitmapContextCreateImage</span> (ctx);</span><br><span class="line">    <span class="built_in">UIImage</span>* rawImage = [<span class="built_in">UIImage</span> imageWithCGImage:imageRef];</span><br><span class="line">    <span class="built_in">CGContextRelease</span>(ctx);</span><br><span class="line">    <span class="keyword">return</span> rawImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<ol start="7">
+<li>显示图像数据区。</li>
+</ol>
+<p>（显示图像数据区，也就是<code>unsigned char*</code>转为<code>graphics context</code>或者<code>UIImage</code>或和<code>CGImageRef</code>）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGContextRef</span> ctx = <span class="built_in">CGBitmapContextCreate</span>(pixelBuf,width,height, bitsPerComponent,bypesPerLine, colorSpace,kCGImageAlphaPremultipliedLast );</span><br><span class="line"><span class="built_in">CGImageRef</span> imageRef = <span class="built_in">CGBitmapContextCreateImage</span> (ctx);</span><br><span class="line"><span class="built_in">UIImage</span>* image = [<span class="built_in">UIImage</span> imageWithCGImage:imageRef];</span><br><span class="line"><span class="built_in">NSString</span>* path = [[<span class="built_in">NSHomeDirectory</span>() stringByAppendingPathComponent:<span class="string">@&quot;Documents&quot;</span>] stringByAppendingPathComponent:<span class="string">@&quot;ss.png&quot;</span>];</span><br><span class="line">[<span class="built_in">UIImagePNGRepresentation</span>(<span class="keyword">self</span>.image) writeToFile:path atomically:<span class="literal">YES</span>];</span><br><span class="line"><span class="built_in">CGContextRelease</span>(ctx);</span><br></pre></td></tr></table></figure>
 
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/24/Mac%E4%B8%8B%E9%85%8D%E7%BD%AEcocos2d-x%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/24/Mac%E4%B8%8B%E9%85%8D%E7%BD%AEcocos2d-x%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.html" class="post-title-link" itemprop="url">Mac下配置cocos2d-x开发环境</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-24 11:24:10 / 修改时间：11:58:47" itemprop="dateCreated datePublished" datetime="2025-06-24T11:24:10+08:00">2025-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="一、下载cocos2d-x"></a><a href="#1">一、下载cocos2d-x</a></h3><p><span class="exturl" data-url="aHR0cHM6Ly9jb2RlLmdvb2dsZS5jb20vcC9jb2NvczJkLXgvZG93bmxvYWRzL2xpc3Q=">http://code.google.com/p/cocos2d-x/downloads/list<i class="fa fa-external-link-alt"></i></span></p>
-<p>cocos2d-x-3.0alpha0.zip  </p>
-<p>我们可以看到最新版本的3.0alpha0，这个版本提供了一个用python命令来建立各平台的项目，十分便利  </p>
-<p>下载，解压（建议解压到主目录下的）</p>
-<h3 id="2"><a href="#2" class="headerlink" title="二、下载python"></a><a href="#2">二、下载python</a></h3><p><span class="exturl" data-url="aHR0cHM6Ly93d3cucHl0aG9uLm9yZy9nZXRpdC8=">http://www.python.org/getit/<i class="fa fa-external-link-alt"></i></span>  </p>
-<p>建议选择2.7.5版本的下载  </p>
-<p>Python 2.7.5 Mac OS X 64-bit&#x2F;32-bit x86-64&#x2F;i386 Installer<br>Python 2.7.5 Mac OS X 32-bit i386&#x2F;PPC Installer  </p>
-<p>下载，安装，然后在终端直接输入python，如果出现版本信息则安装成功</p>
-<h3 id="3"><a href="#3" class="headerlink" title="三、建立cocos2d-x项目"></a><a href="#3">三、建立cocos2d-x项目</a></h3><p>进入终端，执行以下命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unzip cocos2d-x-3.0alpha0.zip</span><br><span class="line"><span class="built_in">cd</span> cocos2d-x-3.0alpha0</span><br><span class="line">python ./create-multi-platform-projects.py -p walker -k com.walkerfree.walker -l cpp</span><br></pre></td></tr></table></figure>
-
-<p><code>create-multi-platform-projects.py</code>要求提供3个参数（工程名：我这里是walker，包名：我这里是<code>com.walkerfree.walker</code>，语言：<code>cpp | js | lua</code>）  </p>
-<p>执行成功会显示以下信息</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">proj.ios        : Done!</span><br><span class="line">proj.android        : Done!</span><br><span class="line">proj.win32        : Done!</span><br><span class="line">proj.mac        : Done!</span><br><span class="line">proj.linux        : Done!</span><br><span class="line">New project has been created <span class="keyword">in</span> this path: /Users/davidzhang/Downloads/ios/cocos2d/cocos2d-x-3.0alpha0/projects/walker</span><br><span class="line">Have Fun!</span><br></pre></td></tr></table></figure>
-
-<p>进入walker目录，你可以看到这些项目</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">davidzhang@192:~/Downloads/ios/cocos2d/cocos2d-x-3.0alpha0$ <span class="built_in">cd</span> projects/</span><br><span class="line">davidzhang@192:~/Downloads/ios/cocos2d/cocos2d-x-3.0alpha0/projects$ ll</span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x   3 davidzhang  staff   102 10  8 15:51 .</span><br><span class="line">drwx------@ 33 davidzhang  staff  1122 10  8 15:51 ..</span><br><span class="line">drwxr-xr-x   8 davidzhang  staff   272  9 21 15:58 walker</span><br><span class="line">davidzhang@192:~/Downloads/ios/cocos2d/cocos2d-x-3.0alpha0/projects$ <span class="built_in">cd</span> walker/</span><br><span class="line">davidzhang@192:~/Downloads/ios/cocos2d/cocos2d-x-3.0alpha0/projects/walker$ ll</span><br><span class="line">total 0</span><br><span class="line">drwxr-xr-x   8 davidzhang  staff  272  9 21 15:58 .</span><br><span class="line">drwxr-xr-x   3 davidzhang  staff  102 10  8 15:51 ..</span><br><span class="line">drwxr-xr-x   6 davidzhang  staff  204  9 21 15:58 Classes</span><br><span class="line">drwxr-xr-x   6 davidzhang  staff  204  9 21 15:58 Resources</span><br><span class="line">drwxr-xr-x  15 davidzhang  staff  510  9 21 15:58 proj.android</span><br><span class="line">drwxr-xr-x   6 davidzhang  staff  204 10  8 15:53 proj.ios_mac</span><br><span class="line">drwxr-xr-x   7 davidzhang  staff  238  9 21 15:58 proj.linux</span><br><span class="line">drwxr-xr-x  11 davidzhang  staff  374  9 21 15:58 proj.win32</span><br><span class="line">davidzhang@192:~/Downloads/ios/cocos2d/cocos2d-x-3.0alpha0/projects/walker$</span><br></pre></td></tr></table></figure>
-
-<p>怎么样，全平台都给你搭好了，而且共用一个Classes文件夹，也就是说你在一个平台更新了代码，全平台都得到了更新。</p>
-<h3 id="4"><a href="#4" class="headerlink" title="四、编辑ios项目"></a><a href="#4">四、编辑ios项目</a></h3><p>进入<code>walker/proj.ios_mac/</code>目录，直接双击打开HelloCpp.xcodeproj（别说你没装xcode，我这里是Xcode5）  </p>
-<p>然后点run就可以跑起来了</p>
-<p>参考文章：<span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9vb2tjb2RlL3AvMzIxNDE2NC5odG1s">http://www.cnblogs.com/ookcode/p/3214164.html<i class="fa fa-external-link-alt"></i></span></p>
+<p>得到图像数据区后就可以很方便的实现图像处理的算法。</p>
 
       
     </div>
@@ -490,7 +902,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/24/Python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E4%BD%93%E7%B3%BB-%E5%AD%A6%E4%B9%A0-%E4%B8%89.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/UITabbar-%E7%9B%B8%E5%85%B3%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -508,7 +920,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/24/Python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E4%BD%93%E7%B3%BB-%E5%AD%A6%E4%B9%A0-%E4%B8%89.html" class="post-title-link" itemprop="url">Python异常处理体系--学习（三）</a>
+          <a href="/2025/06/25/UITabbar-%E7%9B%B8%E5%85%B3%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE.html" class="post-title-link" itemprop="url">UITabbar 相关属性设置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -520,7 +932,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-24 11:24:02 / 修改时间：11:59:33" itemprop="dateCreated datePublished" datetime="2025-06-24T11:24:02+08:00">2025-06-24</time>
+      <time title="创建时间：2025-06-25 09:57:47 / 修改时间：10:03:29" itemprop="dateCreated datePublished" datetime="2025-06-25T09:57:47+08:00">2025-06-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -542,22 +954,14 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1"><a href="#1" class="headerlink" title="异常处理的一些其它用途"></a><a href="#1">异常处理的一些其它用途</a></h2><p>除了处理实际的错误条件之外，对于异常还有许多其它的用处。在标准 Python 库中一个普通的用法就是试着导入一个模块，然后检查是否它能使用。</p>
-<p>导入一个并不存在的模块将引发一个 ImportError 异常。你可以使用这种方法来定义多级别的功能――依靠在运行时哪个模块是有效的，或支持多种平台 (即平台特定代码被分离到不同的模块中)。</p>
-<p>你也能通过创建一个从内置的 Exception 类继承的类定义你自己的异常，然后使用 raise 命令引发你的异常。如果你对此感兴趣，请看进一步阅读的部分。</p>
-<p>下面的例子演示了如何使用异常支持特定平台功能。代码来自 getpass 模块，一个从用户获得口令的封装模块。获得口令在 UNIX、Windows 和 Mac OS 平台上的实现是不同的，但是这个代码封装了所有的不同之处。</p>
-<p>例：支持特定平台功能</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Bind the name getpass to the appropriate function</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">import</span> termios, TERMIOS                    </span><br><span class="line"><span class="keyword">except</span> ImportError:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">import</span> msvcrt                          </span><br><span class="line">    <span class="keyword">except</span> ImportError:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            <span class="keyword">from</span> EasyDialogs <span class="keyword">import</span> AskPassword</span><br><span class="line">        <span class="keyword">except</span> ImportError:</span><br><span class="line">            getpass = default_getpass          </span><br><span class="line">        <span class="keyword">else</span>:                                  </span><br><span class="line">            getpass = AskPassword</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        getpass = win_getpass</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    getpass = unix_getpass</span><br></pre></td></tr></table></figure>
+          <p>背景颜色的设置</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *tabbarBackgroundImage = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;bg_tabbar@2x&quot;</span> ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">    [[<span class="built_in">UITabBar</span> appearance] setBackgroundImage:[<span class="built_in">UIImage</span> imageWithContentsOfFile:tabbarBackgroundImage]];</span><br><span class="line">tabbar选择后的背景设置（这里由于图片的大小，做了一下图片的大小调整）</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageWithContentsOfFile:tabbarBackgroundImage];</span><br><span class="line"><span class="built_in">CGSize</span> size = <span class="built_in">CGSizeMake</span>(<span class="number">20.0</span>, <span class="number">0.5</span>);</span><br><span class="line"><span class="built_in">UIImage</span> *resizeImage = [<span class="keyword">self</span> reSizeImage:image toSize:size];</span><br><span class="line">[[<span class="built_in">UITabBar</span> appearance] setSelectionIndicatorImage:resizeImage];</span><br></pre></td></tr></table></figure>
 
-<p>termios 是 UNIX 独有的一个模块，它提供了对于输入终端的底层控制。</p>
-<p>如果这个模块无效 (因为它不在你的系统上，或你的系统不支持它)，则导入失败，Python 引发我们捕捉的 ImportError 异常。</p>
-<p>OK，我们没有 termios，所以让我们试试 msvcrt，它是 Windows 独有的一个模块，可以提供在 Microsoft Visual C++ 运行服务中的许多有用的函数的一个API。如果导入失败，</p>
-<p>Python 会引发我们捕捉的 ImportError 异常。</p>
-<p>如果前两个不能工作，我们试着从 EasyDialogs 导入一个函数，它是 Mac OS 独有的一个模块，提供了各种各样类型的弹出对话框。再一次，如果导入失败，Python 会引发一个我们捕捉的 ImportError 异常。</p>
-<p>这些平台特定的模块没有一个有效 (有可能，因为 Python 已经移植到了许多不同的平台上了)，所以我们需要回头使用一个缺省口令输入函数 (这个函数定义在 getpass 模块中的别的地方)。注意我们在这里所做的：我们将函数 <code>default_getpass</code> 赋给变量 getpass。如果你读了官方 getpass 文档，它会告诉你 getpass 模块定义了一个 getpass 函数。它是这样做的：通过绑定 getpass 到正确的函数来适应你的平台。然后当你调用 getpass 函数时，你实际上调用了平台特定的函数，是这段代码已经为你设置好的。你不需要知道或关心你的代码正运行在何种平台上；只要调用 getpass，则它总能正确处理。</p>
-<p>一个 <code>try...except</code> 块可以有一条 else 子句，就像 if 语句。如果在 try 块中没有异常引发，然后 else 子句被执行。在本例中，那就意味着如果 from EasyDialogs import AskPassword 导入可工作，所以我们应该绑定 getpass 到 AskPassword 函数。其它每个 <code>try...except</code> 块有着相似的 else 子句，当我们发现一个 import 可用时，就绑定 getpass 到适合的函数。</p>
-<p>自定义异常类，继承Exception类及其子类</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyError</span>( <span class="title class_ inherited__">ArithmeticError</span> ):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyError2</span> ( <span class="title class_ inherited__">Exception</span> ):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p>tabbar字体的颜色设置</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UITabBarItem</span> appearance] setTitleTextAttributes:[<span class="built_in">NSDictionary</span> dictionaryWithObjectsAndKeys:[<span class="built_in">UIColor</span> grayColor],<span class="built_in">UITextAttributeTextColor</span>, <span class="literal">nil</span>] forState:<span class="built_in">UIControlStateNormal</span>];</span><br></pre></td></tr></table></figure>
+
+<p>加一个图片重新调整的函数</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UIImage</span> *)reSizeImage:(<span class="built_in">UIImage</span> *)image toSize:(<span class="built_in">CGSize</span>)reSize</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContext</span>(<span class="built_in">CGSizeMake</span>(reSize.width, reSize.height));</span><br><span class="line">    [image drawInRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, reSize.width, reSize.height)];</span><br><span class="line">    <span class="built_in">UIImage</span> *reSizeImage = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> reSizeImage;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
       
@@ -585,7 +989,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/Python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E4%BD%93%E7%B3%BB-%E5%AD%A6%E4%B9%A0-%E4%BA%8C.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS-5%E4%B8%AD%E5%AE%9A%E5%88%B6Tabbar%E5%BE%88%E7%AE%80%E5%8D%95-%E5%A6%82%E4%BD%95%E8%AE%A9%E9%80%89%E4%B8%AD%E7%9A%84Tab%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%90%8C%E5%9B%BE%E7%89%87.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -603,7 +1007,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/Python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E4%BD%93%E7%B3%BB-%E5%AD%A6%E4%B9%A0-%E4%BA%8C.html" class="post-title-link" itemprop="url">Python异常处理体系--学习（二）</a>
+          <a href="/2025/06/25/iOS-5%E4%B8%AD%E5%AE%9A%E5%88%B6Tabbar%E5%BE%88%E7%AE%80%E5%8D%95-%E5%A6%82%E4%BD%95%E8%AE%A9%E9%80%89%E4%B8%AD%E7%9A%84Tab%E6%98%BE%E7%A4%BA%E4%B8%8D%E5%90%8C%E5%9B%BE%E7%89%87.html" class="post-title-link" itemprop="url">iOS 5中定制Tabbar很简单，如何让选中的Tab显示不同图片</a>
         </h2>
 
         <div class="post-meta-container">
@@ -615,7 +1019,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-23 16:27:08 / 修改时间：17:12:51" itemprop="dateCreated datePublished" datetime="2025-06-23T16:27:08+08:00">2025-06-23</time>
+      <time title="创建时间：2025-06-25 09:57:45 / 修改时间：10:03:49" itemprop="dateCreated datePublished" datetime="2025-06-25T09:57:45+08:00">2025-06-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -637,29 +1041,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1"><a href="#1" class="headerlink" title="Python异常处理体系-结构形式"></a><a href="#1">Python异常处理体系-结构形式</a></h2><p>Python的异常处理可以向用户准确反馈出错信息，所有异常都是基类Exception的子类。自定义异常都是从基类Exception中继承。Python自动将所有内建的异常放到内建命名空间中，所以程序不必导入exceptions模块即可使用异常。</p>
-<p>可以使用的语句结构形式：</p>
-<h3 id="1-1"><a href="#1-1" class="headerlink" title="方式一 使用try,except语句来捕获异常"></a><a href="#1-1">方式一 使用try,except语句来捕获异常</a></h3><p>可以有无数个except语句来处理异常，如果所有except语句都没捕获到,则抛出异常到调用此方法的函数内处理，直到系统的主函数来处理。</p>
-<p>使用except子句需要注意的事情，就是多个except子句截获异常时，如果各个异常类之间具有继承关系，则子类应该写在前面，否则父类将会直接截获子类异常。放在后面的子类异常也就不会执行到了。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="comment">#block</span></span><br><span class="line"><span class="keyword">except</span> [excpetion,[data...]]:</span><br><span class="line">    <span class="comment">#block</span></span><br><span class="line"><span class="keyword">except</span> [excpetion,[data...]]:</span><br><span class="line">    <span class="comment">#block</span></span><br><span class="line"><span class="keyword">except</span> [excpetion,[data...]]:</span><br><span class="line">    <span class="comment">#block</span></span><br></pre></td></tr></table></figure>
+          <p>第一步：获取tabbar</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UITabBar</span> *tabBar = <span class="keyword">self</span>.tabBarController.tabBar;</span><br></pre></td></tr></table></figure>
 
-<h3 id="1-2"><a href="#1-2" class="headerlink" title="方式二 当没有异常发生的时候执行else语句"></a><a href="#1-2">方式二 当没有异常发生的时候执行else语句</a></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="comment">#block</span></span><br><span class="line"><span class="keyword">except</span>  [excpetion,[data...]]:</span><br><span class="line">    <span class="comment">#block</span></span><br><span class="line"><span class="keyword">else</span>:</span><br></pre></td></tr></table></figure>
+<p>第二步：获取tababr的所有选项</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UITabBarItem</span> *item = [tabBar.items objectAtIndex:<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
 
-<h3 id="1-3"><a href="#1-3" class="headerlink" title="方式三 finally 语句,不管有没有发生异常都将执行finally语句块"></a><a href="#1-3">方式三 finally 语句,不管有没有发生异常都将执行finally语句块</a></h3><p>例如我们在python中打开一个文件进行读写操作，我在操作过程中不管是否出现异常，最终都是要把该文件关闭的。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="comment">#block</span></span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    <span class="comment">#block</span></span><br></pre></td></tr></table></figure>
+<p>第三步：设置图片，选择要设置的tabbaritem</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *homePath = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;btn_home_highlight@2x&quot;</span> ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line"><span class="keyword">if</span>(item.tag == <span class="number">1</span>)</span><br><span class="line">&#123;</span><br><span class="line">    item.selectedImage = [<span class="built_in">UIImage</span> imageWithContentsOfFile:homePath];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="1-4"><a href="#1-4" class="headerlink" title="方式四 try,except,finally"></a><a href="#1-4">方式四 try,except,finally</a></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="comment">#block</span></span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="comment">#block</span></span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    <span class="comment">#block</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="2"><a href="#2" class="headerlink" title="引发异常"></a><a href="#2">引发异常</a></h2><p><code>raise [exception[,data]]</code></p>
-<p>在Python中，要想引发异常，最简单的形式就是输入关键字raise，后跟要引发的异常的名称。</p>
-<p>异常名称标识出具体的类：Python异常是那些类的对象。执行raise语句时，Python会创建指定的异常类的一个对象。</p>
-<p>raise语句还可指定对异常对象进行初始化的参数。为此，请在异常类的名称后添加一个逗号以及指定的参数（或者由参数构成的一个元组）。</p>
-<p>例：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyError</span>(<span class="title class_ inherited__">Exception</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">raise</span> MyError <span class="comment">#自己抛出一个异常</span></span><br><span class="line">    <span class="keyword">raise</span> ValueError,<span class="string">&quot;invalid argument&quot;</span></span><br><span class="line"><span class="keyword">except</span> MyError,data:</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;a error&#x27;</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">raise</span> ValueError,<span class="string">&quot;invalid argument&quot;</span></span><br><span class="line"><span class="keyword">except</span> ValueError,data:</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;message = &quot;</span>,<span class="string">&quot;invalid argument&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>捕捉到的内容为：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a error</span><br><span class="line">message =  invalid argument</span><br></pre></td></tr></table></figure>
-
+<p>这个就搞定了</p>
 
       
     </div>
@@ -686,7 +1077,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/Python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E4%BD%93%E7%B3%BB-%E5%AD%A6%E4%B9%A0-%E4%B8%80.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Python-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%EF%BC%8D%E7%B1%BB%E7%9A%84%E5%88%9B%E5%BB%BA.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -704,7 +1095,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/Python%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E4%BD%93%E7%B3%BB-%E5%AD%A6%E4%B9%A0-%E4%B8%80.html" class="post-title-link" itemprop="url">Python异常处理体系--学习（一）</a>
+          <a href="/2025/06/25/Python-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-%EF%BC%8D%E7%B1%BB%E7%9A%84%E5%88%9B%E5%BB%BA.html" class="post-title-link" itemprop="url">Python 面向对象 －类的创建</a>
         </h2>
 
         <div class="post-meta-container">
@@ -716,7 +1107,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-23 16:27:04 / 修改时间：17:14:44" itemprop="dateCreated datePublished" datetime="2025-06-23T16:27:04+08:00">2025-06-23</time>
+      <time title="创建时间：2025-06-25 09:57:40 / 修改时间：10:04:53" itemprop="dateCreated datePublished" datetime="2025-06-25T09:57:40+08:00">2025-06-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -738,543 +1129,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="1"><a href="#1" class="headerlink" title="Python内建异常体系结构"></a><a href="#1">Python内建异常体系结构</a></h2><blockquote>
-<p>BaseException</p>
-<p>+– SystemExit</p>
-<p>+– KeyboardInterrupt</p>
-<p>+– GeneratorExit</p>
-<p>+– Exception</p>
-<p>+– StopIteration</p>
-<p>+– StandardError</p>
-<p>|    +– BufferError</p>
-<p>|    +– ArithmeticError</p>
-<p>|    |    +– FloatingPointError</p>
-<p>|    |    +– OverflowError</p>
-<p>|    |    +– ZeroDivisionError</p>
-<p>|    +– AssertionError</p>
-<p>|    +– AttributeError</p>
-<p>|    +– EnvironmentError</p>
-<p>|    |    +– IOError</p>
-<p>|    |    +– OSError</p>
-<p>|    |         +– WindowsError (Windows)</p>
-<p>|    |         +– VMSError (VMS)</p>
-<p>|    +– EOFError</p>
-<p>|    +– ImportError</p>
-<p>|    +– LookupError</p>
-<p>|    |    +– IndexError</p>
-<p>|    |    +– KeyError</p>
-<p>|    +– MemoryError</p>
-<p>|    +– NameError</p>
-<p>|    |    +– UnboundLocalError</p>
-<p>|    +– ReferenceError</p>
-<p>|    +– RuntimeError</p>
-<p>|    |    +– NotImplementedError</p>
-<p>|    +– SyntaxError</p>
-<p>|    |    +– IndentationError</p>
-<p>|    |         +– TabError</p>
-<p>|    +– SystemError</p>
-<p>|    +– TypeError</p>
-<p>|    +– ValueError</p>
-<p>|         +– UnicodeError</p>
-<p>|              +– UnicodeDecodeError</p>
-<p>|              +– UnicodeEncodeError</p>
-<p>|              +– UnicodeTranslateError</p>
-<p>+– Warning</p>
-<p>+– DeprecationWarning</p>
-<p>+– PendingDeprecationWarning</p>
-<p>+– RuntimeWarning</p>
-<p>+– SyntaxWarning</p>
-<p>+– UserWarning</p>
-<p>+– FutureWarning</p>
-<p>+– ImportWarning</p>
-<p>+– UnicodeWarning</p>
-<p>+– BytesWarning</p>
+          <p>python 的面向对象的操作，使用起来还是比较简单的，比较简洁化，gowhich举个简单的例子－类的创建。代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#!-*- coding=utf-8 -*-</span></span><br><span class="line"><span class="comment">#Filename:objvar.py</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>:</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;Represents a person&#x27;&#x27;&#x27;</span></span><br><span class="line">    population = <span class="number">0</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self,name</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27;Initializes the person&#x27;s data. &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="variable language_">self</span>.name = name</span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;(Initializes %s)&#x27;</span> % <span class="variable language_">self</span>.name</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#When this person is created, he/she</span></span><br><span class="line">        <span class="comment">#adds to the population</span></span><br><span class="line">        Person.population += <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__del__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27; I am dying. &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;%s says bye.&#x27;</span> % (<span class="variable language_">self</span>.name)</span><br><span class="line">        <span class="variable language_">self</span>.__class__.population -= <span class="number">1</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="variable language_">self</span>.__class__.population != <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&#x27;There are still %d people left.&#x27;</span> % <span class="variable language_">self</span>.__class__.population</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&#x27;I am last one&#x27;</span></span><br><span class="line">            </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">sayHi</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27; Greeting by the person, Really, That&#x27;s all it does &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="built_in">print</span> <span class="string">&#x27;Hi ,my name is %s.&#x27;</span> % <span class="variable language_">self</span>.name</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">howMany</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&#x27;&#x27;&#x27; prints the current population. &#x27;&#x27;&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> Person.population == <span class="number">1</span>:</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&#x27;I am the only person here.&#x27;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span> <span class="string">&#x27;We have %d persons here.&#x27;</span> % Person.population</span><br><span class="line">            </span><br><span class="line">durban = Person(<span class="string">&#x27;Durban&#x27;</span>)</span><br><span class="line">durban.sayHi()</span><br><span class="line">durban.howMany()</span><br><span class="line">david = Person(<span class="string">&#x27;David&#x27;</span>)</span><br><span class="line">david.sayHi()</span><br><span class="line">david.howMany()</span><br><span class="line">durban.sayHi()</span><br><span class="line">durban.howMany()</span><br></pre></td></tr></table></figure>
+
+<p>gowhich得到的结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">(Initializes Durban)</span><br><span class="line">Hi ,my name is Durban.</span><br><span class="line">I am the only person here.</span><br><span class="line">(Initializes David)</span><br><span class="line">Hi ,my name is David.</span><br><span class="line">We have 2 persons here.</span><br><span class="line">Hi ,my name is Durban.</span><br><span class="line">We have 2 persons here.</span><br><span class="line">Durban says <span class="built_in">bye</span>.</span><br><span class="line">There are still 1 people left.</span><br><span class="line">David says <span class="built_in">bye</span>.</span><br><span class="line">I am last one</span><br></pre></td></tr></table></figure>
+
+<p>第一次使用，发现<code>__del__</code>这个函数的奇妙之处，就是对象消逝的时候被调用，类似于释放内存的功能。</p>
+<blockquote>
+<p>Python中所有的类成员（包括数据成员）都是 公共的 ，所有的方法都是 有效的 。<br>只有一个例外：如果你使用的数据成员名称以 双下划线前缀 比如<code>__privatevar</code>，Python的名称管理体系会有效地把它作为私有变量。<br>这样就有一个惯例，如果某个变量只想在类或对象中使用，就应该以单下划线前缀。而其他的名称都将作为公共的，可以被其他类&#x2F;对象使用。记住这只是一个惯例，并不是Python所要求的（与双下划线前缀不同）。<br>同样，注意<code>__del__</code>方法与 destructor 的概念类似。</p>
 </blockquote>
-<p>捕获异常的方式</p>
-<h3 id="1-1"><a href="#1-1" class="headerlink" title="方法一 捕获所有的异常"></a><a href="#1-1">方法一 捕获所有的异常</a></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27; 捕获异常的第一种方式，捕获所有的异常 &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    a = b</span><br><span class="line">    b = c</span><br><span class="line"><span class="keyword">except</span> Exception,data:</span><br><span class="line">    <span class="built_in">print</span> Exception,<span class="string">&quot;:&quot;</span>,data</span><br></pre></td></tr></table></figure>
-
-<p>输出：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">＜<span class="built_in">type</span> <span class="string">&#x27;exceptions.Exception&#x27;</span>＞ : <span class="built_in">local</span> variable <span class="string">&#x27;b&#x27;</span> referenced before assignment</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-2"><a href="#1-2" class="headerlink" title="方法二 采用traceback模块查看异常，需要导入traceback模块"></a><a href="#1-2">方法二 采用traceback模块查看异常，需要导入traceback模块</a></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27; 捕获异常的第二种方式，使用traceback查看异常 &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">	a = b</span><br><span class="line">	b = c</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">	<span class="built_in">print</span> traceback.print_exc()</span><br></pre></td></tr></table></figure>
-
-<p>输出：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Traceback (most recent call last):</span><br><span class="line">File <span class="string">&quot;test.py&quot;</span>, line 20, <span class="keyword">in</span> main</span><br><span class="line">a = b</span><br><span class="line">UnboundLocalError: <span class="built_in">local</span> variable <span class="string">&#x27;b&#x27;</span> referenced before assignment</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-3"><a href="#1-3" class="headerlink" title="方法三 采用sys模块回溯最后的异常"></a><a href="#1-3">方法三 采用sys模块回溯最后的异常</a></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;&#x27; 捕获异常的第三种方式，使用sys模块捕获异常 &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">	a = b</span><br><span class="line">	b = c</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">	info = sys.exc_info()</span><br><span class="line">	<span class="built_in">print</span> info</span><br><span class="line">	<span class="built_in">print</span> info[<span class="number">0</span>]</span><br><span class="line">	<span class="built_in">print</span> info[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
-
-<p>输出：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(＜<span class="built_in">type</span> <span class="string">&#x27;exceptions.UnboundLocalError&#x27;</span>＞, UnboundLocalError(<span class="string">&quot;local </span></span><br><span class="line"><span class="string">variable &#x27;b&#x27; referenced before assignment&quot;</span>,),</span><br><span class="line">＜traceback object at 0x00D243F0＞)</span><br><span class="line">＜<span class="built_in">type</span> <span class="string">&#x27;exceptions.UnboundLocalError&#x27;</span>＞</span><br><span class="line"><span class="built_in">local</span> variable <span class="string">&#x27;b&#x27;</span> referenced before assignment</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/%E6%9F%A5%E7%9C%8BPython%E5%BA%93%E7%9A%84%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/%E6%9F%A5%E7%9C%8BPython%E5%BA%93%E7%9A%84%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95.html" class="post-title-link" itemprop="url">查看Python库的安装目录</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-23 16:27:01 / 修改时间：16:31:57" itemprop="dateCreated datePublished" datetime="2025-06-23T16:27:01+08:00">2025-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>查看python中库的位置，其实就是几个命里行的方法</p>
-<p>我这里的方法是：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">davidzhang@192:/Library$ python</span><br><span class="line">Python 2.7.2 (default, Oct 11 2012, 20:14:37) </span><br><span class="line">[GCC 4.2.1 Compatible Apple Clang 4.0 (tags/Apple/clang-418.0.60)] on darwin</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line">&gt;&gt;&gt; import ftplib</span><br><span class="line">&gt;&gt;&gt; reload(ftplib)</span><br><span class="line">&lt;module <span class="string">&#x27;ftplib&#x27;</span> from <span class="string">&#x27;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/ftplib.py&#x27;</span>&gt;</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/paramiko%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/paramiko%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">paramiko的安装与使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-23 16:26:58 / 修改时间：17:15:59" itemprop="dateCreated datePublished" datetime="2025-06-23T16:26:58+08:00">2025-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="简介"></a><a href="#1">简介</a></h3><p>paramiko是用python语言写的一个模块，遵循SSH2协议，支持以加密和认证的方式，进行远程服务器的连接。</p>
-<p>由于使用的是python这样的能够跨平台运行的语言，所以所有python支持的平台，如Linux, Solaris, BSD, MacOS X, Windows等，paramiko都可以支持，因此，如果需要使用SSH从一个平台连接到另外一个平台，进行一系列的操作时，paramiko是最佳工具之一。</p>
-<p>举个常见的例子，现有这样的需求：需要使用windows客户端，远程连接到Linux服务器，查看上面的日志状态，大家通常使用的方法会是：</p>
-<p>1：用telnet</p>
-<p>2：用PUTTY</p>
-<p>3：用WinSCP</p>
-<p>4：用XManager等…</p>
-<p>那现在如果需求又增加一条，要从服务器上下载文件，该怎么办？那常用的办法可能会是：</p>
-<p>1：Linux上安装FTP并配置</p>
-<p>2：Linux上安装Sambe并配置…</p>
-<p>大家会发现，常见的解决方法都会需要对远程服务器必要的配置，如果远程服务器只有一两台还好说，如果有N台，还需要逐台进行配置，或者需要使用代码进行以上操作时，上面的办法就不太方便了。</p>
-<p>使用paramiko可以很好的解决以上问题，比起前面的方法，它仅需要在本地上安装相应的软件（python以及PyCrypto），对远程服务器没有配置要求，对于连接多台服务器，进行复杂的连接操作特别有帮助。</p>
-<h3 id="2"><a href="#2" class="headerlink" title="安装和使用"></a><a href="#2">安装和使用</a></h3><p>1、PyCrypto模块的安装（安装paramiko需要有PyCrypto的支持）</p>
-<p>a、下载地址：<span class="exturl" data-url="aHR0cHM6Ly93d3cuZGxpdHoubmV0L3NvZnR3YXJlL3B5Y3J5cHRvLw==">https://www.dlitz.net/software/pycrypto/<i class="fa fa-external-link-alt"></i></span></p>
-<p>b、解压：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf ./pycrypto-2.6.tar.gz</span><br></pre></td></tr></table></figure>
-
-<p>c、安装：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> pycrypto-2.6/</span><br><span class="line"><span class="built_in">sudo</span> python ./setup.py install</span><br></pre></td></tr></table></figure>
-
-<p>2、paramiko模块的安装</p>
-<p>a、下载地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3poYW5nZGE4OS9wYXJhbWlrby9ibG9iL21hc3Rlci9wYXJhbWlrby9jbGllbnQucHk=">https://github.com/zhangda89/paramiko/blob/master/paramiko/client.py<i class="fa fa-external-link-alt"></i></span></p>
-<p>b、解压：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip ./python-paramiko.zip</span><br></pre></td></tr></table></figure>
-
-<p>c、安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> paramiko-master/</span><br><span class="line"><span class="built_in">sudo</span> python setup.py install</span><br></pre></td></tr></table></figure>
-
-<p>3、运行任意命令，然后进行结果输出</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python </span></span><br><span class="line"><span class="keyword">import</span> paramiko</span><br><span class="line"> </span><br><span class="line">ssh = paramiko.SSHClient()</span><br><span class="line">ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())</span><br><span class="line">ssh.connect(<span class="string">&quot;某IP地址&quot;</span>,<span class="number">22</span>,<span class="string">&quot;用户名&quot;</span>, <span class="string">&quot;口令&quot;</span>)</span><br><span class="line">stdin, stdout, stderr = ssh.exec_command(<span class="string">&quot;你的命令&quot;</span>)</span><br><span class="line"><span class="built_in">print</span> stdout.readlines()</span><br><span class="line">ssh.close()</span><br></pre></td></tr></table></figure>
-
-<p>其中的”你的命令”可以任意linux支持的命令，如一些常用的命令：</p>
-<p>df：查看磁盘使用情况<br>uptime：显示系统运行时间信息<br>cat：显示某文件内容<br>mv&#x2F;cp&#x2F;mkdir&#x2F;rmdir:对文件或目录进行操作<br>&#x2F;sbin&#x2F;service&#x2F; xxxservice start&#x2F;stop&#x2F;restart：启动、停止、重启某服务<br>netstat -ntl |grep 8080：查看8080端口的使用情况<br> 或者 nc -zv localhost ：查看所有端口的使用情况<br>find &#x2F; -name XXX：查找某文件</p>
-<p>4、下载文件</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python </span></span><br><span class="line"><span class="keyword">import</span> paramiko</span><br><span class="line"></span><br><span class="line">t = paramiko.Transport((<span class="string">&quot;主机&quot;</span>,<span class="string">&quot;端口&quot;</span>))</span><br><span class="line">t.connect(username = <span class="string">&quot;用户名&quot;</span>, password = <span class="string">&quot;口令&quot;</span>)</span><br><span class="line">sftp = paramiko.SFTPClient.from_transport(t)</span><br><span class="line">remotepath=<span class="string">&#x27;/var/log/system.log&#x27;</span></span><br><span class="line">localpath=<span class="string">&#x27;/tmp/system.log&#x27;</span></span><br><span class="line">sftp.get(remotepath, localpath)</span><br><span class="line">t.close()</span><br></pre></td></tr></table></figure>
-
-<p>5、上传文件</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python </span></span><br><span class="line"><span class="keyword">import</span> paramiko</span><br><span class="line"></span><br><span class="line">t = paramiko.Transport((<span class="string">&quot;主机&quot;</span>,<span class="string">&quot;端口&quot;</span>))</span><br><span class="line">t.connect(username = <span class="string">&quot;用户名&quot;</span>, password = <span class="string">&quot;口令&quot;</span>)</span><br><span class="line">sftp = paramiko.SFTPClient.from_transport(t)</span><br><span class="line">remotepath=<span class="string">&#x27;/var/log/system.log&#x27;</span></span><br><span class="line">localpath=<span class="string">&#x27;/tmp/system.log&#x27;</span></span><br><span class="line">sftp.put(localpath,remotepath)</span><br><span class="line">t.close()</span><br></pre></td></tr></table></figure>
-
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9nYW5uYW4vYXJjaGl2ZS8yMDEyLzAyLzA2LzIzMzk4ODMuaHRtbA==">paramiko的安装与使用<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3dhbmd3ZWkwMDcuYmxvZy41MWN0by5jb20vNjgwMTkvMTI4NTQxMg==">python用paramiko模块上传本地目录到远程目录<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovLzV5ZHljbS5ibG9nLjUxY3RvLmNvbS8xMTU5MzQvMzQwODU0Lw==">paramiko ssh sftp<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL2VuZ2luZWVyaW5nLm1vbmV0YXRlLmNvbS8yMDEyLzAzLzIzL3B5dGhvbi1zY3JpcHRzLWZvci1kb3dubG9hZGluZy1maWxlcy12aWEtc2Z0cC8=">Python Scripts for Downloading Files via SFTP<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jb2RlcjQuY29tL2FyY2hpdmVzLzMyODA=">Python中操控ssh和sftp<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/%E7%BB%99vps%E8%AE%BE%E7%BD%AEssh%E4%BE%9B%E7%BF%BB%E5%A2%99%E4%BD%BF%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/%E7%BB%99vps%E8%AE%BE%E7%BD%AEssh%E4%BE%9B%E7%BF%BB%E5%A2%99%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">给vps设置ssh供翻墙使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-23 16:26:54 / 修改时间：16:35:26" itemprop="dateCreated datePublished" datetime="2025-06-23T16:26:54+08:00">2025-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在服务器上建一个 username ：</p>
-<p>添加用户：useradd -s &#x2F;bin&#x2F;false username，将用户的shell设置成&#x2F;bin&#x2F;false。这样用户就无法与系统进行交互。</p>
-<p>设置密码：passwd username</p>
-<p>（对已有帐号禁止其shell交互使用：usermod -s &#x2F;bin&#x2F;false username）</p>
-<p><em><strong>小技巧：</strong></em></p>
-<p>也可以使用 &#x2F;usr&#x2F;bin&#x2F;passwd 作为用户的 shell ，这样用户就可以通过登录而来自主修改密码。需要注意的是，需要将 &#x2F;usr&#x2F;bin&#x2F;passwd 这一行写进 &#x2F;etc&#x2F;shells文件。</p>
-<p>sshd 认证通后之后，会检查设定的 shell 是否登记在 &#x2F;etc&#x2F;shells 文件中，若已经登记，则fork自己，然后fork出来的子进程再exec 设定的 shell 。而 ssh 的 -N 参数，则是告诉 sshd 不需要执行 shell。（ssh本身可以通过参数来设置连接到 sshd 但是不执行远程命令，默认是启动用户设定的 shell ）。</p>
-<p>（此文章为转载，未做测试，使用请三思）</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/%E4%BD%BF%E7%94%A8Linode-vps%E7%9A%84ssh%E5%8A%9F%E8%83%BD%E6%9D%A5%E7%BF%BB%E5%A2%99.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/%E4%BD%BF%E7%94%A8Linode-vps%E7%9A%84ssh%E5%8A%9F%E8%83%BD%E6%9D%A5%E7%BF%BB%E5%A2%99.html" class="post-title-link" itemprop="url">使用Linode vps的ssh功能来翻墙</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-23 16:26:50 / 修改时间：16:35:51" itemprop="dateCreated datePublished" datetime="2025-06-23T16:26:50+08:00">2025-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>如果你购买了linode 的vps，就可以使用它做代理上国外的网站，比如facebook，twitter等，不用代理，这些网站在国内是无法否则的，原因不用多说。下面是linode设置代理上网的方法：</p>
-<p>1, 打开PuTTY，输入主机名或IP地址。</p>
-<p>2, 切换到Connection -&gt; SSH -&gt; Tunnels ，设定Source port: 7070（端口号随你喜欢,autoproxy有一条7070端口的记录，设置成这个后面就不用加了）; Destination: 空白, Dynamic，设定完记得按Add。</p>
-<p>3，如有需要，可回到Session保存(Save)设定值，以后运行PuTTY时可直接加载(Load)设定值。在任何时候按”Open”即可以目前设定进行连接。</p>
-<p>4，登录SSH后，将PuTTY界面最小化，保持SSH连接。</p>
-<p>5，设置firefox使用putty生成的socks5代理服务器上网。我们先使用firefox试用一下，autoproxy插件根据个人爱好安装。</p>
-<p>运行firefox，选择“工具”-&gt;“选项”，选择“高级”-&gt;“网络”，</p>
-<p>点击“配置Firefox如何连接至因特网”后的“设置…”，弹出对话框，选择sock5，端口填7070。</p>
-<p>6，这一步很关键：</p>
-<p>经过上面的设置，firefox已经能够访问大部分网站了，但仍然不能访问非死不可和推特，这是为什么呢？原 来，非死不可的 dns查询被动了手脚，无论你向哪个dns服务器查询非死不可的ip地址，都会返回一个错误的结果。幸运的是firefox支持让远程服务器解析 dns地址，但是这个功能默认是关闭的。而IE目前却缺少远程解析dns的功能。</p>
-<p>在firefox的地址栏输入“about:config”进入firefox的高级设置页面，过滤器处输入dns后搜索，找到“network.proxy.socks_remote_dns”项，把它的值改为“true”，然后重新启动firefox：</p>
-<p>好了，现在我们终于能访问久违了的推特。</p>
-<p>7，高级：让firefox自动选择代理服务器（这节不是必须的，可以不看）：</p>
-<p>使用ssh是占用我们vps的流量的，如果你访问完推特又访问新浪微博、百度，访问国内网站的时候会很慢，还占用了流量，firefox的AutoProxy插件就是解决这个问题的。</p>
-<p>AutoProxy会维护一个不能正常访问的网站列表，一旦用户访问列表中的网站，就自动调用代理服务器，而访问不在列表上的网站时，就不会使用代理服务器。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/Xcode%E5%8D%87%E7%BA%A7%E5%88%B05%E4%B9%8B%E5%90%8E-iPhone%E7%9A%84iOS7%E6%A8%A1%E6%8B%9F%E5%99%A8%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%92%8Cmini%E4%B8%80%E6%A0%B7%E5%A4%A7-%E5%8F%88%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%8E%9F%E6%9D%A5%E7%9A%84%E6%A8%A1%E6%8B%9F%E5%99%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/Xcode%E5%8D%87%E7%BA%A7%E5%88%B05%E4%B9%8B%E5%90%8E-iPhone%E7%9A%84iOS7%E6%A8%A1%E6%8B%9F%E5%99%A8%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%92%8Cmini%E4%B8%80%E6%A0%B7%E5%A4%A7-%E5%8F%88%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%8E%9F%E6%9D%A5%E7%9A%84%E6%A8%A1%E6%8B%9F%E5%99%A8.html" class="post-title-link" itemprop="url">Xcode升级到5之后，iPhone的iOS7模拟器的大小和mini一样大  又如何使用原来的模拟器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-23 16:26:46 / 修改时间：16:42:25" itemprop="dateCreated datePublished" datetime="2025-06-23T16:26:46+08:00">2025-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近由于iOS7的出现，为了跟上步调，这不xcode也出新的了，刚出来，创建了一个小的应用，测试的时候就遇到了模拟器的问题，这里我记录一下，希望对看到本帖的人大有帮助</p>
-<p>当我创建完应用，然后运行的</p>
-<p>是不是觉得特别像mini啊，可以使用快捷键改变大小的哦，Command+1,Command+2,Command+3试试就知道了，大小不一样。</p>
-<p>但是是不是无论如何也找不到原来的样式的模拟器了是不是，首先先去看看，自己的模拟器有木有ios6的如果没有请你安装</p>
-<p>将Deployment target中的7.0改为6.0或者是6.1</p>
-<p>然后你去运行一下看看</p>
-<p>你可以选择运行iOS6.1啦</p>
 
       
     </div>
@@ -1294,7 +1158,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/20/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/61/">61</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/22/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/20/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/67/">67</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/22/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">605</span>
+          <span class="site-state-item-count">664</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">83</span>
+        <span class="site-state-item-count">102</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/03/Objective-C-%E4%BF%A1%E6%81%AF%E4%BC%A0%E9%80%92.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/iOS-%E5%B0%8F%E6%8F%90%E7%A4%BA-respondsToSelector.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/03/Objective-C-%E4%BF%A1%E6%81%AF%E4%BC%A0%E9%80%92.html" class="post-title-link" itemprop="url">Objective-C 信息传递</a>
+          <a href="/2025/06/11/iOS-%E5%B0%8F%E6%8F%90%E7%A4%BA-respondsToSelector.html" class="post-title-link" itemprop="url">iOS 小提示 respondsToSelector</a>
         </h2>
 
         <div class="post-meta-container">
@@ -270,15 +270,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-06-03 15:14:54" itemprop="dateCreated datePublished" datetime="2025-06-03T15:14:54+08:00">2025-06-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 16:59:24" itemprop="dateModified" datetime="2025-06-06T16:59:24+08:00">2025-06-06</time>
+      <time title="创建时间：2025-06-11 10:44:01 / 修改时间：10:44:50" itemprop="dateCreated datePublished" datetime="2025-06-11T10:44:01+08:00">2025-06-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -300,19 +294,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Objective-C最大的特色是承自Smalltalk的信息传递模型（message passing），与今日主流的C++差异甚大。Objective-C里，与其说对象互相调用方法，不如说对象之间互相传递信息更为精确。此二种风格的差异主要在于程序如何看待调用方法&#x2F;传送信息这个动作。C++里类型与方法的关系非常严格清楚，一个方法必定属于一个类型，而且在编译时（compile time）就已经紧密绑定，你不可能去调用一个不存在类型里的方法。但在Objective-C，类型与信息的关系比较松散，调用方法视为对对象发送信息，所有方法都被视为对信息的回应。所有信息处理直到运行时（runtime）才会动态决定，并交由类型自行决定如何处理收到的信息。也就是说，一个类型不保证一定会回应收到的信息，如果类型收到了一个无法处理的信息，程序只会抛出一个Exception，不会出错或当掉。</p>
-<p>C++里，送一个信息给对象（或者说调用一个方法）的语法如下:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">obj-&gt;method(argument);</span><br></pre></td></tr></table></figure>
+          <p>respondsToSelector的大概方法如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([<span class="built_in">NSArray</span> respondsToSelector:<span class="keyword">@selector</span>(arrayWithObjects:)])&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>Objective-C则写成:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[obj method: argument];</span><br></pre></td></tr></table></figure>
-<p>此二者并不仅仅是语法上的差异，还有基本行为上的不同。</p>
-<p>这里以一个汽车类（car class）的简单例子来解释Objective-C的信息传递特性：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[car fly];</span><br></pre></td></tr></table></figure>
-
-<p>典型的C++意义解读是“调用car类型的fly方法”。若car类型里头没有定义fly方法，那编译肯定不会通过。但是Objective-C里，我们应当解读为“发提交一个fly的信息给car对象”，fly是信息，而car是信息的接收者。car收到信息后会决定如何回应这个信息，若car类型内定义有fly方法就运行此段程序，若car内不存在fly方法，这里不会产生编译错误，它仅仅是抛出Exception。</p>
-<p>此二种风格各有优劣。C++的编译期绑定使得函数调用非常快速，强制要求所有的方法都必须有对应的动作。缺点是不支持动态绑定（除非手动加上 virtual关键字）。Objective-C天生即是动态绑定，运行期才处理信息，允许传送未知信息给对象。可以送信息给整个对象集合而不需要一一检 查每个对象的型态，天生具备消息转送机制。同时空对象nil也可以接受信息，但是默认不做事，所以送信息给nil也不用担心程序崩溃。</p>
-<p>Objective-C的方法调用因为运行期才动态解析信息，一开始信息比C++ virtual成员函数调用速度慢上三倍。但经由IMP高速缓存改善，目前已经比C++的virtual function快上50％。</p>
+<p>就是NSArray是否会执行arrayWithObjects:方法，一般在执行代理函数之前先这样respondsToSelector检测一下。</p>
 
       
     </div>
@@ -339,7 +324,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/03/Objective-C-Hello-World%E5%AE%9E%E4%BE%8B.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/10-iOS-Libraries-to-Make-Your-Life-Easier-10%E4%B8%AAiOS%E5%BA%93.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -357,7 +342,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/03/Objective-C-Hello-World%E5%AE%9E%E4%BE%8B.html" class="post-title-link" itemprop="url">Objective-C Hello World实例</a>
+          <a href="/2025/06/11/10-iOS-Libraries-to-Make-Your-Life-Easier-10%E4%B8%AAiOS%E5%BA%93.html" class="post-title-link" itemprop="url">10 iOS Libraries to Make Your Life Easier(10个iOS库)</a>
         </h2>
 
         <div class="post-meta-container">
@@ -367,15 +352,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-06-03 15:12:55" itemprop="dateCreated datePublished" datetime="2025-06-03T15:12:55+08:00">2025-06-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 16:59:24" itemprop="dateModified" datetime="2025-06-06T16:59:24+08:00">2025-06-06</time>
+      <time title="创建时间：2025-06-11 10:34:26 / 修改时间：10:39:35" itemprop="dateCreated datePublished" datetime="2025-06-11T10:34:26+08:00">2025-06-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -397,11 +376,37 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>这里示范一个基础的Hello World程序。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import<span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span>&#123;</span><br><span class="line">    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];</span><br><span class="line"> </span><br><span class="line">    NSLog(@<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line"> </span><br><span class="line">    [pool drain];</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>The iOS SDK that developers use to build iPhone and iPad apps is relatively low level, requiring the developer to do a lot of work to get their app up and running. Fortunately there are lots of third party libraries available that provide useful functionality that can make your life as an iOS developer much easier. Here we discuss 10 of the best:（阐述IOS库的是很有用的）</p>
+<p><strong><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2pkZy9NQlByb2dyZXNzSFVE">MBProgressHUD<i class="fa fa-external-link-alt"></i></span> – Progress Indicator Library（进展指示符库）</strong></p>
+<p>Many official Apple apps have a nice translucent progress display. Unfortunately it’s an undocumented API, and therefore using it is likely to get your app rejected from the app store. This library provides a drop in replacement that looks almost identical. It also provides some additional options, such as a visual progress indicator, and a progress completion message. Integrating it into your project is as simple as adding a couple of files, so you’ve got no excuse not to!</p>
+<p><strong><span class="exturl" data-url="aHR0cDovL2FsbHNlZWluZy1pLmNvbS9BU0lIVFRQUmVxdWVzdC8=">ASIHttpRequest<i class="fa fa-external-link-alt"></i></span> – HTTP Network Library（HTTP Network库）</strong></p>
+<p>The iPhone’s network API can be a little verbose. the ASI library simplifies network communication greatly, and offers advanced tools such as file uploads, redirect handling, authentication, form submission, and caching. If you’re doing anything HTTP related in your iPhone app then this library will make your life so much easier! Here’s how simple it makes fetching a website asynchronously:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>) loadAppDevMag</span><br><span class="line">&#123;</span><br><span class="line">   <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;http://www.appdevmag.com&quot;</span>];</span><br><span class="line">   ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];</span><br><span class="line">   [request setDelegate:<span class="keyword">self</span>];</span><br><span class="line">   [request startAsynchronous];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)requestFinished:(ASIHTTPRequest *)request</span><br><span class="line">&#123;</span><br><span class="line">   <span class="comment">// Use when fetching text data</span></span><br><span class="line">   <span class="built_in">NSString</span> *responseString = [request responseString];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>以上是Xcode的旧版”Hello World”程序代码，在4.3.1 xcode的代码为:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> *argv[])</span>&#123;</span><br><span class="line">    @autoreleasepool&#123;</span><br><span class="line">        NSLog(@<span class="string">&quot;Hello World!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong><span class="exturl" data-url="aHR0cHM6Ly9zdGlnLmdpdGh1Yi5jb20vanNvbi1mcmFtZXdvcmsv">JSON Framework<i class="fa fa-external-link-alt"></i></span> – JSON Support（JSON支持）</strong></p>
+<p>If your app interacts with any web services you’ll more than likely come across JSON encoded data. Surprisingly there’s no support for JSON in the native iOS libraries, but the JSON framework provides everything you need, including a parser to turn JSON strings into objects, and a generator to create JSON strings from objects. This library is so popular, and JSON so common, that it’s actually included in many of the other libraries features in this post already. Here’s a quick example:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JSON string -&gt; NSDictionary</span></span><br><span class="line"><span class="built_in">NSString</span> *jsonString = <span class="string">@&quot;&#123;\&quot;foo\&quot;: \&quot;bar\&quot;&#125;&quot;</span>;</span><br><span class="line"><span class="built_in">NSDictionary</span> *dictionary = [jsonString JSONValue];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Dictionary value for \&quot;foo\&quot; is \&quot;%@\&quot;&quot;</span>, [dictionary objectForKey:<span class="string">@&quot;foo&quot;</span>]);</span><br><span class="line"><span class="comment">// NSDictionary -&gt; JSON string</span></span><br><span class="line"><span class="built_in">NSString</span> *newJsonString = [dictionary JSONRepresentation];</span><br></pre></td></tr></table></figure>
+
+<p><strong><span class="exturl" data-url="aHR0cDovL3d3dy5mbHVycnkuY29tL3Byb2R1Y3QvYW5hbHl0aWNzL2luZGV4Lmh0bWw=">Flurry<i class="fa fa-external-link-alt"></i></span> – Detailed Usage Statistics（详尽的使用统计）</strong></p>
+<p>By adding the flurry SDK to your project you’ll automatically get a load of usage statistics about your application, such as how many users you have, how active they are, and where they are in the world. The real power of flurry though is that it allows you to specify your own events to track, and log errors. All of this information is then available in a Google Analytics style dashboard, so you can see what your users are doing with your app, and what problems they’re running into. You really should be using some kind of usage tracking library, and although alternatives do exist, such as <span class="exturl" data-url="aHR0cHM6Ly9jb2RlLmdvb2dsZS5jb20vbW9iaWxlL2FuYWx5dGljcy9kb3dubG9hZC5odG1s">Google Analytics for Mobile<i class="fa fa-external-link-alt"></i></span> and <span class="exturl" data-url="aHR0cDovL3d3dy5sb2NhbHl0aWNzLmNvbS8=">Localytics<i class="fa fa-external-link-alt"></i></span>, Flurry has worked really well for me.</p>
+<p><a target="_blank" rel="noopener" href="http://regexkit.sourceforge.net/RegexKitLite/"><strong>RegexKitLite</strong></a> – <strong>Regular Expression Support（正则表达式支持）</strong></p>
+<p>Regular Expressions are a really powerful tool, and the absence of support for regular expressions in the iPhone SDK seems to be a glaring omission. Fortunately the RexexKitLite library is here to help. It’s a powerful fully featured regex library that’s simple to use. Here’s the sample code to match a phone number:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// finds phone number in format nnn-nnn-nnnn</span></span><br><span class="line"><span class="built_in">NSString</span> *regEx = <span class="string">@&quot;[0-9]&#123;3&#125;-[0-9]&#123;3&#125;-[0-9]&#123;4&#125;&quot;</span>;</span><br><span class="line"><span class="keyword">for</span>(<span class="built_in">NSString</span> *match <span class="keyword">in</span> [textView.text componentsMatchedByRegex:regEx]) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Phone number is %@&quot;</span>, match);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2ZhY2Vib29rL2ZhY2Vib29rLWlvcy1zZGs=">Facebook iOS SDK<i class="fa fa-external-link-alt"></i></span> – Facebook API Library（Facebook API 库）</strong></p>
+<p>Facebook login (previously called Facebook Connect) is used all over the web as a way for users to login to services by using their existing Facebook account, saving them from having to create lots of separate accounts. This library allows you to do the same with your iPhone apps. It also has full support for both the Facebook Graph API and the older REST api, which give you access to the social graph and related Facebook information of your users, and make it easy to implement features such as friend finders and inviters. This library is used by a lot of big name apps for their Facebook integration, so if you want to use Facebook as your primary authentication method or you’d just like to add a friend invite feature this library is well worth checking out.</p>
+<p><strong><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3JzL1NEV2ViSW1hZ2U=">SDWebImage<i class="fa fa-external-link-alt"></i></span> – Simple Web Image Support（网络图片支持）</strong></p>
+<p>SDWebImage is a library for dealing with images on the web. It allows you to use images on the web as easily as local files already packaged with your application. It automatically handles caching, and also supports advanced features such as placeholder images and a download queue. Once you’ve added it to your project you can set the image for a UIWebView as simply as:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[imageView setImageWithURL:[<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;http://example.com/image.png&quot;</span>]];</span><br></pre></td></tr></table></figure>
+
+<p>Similar functionality is provided by the Three20 library, mentioned later, but if you’re after a simple library that focuses on doing one thing well, and you’re using web based images in your project, then SDBWebImage is what you need.</p>
+<p><strong><span class="exturl" data-url="aHR0cHM6Ly9jb2RlLmdvb2dsZS5jb20vcC9nZGF0YS1vYmplY3RpdmVjLWNsaWVudC8=">GData client<i class="fa fa-external-link-alt"></i></span> – iPhone library for all of Google’s services（iPhone上所有Google相关服务的类库）</strong></p>
+<p>Google’s official GData library allows you to access many of Google’s services, including contacts, calendar, analytics, picasa, translate and YouTube. The project is well documented, and contains lots of example applications. With all of the great services Google offer there are so many different ways that this library could be used to enhance an existing application, and there are probably lots of interesting apps that could be built off the back of the example apps included in this library. If you’re an iOS developer stuck for ideas then this is where I’d suggest you look!</p>
+<p><strong><span class="exturl" data-url="aHR0cHM6Ly9jb2RlLmdvb2dsZS5jb20vcC9jb3JlLXBsb3Qv">CorePlot<i class="fa fa-external-link-alt"></i></span> – 2D Graph Plotter（2D图形绘图仪）</strong></p>
+<p>CorePlot makes makes it extremely easy to visualize your data in a variety of ways, and produces very attractive graphs. It supports bar graphs, pie charts, line graphs, and complex mathematical function plotting among others. The library is well documented, and the website contains lots of examples of where it’s already being used, including stock price applications, game scores, personal finance apps, and for web analytics visualization.</p>
+<p><strong><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2ZhY2Vib29rL3RocmVlMjA=">Three20<i class="fa fa-external-link-alt"></i></span> – General iOS Library（通用iOS库）</strong></p>
+<p>The Three20 library came out of the official Facebook iPhone app. It’s a fairly big and full featured library, including low level components such as a HTTP cache, and many higher level UI components such as a photo viewer and web based table view. It can be a little tricky to integrate Three20 into existing projects, but if you’re starting a project from scratch Three20 can really give you a big head start, especially for projects that make heavy use of the web.</p>
+<p>Whether it’s interacting with a web API, visualizing data, loading images from the web, or creating social features in your app, the libraries listed here make developing such features easier and less time consuming. If you’re an iOS developer and you haven’t made use of any of these libraries then you should definitely check them out before starting your next project. If you have used any of them, or one that we haven’t mentioned, then please let us know your experiences in the comments.（有了更多的库，会让你的开发更容易，生活更美好）</p>
 
       
     </div>
@@ -428,7 +433,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/03/Yii-CRUD%E6%93%8D%E4%BD%9C.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%B8%AAnginx%E7%9A%84%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF%E8%A7%A3%E9%87%8A-nginx%E2%80%93getgrnam-presmini-failed.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -446,7 +451,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/03/Yii-CRUD%E6%93%8D%E4%BD%9C.html" class="post-title-link" itemprop="url">Yii CRUD操作</a>
+          <a href="/2025/06/11/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%B8%AAnginx%E7%9A%84%E4%B8%80%E4%B8%AA%E9%94%99%E8%AF%AF%E8%A7%A3%E9%87%8A-nginx%E2%80%93getgrnam-presmini-failed.html" class="post-title-link" itemprop="url">关于一个nginx的一个错误解释“nginx – getgrnam (“presmini”) failed”</a>
         </h2>
 
         <div class="post-meta-container">
@@ -456,15 +461,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-06-03 15:11:26" itemprop="dateCreated datePublished" datetime="2025-06-03T15:11:26+08:00">2025-06-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 16:59:24" itemprop="dateModified" datetime="2025-06-06T16:59:24+08:00">2025-06-06</time>
+      <time title="创建时间：2025-06-11 10:34:08 / 修改时间：10:37:49" itemprop="dateCreated datePublished" datetime="2025-06-11T10:34:08+08:00">2025-06-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -486,8 +485,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>对于喜欢操作sql语句的人来说和对于sql语句基础不是很好的，能够明白每个CRUD操作是什么意思很重要，简单的介绍个例子，代码如下：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span> <span class="keyword">extends</span> <span class="title">CActiveRecord</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$fixtures</span> = [</span><br><span class="line">        <span class="string">&#x27;posts&#x27;</span> =&gt; <span class="string">&#x27;Post&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;tags&#x27;</span> =&gt; <span class="string">&#x27;Tag&#x27;</span>,</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">findPost</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">//调用find时，我们使用$condition和$params指定查询条件。</span></span><br><span class="line">        <span class="comment">//此处$condition可以是SQL语句中的WHERE字符串，$params则是一个参数数组，</span></span><br><span class="line">        <span class="comment">//其中的值应绑定到$condation中的占位符。</span></span><br><span class="line">        <span class="variable">$post</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">posts</span>(<span class="string">&#x27;post1&#x27;</span>);</span><br><span class="line">        <span class="variable">$fPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">find</span>(<span class="string">&#x27;id=:id&#x27;</span>, [<span class="string">&#x27;:id&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;id]);</span><br><span class="line">        <span class="comment">//SELECT * FROM `tbl_post` `t` WHERE `t`.`id`=1 LIMIT 1</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$fPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">find</span>(<span class="string">&#x27;?&#x27;</span>, [<span class="variable">$post</span>-&gt;id]);</span><br><span class="line">        <span class="comment">//SELECT * FROM `tbl_post` `t` WHERE &#x27;1&#x27; LIMIT 1</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//find返回符合条件的第一条记录，而findAll会返回符合条件的所有行。</span></span><br><span class="line">        <span class="variable">$fAllPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findAll</span>(<span class="string">&#x27;id=:id&#x27;</span>, [<span class="string">&#x27;:id&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;id]);</span><br><span class="line">        <span class="comment">//SELECT * FROM `tbl_post` `t` WHERE id = &#x27;1&#x27;</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$fAllPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findAll</span>(<span class="string">&#x27;?&#x27;</span>, [<span class="variable">$post</span>-&gt;id]);</span><br><span class="line">        <span class="comment">//SELECT * FROM `tbl_post` `t` WHERE &#x27;1&#x27;</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$criteria</span> = <span class="keyword">new</span> <span class="title class_">CDbCriteria</span>();</span><br><span class="line">        <span class="variable">$criteria</span>-&gt;condition = <span class="string">&#x27;id=:id AND title=:title&#x27;</span>;</span><br><span class="line">        <span class="variable">$criteria</span>-&gt;params = [<span class="string">&#x27;:id&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;id, <span class="string">&#x27;:title&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;title];</span><br><span class="line">        <span class="variable">$fPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">find</span>(<span class="variable">$criteria</span>);</span><br><span class="line">        <span class="comment">//SELECT * FROM `tbl_post` `t` WHERE id = &#x27;1&#x27; AND title = &#x27;post1&#x27; LIMIT 1</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$fAllPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findAll</span>(<span class="variable">$criteria</span>);</span><br><span class="line">        <span class="comment">//SELECT * FROM `tbl_post` `t` WHERE id = &#x27;1&#x27; AND title = &#x27;post1&#x27;</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$fPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findByPk</span>(<span class="variable">$post</span>-&gt;id, <span class="string">&#x27;title=:title&#x27;</span>, [<span class="string">&#x27;:title&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;title]);</span><br><span class="line">        <span class="comment">//SELECT * FROM `tbl_post` `t` WHERE `t`.`id`=1 AND (title = &#x27;post1&#x27;) LIMIT 1</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$fPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findByAttributes</span>([<span class="string">&#x27;id&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;id, <span class="string">&#x27;title&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;title]);</span><br><span class="line">        <span class="comment">//SELECT * FROM `tbl_post` `t` WHERE `t`.`id`=&#x27;1&#x27; AND `t`.`title`=&#x27;post1&#x27; LIMIT 1</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$sql</span> = <span class="string">&#x27;SELECT id, title from &#123;&#123;post&#125;&#125; WHERE id = ? AND title = ?&#x27;</span>; <span class="comment">//必须设置表前缀</span></span><br><span class="line">        <span class="variable">$fPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findBySql</span>(<span class="variable">$sql</span>, [<span class="variable">$post</span>-&gt;id, <span class="variable">$post</span>-&gt;title]);</span><br><span class="line"></span><br><span class="line">        <span class="variable">$sql</span> = <span class="string">&#x27;SELECT id, title from &#123;&#123;post&#125;&#125; WHERE id = :id AND title = :title&#x27;</span>;</span><br><span class="line">        <span class="variable">$fPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findBySql</span>(<span class="variable">$sql</span>, [<span class="string">&#x27;:id&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;id, <span class="string">&#x27;:title&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;title]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//如果没有找到符合条件的行，find返回null，findAll返回array()。</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">countPost</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$post</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">posts</span>(<span class="string">&#x27;post1&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="variable">$cPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">count</span>(<span class="string">&#x27;?&#x27;</span>, [<span class="variable">$post</span>-&gt;title]);</span><br><span class="line">        <span class="comment">//SELECT COUNT(*) FROM `tbl_post` `t` WHERE &#x27;post1&#x27; 无意义</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$cPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">countByAttributes</span>([<span class="string">&#x27;title&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;title, <span class="string">&#x27;content&#x27;</span> =&gt; <span class="variable">$post</span>-&gt;content]);</span><br><span class="line">        <span class="comment">//SELECT COUNT(*) FROM `tbl_post` `t` WHERE `t`.`title`=&#x27;post1&#x27; AND `t`.`content`=&#x27;content1&#x27;</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$sql</span> = <span class="string">&quot;SELECT title from &#123;&#123;post&#125;&#125; WHERE title LIKE &#x27;%&quot;</span> . <span class="variable">$post</span>-&gt;title . <span class="string">&quot;%&#x27;&quot;</span>;</span><br><span class="line">        <span class="variable">$cPost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">countBySql</span>(<span class="variable">$sql</span>);</span><br><span class="line">        <span class="comment">//至少有一条记录符合查询条件</span></span><br><span class="line">        <span class="variable">$ePost</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">exists</span>(<span class="string">&#x27;id=?ANDtitle=?&#x27;</span>, [<span class="variable">$post</span>-&gt;id, <span class="variable">$post</span>-&gt;title]);</span><br><span class="line">        <span class="comment">//SELECT 1 FROM `tbl_post` `t` WHERE id = &#x27;1&#x27; AND title = &#x27;post1&#x27; LIMIT 1</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">updatePost</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$post</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">posts</span>(<span class="string">&#x27;post1&#x27;</span>);</span><br><span class="line">        <span class="variable">$post</span>-&gt;title = <span class="string">&#x27;updatepost1&#x27;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$post</span>-&gt;isNewRecord) &#123;</span><br><span class="line">            <span class="variable">$post</span>-&gt;create_time = <span class="variable">$post</span>-&gt;update_time = <span class="keyword">new</span> <span class="title class_">CDbExpression</span>(<span class="string">&#x27;NOW()&#x27;</span>);</span><br><span class="line">            <span class="comment">//UPDATE `tbl_post` SET `id`=1, `title`=&#x27;update post 1&#x27;, `content`=&#x27;content1&#x27;, `tags`=NULL, `status`=1, `create_time`=NULL, `update_time`=1302161123, `author_id`=1 WHERE `tbl_post`.`id`=1</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable">$post</span>-&gt;update_time = <span class="title function_ invoke__">time</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable">$post</span>-&gt;<span class="title function_ invoke__">save</span>();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//updateAll</span></span><br><span class="line">        <span class="variable">$sql</span> = <span class="string">&quot;SELECT * FROM &#123;&#123;post&#125;&#125; WHERE title LIKE &#x27;%&quot;</span> . <span class="string">&quot;post&quot;</span> . <span class="string">&quot;%&#x27;&quot;</span>;</span><br><span class="line">        <span class="comment">//SELECT * FROM tbl_post WHERE title LIKE &#x27;%post%&#x27;</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$post</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findBySql</span>(<span class="variable">$sql</span>);</span><br><span class="line">        <span class="variable">$post</span>-&gt;<span class="title function_ invoke__">updateAll</span>([<span class="string">&#x27;update_time&#x27;</span> =&gt; <span class="title function_ invoke__">time</span>()], <span class="string">&#x27;id&lt;=?&#x27;</span>, [<span class="string">&#x27;2&#x27;</span>]);</span><br><span class="line">        <span class="comment">//UPDATE `tbl_post` SET `update_time`=1302161123 WHERE id &lt;= &#x27;2&#x27;</span></span><br><span class="line"></span><br><span class="line">        <span class="variable">$post</span>-&gt;<span class="title function_ invoke__">updateByPk</span>(<span class="variable">$post</span>-&gt;id + <span class="number">2</span>, [<span class="string">&#x27;title&#x27;</span> =&gt; <span class="string">&#x27;updatepost3&#x27;</span>]);</span><br><span class="line">        <span class="variable">$post</span>-&gt;<span class="title function_ invoke__">updateByPk</span>(<span class="variable">$post</span>-&gt;id, [<span class="string">&#x27;title&#x27;</span> =&gt; <span class="string">&#x27;updatepost3&#x27;</span>], <span class="string">&#x27;id=?&#x27;</span>, [<span class="string">&#x27;3&#x27;</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//updateCounter更新某个字段的数值，一般是计数器(+/-)。</span></span><br><span class="line">        <span class="variable">$tag</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">tags</span>(<span class="string">&#x27;tag1&#x27;</span>);</span><br><span class="line">        <span class="variable">$uTag</span> = <span class="title class_">Tag</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">updateCounters</span>([<span class="string">&#x27;frequency&#x27;</span> =&gt; <span class="string">&#x27;3&#x27;</span>], <span class="string">&#x27;id=?&#x27;</span>, [<span class="string">&#x27;1&#x27;</span>]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">deletePost</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$post</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">posts</span>(<span class="string">&#x27;post1&#x27;</span>);</span><br><span class="line">        <span class="variable">$post</span>-&gt;<span class="title function_ invoke__">delete</span>();</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="number">1</span>, <span class="variable">$post</span>-&gt;id); <span class="comment">//删除数据库表中的记录，但是post的这个实例还在。</span></span><br><span class="line">        <span class="variable">$post2</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findByPk</span>(<span class="variable">$post</span>-&gt;id);</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="literal">null</span>, <span class="variable">$post2</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//多条记录</span></span><br><span class="line">        <span class="variable">$delete</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">deleteAll</span>(<span class="string">&#x27;(id = ? AND title = ?) || (id = \&#x27;4\&#x27;) &#x27;</span>, [<span class="number">1</span>, <span class="string">&#x27;post1&#x27;</span>]);</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="number">0</span>, <span class="variable">$delete</span>);</span><br><span class="line"></span><br><span class="line">        <span class="variable">$delete</span> = <span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">deleteAllByAttributes</span>([<span class="string">&#x27;id&#x27;</span> =&gt; <span class="string">&#x27;2&#x27;</span>], <span class="string">&#x27;content=?&#x27;</span>, [<span class="string">&#x27;content2&#x27;</span>]);</span><br><span class="line">        <span class="comment">//DELETE FROM `tbl_post` WHERE `tbl_post`.`id`=&#x27;2&#x27; AND (content = &#x27;content2&#x27;)</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assertEquals</span>(<span class="number">1</span>, <span class="variable">$delete</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>I got this error after installing nginx and trying to run passenger for my ruby apps. I understood that I needed to run nginx as the same user I was using to run my ruby apps. To do this, I had to use the “user” directive in the nginx.conf file to define the startup user to be “presmini” (the same user running my ruby apps). What I screwed up was that the failure（他也遇到了，其实我也遇到了）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[emerg]: getgrnam(“presmini”) failed <span class="keyword">in</span> /opt/nginx/conf/nginx.conf:1</span><br></pre></td></tr></table></figure>
+
+<p>上面是错误提示的说明。</p>
+<p>is that I wasn’t explicity defining a group in the nginx.conf file, and so it was defaulting to something that does exist. Since I’m on a mac, I just changed the “user” directive in the nginx.conf file to:</p>
+<p>原因是没有添加组</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user presmini staff</span><br></pre></td></tr></table></figure>
+
+<p>修改成类似这样的就可以了</p>
 
       
     </div>
@@ -514,7 +520,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/03/Yii%E5%9C%A8IIS%E4%B8%8B%E7%9A%84%E4%BC%AA%E9%9D%99%E6%80%81%E5%A4%84%E7%90%86.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/MAC-OS-X-PHP5.3-with-FPM.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -532,7 +538,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/03/Yii%E5%9C%A8IIS%E4%B8%8B%E7%9A%84%E4%BC%AA%E9%9D%99%E6%80%81%E5%A4%84%E7%90%86.html" class="post-title-link" itemprop="url">Yii在IIS下的伪静态处理</a>
+          <a href="/2025/06/11/MAC-OS-X-PHP5.3-with-FPM.html" class="post-title-link" itemprop="url">MAC OS X PHP5.3 with FPM</a>
         </h2>
 
         <div class="post-meta-container">
@@ -542,15 +548,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-06-03 15:09:10" itemprop="dateCreated datePublished" datetime="2025-06-03T15:09:10+08:00">2025-06-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 16:59:24" itemprop="dateModified" datetime="2025-06-06T16:59:24+08:00">2025-06-06</time>
+      <time title="创建时间：2025-06-11 10:33:56 / 修改时间：10:35:58" itemprop="dateCreated datePublished" datetime="2025-06-11T10:33:56+08:00">2025-06-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -572,10 +572,33 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Yii在IIS下的伪静态处理是，在根目录建立httpd.ini文件，然后使用IIS的伪静态规则，写入自己需要的规则：</p>
-<p>我购买的虚拟主机在香港，因为windows的主机比较多，于是我也中招了，于是四处寻求方法，四处尝试，终于找到了适合Yii的伪静态规则：</p>
-<p>代码如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[ISAPI_Rewrite]</span><br><span class="line"><span class="comment"># 3600 = 1 hour</span></span><br><span class="line">CacheClockRate 3600</span><br><span class="line">RepeatLimit 32</span><br><span class="line">RewriteEngine On</span><br><span class="line"><span class="comment">#伪静态规则</span></span><br><span class="line">RewriteBase /</span><br><span class="line">RewriteCond %&#123;REQUEST_FILENAME&#125; !-f</span><br><span class="line">RewriteCond %&#123;REQUEST_FILENAME&#125; !-d</span><br><span class="line">RewriteRule ^(.*)/(.*)$ <span class="variable">$1</span>/index.php?<span class="variable">$2</span></span><br><span class="line">RewriteRule !\.(js|ico|gif|jpe?g|bmp|png|css)$ index.php [L]</span><br><span class="line">我在虚拟机上测试通过了，哈哈，希望对你也有用</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+          <p>I’ve been considering diving into nginx for a bit now. Rumors of it’s speed and Cyrillic error messages have intrigued me. With recent forays into node.js apps and their requirement for a free port, I wanted to find a nice solution that complimented the evented speed of node.js without exposing a port publicly for each app. As it turns out Nginx is suited quite nicely to this. But that wasn’t where it ended. I found nginx to have a much more interesting and dynamic config language. And even beyond that it gave me a good excuse to learn more about running PHP as a FastCGI process and how PHP-FPM (baked in as of 5.3.3) fits into the picture. Not sure if MEMP is the correct acronym, but since I’ve seen talk of LEMP servers, I’ll run with it.（似乎说了一下为什么要使用PHP-FPM）  </p>
+<p>MacPorts. If you’re not already familiar with it, I recommend reading up before proceeding.  </p>
+<p>Since I already have MySQL set up and configured I won’t bother covering it here. It’s pretty well documented around the webs. The main focus here is going to be getting nginx installed and setting up PHP as a service to it with an emphasis on local development. No need to tweak this for production on my Macbook Pro.(这里说明了一下MacPorts是什么，给他带了什么好处)  </p>
+<p>PHP 5.3.3 introduced PHP-FPM (FastCGI Process Manager) to the codebase. Building it requires a few extra config flags and generates a php-fpm binary. The binary will manage spawning cgi processes and handling the FastCGI passthru from nginx. Currently MacPorts does not have an option to build PHP with PHP-FPM. After some hacking on the current Portfile I arrived at a working solution. It includes the correct flags, a dependency on libevent, and a startup item.(这里介绍了一下什么是PHP-FPM)</p>
+<p>First things first.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> port selfupdate</span><br><span class="line"><span class="comment"># recommended but probably not a requirement</span></span><br><span class="line"><span class="built_in">sudo</span> port upgrade outdated</span><br><span class="line"><span class="built_in">sudo</span> port uninstall inactive</span><br></pre></td></tr></table></figure>
+
+<p>(If you’ve already got the php5 package installed, uninstall it and it’s cohorts to ensure a clean install process going forward.)<br>This is a bit of a hack and there’s probably a better way, like submitting a proper patch to MacPorts, but this will get the job done for today.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># replace this file with the Portfile from the gist below</span></span><br><span class="line">/opt/local/var/macports/sources/rsync.macports.org/release/ports/lang/php5/Portfile</span><br></pre></td></tr></table></figure>
+
+<p>Then run the regular port install.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> port install nginx php5 +fastcgi php5-apc php5-mysql +mysqlnd</span><br></pre></td></tr></table></figure>
+
+<p>Next we’ll need to set up the configs. There’s two basic configs that require attention. First is the nginx config. Since this is just for a local development env we can be pretty lean on what we need.</p>
+<p>下面是关于nginx的配置</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /opt/local/etc/nginx/nginx.conf</span></span><br><span class="line"></span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">error_log  /var/log/nginx/error.log;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    sendfile           on;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">      listen 80;</span><br><span class="line">      server_name   ~^<span class="built_in">local</span>\.(?.+?)\.com$;</span><br><span class="line">      root  /Users/jason/Sites/<span class="variable">$site</span>/web;</span><br><span class="line">      index  index.php index.html;</span><br><span class="line"></span><br><span class="line">      location = /favicon.ico &#123;</span><br><span class="line">        log_not_found off;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      location ~ \.php$ &#123;</span><br><span class="line">         fastcgi_pass   unix:/tmp/php-fpm.sock;</span><br><span class="line">         fastcgi_param  SCRIPT_FILENAME  $document_root<span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">         include        fastcgi_params;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>This is the config that I’m currently using as my generic site config. It has a few nice features. First the server name is matched against a regular expression. So any site that matches local.xxxx.com will be parsed and use the xxxx as a sub-directory in my Sites folder. This is nice. So I only need to create a new directory and add my local.xxxx.com domain to &#x2F;etc&#x2F;hosts pointed at 127.0.0.1 and I can immediately begin developing. Gone are the days of creating a new v-hosts file, enabling it, and restarting apache every time I want to play with a new site’s code. The other nicety here is we’re using a unix socket for the fastcgi passthru. This is unnoticeably faster on my Mac, but again frees up the need to be concerned with another open port on my system.<br>It’s worth noting that any fastcgi_param that you define in this config is available within PHP as a $_SERVER variable.<br>The second config is the FPM config. Copy &#x2F;opt&#x2F;local&#x2F;etc&#x2F;php-fpm.conf.default to &#x2F;opt&#x2F;local&#x2F;etc&#x2F;php-fpm.conf and open it up. Here are the important ones to modify:（下面是关于php-fpm的配置）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">pid = /opt/local/var/run/php-fpm.pid</span><br><span class="line">error_log = /opt/local/var/log/php-fpm.log</span><br><span class="line">listen = /tmp/php-fpm.sock</span><br><span class="line">listen.owner = _www</span><br><span class="line">listen.group = _www</span><br><span class="line">pm.max_children = 1</span><br><span class="line">pm.start_servers = 1</span><br><span class="line">pm.min_spare_servers = 1</span><br><span class="line">pm.max_spare_servers = 1</span><br><span class="line">pm.max_requests = 500</span><br><span class="line">slowlog = /opt/local/var/log/php-fpm.log.slow</span><br></pre></td></tr></table></figure>
+
+<p>It’s pretty straight-forward. Lean cus we can. Save and continue.<br>At this point we’ve got all the pieces in place. We just need a way to start&#x2F;stop&#x2F;restart nginx and FPM. I looked for a cleaner way to accomplish this but in the end it came down to a handful of aliases. Add these to your ~&#x2F;.profile.（配置啊启动和关闭nginx，fpm）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nginx</span></span><br><span class="line"><span class="built_in">alias</span> nginx_start=<span class="string">&#x27;sudo launchctl load /Library/LaunchDaemons/org.macports.nginx.plist&#x27;</span> </span><br><span class="line"><span class="built_in">alias</span> nginx_stop=<span class="string">&#x27;sudo launchctl unload /Library/LaunchDaemons/org.macports.nginx.plist&#x27;</span> </span><br><span class="line"><span class="built_in">alias</span> nginx_restart=<span class="string">&#x27;nginx_stop; nginx_start;&#x27;</span> </span><br><span class="line"></span><br><span class="line"><span class="comment"># php-fpm</span></span><br><span class="line"><span class="built_in">alias</span> fpm_start=<span class="string">&#x27;sudo launchctl load /Library/LaunchDaemons/org.macports.php-fpm.plist&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> fpm_stop=<span class="string">&#x27;sudo launchctl unload /Library/LaunchDaemons/org.macports.php-fpm.plist&#x27;</span></span><br><span class="line"><span class="built_in">alias</span> fpm_restart=<span class="string">&#x27;fpm_stop; fpm_start&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>（到这里，果然牛逼，直接放在自己的命令行里面）</p>
+<p>Reopen the Terminal window to enable the new aliases. Start or restart nginx and FPM as the case may be.  </p>
+<p>At this point you should be able to create a site directory, add a domain to &#x2F;etc&#x2F;hosts and drop in an index.php with phpinfo(); to verify that PHP is working.<br>Hopefully this will be of some use to other aspiring MEMP devs out there.</p>
+<p>来源：<span class="exturl" data-url="aHR0cDovL2Jsb2cuamFzb25tb29iZXJyeS5jb20vMjAxMC8xMi9tZW1wLXBocC01LTMtd2l0aC1mcG0tYW5kLW5naW54LXZpYS1tYWNwb3J0cy8=">http://blog.jasonmooberry.com/2010/12/memp-php-5-3-with-fpm-and-nginx-via-macports/<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -602,7 +625,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/03/Yii-Gii%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/10/Mac-OS-X%E4%B8%8B%E5%AE%89%E8%A3%85nginx+php%E5%8F%8A%E6%B5%8B%E8%AF%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -620,7 +643,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/03/Yii-Gii%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">Yii-Gii的安装和配置</a>
+          <a href="/2025/06/10/Mac-OS-X%E4%B8%8B%E5%AE%89%E8%A3%85nginx+php%E5%8F%8A%E6%B5%8B%E8%AF%95.html" class="post-title-link" itemprop="url">Mac OS X下安装nginx+php及测试</a>
         </h2>
 
         <div class="post-meta-container">
@@ -630,15 +653,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-06-03 15:05:48" itemprop="dateCreated datePublished" datetime="2025-06-03T15:05:48+08:00">2025-06-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 16:59:24" itemprop="dateModified" datetime="2025-06-06T16:59:24+08:00">2025-06-06</time>
+      <time title="创建时间：2025-06-10 15:46:40 / 修改时间：16:54:41" itemprop="dateCreated datePublished" datetime="2025-06-10T15:46:40+08:00">2025-06-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -660,13 +677,54 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Gii 是基于 web 的 Yii framework 代码生成器。</p>
-<p>开始配置</p>
-<p>可以在你的应用程序配置文件中增加以下代码以使用该模块：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;modules&#x27;</span> =&gt; [</span><br><span class="line">    <span class="string">&#x27;gii&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;system.gii.GiiModule&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;username&#x27;</span> =&gt; <span class="string">&#x27;dev&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;password&#x27;</span> =&gt; <span class="string">&#x27;yiidev&#x27;</span>,</span><br><span class="line">    ],</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+          <p>—先安装XCode，这样才有GCC等必要开发工具包</p>
+<p>默认XCode安装完成不会添加命令行支持，需要在XCode的“偏好设置–&gt;下载–&gt;选择下载命令行支持”</p>
+<p>–命令行在 “应用程序–&gt; 实用工具–&gt;终端”</p>
+<h3 id="1"><a href="#1" class="headerlink" title="安装依赖的库"></a><a href="#1">安装依赖的库</a></h3><p>建议通过Macports来进行安装，（附<span class="exturl" data-url="aHR0cDovL3d3dy4zMjEzMy5jb20vc2tpbGxzLzU5OS5odG1s">MacPorts安装使用说明<i class="fa fa-external-link-alt"></i></span>）。只需要执行如下指令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo port install pcre</span><br></pre></td></tr></table></figure>
 
-<p>运行</p>
-<p>打开浏览器，输入 <code>http://localhost/yourapp/index.php?r=gii</code>，使用刚才在配置文件中填的 username 和 password 登录。</p>
+<p>如果你已经通过自己下载pcre包来make &amp; make install，很有可能会由于安装的pcre路径问题，在安装其他软件时会出问题。想要删除安装好的pcre，则只需要在下载下来的pcre解压文件夹下，执行make uninstall。</p>
+<h3 id="2"><a href="#2" class="headerlink" title="安装Nginx"></a><a href="#2">安装Nginx</a></h3><p>方法一：仍然通过Macports，执行下面语句就ok</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo port install nginx spawn-fcgi</span><br></pre></td></tr></table></figure>
+
+<p>方法二:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$</span><span class="language-bash">curl -O http://nginx.org/download/nginx-0.8.53.tar.gz</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">tar zxvf nginx-0.8.53.tar.gz</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash"><span class="built_in">cd</span> nginx-0.8.53</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">./configure --prefix=/usr/local/nginx --conf-path=/usr/local/nginx/conf/nginx.conf</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash">make</span></span><br><span class="line"><span class="meta prompt_">$</span><span class="language-bash"><span class="built_in">sudo</span> make install</span></span><br></pre></td></tr></table></figure>
+
+<p>配置文件为：<code>/usr/local/nginx/conf/nginx.conf</code><br>默认安装在<code>/usr/local/nginx</code><br>启动：输入以下命令启动Nginx，然后浏览器输入地址 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC8=">http://localhost<i class="fa fa-external-link-alt"></i></span> 进行测试，看到很大的字体的Welcome to nginx!就代表安装成功了</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure>
+
+<p>推荐关闭方式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/nginx/sbin/nginx -s stop</span><br></pre></td></tr></table></figure>
+
+<p>其他关闭方式：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep nginx # 找到pid</span><br><span class="line"></span><br><span class="line">sudo kill pid</span><br></pre></td></tr></table></figure>
+
+<h3 id="3"><a href="#3" class="headerlink" title="安装PHP"></a><a href="#3">安装PHP</a></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo port install php5 +fastcgi fcgi php5-gd php5-mysql php5-sqlite php5-eaccelerator php5-curl php5-iconv</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-1"><a href="#3-1" class="headerlink" title="配置文件"></a><a href="#3-1">配置文件</a></h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/local/etc/php5</span><br><span class="line">sudo cp php.ini-development php.ini</span><br></pre></td></tr></table></figure>
+
+<p>将时区修改为：<code>date.timezone = Asia/Chongqing</code><br>错误级别修改为：<code>error\_reporting = E\_ALL &amp; ~E\_NOTICE</code></p>
+<p>启动：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo /opt/local/bin/spawn-fcgi -C 2 -p 9000 -f /opt/local/bin/php-cgi</span><br></pre></td></tr></table></figure>
+
+<h3 id="4"><a href="#4" class="headerlink" title="遇到NGINX PHP “No input file specified”问题，解决方法："></a><a href="#4">遇到NGINX PHP “No input file specified”问题，解决方法：</a></h3><p>1、 php.ini（&#x2F;opt&#x2F;local&#x2F;etc&#x2F;php5&#x2F;php.ini或者&#x2F;etc&#x2F;php5&#x2F;cgi&#x2F;php.ini）的配置中这两项</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cgi.fix_pathinfo=1 （这个是自己添加的）</span><br><span class="line">doc_root= （这行本来就有）</span><br></pre></td></tr></table></figure>
+
+<p>并修改下面：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">    fastcgi_index  index.php;</span><br><span class="line">    fastcgi_param  SCRIPT_FILENAME  /var/www/sitepath$fastcgi_script_name;</span><br><span class="line">    include               fastcgi_params;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>/var/www/sitepath</code>部分路径需要根据你主机主目录的实际情况填写，也可以用$document_root代替，其值实为PHP配置文件中的basedir一值。</p>
+<p>测试方法：</p>
+<p>在nginx的html目录下（默认为&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;html），新建一个文件test.php，输入以下测试代码：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//测试mysql</span></span><br><span class="line"><span class="variable">$link</span> = <span class="title function_ invoke__">mysql_connect</span>(<span class="string">&#x27;localhost&#x27;</span>, <span class="string">&#x27;root&#x27;</span>, <span class="string">&#x27;mysql密码&#x27;</span>);</span><br><span class="line"><span class="keyword">if</span> (!<span class="variable">$link</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;mysql fail!&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;mysql succees&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">mysql_close</span>();</span><br><span class="line"><span class="comment">//输出php信息</span></span><br><span class="line"><span class="title function_ invoke__">phpinfo</span>();</span><br></pre></td></tr></table></figure>
+
+<p>通过<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC90ZXN0LnBocA==">http://localhost/test.php<i class="fa fa-external-link-alt"></i></span> 访问，如果能正常显示，那恭喜你，ok了。</p>
+<p>附nginx, php, mysql快捷启动代码，建议复制保存为startup.sh，每次通过执行.&#x2F;startup.sh，然后输入管理员密码，就一次性开启了三项服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/sh</span></span><br><span class="line">sudo /usr/local/nginx/sbin/nginx</span><br><span class="line">sudo /opt/local/bin/spawn-fcgi -C 2 -p 9000 -f /opt/local/bin/php-cgi</span><br><span class="line">sudo /usr/local/mysql/bin/mysqld_safe &amp;</span><br></pre></td></tr></table></figure>
+
+<p>再附上nginx, php, mysql快捷关闭代码，建议复制保存为shutdown.sh，每次通过执行.&#x2F;shutdown.sh就关闭了三项服务：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/sh</span></span><br><span class="line">sudo /usr/local/nginx/sbin/nginx -s stop;</span><br><span class="line">`ps -ef | grep php | head -n1|awk &#x27;&#123;print &quot;sudo kill &quot;$2&#125;&#x27;`;</span><br><span class="line">sudo /usr/local/mysql/bin/mysqladmin -uroot -pms shutdown;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -693,7 +751,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/03/Yii%E5%88%86%E9%A1%B5%E8%AE%BE%E7%BD%AE.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/10/iOS-plist%E6%96%87%E4%BB%B6%E7%9A%84%E5%A2%9E%E5%88%A0%E6%93%8D%E4%BD%9C.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -711,7 +769,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/03/Yii%E5%88%86%E9%A1%B5%E8%AE%BE%E7%BD%AE.html" class="post-title-link" itemprop="url">Yii分页设置</a>
+          <a href="/2025/06/10/iOS-plist%E6%96%87%E4%BB%B6%E7%9A%84%E5%A2%9E%E5%88%A0%E6%93%8D%E4%BD%9C.html" class="post-title-link" itemprop="url">iOS plist文件的增删操作</a>
         </h2>
 
         <div class="post-meta-container">
@@ -721,15 +779,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-06-03 15:03:26" itemprop="dateCreated datePublished" datetime="2025-06-03T15:03:26+08:00">2025-06-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 16:59:24" itemprop="dateModified" datetime="2025-06-06T16:59:24+08:00">2025-06-06</time>
+      <time title="创建时间：2025-06-10 15:46:27 / 修改时间：15:49:07" itemprop="dateCreated datePublished" datetime="2025-06-10T15:46:27+08:00">2025-06-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -751,13 +803,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>yii自己是带有自动分页功能的。只要在对应的controller里面，类似下面这样鞋代码，就会实现的</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$dataProvider</span> = <span class="keyword">new</span> <span class="title class_">CActiveDataProvider</span>(</span><br><span class="line">    <span class="string">&#x27;Blog&#x27;</span>,</span><br><span class="line">    [</span><br><span class="line">        <span class="string">&#x27;pagination&#x27;</span> =&gt; [<span class="string">&#x27;pageSize&#x27;</span> =&gt; <span class="number">10</span>],</span><br><span class="line">        <span class="string">&#x27;criteria&#x27;</span> =&gt; [<span class="string">&#x27;order&#x27;</span> =&gt; <span class="string">&#x27;create_date DESC&#x27;</span>],</span><br><span class="line">    ]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+          <p>我最近在使用plist存数数据，方便后面的数据浏览</p>
+<p>很是苦恼于是自己就查遍各方资料，弄了一个简单的类函数,方便自己的更新数据</p>
+<figure class="highlight objectivec"><figcaption><span>detailViewController.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">personIndex</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSArray</span> *personArr;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSMutableArray</span> *personMulArr;</span><br><span class="line"></span><br><span class="line"><span class="comment">//清空原有数据</span></span><br><span class="line">-(<span class="type">void</span>) deletePlist;</span><br><span class="line"><span class="comment">//响应错误</span></span><br><span class="line">-(<span class="type">void</span>) showAlert;</span><br><span class="line"><span class="comment">//获取远端数据</span></span><br><span class="line">-(<span class="type">void</span>) getRemoteData;</span><br><span class="line"><span class="comment">//创建plist文件</span></span><br><span class="line">-(<span class="type">void</span>) createPlist;</span><br><span class="line"><span class="comment">//写入数据到plist文件</span></span><br><span class="line">-(<span class="type">void</span>) writePlist;</span><br><span class="line"><span class="comment">//解析json数据</span></span><br><span class="line">-(<span class="built_in">NSArray</span> *) readJsonData:(<span class="built_in">NSMutableData</span> *)data;</span><br><span class="line"><span class="comment">//下载数据</span></span><br><span class="line">-(<span class="type">void</span>) executeDown;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 
-<p>但是样式还是yii中已经写好的，那么对于我，我要改掉这个样式，使用我提供的样式，可以像我下面这样写</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">widget</span>(<span class="string">&#x27;zii.widgets.CListView&#x27;</span>, [</span><br><span class="line">    <span class="string">&#x27;dataProvider&#x27;</span> =&gt; <span class="variable">$dataProvider</span>,</span><br><span class="line">    <span class="string">&#x27;itemView&#x27;</span> =&gt; <span class="string">&#x27;_view&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;summaryCssClass&#x27;</span> =&gt; <span class="string">&#x27;hide&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;pagerCssClass&#x27;</span> =&gt; <span class="string">&#x27;pagination&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;pager&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;CLinkPager&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;nextPageLabel&#x27;</span> =&gt; <span class="string">&#x27;&amp;raquo;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;prevPageLabel&#x27;</span> =&gt; <span class="string">&#x27;&amp;laquo;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;firstPageLabel&#x27;</span> =&gt; <span class="string">&#x27;最前&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;lastPageLabel&#x27;</span> =&gt; <span class="string">&#x27;最后&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;htmlOptions&#x27;</span> =&gt; [<span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;header&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;hiddenPageCssClass&#x27;</span> =&gt; <span class="string">&#x27;disabled&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;selectedPageCssClass&#x27;</span> =&gt; <span class="string">&#x27;active&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;previousPageCssClass&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;nextPageCssClass&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    ],</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
-<p>其实只要添加自己对应的class属性就可以了，因为yii有自己默认的class属性，这个是比较简单。</p>
-<p>下次我们可以看看，如何修改侧边下拉框，改为自己的喜欢的样式。</p>
+
+
+<figure class="highlight objectivec"><figcaption><span>detailViewController.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&quot;personIndex.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">personIndex</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> personArr;</span><br><span class="line"><span class="keyword">@synthesize</span> personMulArr;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) executeDown&#123;</span><br><span class="line">    [<span class="keyword">self</span> deletePlist];</span><br><span class="line">    [<span class="keyword">self</span> getRemoteData];</span><br><span class="line">    [<span class="keyword">self</span> createPlist];</span><br><span class="line">    [<span class="keyword">self</span> writePlist];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//将数据写入plist</span></span><br><span class="line">-(<span class="type">void</span>) writePlist&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *paths = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>);</span><br><span class="line">    <span class="built_in">NSString</span> *documentsDirectory = [paths objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *path = [documentsDirectory stringByAppendingPathComponent:<span class="string">@&quot;test.plist&quot;</span>];</span><br><span class="line">    <span class="built_in">NSFileManager</span> *fileManager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ([fileManager fileExistsAtPath: path])&#123;<span class="comment">//如果文件存在，写入数据</span></span><br><span class="line">        <span class="comment">//创建字典</span></span><br><span class="line">        <span class="built_in">NSMutableDictionary</span> *dictplist = [[<span class="built_in">NSMutableDictionary</span> alloc ] init];</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">id</span> item <span class="keyword">in</span> <span class="keyword">self</span>.personArr)&#123;</span><br><span class="line">            <span class="comment">//设置属性值</span></span><br><span class="line">            [dictplist setValue:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@&quot;</span>,[item valueForKey:<span class="string">@&quot;zh_name&quot;</span>]]</span><br><span class="line">                         forKey:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@&quot;</span>,[item valueForKey:<span class="string">@&quot;id&quot;</span>]]];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//写入文件</span></span><br><span class="line">        <span class="keyword">if</span>(![dictplist writeToFile:path atomically:<span class="literal">YES</span>])&#123;</span><br><span class="line">            [<span class="keyword">self</span> showAlert:<span class="string">@&quot;同步数据失败&quot;</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">NSString</span> *appFile = [documentsDirectory stringByAppendingPathComponent: [<span class="built_in">NSString</span> stringWithFormat: <span class="string">@&quot;test.plist&quot;</span>] ];</span><br><span class="line">        <span class="comment">//创建字典</span></span><br><span class="line">        <span class="built_in">NSMutableDictionary</span> *dictplist = [[<span class="built_in">NSMutableDictionary</span> alloc ] init];</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">for</span>(<span class="type">id</span> item <span class="keyword">in</span> <span class="keyword">self</span>.personArr)&#123;</span><br><span class="line">            <span class="comment">//设置属性值</span></span><br><span class="line">            [dictplist setValue:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@&quot;</span>,[item valueForKey:<span class="string">@&quot;zh_name&quot;</span>]]</span><br><span class="line">                         forKey:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@&quot;</span>,[item valueForKey:<span class="string">@&quot;id&quot;</span>]]];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">///写入文件</span></span><br><span class="line">        <span class="keyword">if</span>(![dictplist writeToFile:appFile atomically:<span class="literal">YES</span>])&#123;</span><br><span class="line">            [<span class="keyword">self</span> showAlert:<span class="string">@&quot;同步数据失败&quot;</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) deletePlist&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *paths = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>);</span><br><span class="line">    <span class="built_in">NSString</span> *documentsDirectory = [paths objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *path = [documentsDirectory stringByAppendingPathComponent:<span class="string">@&quot;test.plist&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSFileManager</span> *fileManager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line">    [fileManager removeItemAtPath:path error:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-(<span class="built_in">NSMutableDictionary</span> *) readPlist&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *paths = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>);</span><br><span class="line">    <span class="built_in">NSString</span> *documentsDirectory = [paths objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *path = [documentsDirectory stringByAppendingPathComponent:<span class="string">@&quot;test.plist&quot;</span>];</span><br><span class="line">    <span class="built_in">NSFileManager</span> *fileManager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSMutableDictionary</span> *data = [[<span class="built_in">NSMutableDictionary</span> alloc] initWithContentsOfFile: path];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ([fileManager fileExistsAtPath: path])&#123;<span class="comment">//如果文件存在，写入数据</span></span><br><span class="line">        data = [[<span class="built_in">NSMutableDictionary</span> alloc] initWithContentsOfFile: path];</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// If the file doesn’t exist, create an empty dictionary</span></span><br><span class="line">        data = [[<span class="built_in">NSMutableDictionary</span> alloc] init];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建plist文件</span></span><br><span class="line">-(<span class="type">void</span>) createPlist&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *paths = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>);</span><br><span class="line">    <span class="built_in">NSString</span> *documentsDirectory = [paths objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *path = [documentsDirectory stringByAppendingPathComponent:<span class="string">@&quot;test.plist&quot;</span>];</span><br><span class="line">    <span class="built_in">NSFileManager</span> *fileManager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (![fileManager fileExistsAtPath: path])&#123;</span><br><span class="line">        [documentsDirectory stringByAppendingPathComponent: [<span class="built_in">NSString</span> stringWithFormat: <span class="string">@&quot;test.plist&quot;</span>]];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) getRemoteData&#123;</span><br><span class="line">    <span class="built_in">NSURL</span> *url = [[<span class="built_in">NSURL</span> alloc] initWithString:<span class="string">@&quot;http://222.73.93.70:3002/person/actorlist?order_by=index&amp;start_date=2012-06-01&amp;end_date=2012-07-01&amp;start=1&amp;offset=10&amp;app_key=KSKdzSyeb99YdLwTMrzvuLumNYCM6pzT4Z3f27R4L3qq6jCs&quot;</span>];</span><br><span class="line">    <span class="built_in">NSURLRequest</span> *request = [[<span class="built_in">NSURLRequest</span> alloc] initWithURL:url</span><br><span class="line">                                                  cachePolicy:<span class="built_in">NSURLRequestUseProtocolCachePolicy</span></span><br><span class="line">                                              timeoutInterval:<span class="number">60</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSURLResponse</span> *response = [[<span class="built_in">NSURLResponse</span> alloc] init];</span><br><span class="line">    <span class="built_in">NSError</span> *error = [[<span class="built_in">NSError</span> alloc] init];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSMutableData</span> *receivedData = (<span class="built_in">NSMutableData</span> *)[<span class="built_in">NSURLConnection</span> sendSynchronousRequest:request returningResponse:&amp;response error:&amp;error];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span>.personArr = [<span class="keyword">self</span> readJsonData:receivedData];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="built_in">NSArray</span> *) readJsonData:(<span class="built_in">NSMutableData</span> *)data&#123;</span><br><span class="line">    <span class="comment">//NSJSONSerialization提供了将JSON数据转换为Foundation对象（一般都是NSDictionary和NSArray）</span></span><br><span class="line">    <span class="comment">//和Foundation对象转换为JSON数据（可以通过调用isValidJSONObject来判断Foundation对象是否可以转换为JSON数据）。</span></span><br><span class="line">    <span class="built_in">NSArray</span> *personList = [[<span class="built_in">NSArray</span> alloc] init];</span><br><span class="line">    <span class="keyword">if</span>(data == <span class="literal">nil</span>)&#123;</span><br><span class="line">        [<span class="keyword">self</span> showAlert:<span class="string">@&quot;更新数据失败&quot;</span>];</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">NSError</span> *error;</span><br><span class="line">        <span class="built_in">NSDictionary</span> *personDictionary = [<span class="built_in">NSJSONSerialization</span> JSONObjectWithData:data</span><br><span class="line">                                                                         options:<span class="built_in">NSJSONReadingMutableContainers</span></span><br><span class="line">                                                                           error:&amp;error];</span><br><span class="line">        <span class="built_in">NSDictionary</span> *personInfo = [personDictionary objectForKey:<span class="string">@&quot;data&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        personList = [personInfo objectForKey:<span class="string">@&quot;list&quot;</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> personList;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="built_in">NSArray</span> *) readStringJsonData:(<span class="built_in">NSMutableData</span> *)data&#123;</span><br><span class="line">    <span class="comment">//NSJSONSerialization提供了将JSON数据转换为Foundation对象（一般都是NSDictionary和NSArray）</span></span><br><span class="line">    <span class="comment">//和Foundation对象转换为JSON数据（可以通过调用isValidJSONObject来判断Foundation对象是否可以转换为JSON数据）。</span></span><br><span class="line">    <span class="built_in">NSError</span> *error;</span><br><span class="line">    <span class="built_in">NSDictionary</span> *personDictionary = [<span class="built_in">NSJSONSerialization</span> JSONObjectWithData:data</span><br><span class="line">                                                                     options:<span class="built_in">NSJSONReadingMutableContainers</span></span><br><span class="line">                                                                       error:&amp;error];</span><br><span class="line">    <span class="built_in">NSDictionary</span> *personInfo = [personDictionary objectForKey:<span class="string">@&quot;data&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSArray</span> *personList = [personInfo objectForKey:<span class="string">@&quot;list&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> personList;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) showAlert:(<span class="built_in">NSString</span> *)stringData&#123;</span><br><span class="line">    <span class="built_in">UIAlertView</span> *alrt = [[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@&quot;同步数据失败&quot;</span></span><br><span class="line">                                                   message:[<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@&quot;</span>,stringData]</span><br><span class="line">                                                  delegate:<span class="keyword">self</span></span><br><span class="line">                                         cancelButtonTitle:<span class="string">@&quot;OK&quot;</span></span><br><span class="line">                                         otherButtonTitles:<span class="literal">nil</span>];</span><br><span class="line">    [alrt show];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -784,7 +836,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/03/Yii-CDbCriteria%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/10/iOS%E4%B8%AD%E8%8E%B7%E5%8F%96%E7%A8%8B%E5%BA%8F%E7%9B%AE%E5%BD%95%E8%B7%AF%E5%BE%84.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -802,7 +854,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/03/Yii-CDbCriteria%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">Yii CDbCriteria常用方法</a>
+          <a href="/2025/06/10/iOS%E4%B8%AD%E8%8E%B7%E5%8F%96%E7%A8%8B%E5%BA%8F%E7%9B%AE%E5%BD%95%E8%B7%AF%E5%BE%84.html" class="post-title-link" itemprop="url">iOS中获取程序目录路径</a>
         </h2>
 
         <div class="post-meta-container">
@@ -812,15 +864,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-06-03 15:01:08" itemprop="dateCreated datePublished" datetime="2025-06-03T15:01:08+08:00">2025-06-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 16:59:24" itemprop="dateModified" datetime="2025-06-06T16:59:24+08:00">2025-06-06</time>
+      <time title="创建时间：2025-06-10 15:46:19 / 修改时间：15:48:12" itemprop="dateCreated datePublished" datetime="2025-06-10T15:46:19+08:00">2025-06-10</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -842,320 +888,293 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Yii的Active Recorder包装了很多。</p>
-<p>特别是把SQL中 把where,order,limit,IN&#x2F;not IN,like等常用短句都包含进CDbCriteria这个类中去，这样整个代码会比较规范，一目了然。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$criteria</span> = newCDbCriteria;</span><br><span class="line"><span class="variable">$criteria</span>-&gt;<span class="title function_ invoke__">addCondition</span>(<span class="string">&quot;id=1&quot;</span>); <span class="comment">//查询条件，即where id =1</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;<span class="title function_ invoke__">addInCondition</span>(<span class="string">&#x27;id&#x27;</span>, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]); <span class="comment">//代表where id IN (1,23,,4,5,);</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;<span class="title function_ invoke__">addNotInCondition</span>(<span class="string">&#x27;id&#x27;</span>, [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]); <span class="comment">//与上面正好相法，是NOT IN</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;<span class="title function_ invoke__">addCondition</span>(<span class="string">&#x27;id=1&#x27;</span>, <span class="string">&#x27;OR&#x27;</span>); <span class="comment">//这是OR条件，多个条件的时候，该条件是OR而非AND</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;<span class="title function_ invoke__">addSearchCondition</span>(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;分类&#x27;</span>); <span class="comment">//搜索条件，其实代表了。。where name like ‘%分类%’</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;<span class="title function_ invoke__">addBetweenCondition</span>(<span class="string">&#x27;id&#x27;</span>, <span class="number">1</span>, <span class="number">4</span>); <span class="comment">//between1 and 4</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$criteria</span>-&gt;<span class="title function_ invoke__">compare</span>(<span class="string">&#x27;id&#x27;</span>, <span class="number">1</span>); <span class="comment">//这个方法比较特殊，他会根据你的参数自动处理成addCondition或者addInCondition，</span></span><br><span class="line"><span class="comment">//即如果第二个参数是数组就会调用addInCondition</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$criteria</span>-&gt;<span class="title function_ invoke__">addCondition</span>(<span class="string">&quot;id = :id&quot;</span>);</span><br><span class="line"><span class="variable">$criteria</span>-&gt;params[<span class="string">&#x27;:id&#x27;</span>] = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$criteria</span>-&gt;select = <span class="string">&#x27;id,parentid,name&#x27;</span>; <span class="comment">//代表了要查询的字段，默认select=’*&#x27;;</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;join = <span class="string">&#x27;xxx&#x27;</span>; <span class="comment">//连接表</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;with = <span class="string">&#x27;xxx&#x27;</span>; <span class="comment">//调用relations</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;limit = <span class="number">10</span>; <span class="comment">//取1条数据，如果小于0，则不作处理</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;offset = <span class="number">1</span>; <span class="comment">//两条合并起来，则表示 limit 10 offset1,或者代表了。limit 1,10</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;order = <span class="string">&#x27;xxx DESC,XXX ASC&#x27;</span>; <span class="comment">//排序条件</span></span><br><span class="line"><span class="variable">$criteria</span>-&gt;group = <span class="string">&#x27;group 条件&#x27;</span>;</span><br><span class="line"><span class="variable">$criteria</span>-&gt;having = <span class="string">&#x27;having 条件 &#x27;</span>;</span><br><span class="line"><span class="variable">$criteria</span>-&gt;distinct = <span class="literal">false</span>; <span class="comment">//是否唯一查询</span></span><br></pre></td></tr></table></figure>
+          <h3 id="1"><a href="#1" class="headerlink" title="获取程序Documents目录路径"></a><a href="#1">获取程序Documents目录路径</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *paths = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>,<span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>);</span><br><span class="line"><span class="built_in">NSString</span> *documentsDirectory = [paths objectAtIndex:<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
 
-      
-    </div>
+<h3 id="2"><a href="#2" class="headerlink" title="获取程序app文件所在目录路径"></a><a href="#2">获取程序app文件所在目录路径</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSHomeDirectory</span>();</span><br></pre></td></tr></table></figure>
 
-    
-    
-    
+<h3 id="3"><a href="#3" class="headerlink" title="获取程序tmp目录路径"></a><a href="#3">获取程序tmp目录路径</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSTemporaryDirectory</span>();</span><br></pre></td></tr></table></figure>
 
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/03/Yii%E5%BC%80%E5%90%AF%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/03/Yii%E5%BC%80%E5%90%AF%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97.html" class="post-title-link" itemprop="url">Yii开启错误日志</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-03 14:56:27" itemprop="dateCreated datePublished" datetime="2025-06-03T14:56:27+08:00">2025-06-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 16:59:24" itemprop="dateModified" datetime="2025-06-06T16:59:24+08:00">2025-06-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>生产环境中的 Web 应用常需要具有完善的事件日志功能。在我们的博客应用中，我们想记录它在使用时发生的错误。这些错误可能是程序错误或者是用户对系统的不当使用导致的错误。记录这些错误可以帮助我们完善此博客应用。</p>
-<p>为启用错误日志功能，我们修改 应用配置 如下,</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="string">&#x27;preload&#x27;</span> =&gt; [<span class="string">&#x27;log&#x27;</span>],</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ......</span></span><br><span class="line"></span><br><span class="line">    <span class="string">&#x27;components&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;log&#x27;</span> =&gt; [</span><br><span class="line">            <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;CLogRouter&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;routes&#x27;</span> =&gt; [</span><br><span class="line">                [</span><br><span class="line">                    <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;CFileLogRoute&#x27;</span>,</span><br><span class="line">                    <span class="string">&#x27;levels&#x27;</span> =&gt; <span class="string">&#x27;error, warning&#x27;</span>,</span><br><span class="line">                ],</span><br><span class="line">                [</span><br><span class="line">                    <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;CProfileLogRoute&#x27;</span>, <span class="comment">//显示页面加载的整个流程，包括mysql语句</span></span><br><span class="line">                    <span class="string">&#x27;levels&#x27;</span> =&gt; <span class="string">&#x27;profile&#x27;</span>,</span><br><span class="line">                ],</span><br><span class="line">                [</span><br><span class="line">                    <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;CWebLogRoute&#x27;</span>,</span><br><span class="line">                    <span class="string">&#x27;levels&#x27;</span> =&gt; <span class="string">&#x27;profile,trace&#x27;</span>,</span><br><span class="line">                ],</span><br><span class="line">            ],</span><br><span class="line">        ],</span><br><span class="line">        <span class="comment">//......</span></span><br><span class="line">    ],</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-<p>通过上述配置，如果有错误（error）或警告（warning）发生，其详细信息将被记录并保存到位于&#x2F;wwwroot&#x2F;blog&#x2F;protected&#x2F;runtime目录的文件中。</p>
-<p>log组件还提供了更多的高级功能，例如将日志信息发送到一个 Email 列表，在 JavaScript 控制台窗口中显示日志信息等。更多详情，请参考<del><span class="exturl" data-url="aHR0cDovL3d3dy55aWlmcmFtZXdvcmsuY29tL2RvYy9ndWlkZS90b3BpY3MubG9nZ2luZw==">指南<i class="fa fa-external-link-alt"></i></span></del>。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/05/29/hexo%E9%BB%98%E8%AE%A4%E5%A4%84%E7%90%86heading%E7%9A%84%E6%A0%87%E9%A2%98%E4%B8%BAid%E7%9A%84%E5%BC%82%E5%B8%B8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/05/29/hexo%E9%BB%98%E8%AE%A4%E5%A4%84%E7%90%86heading%E7%9A%84%E6%A0%87%E9%A2%98%E4%B8%BAid%E7%9A%84%E5%BC%82%E5%B8%B8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html" class="post-title-link" itemprop="url">hexo默认处理heading的标题为id的异常解决方案</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-05-29 17:08:34" itemprop="dateCreated datePublished" datetime="2025-05-29T17:08:34+08:00">2025-05-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 16:59:24" itemprop="dateModified" datetime="2025-06-06T16:59:24+08:00">2025-06-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>hexo在处理markdown文档的时候，默认将heading的内容作为了id来处理锚点，如果是英文是没有问题的。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">## 我的标题</span><br></pre></td></tr></table></figure>
-
-<p>处理后的html内容</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h2</span> <span class="attr">id</span>=<span class="string">&quot;我的标题&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#我的标题&quot;</span> <span class="attr">class</span>=<span class="string">&quot;headerlink&quot;</span> <span class="attr">title</span>=<span class="string">&quot;我的标题&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#我的标题&quot;</span>&gt;</span>我的标题<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>但是作为标题是中文的话就会有问题，以为在js的代码中，id是中文是不支持的，这会导致很多js库无法正常运行</p>
-<p>找了很多资料，其中就有安装<code>hexo-renderer-markdown-it</code></p>
-<p>但是我自己亲自测试下来，还是很复杂，然后也没有解决我的问题，于是我思考这个hexo不会烂到这个程度吧</p>
-<p>于是我看到了一种写法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">## [我的标题](#custom-id)</span><br></pre></td></tr></table></figure>
-
-<p>处理后的html内容</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h2</span> <span class="attr">id</span>=<span class="string">&quot;custom-id&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#custom-id&quot;</span> <span class="attr">class</span>=<span class="string">&quot;headerlink&quot;</span> <span class="attr">title</span>=<span class="string">&quot;我的标题&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#custom-id&quot;</span>&gt;</span>我的标题<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>哎，可以，就这么轻松的解决了，不需要什么卸载安装什么的</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/05/29/Yii%E7%AE%80%E5%8D%95%E7%9A%84%E5%9F%BA%E4%BA%8E%E8%A7%92%E8%89%B2%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/05/29/Yii%E7%AE%80%E5%8D%95%E7%9A%84%E5%9F%BA%E4%BA%8E%E8%A7%92%E8%89%B2%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6.html" class="post-title-link" itemprop="url">Yii简单的基于角色的访问控制</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-05-29 15:28:14" itemprop="dateCreated datePublished" datetime="2025-05-29T15:28:14+08:00">2025-05-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-06 16:59:24" itemprop="dateModified" datetime="2025-06-06T16:59:24+08:00">2025-06-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filters</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        <span class="string">&#x27;accessControl&#x27;</span>, <span class="comment">// perform access control for CRUD operations</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">accessRules</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        [</span><br><span class="line">            <span class="string">&#x27;allow&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;action&#x27;</span> =&gt; [<span class="string">&#x27;admin&#x27;</span>],</span><br><span class="line">            <span class="string">&#x27;roles&#x27;</span> =&gt; [<span class="string">&#x27;staff&#x27;</span>, <span class="string">&#x27;devel&#x27;</span>],</span><br><span class="line">        ],</span><br><span class="line">        [</span><br><span class="line">            <span class="string">&#x27;deny&#x27;</span>, <span class="comment">// deny all users</span></span><br><span class="line">            <span class="string">&#x27;users&#x27;</span> =&gt; [<span class="string">&#x27;*&#x27;</span>],</span><br><span class="line">        ],</span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="user-model"><a href="#user-model" class="headerlink" title="用户模型"></a><a href="#user-model">用户模型</a></h2><p>在用户表中新增一列，列名 roles。建立相应的模型。在这里它将被命名为 “User”。</p>
-<p>当添加用户可以给他们分配角色 “管理员”，“用户”，“员工”等等。</p>
-<h2 id="yanzheng"><a href="#yanzheng" class="headerlink" title="验证"></a><a href="#yanzheng">验证</a></h2><p>在文件 protected&#x2F;components&#x2F;UserIdentity.php 添加如下内容：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserIdentity</span> <span class="keyword">extends</span> <span class="title">CUserIdentity</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$id</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">authenticate</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$record</span> = <span class="title class_">User</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findByAttributes</span>([<span class="string">&#x27;email&#x27;</span> =&gt; <span class="variable">$this</span>-&gt;username]);</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> === <span class="variable">$record</span>) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;errorCode = <span class="built_in">self</span>::<span class="variable constant_">ERROR_USERNAME_INVALID</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="title function_ invoke__">md5</span>(<span class="variable">$this</span>-&gt;password) !== <span class="variable">$record</span>-&gt;password) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;errorCode = <span class="built_in">self</span>::<span class="variable constant_">ERROR_PASSWORD_INVALID</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;id = <span class="variable">$record</span>-&gt;id;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">setState</span>(<span class="string">&#x27;roles&#x27;</span>, <span class="variable">$record</span>-&gt;roles);</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;errorCode = <span class="built_in">self</span>::<span class="variable constant_">ERROR_NONE</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> !<span class="variable language_">$this</span>-&gt;errorCode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getId</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">$this</span>-&gt;id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>重要的一行是</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">setState</span>(<span class="string">&#x27;roles&#x27;</span>, <span class="variable">$record</span>-&gt;roles);</span><br></pre></td></tr></table></figure>
-
-<p>他给会话增加了用户角色。你可以使用如下代码获取用户角色。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Yii:<span class="title function_ invoke__">app</span>()-&gt;user-&gt;<span class="title function_ invoke__">getState</span>(<span class="string">&quot;roles&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="4"><a href="#4" class="headerlink" title="获取程序应用包路径"></a><a href="#4">获取程序应用包路径</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSBundle</span> mainBundle] resourcePath];</span><br></pre></td></tr></table></figure>
 
 <p>或</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;user-&gt;roles</span><br></pre></td></tr></table></figure>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSBundle</span> mainBundle] pathForResource: <span class="string">@&quot;info&quot;</span> ofType: <span class="string">@&quot;txt&quot;</span>];</span><br></pre></td></tr></table></figure>
 
-<h2 id="quanxianjiancha"><a href="#quanxianjiancha" class="headerlink" title="检查权限:结构"></a><a href="#quanxianjiancha">检查权限:结构</a></h2><p>在 protected&#x2F;components 文件夹下修改并创建文件 WebUser.php ,然后重写 checkAccess() 方法。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WebUser</span> <span class="keyword">extends</span> <span class="title">CWebUser</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Overrides a Yii method that is used for roles in controllers (accessRules).</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> string $operation Name of the operation required (here, a role).</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> mixed $params (opt) Parameters for this operation, usually the object to access.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> bool Permission granted?</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">checkAccess</span>(<span class="params"><span class="variable">$operation</span>, <span class="variable">$params</span> = []</span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable language_">$this</span>-&gt;id)) &#123;</span><br><span class="line">            <span class="comment">// Not identified =&gt; no rights</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$role</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getState</span>(<span class="string">&quot;roles&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="string">&#x27;admin&#x27;</span> === <span class="variable">$role</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// admin role has access to everything</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// allow access if the operation request is the current user&#x27;s role</span></span><br><span class="line">        <span class="keyword">return</span> (<span class="variable">$operation</span> === <span class="variable">$role</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>来源：<span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9rYWl4dWFuL2FyY2hpdmUvMjAxMS8wNS8zMS8yMDY0Nzk2Lmh0bWw=">http://www.cnblogs.com/kaixuan/archive/2011/05/31/2064796.html<i class="fa fa-external-link-alt"></i></span></p>
 
-<p>在 checkAccess() 方法中你可以定义自己的逻辑。<br>确保类可以被yii使用配置文件 “protected&#x2F;config&#x2F;main.php” 必须包含以下内容:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;components&#x27;</span> =&gt; [</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="string">&#x27;user&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;WebUser&#x27;</span>,</span><br><span class="line">    ],</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+      
+    </div>
 
-<blockquote><p>旁注:<br>[CWebUser::checkAccess()] 通常连接yii的验证系统。这里我们使用一个简单的处理角色的系统来替换[CAuthManager] 定义的分级系统。详细教程参加 Role-Based Access Control</p>
-</blockquote>
+    
+    
+    
 
-<h2 id="quanxianjianchashiyong"><a href="#quanxianjianchashiyong" class="headerlink" title="检查权限: 使用"></a><a href="#quanxianjianchashiyong">检查权限: 使用</a></h2><p>在你的 PHP 代码中使用 <code>Yii::app()-&gt;user-&gt;checkAccess(&#39;admin&#39;)</code> 来检查当前用户是否有 ‘admin’ 角色。</p>
-<p>当用户拥有 “staff” 或 “admin” 角色时，调用 <code>Yii::app()-&gt;user-&gt;checkAccess(&quot;staff&quot;)</code> 将会返回 true。</p>
-<p>在控制器中你可以使用 accessRules() 中的 “roles” 属性进行过滤。</p>
-<p>见下面的例子。 怎样过滤动作 控制器必须包含以下代码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">filters</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        <span class="string">&#x27;accessControl&#x27;</span>, <span class="comment">// perform access control for CRUD operations</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">accessRules</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        [</span><br><span class="line">            <span class="string">&#x27;allow&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;action&#x27;</span> =&gt; [<span class="string">&#x27;admin&#x27;</span>],</span><br><span class="line">            <span class="string">&#x27;roles&#x27;</span> =&gt; [<span class="string">&#x27;staff&#x27;</span>, <span class="string">&#x27;devel&#x27;</span>],</span><br><span class="line">        ],</span><br><span class="line">        [</span><br><span class="line">            <span class="string">&#x27;deny&#x27;</span>, <span class="comment">// deny all users</span></span><br><span class="line">            <span class="string">&#x27;users&#x27;</span> =&gt; [<span class="string">&#x27;*&#x27;</span>],</span><br><span class="line">        ],</span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
 
-<p>这里对控制器中的 “admin” 动作进行了限制访问: 只有拥有 “staff” 或 “devel” 角色才可以访问。 像API文档中描述的那样 CAccessRule, “roles” 属性实际上调用的是 <code>Yii::app()-&gt;user-&gt;checkAccess()</code> 方法。 怎样根据角色显示不同菜单 你只需使用一个基于用户角色的菜单。例如</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$user</span> = <span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;user; <span class="comment">// just a convenience to shorten expressions</span></span><br><span class="line"><span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">widget</span>(<span class="string">&#x27;zii.widgets.CMenu&#x27;</span>, [</span><br><span class="line">    <span class="string">&#x27;items&#x27;</span> =&gt; [</span><br><span class="line">        [<span class="string">&#x27;label&#x27;</span> =&gt; <span class="string">&#x27;Users&#x27;</span>, <span class="string">&#x27;url&#x27;</span> =&gt; [<span class="string">&#x27;/manageUser/admin&#x27;</span>], <span class="string">&#x27;visible&#x27;</span> =&gt; <span class="variable">$user</span>-&gt;<span class="title function_ invoke__">checkAcces</span>(<span class="string">&#x27;staff&#x27;</span>)],</span><br><span class="line">        [<span class="string">&#x27;label&#x27;</span> =&gt; <span class="string">&#x27;Your Ideas&#x27;</span>, <span class="string">&#x27;url&#x27;</span> =&gt; [<span class="string">&#x27;/userarea/ideaList&#x27;</span>], <span class="string">&#x27;visible&#x27;</span> =&gt; <span class="variable">$user</span>-&gt;<span class="title function_ invoke__">checkAcces</span>(<span class="string">&#x27;normal&#x27;</span>)],</span><br><span class="line">        [<span class="string">&#x27;label&#x27;</span> =&gt; <span class="string">&#x27;Login&#x27;</span>, <span class="string">&#x27;url&#x27;</span> =&gt; [<span class="string">&#x27;/site/login&#x27;</span>], <span class="string">&#x27;visible&#x27;</span> =&gt; <span class="variable">$user</span>-&gt;isGuest],</span><br><span class="line">        [<span class="string">&#x27;label&#x27;</span> =&gt; <span class="string">&#x27;Logout (&#x27;</span> . <span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;user-&gt;name . <span class="string">&#x27;)&#x27;</span>, <span class="string">&#x27;url&#x27;</span> =&gt; [<span class="string">&#x27;/site/logout&#x27;</span>], <span class="string">&#x27;visible&#x27;</span> =&gt; !<span class="variable">$user</span>-&gt;isGuest],</span><br><span class="line">    ],</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
 
-<h2 id="more-context"><a href="#more-context" class="headerlink" title="更进一步: 访问上下文"></a><a href="#more-context">更进一步: 访问上下文</a></h2><p>一个通常的需求，用户只能够修改自己的数据。在这种情况下，用户的角色是没有任何意义的：将要修改的数据。 这就是为什么 [CWebUser::checkAccess()] 有一个可选的参数 “$param” 。现在假设我们要检查的是一个用户是否有权更新Post记录的权限。我们可以这样写：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;user-&gt;<span class="title function_ invoke__">checkAccess</span>(<span class="string">&#x27;normal&#x27;</span>, <span class="variable">$post</span>)) &#123;</span><br><span class="line">    <span class="comment">// .....</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当然 <code>WebUser::checkAccess()</code> 必须被扩展来使用 “$params” 参数。这将取决于你的应用程序的逻辑。比如, 这可能是非常简单的 <code>$post-&gt;userId == $this-&gt;id</code>。</p>
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/10/iOS-%E5%AD%97%E5%85%B8%E5%AF%B9%E8%B1%A1%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93NSDictionary%E5%92%8CNSMutableDictionary.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/10/iOS-%E5%AD%97%E5%85%B8%E5%AF%B9%E8%B1%A1%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E6%80%BB%E7%BB%93NSDictionary%E5%92%8CNSMutableDictionary.html" class="post-title-link" itemprop="url">iOS 字典对象 常用方法总结 NSDictionary 和 NSMutableDictionary</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-10 15:30:47 / 修改时间：15:34:57" itemprop="dateCreated datePublished" datetime="2025-06-10T15:30:47+08:00">2025-06-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="1"><a href="#1" class="headerlink" title="NSDictionary的常用方法有"></a><a href="#1">NSDictionary的常用方法有</a></h3><ul>
+<li><p>+(id)dictionaryWithObjectsAndKeys:obj1,key1,obj2,key2,……nil<br>顺序添加对象和键值来创建一个字典，注意结尾是nil</p>
+</li>
+<li><p>-(id)initWithObjectsAndKeys::obj1,key1,obj2,key2,……nil<br>初始化一个新分配的字典，顺序添加对象和值，结尾是nil</p>
+</li>
+<li><p>-(unsigned int)count<br>返回字典中的记录数</p>
+</li>
+<li><p>-(NSEnumerator*)keyNSEnumerator<br>返回字典中的所有键到一个 NSEnumerator 对象</p>
+</li>
+<li><p>-(NSArray*)keysSortedByValueUsingSelector:(SEL)selector<br>将字典中所有键按照selector 指定的方法进行排序，并将结果返回</p>
+</li>
+<li><p>-(NSEnumerator*)objectEnumerator<br>返回字典中所有的值到一个 NSEnumetator 类型对象</p>
+</li>
+<li><p>-(id)objectForKey:key<br>返回指定key 值的对象</p>
+</li>
+</ul>
+<h3 id="2"><a href="#2" class="headerlink" title="NSMutableDictionary的常用方法有："></a><a href="#2">NSMutableDictionary的常用方法有：</a></h3><ul>
+<li><p>+(id)dictionaryWithCapacity:size<br>创建一个size大小的可变字典</p>
+</li>
+<li><p>-(id)initWithCapacity:size<br>初始化一个size 大小的可变字典</p>
+</li>
+<li><p>-(void)removeAllObjects<br>删除字典中所有元素</p>
+</li>
+<li><p>-(void)removeObjectForKey:key<br>删除字典中key位置的元素</p>
+</li>
+<li><p>-(void)setObject:obj forKey:key<br>添加 (key , obj)到字典中去；若key已经存在，则替换值为 obj</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/10/iOS-SBJson%E8%A7%A3%E6%9E%90Json%E6%96%87%E4%BB%B6.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/10/iOS-SBJson%E8%A7%A3%E6%9E%90Json%E6%96%87%E4%BB%B6.html" class="post-title-link" itemprop="url">iOS SBJson解析Json文件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-10 15:30:39 / 修改时间：15:32:05" itemprop="dateCreated datePublished" datetime="2025-06-10T15:30:39+08:00">2025-06-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近在搞到，如何解析json文件，使用ios自带的函数很容易解析出来，但是对于中文的问题，一直困扰着我，于是查看了各种相关资料，最后我的解决方法如下：</p>
+<p>1，让我找到了一个兼容ARC机制的类库，SBJson，现在地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3N0aWcvanNvbi1mcmFtZXdvcmsvZG93bmxvYWRzJUVGJUJDJThDJUU2JTlDJTgwJUU4JUJGJTkxJUU3JTlBJTg0JUU0JUI4JTgwJUU0JUI4JUFBJUU3JTg5JTg4JUU2JTlDJUFDJUU2JTk0JUFGJUU2JThDJTgxQVJD">https://github.com/stig/json-framework/downloads，最近的一个版本支持ARC<i class="fa fa-external-link-alt"></i></span></p>
+<p>2，将其下载过来后，引入到项目中，#import “SBJson.h”</p>
+<p>3，使用方法是</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) test&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;test 开始运行&quot;</span>);</span><br><span class="line">    <span class="built_in">NSString</span> *testString = [[<span class="built_in">NSString</span> alloc]initWithString:<span class="string">@&quot;&#123;\&quot;customer\&quot;:[&#123;\&quot;name\&quot;:\&quot;roamer\&quot;,\&quot;ycount\&quot;:\&quot;232.4\&quot;,\&quot;sumcount\&quot;:\&quot;322.3\&quot;&#125;,&#123;\&quot;name\&quot;:\&quot;王三\&quot;,\&quot;ycount\&quot;:\&quot;221.2\&quot;,\&quot;sumcount\&quot;:\&quot;1123.2\&quot;&#125;,&#123;\&quot;name\&quot;:\&quot;李四\&quot;,\&quot;ycount\&quot;:\&quot;1221.2\&quot;,\&quot;sumcount\&quot;:\&quot;12123.2\&quot;&#125;]&#125;&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    SBJsonParser *parser = [[SBJsonParser alloc] init];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,testString);</span><br><span class="line">    <span class="built_in">NSError</span> *error = <span class="literal">nil</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSMutableDictionary</span> *root = [[<span class="built_in">NSMutableDictionary</span> alloc] initWithDictionary:[parser objectWithString:testString error:&amp;error]];</span><br><span class="line">    <span class="comment">//注意转换代码</span></span><br><span class="line">    SBJsonWriter *jsonWriter = [[SBJsonWriter alloc] init];</span><br><span class="line">    <span class="built_in">NSString</span> *jsonString = [jsonWriter stringWithObject:root];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,jsonString);</span><br><span class="line">    <span class="comment">//注意转换代码</span></span><br><span class="line">    <span class="built_in">NSMutableArray</span> * customers = [root objectForKey:<span class="string">@&quot;customer&quot;</span>];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,customers);</span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">NSMutableDictionary</span> * member  <span class="keyword">in</span> customers)&#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,[[member objectForKey:<span class="string">@&quot;name&quot;</span>] description]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面只是一个，自己写的json格式的字符串，自己可以使用来自远程获取的数据，做一下测试</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/10/iOS-Objective-C-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%B1%BB%E5%9E%8B.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/10/iOS-Objective-C-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%B1%BB%E5%9E%8B.html" class="post-title-link" itemprop="url">iOS Objective-C 判断对象的类型</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-10 15:29:18 / 修改时间：15:30:28" itemprop="dateCreated datePublished" datetime="2025-06-10T15:29:18+08:00">2025-06-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>所有继承 NSObject 的的对象可以调用isKindOfClass 方法</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="type">BOOL</span>)isKindOfClass:(Class)aClass</span><br></pre></td></tr></table></figure>
+
+<p>例如:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">BOOL</span> test = [obj isKindOfClass:[SomeClass <span class="keyword">class</span>]];</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -1175,7 +1194,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/59/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/59/">59</a><span class="page-number current">60</span><a class="page-number" href="/page/61/">61</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/61/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/59/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/59/">59</a><span class="page-number current">60</span><a class="page-number" href="/page/61/">61</a><span class="space">&hellip;</span><a class="page-number" href="/page/67/">67</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/61/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
