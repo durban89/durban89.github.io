@@ -26,12 +26,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="在阅读和书写关于iPhone编程的代码的时候，发现有很多这样的情况：看到很多源代码里面，使用前面带下划线变量，然后在@synthesize 语句中在用一个不带下划线的变量名。   这样做，到底有什么作用？   因为我常常是以这种方式来做的：*.h中申明变量 123456789#import &lt;UIKit&#x2F;UIKit.h&gt;@interface NewPlayerController :">
+    <meta name="description" content="在阅读和书写关于iPhone编程的代码的时候，发现有很多这样的情况： 看到很多源代码里面，使用前面带下划线变量，然后在@synthesize 语句中在用一个不带下划线的变量名。 这样做，到底有什么作用？ 因为我常常是以这种方式来做的： *.h中申明变量 123456789#import &lt;UIKit&#x2F;UIKit.h&gt;@interface NewPlayerController : UI">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Objective-C 声明属性为什么用下划线，代码规范和编程风格 ,有可能是导致闪退的原因">
 <meta property="og:url" content="https://blog.gowhich.com/2025/06/17/Objective-C-%E5%A3%B0%E6%98%8E%E5%B1%9E%E6%80%A7%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8%E4%B8%8B%E5%88%92%E7%BA%BF-%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%92%8C%E7%BC%96%E7%A8%8B%E9%A3%8E%E6%A0%BC--%E6%9C%89%E5%8F%AF%E8%83%BD%E6%98%AF%E5%AF%BC%E8%87%B4%E9%97%AA%E9%80%80%E7%9A%84%E5%8E%9F%E5%9B%A0.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="在阅读和书写关于iPhone编程的代码的时候，发现有很多这样的情况：看到很多源代码里面，使用前面带下划线变量，然后在@synthesize 语句中在用一个不带下划线的变量名。   这样做，到底有什么作用？   因为我常常是以这种方式来做的：*.h中申明变量 123456789#import &lt;UIKit&#x2F;UIKit.h&gt;@interface NewPlayerController :">
+<meta property="og:description" content="在阅读和书写关于iPhone编程的代码的时候，发现有很多这样的情况： 看到很多源代码里面，使用前面带下划线变量，然后在@synthesize 语句中在用一个不带下划线的变量名。 这样做，到底有什么作用？ 因为我常常是以这种方式来做的： *.h中申明变量 123456789#import &lt;UIKit&#x2F;UIKit.h&gt;@interface NewPlayerController : UI">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-17T10:57:15.000Z">
 <meta property="article:modified_time" content="2025-06-17T11:09:33.771Z">
@@ -193,18 +193,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">665</span>
+          <span class="site-state-item-count">685</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-count">113</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -303,60 +303,89 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>在阅读和书写关于iPhone编程的代码的时候，发现有很多这样的情况：<br>看到很多源代码里面，使用前面带下划线变量，然后在@synthesize 语句中在用一个不带下划线的变量名。  </p>
-<p>这样做，到底有什么作用？  </p>
-<p>因为我常常是以这种方式来做的：<br><code>*.h</code>中申明变量</p>
+    <div class="post-body" itemprop="articleBody"><p>在阅读和书写关于iPhone编程的代码的时候，发现有很多这样的情况：<br>
+看到很多源代码里面，使用前面带下划线变量，然后在@synthesize 语句中在用一个不带下划线的变量名。</p>
+<p>这样做，到底有什么作用？</p>
+<p>因为我常常是以这种方式来做的：<br>
+<code>*.h</code>中申明变量</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NewPlayerController</span> : <span class="title">UIViewController</span></span>&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *test;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">retain</span>) <span class="built_in">NSString</span> *test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
 <p>在<code>*.m</code>中</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&quot;NewPlayerController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NewPlayerController</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> test;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad&#123;</span><br><span class="line"></span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line"></span><br><span class="line">    test=[[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;test&quot;</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-<p>但是，发现很多别人写的代码是这样子的：<br><code>*.h</code>中申明变量</p>
+<p>但是，发现很多别人写的代码是这样子的：<br>
+<code>*.h</code>中申明变量</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NewPlayerController</span> : <span class="title">UIViewController</span></span>&#123;</span><br><span class="line">    <span class="built_in">NSString</span>* _test;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span>(<span class="keyword">nonatomic</span>,<span class="keyword">retain</span>) <span class="built_in">NSString</span> *test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
 <p>在<code>*.m</code>中</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&quot;NewPlayerController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NewPlayerController</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> test=_test;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad&#123;</span><br><span class="line"></span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line"></span><br><span class="line">    _test=[[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;test&quot;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 或者这样</span></span><br><span class="line">    <span class="keyword">self</span>.test=[[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;test&quot;</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-<p>这两种方式到底有什么区别？用那种好？  </p>
-<p>带着这个疑问，我去网上搜索”代码风格”，“编码规范”，“下划线公约”。解释太宽泛了，根本没有一个定论。  </p>
-<p>于是只有理论+实践自己在走一回吧。  </p>
-<p>开始：<br>第一种方式，就是平常我们说的不带下划线的那种方式：</p>
+<p>这两种方式到底有什么区别？用那种好？</p>
+<p>带着这个疑问，我去网上搜索&quot;代码风格&quot;，“编码规范”，“下划线公约”。解释太宽泛了，根本没有一个定论。</p>
+<p>于是只有理论+实践自己在走一回吧。</p>
+<p>开始：<br>
+第一种方式，就是平常我们说的不带下划线的那种方式：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.test=[[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;test&quot;</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;self.test的应用计数:%d&quot;</span>,[<span class="keyword">self</span>.test retainCount]);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;test的应用计数:%d&quot;</span>,[test retainCount]);</span><br></pre></td></tr></table></figure>
-
 <p>但是，我惊奇的发现，输出竟然这样：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2012</span><span class="number">-11</span><span class="number">-17</span> <span class="number">15</span>:<span class="number">52</span>:<span class="number">29.604</span> ArtTV[<span class="number">901</span>:<span class="number">14303</span>] <span class="keyword">self</span>.test的应用计数:<span class="number">2</span></span><br><span class="line"><span class="number">2012</span><span class="number">-11</span><span class="number">-17</span> <span class="number">15</span>:<span class="number">52</span>:<span class="number">33.264</span> ArtTV[<span class="number">901</span>:<span class="number">14303</span>] test的应用计数:<span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<p>self.test和test的地址是相同的，说明是同一个对象的应用，但为什么，应用计数会是2呢？  </p>
+<p>self.test和test的地址是相同的，说明是同一个对象的应用，但为什么，应用计数会是2呢？</p>
 <p>于是，代码变成这样写（仅仅是，self.test换成test）：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">test=[[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;test&quot;</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;self.test的应用计数:%d&quot;</span>,[<span class="keyword">self</span>.test retainCount]);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;test的应用计数:%d&quot;</span>,[test retainCount]);</span><br></pre></td></tr></table></figure>
-
 <p>输出：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2012</span><span class="number">-11</span><span class="number">-17</span> <span class="number">15</span>:<span class="number">59</span>:<span class="number">58.274</span> ArtTV[<span class="number">954</span>:<span class="number">14303</span>] <span class="keyword">self</span>.test的应用计数:<span class="number">1</span></span><br><span class="line"><span class="number">2012</span><span class="number">-11</span><span class="number">-17</span> <span class="number">15</span>:<span class="number">59</span>:<span class="number">59.718</span> ArtTV[<span class="number">954</span>:<span class="number">14303</span>] test的应用计数:<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>这才是我们所期望的。应用计数应该为1才对，为什么会变成2呢？<br>恍然大悟了！原来原因出在这里：我们申明test时，用的属性修饰符retain。<br>当我们，使用self.test时，就使用了编译器为我们生成的setXXX方法。在该方法中retainCount被加1，所以，变为2.<br>这样的花，如果，我们在代码中，直接用<br><code>self.test=[[NSString alloc] initWithFormat:@&quot;test&quot;]; </code><br>这行代码后，test变量的应用计数变成了2：<br>相当于：<br>首先，声明一个字符串对象，这时候，引用计数为1.<br>其次，再将test的值赋给self.test。（相当于，使用了setXXX方法，让retainCount，加1），导致应用计数变成2.<br>所以，在类中，如果，仅仅是指针赋值，（将一个对象的指针赋给另一个指针）尽量避免使用self.test进行赋值。这样会引起引用计数+1，容易引起释放内存泄漏。而直接用test来赋值。<br>也就是，在方法中，使用self.xxxx,进行赋值，就会使用编译器生成的setXXX方法，从而根据申明对象时的属性（copy，retain，assign）进行调用setXXX方法。<br>如果，只用属性之间来赋值（test&#x3D; newValue;，就是不带self），那么，仅仅是指针之间的赋值。<br>第二种方式，就是带下划线的那种方式：<br>这样，让我们验证：<br>代码中，我们这么写：</p>
+<p>这才是我们所期望的。应用计数应该为1才对，为什么会变成2呢？<br>
+恍然大悟了！原来原因出在这里：我们申明test时，用的属性修饰符retain。<br>
+当我们，使用self.test时，就使用了编译器为我们生成的setXXX方法。在该方法中retainCount被加1，所以，变为2.<br>
+这样的花，如果，我们在代码中，直接用<br>
+<code>self.test=[[NSString alloc] initWithFormat:@&quot;test&quot;]; </code><br>
+这行代码后，test变量的应用计数变成了2：<br>
+相当于：<br>
+首先，声明一个字符串对象，这时候，引用计数为1.<br>
+其次，再将test的值赋给self.test。（相当于，使用了setXXX方法，让retainCount，加1），导致应用计数变成2.<br>
+所以，在类中，如果，仅仅是指针赋值，（将一个对象的指针赋给另一个指针）尽量避免使用self.test进行赋值。这样会引起引用计数+1，容易引起释放内存泄漏。而直接用test来赋值。<br>
+也就是，在方法中，使用self.xxxx,进行赋值，就会使用编译器生成的setXXX方法，从而根据申明对象时的属性（copy，retain，assign）进行调用setXXX方法。<br>
+如果，只用属性之间来赋值（test= newValue;，就是不带self），那么，仅仅是指针之间的赋值。<br>
+第二种方式，就是带下划线的那种方式：<br>
+这样，让我们验证：<br>
+代码中，我们这么写：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test=[[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;test&quot;</span>];</span><br></pre></td></tr></table></figure>
-
 <p>我们会收到一个错误提示：</p>
 <p>Object-C <wbr>声明属性为什么用下划线，代码规范和编程风格</p>
 <p>看来，不能直接访问，test，而要用<code>_test</code>来代替。</p>
 <p>不管它，那就用它推荐的方法，继续写完：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.test=[[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;test&quot;</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;self.test的应用计数:%d&quot;</span>,[<span class="keyword">self</span>.test retainCount]);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;_test的应用计数:%d&quot;</span>,[_test retainCount]);</span><br></pre></td></tr></table></figure>
-
 <p>运行代码，输出如下：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2012</span><span class="number">-11</span><span class="number">-17</span> <span class="number">16</span>:<span class="number">30</span>:<span class="number">39.525</span> ArtTV[<span class="number">1042</span>:<span class="number">14303</span>] <span class="keyword">self</span>.test的应用计数:<span class="number">2</span></span><br><span class="line"><span class="number">2012</span><span class="number">-11</span><span class="number">-17</span> <span class="number">16</span>:<span class="number">30</span>:<span class="number">41.553</span> ArtTV[<span class="number">1042</span>:<span class="number">14303</span>] _test的应用计数:<span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<p>运行输出，很显然，应用计数为2，不是我们想要的结果。原因，跟我们讨论的第一种情况，是一样的。<br>这仅仅是一种调用的另一种方式：<br>默认情况，调用test，当我们申明<code>test=_test</code>;时候，那么在类内部使用<code>_test</code>。<br>在使用<code>_test</code>，时候，也仅仅是指针的赋值。<br>使用<code>self.test</code>，就是要调用编译器生成的响应的getXXX，setXXX方法了。<br>为了证明我们的想法，我们将代码修改成这样：</p>
+<p>运行输出，很显然，应用计数为2，不是我们想要的结果。原因，跟我们讨论的第一种情况，是一样的。<br>
+这仅仅是一种调用的另一种方式：<br>
+默认情况，调用test，当我们申明<code>test=_test</code>;时候，那么在类内部使用<code>_test</code>。<br>
+在使用<code>_test</code>，时候，也仅仅是指针的赋值。<br>
+使用<code>self.test</code>，就是要调用编译器生成的响应的getXXX，setXXX方法了。<br>
+为了证明我们的想法，我们将代码修改成这样：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">_test=[[<span class="built_in">NSString</span> alloc] initWithFormat:<span class="string">@&quot;test&quot;</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;self.test的应用计数:%d&quot;</span>,[<span class="keyword">self</span>.test retainCount]);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;_test的应用计数:%d&quot;</span>,[_test retainCount]);</span><br></pre></td></tr></table></figure>
-
 <p>输出如下：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2012</span><span class="number">-11</span><span class="number">-17</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">09.089</span> ArtTV[<span class="number">1074</span>:<span class="number">14303</span>] <span class="keyword">self</span>.test的应用计数:<span class="number">1</span></span><br><span class="line"><span class="number">2012</span><span class="number">-11</span><span class="number">-17</span> <span class="number">16</span>:<span class="number">36</span>:<span class="number">10.701</span> ArtTV[<span class="number">1074</span>:<span class="number">14303</span>] _test的应用计数:<span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>关于，使用方式，我们就将到这里吧。亲自动手，实验一下。就明白其中的奥妙了！<br>但是，还没有结束！<br>另一个疑惑，也随之而来。<br>我们用那种方式好呢？？？？<br>我看了一些帖子，说，苹果不提倡在我们定义的类中使用“<code>_xxxx</code>”，这种形式的属性声明，因为，在很多苹果提供的框架中，大量使用“<code>_xxxx</code>”这种属性声明。  </p>
-<p>——————————————————————————————————————<br>Cocoa编码指南: 编程公约:  </p>
-<p>避免使用下划线作为前缀，特别是在私有方法中。苹果公司保留并使用本公约。使用第三方可能会导致命名空间冲突；自己不知不觉中，可能会覆盖现有的私有方法，带来灾难性的后果。<br>——————————————————————————————————————  </p>
-<p>打开一个看看：  </p>
-<p>Object-C <wbr>声明属性为什么用下划线，代码规范和编程风格<br>确实，如此啊！<br>在这种情况下，如果，我们，继承了某个框架类，并且无意间声明的“<code>_xxxx</code>”属性跟父类的相同，那么可能就会覆盖掉，从而引发不可估计的后果！<br>但是，我看苹果帮助文档中写的许多例子也在用“<code>_xxxx</code>”这种方式啊！所以，我觉的可以用，但要注意！Object-C <wbr>声明属性为什么用下划线，代码规范和编程风格<br>为什么是可以用呢？  </p>
-<p>因为个人感觉：“<code>_xxxx</code>”确实很好用！<br>1.从风格上表明类的内部变量。<br>2.意在指明这个变量是内部变量（类外部不会使用。。。）<br>3.外部访问用obj.xxxxx, 避免对类变量的直接访问。<br>4.这样的话，要是需要直接引用变量就用<code>_xxxx</code>，当需要用get，set方法时，就用self.xxx。<br>汇成一句话：<br>下划线和非下划线的使用，可以说是一种习惯问题吧。不用太过于纠结！<br>默认情况下，@synthesize name;编译器为我们生成的get，set方法中所使用的变量名称，跟我们申明的变量名称时一样的（仅仅用self.name和name来区分确实不够理想）。<br>但是，当我们用<code>@synthesize name=_name;</code>时，就为属性取了一个别名，那样的话，指针变量，跟编译器生成的get，set方法为属性赋值时就容易区分了！<br>文章参考:<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1MTUzODMxMDYvYXJ0aWNsZS9kZXRhaWxzLzg1MDg2MTE=">http://blog.csdn.net/qq515383106/article/details/8508611<i class="fa fa-external-link-alt"></i></span></p>
+<p>关于，使用方式，我们就将到这里吧。亲自动手，实验一下。就明白其中的奥妙了！<br>
+但是，还没有结束！<br>
+另一个疑惑，也随之而来。<br>
+我们用那种方式好呢？？？？<br>
+我看了一些帖子，说，苹果不提倡在我们定义的类中使用“<code>_xxxx</code>”，这种形式的属性声明，因为，在很多苹果提供的框架中，大量使用“<code>_xxxx</code>”这种属性声明。</p>
+<p>——————————————————————————————————————<br>
+Cocoa编码指南: 编程公约:</p>
+<p>避免使用下划线作为前缀，特别是在私有方法中。苹果公司保留并使用本公约。使用第三方可能会导致命名空间冲突；自己不知不觉中，可能会覆盖现有的私有方法，带来灾难性的后果。<br>
+——————————————————————————————————————</p>
+<p>打开一个看看：</p>
+<p>Object-C <wbr>声明属性为什么用下划线，代码规范和编程风格<br>
+确实，如此啊！<br>
+在这种情况下，如果，我们，继承了某个框架类，并且无意间声明的“<code>_xxxx</code>”属性跟父类的相同，那么可能就会覆盖掉，从而引发不可估计的后果！<br>
+但是，我看苹果帮助文档中写的许多例子也在用“<code>_xxxx</code>”这种方式啊！所以，我觉的可以用，但要注意！Object-C <wbr>声明属性为什么用下划线，代码规范和编程风格<br>
+为什么是可以用呢？</p>
+<p>因为个人感觉：“<code>_xxxx</code>”确实很好用！<br>
+1.从风格上表明类的内部变量。<br>
+2.意在指明这个变量是内部变量（类外部不会使用。。。）<br>
+3.外部访问用obj.xxxxx, 避免对类变量的直接访问。<br>
+4.这样的话，要是需要直接引用变量就用<code>_xxxx</code>，当需要用get，set方法时，<span class="exturl" data-url="aHR0cDovL3huLS1zZWxmLWsyOWdnMjlqLnh4eA==">就用self.xxx<i class="fa fa-external-link-alt"></i></span>。<br>
+汇成一句话：<br>
+下划线和非下划线的使用，可以说是一种习惯问题吧。不用太过于纠结！<br>
+默认情况下，@synthesize name;编译器为我们生成的get，set方法中所使用的变量名称，跟我们申明的变量名称时一样的（仅仅用self.name和name来区分确实不够理想）。<br>
+但是，当我们用<code>@synthesize name=_name;</code>时，就为属性取了一个别名，那样的话，指针变量，跟编译器生成的get，set方法为属性赋值时就容易区分了！<br>
+文章参考:<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE1MTUzODMxMDYvYXJ0aWNsZS9kZXRhaWxzLzg1MDg2MTE=">http://blog.csdn.net/qq515383106/article/details/8508611<i class="fa fa-external-link-alt"></i></span></p>
 
     </div>
 

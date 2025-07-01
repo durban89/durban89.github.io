@@ -26,12 +26,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="当通过 TCP&#x2F;IP 连接 MySQL 远程主机时，出现 ERROR 2013 (HY000): Lost connection to MySQL server at &#39;reading initial communication packet&#39;, system error: 104 。 如果是在linux shell命令行中直接打 mysql 命令，能够顺利连上 MySQ">
+    <meta name="description" content="当通过 TCP&#x2F;IP 连接 MySQL 远程主机时，出现 ERROR 2013 (HY000): Lost connection to MySQL server at &#39;reading initial communication packet&#39;, system error: 104 。 如果是在linux shell命令行中直接打 mysql 命令，能够顺利连上 MySQL，执行查询语句也比较正常">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="解决Lost connection to MySQL server at &#39;reading错误">
 <meta property="og:url" content="https://blog.gowhich.com/2025/06/12/%E8%A7%A3%E5%86%B3Lost-connection-to-MySQL-server-at-reading%E9%94%99%E8%AF%AF.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="当通过 TCP&#x2F;IP 连接 MySQL 远程主机时，出现 ERROR 2013 (HY000): Lost connection to MySQL server at &#39;reading initial communication packet&#39;, system error: 104 。 如果是在linux shell命令行中直接打 mysql 命令，能够顺利连上 MySQ">
+<meta property="og:description" content="当通过 TCP&#x2F;IP 连接 MySQL 远程主机时，出现 ERROR 2013 (HY000): Lost connection to MySQL server at &#39;reading initial communication packet&#39;, system error: 104 。 如果是在linux shell命令行中直接打 mysql 命令，能够顺利连上 MySQL，执行查询语句也比较正常">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-12T09:45:14.000Z">
 <meta property="article:modified_time" content="2025-06-12T10:08:12.644Z">
@@ -193,18 +193,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">665</span>
+          <span class="site-state-item-count">685</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-count">113</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -303,9 +303,9 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>当通过 TCP&#x2F;IP 连接 MySQL 远程主机时，出现 <code>ERROR 2013 (HY000): Lost connection to MySQL server at &#39;reading initial communication packet&#39;, system error: 104 </code>。</p>
-<p>如果是在linux shell命令行中直接打 mysql 命令，能够顺利连上 MySQL，执行查询语句也比较正常，但如果执行 STOP SLAVE; 命令时就随机出现 <code>ERROR 2013 (HY000): Lost connection to MySQL server during query</code> 问题。而如果把操作命令写到脚本文件再去执行该脚本文件的话，则必然出现 <code>Lost connection to MySQL server at &#39;reading initial communication packet&#39;, system error: 111</code></p>
-<p>要是无论通过什么途径远程访问都出现错误可以认为是系统有防火墙之类的限制，但现在这种奇怪的抽筋现象让人百思不得其解。最后找到的解决方法是在 <code>my.cnf</code> 里面的 <code>[mysqld]</code> 段增加一个启动参数<code>skip-name-resolve</code> 问题消失。但原因还是想不出所以然。  </p>
+    <div class="post-body" itemprop="articleBody"><p>当通过 TCP/IP 连接 MySQL 远程主机时，出现 <code>ERROR 2013 (HY000): Lost connection to MySQL server at 'reading initial communication packet', system error: 104 </code>。</p>
+<p>如果是在linux shell命令行中直接打 mysql 命令，能够顺利连上 MySQL，执行查询语句也比较正常，但如果执行 STOP SLAVE; 命令时就随机出现 <code>ERROR 2013 (HY000): Lost connection to MySQL server during query</code> 问题。而如果把操作命令写到脚本文件再去执行该脚本文件的话，则必然出现 <code>Lost connection to MySQL server at 'reading initial communication packet', system error: 111</code></p>
+<p>要是无论通过什么途径远程访问都出现错误可以认为是系统有防火墙之类的限制，但现在这种奇怪的抽筋现象让人百思不得其解。最后找到的解决方法是在 <code>my.cnf</code> 里面的 <code>[mysqld]</code> 段增加一个启动参数<code>skip-name-resolve</code> 问题消失。但原因还是想不出所以然。</p>
 <p>产生的原因是 my.cnf 中我设置了 <code>skip-name-resolve</code>，<code>skip-name-resolve</code>是禁用dns解析，所以在mysql的授权表中就不能使用主机名了，只能使用IP 。</p>
 
     </div>

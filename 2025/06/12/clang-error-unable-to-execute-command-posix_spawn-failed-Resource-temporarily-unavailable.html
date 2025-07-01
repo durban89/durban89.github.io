@@ -193,18 +193,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">665</span>
+          <span class="site-state-item-count">685</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-count">113</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -305,18 +305,14 @@
     
     <div class="post-body" itemprop="articleBody"><p>Xcode下创建一个项目，但是运行的时候出现了如下的错误：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clang: error: unable to execute <span class="built_in">command</span>: posix_spawn failed: Resource temporarily unavailable</span><br><span class="line">clang: error: clang frontend <span class="built_in">command</span> failed due to signal (use -v to see invocation)</span><br></pre></td></tr></table></figure>
-
 <p>经过查找资料，有个说明是这样的，如下：</p>
 <p>you may be running into too-low limits on the number of concurrent processes allowed on the machine. Check:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sysctl kern.maxproc</span><br><span class="line">sysctl kern.maxprocperuid</span><br></pre></td></tr></table></figure>
-
 <p>You can increase them with e.g.:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> sysctl -w kern.maxproc=2500</span><br><span class="line"><span class="built_in">sudo</span> sysctl -w kern.maxprocperuid=2500</span><br></pre></td></tr></table></figure>
-
 <p>But normally this shouldn’t be necessary if you’re building on 10.7 or higher. If you see this, check if some rogue program spawned hundreds of processes and kill them first.</p>
 <p>我按照上面的流程执行了操作：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">davidzhang@davidzhang:~/command$ sysctl kern.maxproc</span><br><span class="line">kern.maxproc: 1064</span><br><span class="line">davidzhang@davidzhang:~/command$ sysctl kern.maxprocperuid</span><br><span class="line">kern.maxprocperuid: 709</span><br><span class="line">davidzhang@davidzhang:~/command$ <span class="built_in">sudo</span> sysctl -w kern.maxproc=2500</span><br><span class="line">Password:</span><br><span class="line">kern.maxproc: 1064 -&gt; 2500</span><br><span class="line">davidzhang@davidzhang:~/command$ <span class="built_in">sudo</span> sysctl -w kern.maxprocperuid=2500</span><br><span class="line">kern.maxprocperuid: 709 -&gt; 2500</span><br></pre></td></tr></table></figure>
-
 <p>最后运行我的项目的时候，问题就解决了</p>
 <p>查询参考资料:<span class="exturl" data-url="aHR0cDovL2NvZGUuZ29vZ2xlLmNvbS9wL2Nocm9taXVtL3dpa2kvTWFjQnVpbGRJbnN0cnVjdGlvbnM=">http://code.google.com/p/chromium/wiki/MacBuildInstructions<i class="fa fa-external-link-alt"></i></span></p>
 

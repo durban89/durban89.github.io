@@ -193,18 +193,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">665</span>
+          <span class="site-state-item-count">685</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-count">113</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -307,14 +307,11 @@
 <p>使用Nodejs是如此简单的实现了一个简单的聊天服务器</p>
 <p>实现代码如下：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> net = <span class="built_in">require</span>(<span class="string">&#x27;net&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> chatServer = net.<span class="title function_">createServer</span>(),clientList = [];</span><br><span class="line"></span><br><span class="line">chatServer.<span class="title function_">on</span>(<span class="string">&quot;connection&quot;</span>,<span class="keyword">function</span>(<span class="params">client</span>)&#123;</span><br><span class="line">    client.<span class="property">name</span> = client.<span class="property">remoteAddress</span> + <span class="string">&quot;:&quot;</span> + client.<span class="property">remotePort</span>;</span><br><span class="line">    client.<span class="title function_">write</span>(<span class="string">&quot;Hi! &quot;</span>+client.<span class="property">name</span>+<span class="string">&quot; \n&quot;</span>);</span><br><span class="line">    clientList.<span class="title function_">push</span>(client);</span><br><span class="line"></span><br><span class="line">    client.<span class="title function_">on</span>(<span class="string">&quot;data&quot;</span>,<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span><br><span class="line">        <span class="comment">//数据发送给客户端</span></span><br><span class="line">        <span class="title function_">broadcast</span>(data,client);</span><br><span class="line">        <span class="comment">// clientList[i].write(data);</span></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    client.<span class="title function_">on</span>(<span class="string">&quot;end&quot;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        clientList.<span class="title function_">splice</span>(clientList.<span class="title function_">indexOf</span>(client),<span class="number">1</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    client.<span class="title function_">on</span>(<span class="string">&quot;error&quot;</span>,<span class="keyword">function</span>(<span class="params">e</span>)&#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(e)</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line">chatServer.<span class="title function_">listen</span>(<span class="number">9000</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">broadcast</span>(<span class="params">message,client</span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> cleanup = [];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;clientList.<span class="property">length</span>;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(client != clientList[i])&#123;</span><br><span class="line">            <span class="keyword">if</span>(clientList[i].<span class="property">writable</span>)&#123;</span><br><span class="line">                clientList[i].<span class="title function_">write</span>(client.<span class="property">name</span> = <span class="string">&quot;says:&quot;</span>+message);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                cleanup.<span class="property">push</span>[clientList[i]];</span><br><span class="line">                clientList[i].<span class="title function_">destory</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>使用过程就是：</p>
 <p>启动js</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node chat.js</span><br></pre></td></tr></table></figure>
-
 <p>连接方式：telnet</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet 127.0.0.1 9000</span><br></pre></td></tr></table></figure>
-
 
     </div>
 

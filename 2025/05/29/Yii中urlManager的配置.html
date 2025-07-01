@@ -193,18 +193,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">665</span>
+          <span class="site-state-item-count">685</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-count">113</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -313,19 +313,15 @@
 <p>在main.php配置文件的component域中添加urlManager模块，并加入urlrules.</p>
 <p>引入rule文件，代码如下</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$urls</span> = <span class="keyword">include</span>(<span class="title function_ invoke__">dirname</span>(<span class="keyword">__FILE__</span>) . <span class="string">&#x27;/urlrules.php&#x27;</span>);</span><br><span class="line">urlManager配置修改如下</span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;urlManager&#x27;</span>=&gt;<span class="keyword">array</span>(</span><br><span class="line">    <span class="string">&#x27;urlFormat&#x27;</span> =&gt; <span class="string">&#x27;path&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;showScriptName&#x27;</span> =&gt; <span class="literal">false</span>,<span class="comment">//隐藏index.php </span></span><br><span class="line">    <span class="string">&#x27;urlSuffix&#x27;</span> =&gt; <span class="string">&#x27;.html&#x27;</span>,<span class="comment">//后缀 </span></span><br><span class="line">    <span class="string">&#x27;rules&#x27;</span> =&gt; <span class="variable">$urls</span>,</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
-
 <p>第二步:在同级目录下写urlrules.php.如：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">&#x27;/index.html&#x27;</span> =&gt; <span class="string">&#x27;site/index&#x27;</span>, <span class="comment">//首页</span></span><br><span class="line">    <span class="string">&#x27;search&#x27;</span> =&gt; <span class="string">&#x27;search/index&#x27;</span>，</span><br><span class="line"></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
 <p>第三步，当然是配置服务器的rewrite模块，使得入口为index.php</p>
 <p>1)apache下，在网站根目录下建立.htaccess如下:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Options +FollowSymLinks </span><br><span class="line"></span><br><span class="line">IndexIgnore */* </span><br><span class="line"></span><br><span class="line">RewriteEngine on  </span><br><span class="line"><span class="comment"># if a directory or a file exists, use it directly </span></span><br><span class="line">RewriteCond %&#123;REQUEST_FILENAME&#125; !-f</span><br><span class="line">RewriteCond %&#123;REQUEST_FILENAME&#125; !-d</span><br><span class="line"></span><br><span class="line">RewriteRule . index.php</span><br></pre></td></tr></table></figure>
-
 <ol start="2">
 <li>nginx下在php配置模块和location模块添加rewrite如下：</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    root   /home/george/workspace/EclipsePHP/webroot;</span><br><span class="line">    index  index.html index.php index.htm;</span><br><span class="line">    <span class="comment">#try_files $uri $uri/ @rewrite;</span></span><br><span class="line">    <span class="keyword">if</span> (!-f <span class="variable">$request_filename</span>)&#123;</span><br><span class="line">        rewrite (.*) /index.php;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">location ~ \.php$ &#123;</span><br><span class="line">    root            /home/george/workspace/EclipsePHP/webroot;</span><br><span class="line">    fastcgi_pass   127.0.0.1:9000;</span><br><span class="line">    fastcgi_index  index.php;</span><br><span class="line">    fastcgi_param  SCRIPT_FILENAME   /home/george/workspace/EclipsePHP/webroot<span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">    include        fastcgi_params;</span><br><span class="line">    <span class="keyword">if</span> (!-f <span class="variable">$request_filename</span>)&#123;</span><br><span class="line">        rewrite (.*) /index.php;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>完了，再看看你的网站的url 是不是漂亮了不少，同行努力！</p>
 
     </div>

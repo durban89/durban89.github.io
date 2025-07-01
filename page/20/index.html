@@ -191,18 +191,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">665</span>
+          <span class="site-state-item-count">685</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-count">113</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Eclipse-%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Django-%E4%BD%BF%E7%94%A8%E9%AA%8C%E8%AF%81%E7%A0%81%E5%B7%A5%E5%85%B7django-simple-captcha%E7%9A%84%E9%81%87%E5%88%B0%E9%97%AE%E9%A2%98-imagingft-IndexError--list-index-out-of-range.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Eclipse-%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6.html" class="post-title-link" itemprop="url">Eclipse 安装插件</a>
+          <a href="/2025/06/26/Django-%E4%BD%BF%E7%94%A8%E9%AA%8C%E8%AF%81%E7%A0%81%E5%B7%A5%E5%85%B7django-simple-captcha%E7%9A%84%E9%81%87%E5%88%B0%E9%97%AE%E9%A2%98-imagingft-IndexError--list-index-out-of-range.html" class="post-title-link" itemprop="url">Django 使用验证码工具django-simple-captcha的遇到问题{_imagingft,IndexError: list index out of range}</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-25 10:26:07 / 修改时间：10:51:17" itemprop="dateCreated datePublished" datetime="2025-06-25T10:26:07+08:00">2025-06-25</time>
+      <time title="创建时间：2025-06-26 10:32:12 / 修改时间：11:02:24" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:12+08:00">2025-06-26</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,56 +294,661 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>PyDev插件</p>
-<p>插件地址：<span class="exturl" data-url="aHR0cDovL3B5ZGV2Lm9yZy91cGRhdGVz">http://pydev.org/updates<i class="fa fa-external-link-alt"></i></span></p>
-<p>安装方式：</p>
-<p>线上安装（原因：下载后安装报错，线上安装也比较快）</p>
-</blockquote>
+          <h3 id="先来看看第一个问题"><a href="#1">先来看看第一个问题</a></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IndexError: list index out of range</span><br></pre></td></tr></table></figure>
+<p>就是这个简单的错误是因为我在django中使用django-simple-captcha的时候，没有在项目中运行下面的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py syncdb</span><br></pre></td></tr></table></figure>
+<p>就是一定要记得要进行数据库表的同步</p>
+<h3 id="第二个问题就是比较验证的操作量比较大的“-imagingft”问题"><a href="#2">第二个问题就是比较验证的操作量比较大的“<code>_imagingft</code>”问题</a></h3>
+<p>不过经过google的查找，按照下面的步骤进行就解决了问题，步骤如下</p>
+<p>这个是由于PIL没有编译freetype导致的</p>
+<p>查看 lib/python2.7/site-packages/PIL/</p>
+<p>看看 <code>_imagingft.so</code> 是否存在</p>
+<h3 id="第一步安装ipeg库"><a href="#3">第一步安装ipeg库</a></h3>
+<p>最新的可以到<span class="exturl" data-url="aHR0cDovL3d3dy5pamcub3JnL2ZpbGVz">http://www.ijg.org/files<i class="fa fa-external-link-alt"></i></span> 这里去下载</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.ijg.org/files/jpegsrc.v7.tar.gz</span><br><span class="line">tar -zxvf jpegsrc.v7.tar.gz</span><br><span class="line"><span class="built_in">cd</span> jpeg-7</span><br><span class="line">CC=<span class="string">&quot;gcc -arch x86_64&quot;</span></span><br><span class="line">./configure --enable-shared --enable-static</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<h3 id="第二步安装freetype开发库"><a href="#4">第二步安装freetype开发库</a></h3>
+<p>让PIL支持freetype的方法</p>
+<p>1、安装freetype开发库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install freetype-devel</span><br></pre></td></tr></table></figure>
+<p>2、下载源代码<span class="exturl" data-url="aHR0cDovL2VmZmJvdC5vcmcvZG93bmxvYWRzL0ltYWdpbmctMS4xLjcudGFyLmd6">http://effbot.org/downloads/Imaging-1.1.7.tar.gz<i class="fa fa-external-link-alt"></i></span></p>
+<p>3、修改setup.py文件</p>
+<p>修改</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">JPEG_ROOT = libinclude(<span class="string">&quot;/usr/local&quot;</span>)</span><br><span class="line"></span><br><span class="line">FREETYPE_ROOT = <span class="string">&#x27;/usr/lib64&#x27;</span>,<span class="string">&#x27;/usr/include/freetype2/freetype&#x27;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>关于freetype的安装我因为是在ubuntu环境下，不想运行yum，我是自己下载的，最近的源码可以到这个网址<span class="exturl" data-url="aHR0cDovL2Rvd25sb2FkLnNhdmFubmFoLmdudS5vcmcvcmVsZWFzZXMvZnJlZXR5cGUv">http://download.savannah.gnu.org/releases/freetype/<i class="fa fa-external-link-alt"></i></span> 下载，然后进行手动源码安装</p>
+<p>第三步重新编译PIL进行安装（这里我采用的也是源码安装，源码的最新库的地址在<span class="exturl" data-url="aHR0cDovL2VmZmJvdC5vcmcvZG93bmxvYWRz">http://effbot.org/downloads<i class="fa fa-external-link-alt"></i></span> ）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py build_ext -i</span><br></pre></td></tr></table></figure>
+<p>— FREETYPE2 support available  注意这一项</p>
+<p>编译安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
 <hr>
 <blockquote>
-<p>Django Editor插件</p>
-<p>插件地址：<span class="exturl" data-url="aHR0cDovL2VjbGlwc2Uua2FjcHJ6YWsub3JnLw==">http://eclipse.kacprzak.org/<i class="fa fa-external-link-alt"></i></span></p>
-<p>安装方式：</p>
-<p>下载-&gt;解压-&gt;本地文件安装</p>
+<p>若上面的设置都失败，则只能拿出下面的杀手锏（我是没有经过这一步就成功了）：</p>
+<p>sudo apt-get build-dep python-imaging</p>
+<p>sudo ln -s /usr/lib/<code>uname -i</code>-linux-gnu/libfreetype.so /usr/lib/</p>
+<p>sudo ln -s /usr/lib/<code>uname -i</code>-linux-gnu/libjpeg.so /usr/lib/</p>
+<p>sudo ln -s /usr/lib/<code>uname -i</code>-linux-gnu/libz.so /usr/lib/</p>
+<p>pip install -U PIL</p>
 </blockquote>
+<p>安装成功的结果是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------------</span><br><span class="line">PIL 1.1.7 SETUP SUMMARY</span><br><span class="line">--------------------------------------------------------------------</span><br><span class="line">version       1.1.7</span><br><span class="line">platform      linux2 2.7.3 (default, Sep 26 2013, 20:08:41)</span><br><span class="line">              [GCC 4.6.3]</span><br><span class="line">--------------------------------------------------------------------</span><br><span class="line">*** TKINTER support not available</span><br><span class="line">--- JPEG support available</span><br><span class="line">--- ZLIB (PNG/ZIP) support available</span><br><span class="line">--- FREETYPE2 support available</span><br><span class="line">*** LITTLECMS support not available</span><br><span class="line">--------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9kZXNjdXNyL3AvMzIyNTg3NC5odG1s">http://www.cnblogs.com/descusr/p/3225874.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Django-%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84%E4%BD%BF%E7%94%A8-django-simple-captcha%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/Django-%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84%E4%BD%BF%E7%94%A8-django-simple-captcha%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">Django 验证码的使用django-simple-captcha使用方法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 10:32:07 / 修改时间：11:03:24" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:07+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>关于Django的验证码的问题，进行再次的追究，找到了第二种方法</p>
+<p>简单的简介和使用方法。并且关于在这里出现的问题我会在下篇文章进行说明，因为我在安装和使用的过程中还是遇到了问题的。大概的步骤如下</p>
+<p>一、简介</p>
+<p>项目地址：<span class="exturl" data-url="aHR0cDovL2NvZGUuZ29vZ2xlLmNvbS9wL2RqYW5nby1zaW1wbGUtY2FwdGNoYS8=">http://code.google.com/p/django-simple-captcha/<i class="fa fa-external-link-alt"></i></span></p>
+<p>简介：是一个第三方django APP，用于为表单添加验证码图片</p>
+<p>二、一般的使用方法</p>
+<p>下载后python <span class="exturl" data-url="aHR0cDovL3NldHVwLnB5">setup.py<i class="fa fa-external-link-alt"></i></span> install进行安装</p>
+<p>将下载包解压，将里面的captcha包复制到项目目录下，如myblog/captcha</p>
+<p>settings.py里添加：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS(‘captcha’,)</span><br></pre></td></tr></table></figure>
+<p>urls.py里添加：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url(<span class="string">r&#x27;^captcha/&#x27;</span>, include(<span class="string">&#x27;captcha.urls&#x27;</span>)),</span><br></pre></td></tr></table></figure>
+<p>执行python <span class="exturl" data-url="aHR0cDovL21hbmFnZS5weQ==">manage.py<i class="fa fa-external-link-alt"></i></span> syncdb生成所需数据库表</p>
+<p>在需要用到captcha的forms.py文件里的合适位置添加下面的代码，增加验证码字段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> captcha.fields <span class="keyword">import</span> CaptchaField</span><br><span class="line">captcha=CaptchaField()</span><br></pre></td></tr></table></figure>
+<p>在处理表单提交的业务逻辑代码块里添加：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> form.is_valid():</span><br><span class="line">    human = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>三、与django的comments组件结合使用的方法（这里目前我是没有加到自己的项目里面）</p>
+<p>如果你的项目里的评论系统直接使用的django内置的comments库，则comments库与此验证码库结合使用的方法如下：</p>
+<p>执行前面的1至5步</p>
+<p>在 <code>Python27\Lib\site-packages\django\contrib\comments\forms.py</code>文件中（windows环境下的路径），在CommentDetailsForm类里面添加验证码字段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> captcha.fields <span class="keyword">import</span> CaptchaField</span><br><span class="line">captcha= CaptchaField()</span><br></pre></td></tr></table></figure>
+<p>在<code>Python27\Lib\site-packages\django\contrib\comments\views\comments.py</code>文件中，在# Otherwise create the comment这句下面添加：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">human=<span class="literal">True</span></span><br></pre></td></tr></table></figure>
+<p>修改表单模板：如果评论表单模板直接用的则什么都不用修改；如果是自己定制的表单模板，则可添加如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;id_captcha&quot;</span>&gt;</span>验证（必填）：<span class="tag">&lt;/<span class="name">label</span>&gt;</span> &#123;&#123;form.captcha&#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这样就基本能够使用了</p>
 <hr>
-<blockquote>
-<p>PHPEclipse插件</p>
-<p>插件地址：<span class="exturl" data-url="aHR0cHM6Ly9zb3VyY2Vmb3JnZS5uZXQvcHJvamVjdHMvcGhwZWNsaXBzZS9maWxlcy8=">https://sourceforge.net/projects/phpeclipse/files/<i class="fa fa-external-link-alt"></i></span></p>
-<p>安装方式：</p>
-<p>下载-&gt;解压-&gt;本地文件安装</p>
-</blockquote>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL25ld2xpdS5jb20vcG9zdC81Lw==">http://newliu.com/post/5/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS96YWNrbGluZS9wLzMzNjUwMDIuaHRtbA==">http://www.cnblogs.com/zackline/p/3365002.html<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5teXNqdHUuY29tL3BhZ2UvTTAvUzkxMS85MTEwODAuaHRtbA==">http://www.mysjtu.com/page/M0/S911/911080.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Django-%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84%E4%BD%BF%E7%94%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/Django-%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">Django 验证码的使用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 11:35:16 / 修改时间：11:35:57" itemprop="dateCreated datePublished" datetime="2025-06-25T11:35:16+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>关于django的验证码的使用，我在网上搜索的时候，目前只发现了两种，这里简单的记录下DjangoVerifyCode的使用方法。</p>
 <hr>
-<blockquote>
-<p>Color Theme插件</p>
-<p>插件地址:<span class="exturl" data-url="aHR0cDovL2VjbGlwc2UtY29sb3ItdGhlbWUuZ2l0aHViLmNvbS91cGRhdGU=">http://eclipse-color-theme.github.com/update<i class="fa fa-external-link-alt"></i></span></p>
-<p>安装方式:</p>
-<p>线上安装（比较快）</p>
-</blockquote>
+<p>在django中生成英文单词验证码,提供验证码图片生成,检查验证码等功能.</p>
+<h3 id="安装"><a href="#1">安装</a></h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install DjangoVerifyCode</span><br></pre></td></tr></table></figure>
+<p>or</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">easy_install DjangoVerifyCode</span><br></pre></td></tr></table></figure>
+<p>显示验证码(<span class="exturl" data-url="aHR0cDovL3ZpZXdzLnB5">views.py<i class="fa fa-external-link-alt"></i></span>)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> DjangoVerifyCode <span class="keyword">import</span> Code</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">code</span>(<span class="params">request</span>):</span><br><span class="line">    code = Code(request)</span><br><span class="line">    <span class="keyword">return</span> code.display()</span><br></pre></td></tr></table></figure>
+<p>检查用户输入的验证码是否正确(<span class="exturl" data-url="aHR0cDovL3ZpZXdzLnB5">views.py<i class="fa fa-external-link-alt"></i></span>)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> DjangoVerifyCode <span class="keyword">import</span> Code</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>(<span class="params">request</span>):</span><br><span class="line">    _code = request.GET.get(<span class="string">&#x27;code&#x27;</span>) <span class="keyword">or</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> _code:</span><br><span class="line">        <span class="keyword">return</span> render(<span class="string">&#x27;index.html&#x27;</span>,<span class="built_in">locals</span>())</span><br><span class="line"> </span><br><span class="line">    code = Code(request)</span><br><span class="line">    <span class="keyword">if</span> code.check(_code):</span><br><span class="line">        <span class="keyword">return</span> HttpResponse(<span class="string">&#x27;验证成功&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> HttpResponse(<span class="string">&#x27;验证失败&#x27;</span>)</span><br><span class="line"> <span class="comment">#该代码片段来自于: http://www.sharejs.com/codes/python/7377</span></span><br></pre></td></tr></table></figure>
+<p>自定义</p>
+<p>用户可根据自己的需要对DjangoVerifyCode.Code对象的属性进行设置</p>
+<p>输出图片的宽度</p>
+<p>code.img_width = 150</p>
+<p>输出图片的高度</p>
+<p>code.img_height = 30</p>
+<p>验证码字体颜色</p>
+<p>code.font_color = [‘black’,‘darkblue’,‘darkred’]</p>
+<p>字体大小</p>
+<p>font_size = 24</p>
+<p>依赖包</p>
+<p>PIL</p>
+<p>安装PIL可以使用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pil</span><br></pre></td></tr></table></figure>
+<p>我没有采用这种方法，一直还不知道如何在模板中使用，有哪位大神知道的，可以指教一二。</p>
 <hr>
-<blockquote>
-<p>Aptana插件</p>
-<p>插件地址：<span class="exturl" data-url="aHR0cDovL3d3dy5hcHRhbmEuY29tL2Rvd25sb2Fkcy9zdGFydA==">http://www.aptana.com/downloads/start<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL2Rvd25sb2FkLmFwdGFuYS5jb20vc3R1ZGlvMy9wbHVnaW4vaW5zdGFsbA==">http://download.aptana.com/studio3/plugin/install<i class="fa fa-external-link-alt"></i></span></p>
-<p>安装方式：</p>
-<p>1，下载-&gt;解压-&gt;本地文件安装</p>
-<p>2，线上安装</p>
-</blockquote>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5zaGFyZWpzLmNvbS9jb2Rlcy9weXRob24vNzM3Nw==">http://www.sharejs.com/codes/python/7377<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy4xMDAwMDAwMDBkdS5jb20vY2FwdGNoYS84MTU1Ni5odG1s">http://www.100000000du.com/captcha/81556.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS7-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8iOS%E6%89%8B%E5%8A%BFUIGestureRecognizer.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/iOS7-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8iOS%E6%89%8B%E5%8A%BFUIGestureRecognizer.html" class="post-title-link" itemprop="url">iOS7 如何使用iOS手势UIGestureRecognizer</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 11:35:12 / 修改时间：11:36:31" itemprop="dateCreated datePublished" datetime="2025-06-25T11:35:12+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>今天终于有时间接触了UIGestureRecognizer，果然很好玩，下面关于他的一些使用，以下内容完全来自于网上，尚未做过测试。</p>
+<p>UIKit中包含了UIGestureRecognizer类，用于检测发生在设备中的手势。UIGestureRecognizer是一个抽象类，定义了所有手势的基本行为，它有下面一些子类用于处理具体的手势：</p>
+<ul>
+<li>拍击UITapGestureRecognizer (任意次数的拍击)</li>
+<li>向里或向外捏UIPinchGestureRecognizer (用于缩放)</li>
+<li>摇动或者拖拽UIPanGestureRecognizer</li>
+<li>滑动UISwipeGestureRecognizer (以任意方向)</li>
+<li>旋转UIRotationGestureRecognizer (手指朝相反方向移动)</li>
+<li>长按UILongPressGestureRecognizer</li>
+</ul>
+<p>对于不同类型的手势识别器，具有不同的配置属性。比如UITapGestureRecognizer，可以配置拍击次数。界面接收到手势之后，可以发送一 个消息，用于处理响应手势动作后的任务。当然，不同的手势识别器，发送的消息方法也会有所不同。下面列举几个具体示例代码：</p>
+<p>一个手指，拍击两次手势</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个手势识别器</span></span><br><span class="line"><span class="built_in">UITapGestureRecognizer</span> *oneFingerTwoTaps =</span><br><span class="line">[[[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(oneFingerTwoTaps)] autorelease];</span><br><span class="line"><span class="comment">// Set required taps and number of touches</span></span><br><span class="line">[oneFingerTwoTaps setNumberOfTapsRequired:<span class="number">2</span>];</span><br><span class="line">[oneFingerTwoTaps setNumberOfTouchesRequired:<span class="number">1</span>];</span><br><span class="line"><span class="comment">// Add the gesture to the view</span></span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:oneFingerTwoTaps];</span><br><span class="line">消息方法oneFingerTwoTaps</span><br><span class="line">- (<span class="type">void</span>)oneFingerTwoTaps</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Action: One finger, two taps&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>两个手指，拍击两次手势</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UITapGestureRecognizer</span> *twoFingersTwoTaps =</span><br><span class="line">[[[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(twoFingersTwoTaps)] autorelease];</span><br><span class="line">[twoFingersTwoTaps setNumberOfTapsRequired:<span class="number">2</span>];</span><br><span class="line">[twoFingersTwoTaps setNumberOfTouchesRequired:<span class="number">2</span>];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:twoFingersTwoTaps];</span><br><span class="line">消息方法twoFingersTwoTaps</span><br><span class="line">- (<span class="type">void</span>)twoFingersTwoTaps &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Action: Two fingers, two taps&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个手指向上、向下滑动手势</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 向上滑动</span></span><br><span class="line"><span class="built_in">UISwipeGestureRecognizer</span> *oneFingerSwipeUp =</span><br><span class="line">[[[<span class="built_in">UISwipeGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(oneFingerSwipeUp:)] autorelease];</span><br><span class="line">[oneFingerSwipeUp setDirection:<span class="built_in">UISwipeGestureRecognizerDirectionUp</span>];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:oneFingerSwipeUp];</span><br><span class="line">- (<span class="type">void</span>)oneFingerSwipeUp:(<span class="built_in">UISwipeGestureRecognizer</span> *)recognizer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGPoint</span> point = [recognizer locationInView:[<span class="keyword">self</span> view]];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Swipe up - start location: %f,%f&quot;</span>, point.x, point.y);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 向下滑动</span></span><br><span class="line"><span class="built_in">UISwipeGestureRecognizer</span> *oneFingerSwipeDown =</span><br><span class="line">[[[<span class="built_in">UISwipeGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(oneFingerSwipeDown:)] autorelease];</span><br><span class="line">[oneFingerSwipeDown setDirection:<span class="built_in">UISwipeGestureRecognizerDirectionDown</span>];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:oneFingerSwipeDown];</span><br><span class="line">- (<span class="type">void</span>)oneFingerSwipeDown:(<span class="built_in">UISwipeGestureRecognizer</span> *)recognizer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGPoint</span> point = [recognizer locationInView:[<span class="keyword">self</span> view]];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Swipe down - start location: %f,%f&quot;</span>, point.x, point.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>旋转手势</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIRotationGestureRecognizer</span> *twoFingersRotate =</span><br><span class="line">[[[<span class="built_in">UIRotationGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(twoFingersRotate:)] autorelease];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:twoFingersRotate];</span><br><span class="line">- (<span class="type">void</span>)twoFingersRotate:(<span class="built_in">UIRotationGestureRecognizer</span> *)recognizer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Convert the radian value to show the degree of rotation</span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Rotation in degrees since last change: %f&quot;</span>, [recognizer rotation] * (<span class="number">180</span> / M_PI));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>向里或向外捏的手势</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIPinchGestureRecognizer</span> *twoFingerPinch =</span><br><span class="line">[[[<span class="built_in">UIPinchGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(twoFingerPinch:)] autorelease];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:twoFingerPinch];</span><br><span class="line">- (<span class="type">void</span>)twoFingerPinch:(<span class="built_in">UIPinchGestureRecognizer</span> *)recognizer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Pinch scale: %f&quot;</span>, recognizer.scale);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UITapGestureRecognizer</span> *twoFingersTwoTaps =</span><br><span class="line">[[[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(twoFingersTwoTaps)] autorelease];</span><br><span class="line">[twoFingersTwoTaps setNumberOfTapsRequired:<span class="number">2</span>];</span><br><span class="line">[twoFingersTwoTaps setNumberOfTouchesRequired:<span class="number">2</span>];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:twoFingersTwoTaps];</span><br><span class="line"><span class="comment">// 消息方法twoFingersTwoTaps</span></span><br><span class="line">- (<span class="type">void</span>)twoFingersTwoTaps &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Action: Two fingers, two taps&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>参考文章：</p>
+<ul>
+<li><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS95MDQxMDM5L2FyY2hpdmUvMjAxMi8wNy8xMS8yNTg2NjI5Lmh0bWw=">http://www.cnblogs.com/y041039/archive/2012/07/11/2586629.html<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cDovL3d3dy5jb2NvYWNoaW5hLmNvbS9uZXdiaWUvYmFzaWMvMjAxMi8wNjA0LzQzMjIuaHRtbA==">http://www.cocoachina.com/newbie/basic/2012/0604/4322.html<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS7-%E4%B8%8B%E4%BD%BF%E7%94%A8UITapGestureRecognizer-%E5%AE%9E%E7%8E%B0%E5%9B%BE%E7%89%87%E6%94%BE%E5%A4%A7%E7%BC%A9%E5%B0%8F%E7%9A%84%E5%8E%9F%E7%90%86-%E8%87%AA%E5%88%9B.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/iOS7-%E4%B8%8B%E4%BD%BF%E7%94%A8UITapGestureRecognizer-%E5%AE%9E%E7%8E%B0%E5%9B%BE%E7%89%87%E6%94%BE%E5%A4%A7%E7%BC%A9%E5%B0%8F%E7%9A%84%E5%8E%9F%E7%90%86-%E8%87%AA%E5%88%9B.html" class="post-title-link" itemprop="url">iOS7 下使用UITapGestureRecognizer 实现图片放大缩小的原理（自创）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 11:35:08 / 修改时间：11:37:00" itemprop="dateCreated datePublished" datetime="2025-06-25T11:35:08+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>关于在IOS7下实现点击UIImageView是实现放大图片的原理（完全是自己参考其他的文脏，自己总结出来的，如有雷同，那咱就是心有灵犀啦）</p>
+<p>我这里的情况是，在UITableView中的UITableviewCell中使用UIImageView，UIImageView是放在cell中的。这里的实现代码如下</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *imagepath = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;girl&quot;</span></span><br><span class="line">                                                      ofType:<span class="string">@&quot;jpg&quot;</span>];</span><br><span class="line"><span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageWithContentsOfFile:imagepath];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">GBPathImageView *headImageView = [[GBPathImageView alloc] initWithFrame:<span class="built_in">CGRectMake</span>(imageX,</span><br><span class="line">                                                                                   imageY,</span><br><span class="line">                                                                                   imageWidth,</span><br><span class="line">                                                                                   imageHeight)</span><br><span class="line">                                                                  image:image</span><br><span class="line">                                                               pathType:GBPathImageViewTypeCircle</span><br><span class="line">                                                              pathColor:[<span class="built_in">UIColor</span> whiteColor]</span><br><span class="line">                                                            borderColor:[<span class="built_in">UIColor</span> whiteColor]</span><br><span class="line">                                                              pathWidth:<span class="number">1.0</span>];</span><br><span class="line">headImageView.userInteractionEnabled = <span class="literal">YES</span>;</span><br><span class="line">headImageView.multipleTouchEnabled = <span class="literal">YES</span>;</span><br><span class="line">headImageView.tag = row;</span><br><span class="line"><span class="built_in">UITapGestureRecognizer</span> *tap = [[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span></span><br><span class="line">                                                                      action:<span class="keyword">@selector</span>(showBigImage:)];</span><br><span class="line">tap.view.tag= (<span class="type">int</span>)headImageView.image;</span><br><span class="line">tap.delegate = <span class="keyword">self</span>;</span><br><span class="line">[headImageView addGestureRecognizer:tap];</span><br><span class="line"></span><br><span class="line">[cell.contentView addSubview:headImageView];</span><br></pre></td></tr></table></figure>
+<p>这里就是使用了UITapGestureRecognizer，添加了排击的事件。</p>
+<p>注意点：</p>
+<ul>
+<li>第一点：UIImageview的userInteractionEnabled和multipleTouchEnabled的设置，不然不起作用</li>
+<li>第二点：代理UIGestureRecognizerDelegate的引入</li>
+<li>第三点：tag的使用，这个是为了后面的操作，主要是因为加了tag我们就会知道是哪个UIImageView被点击了，从而做一些其他的处理。</li>
+</ul>
+<p>那么关于方法图片和缩小图片的方法如下：</p>
+<p>放大图片的代码：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) showBigImage:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UITapGestureRecognizer</span> *tap = (<span class="built_in">UITapGestureRecognizer</span>*)sender;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;tag = %d&quot;</span>,tap.view.tag);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIImageView</span> *imageViewer=[[<span class="built_in">UIImageView</span> alloc] init];</span><br><span class="line">    <span class="built_in">UITapGestureRecognizer</span> *closeTap = [[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span></span><br><span class="line">                                                                              action:<span class="keyword">@selector</span>(hideBigImage:)];</span><br><span class="line">    closeTap.delegate = <span class="keyword">self</span>;</span><br><span class="line">    imageViewer.multipleTouchEnabled = <span class="literal">YES</span>;</span><br><span class="line">    imageViewer.userInteractionEnabled = <span class="literal">YES</span>;</span><br><span class="line">    [imageViewer addGestureRecognizer:closeTap];</span><br><span class="line">    imageViewer.animationDuration = <span class="number">2.0</span>;</span><br><span class="line">    imageViewer.animationRepeatCount = <span class="number">1</span>;</span><br><span class="line">    [imageViewer setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0.0</span>,</span><br><span class="line">                                     _tableview.frame.origin.y,</span><br><span class="line">                                     _tableview.frame.size.width,</span><br><span class="line">                                     _tableview.frame.size.height)];</span><br><span class="line">    [imageViewer startAnimating];</span><br><span class="line">    <span class="built_in">NSString</span> *imagepath = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;girl&quot;</span></span><br><span class="line">                                                          ofType:<span class="string">@&quot;jpg&quot;</span>];</span><br><span class="line">    <span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageWithContentsOfFile:imagepath];</span><br><span class="line">    [imageViewer setImage:image];</span><br><span class="line">    <span class="built_in">UIWindow</span> *mainWindow=[<span class="built_in">UIApplication</span> sharedApplication].delegate.window;</span><br><span class="line">    [mainWindow.rootViewController.view addSubview:imageViewer];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>缩小图片的方法：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) hideBigImage:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UITapGestureRecognizer</span> *tap = (<span class="built_in">UITapGestureRecognizer</span>*)sender;</span><br><span class="line">    [tap.view removeFromSuperview];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大概的原理全在代码中了，如何放大图片，如何做出图片更加好的效果，这个是后面优化要做的。</p>
+<p>参考文章：</p>
+<ul>
+<li><span class="exturl" data-url="aHR0cDovL2hpLmJhaWR1LmNvbS9qdF9vbmUvaXRlbS85NWJhYmUzNTU4M2YzNTk4YjgwYzAzMTY=">http://hi.baidu.com/jt_one/item/95babe35583f3598b80c0316<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cDovL3d3dy5jb2NvYWNoaW5hLmNvbS9iYnMvc2ltcGxlLz90NzA1MDMuaHRtbA==">http://www.cocoachina.com/bbs/simple/?t70503.html<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cDovL3N0YWNrb3ZlcmZsb3cuY29tL3F1ZXN0aW9ucy8xMTU1MjE4NC91aXRhcGdlc3R1cmVyZWNvZ25pemVyLW5vdC13b3JraW5nLWluLXVpaW1hZ2V2aWV3">http://stackoverflow.com/questions/11552184/uitapgesturerecognizer-not-working-in-uiimageview<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvemp3ZW4xMDA2L2FydGljbGUvZGV0YWlscy82OTE2NTkx">http://blog.csdn.net/zjwen1006/article/details/6916591<i class="fa fa-external-link-alt"></i></span></li>
+<li><span class="exturl" data-url="aHR0cDovL2hpLmJhaWR1LmNvbS9tb29uXzIwMDkvaXRlbS9iM2VjYTgzMjYyNTgyZDg2YzJjZjI5MWY=">http://hi.baidu.com/moon_2009/item/b3eca83262582d86c2cf291f<i class="fa fa-external-link-alt"></i></span></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS7-%E5%B1%8F%E5%B9%95%E9%AB%98%E5%BA%A6-%E7%8A%B6%E6%80%81%E6%A0%8F%E9%AB%98%E5%BA%A6-%E6%A0%87%E7%AD%BE%E6%A0%8F%E5%B0%BA%E5%AF%B8%E7%AD%89%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/iOS7-%E5%B1%8F%E5%B9%95%E9%AB%98%E5%BA%A6-%E7%8A%B6%E6%80%81%E6%A0%8F%E9%AB%98%E5%BA%A6-%E6%A0%87%E7%AD%BE%E6%A0%8F%E5%B0%BA%E5%AF%B8%E7%AD%89%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F.html" class="post-title-link" itemprop="url">iOS7 屏幕高度，状态栏高度，标签栏尺寸等获取方式</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 11:35:04 / 修改时间：11:38:10" itemprop="dateCreated datePublished" datetime="2025-06-25T11:35:04+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>关于新的获取屏幕高度，状态栏尺寸，标签栏尺寸的获取方法，找了多个资料和文章，其方法总结如下</p>
+<h3 id="App尺寸，去掉状态栏"><a href="#1">App尺寸，去掉状态栏</a></h3>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGRect</span> r = [ <span class="built_in">UIScreen</span> mainScreen ].applicationFrame;</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;r.height = %f,r.width = %f,r.x = %f,r.y = %f&quot;</span>,r.size.height,r.size.width,r.origin.x,r.origin.y);</span><br></pre></td></tr></table></figure>
+<p>gowhich得到的结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2013-11-28 12:09:22.188 寻艺[49308:70b] r.height = 548.000000,r.width = 320.000000,r.x = 0.000000,r.y = 20.000000</span><br></pre></td></tr></table></figure>
+<h3 id="屏幕尺寸"><a href="#2">屏幕尺寸</a></h3>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGRect</span> rx = [<span class="built_in">UIScreen</span> mainScreen].bounds;</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;rx.height = %f,rx.width = %f,rx.x = %f,rx.y = %f&quot;</span>,rx.size.height,rx.size.width,rx.origin.x,rx.origin.y);</span><br></pre></td></tr></table></figure>
+<p>得到的结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2013-11-28 12:09:22.189 寻艺[49308:70b] rx.height = 568.000000,rx.width = 320.000000,rx.x = 0.000000,rx.y = 0.000000</span><br></pre></td></tr></table></figure>
+<h3 id="状态栏尺寸"><a href="#3">状态栏尺寸</a></h3>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGRect</span> rect  = [[<span class="built_in">UIApplication</span> sharedApplication] statusBarFrame];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;rect.height = %f,rect.width = %f,rect.x = %f,rect.y = %f&quot;</span>,rect.size.height,rect.size.width,rect.origin.x,rect.origin.y);</span><br></pre></td></tr></table></figure>
+<p>得到的结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2013-11-28 12:14:18.972 寻艺[49617:70b] rect.height = 20.000000,rect.width = 320.000000,rect.x = 0.000000,rect.y = 0.000000</span><br></pre></td></tr></table></figure>
+<h3 id="iPhone中获取屏幕分辨率的方法"><a href="#4">iPhone中获取屏幕分辨率的方法</a></h3>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGRect</span> rect = [[<span class="built_in">UIScreen</span> mainScreen] bounds];</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGSize</span> size = rect.size;</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGFloat</span> width = size.width;</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGFloat</span> height = size.height;</span><br></pre></td></tr></table></figure>
+<p>另外，设计UI的时候，注意用户最小的触控面积。有2种说法</p>
+<p><code>44*44</code> 好像是来自sdk</p>
+<p><code>64*64</code> 来自standford讲义</p>
+<p>参考文章:</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGluemhpamkvYXJ0aWNsZS9kZXRhaWxzLzY3NjQ3Mzg=">http://blog.csdn.net/linzhiji/article/details/6764738<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Django-Strip-Remove-HTML-tags.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/Django-Strip-Remove-HTML-tags.html" class="post-title-link" itemprop="url">Django Strip/Remove HTML tags</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 11:35:00 / 修改时间：14:35:15" itemprop="dateCreated datePublished" datetime="2025-06-25T11:35:00+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在php中我们知道如果想要去掉html的标签的话，使用函数<code>strip_tags</code>在django中如何去去掉html的标签呢,下面是我在google中搜索到的结果。</p>
+<p>To strip/remove HTML tags from an existing string we can use the <code>strip_tags</code> function.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># import the strip_tags</span></span><br><span class="line"><span class="keyword">from</span> django.utils.html <span class="keyword">import</span> strip_tags</span><br><span class="line"><span class="comment"># simple string with html inside.</span></span><br><span class="line">html = <span class="string">&#x27;&lt;p&gt;paragraph&lt;/p&gt;&#x27;</span></span><br><span class="line"><span class="built_in">print</span> html <span class="comment"># will produce: &lt;p&gt;paragraph&lt;/p&gt;</span></span><br><span class="line">stripped = strip_tags(html)</span><br><span class="line"><span class="built_in">print</span> stripped <span class="comment"># will produce: paragraph</span></span><br></pre></td></tr></table></figure>
+<p>This is also available as a template tag:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; somevalue|striptags &#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>If you want to remove only specific tags you need to use the removetags</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.template.defaultfilters <span class="keyword">import</span> removetags</span><br><span class="line">html = <span class="string">&#x27;&lt;strong&gt;Bold...&lt;/strong&gt;&lt;p&gt;paragraph....&lt;/p&gt;&#x27;</span></span><br><span class="line">stripped = removetags(html, <span class="string">&#x27;strong&#x27;</span>) <span class="comment"># removes the strong only.</span></span><br><span class="line">stripped2 = removetags(html, <span class="string">&#x27;strong p&#x27;</span>) <span class="comment"># removes the strong AND p tags.</span></span><br></pre></td></tr></table></figure>
+<p>Also available in template:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; value|removetags:&quot;a span&quot;|safe &#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>在模板里面是使用去掉html标签的方法是不是很简单，嘿嘿。</p>
 <hr>
-<blockquote>
-<p>Java EE 插件</p>
-<p>插件地址：<span class="exturl" data-url="aHR0cDovL2Rvd25sb2FkLmVjbGlwc2Uub3JnL3JlbGVhc2VzL2luZGlnbw==">http://download.eclipse.org/releases/indigo<i class="fa fa-external-link-alt"></i></span></p>
-<p>安装方式：</p>
-<p>在线安装</p>
-</blockquote>
-<hr>
-<blockquote>
-<p>svn 插件</p>
-<p>插件地址：<span class="exturl" data-url="aHR0cDovL3d3dy5lY2xpcHNlLm9yZy9zdWJ2ZXJzaXZlL2xhdGVzdC1yZWxlYXNlcy5waHA=">http://www.eclipse.org/subversive/latest-releases.php<i class="fa fa-external-link-alt"></i></span></p>
-<p>安装方式：</p>
-<p>下载-&gt;解压-&gt;本地文件安装</p>
-</blockquote>
+<p>参考的文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3NuaXBwbHIuY29tL3ZpZXcvNTA4MzUv">http://snipplr.com/view/50835/<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -370,7 +975,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/ThinkPHP-CSS-js-image-%E7%AD%89%E6%96%87%E4%BB%B6-%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AE.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS7-%E4%B8%8B%E4%BF%AE%E6%94%B9-UINavigationBar-%E7%9A%84%E8%83%8C%E6%99%AF%E8%89%B2%E5%92%8C%E8%AE%BE%E7%BD%AE%E6%A0%87%E9%A2%98%E7%9A%84%E9%A2%9C%E8%89%B2.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -388,7 +993,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/ThinkPHP-CSS-js-image-%E7%AD%89%E6%96%87%E4%BB%B6-%E7%AE%80%E5%8D%95%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">ThinkPHP CSS js image 等文件 简单配置</a>
+          <a href="/2025/06/25/iOS7-%E4%B8%8B%E4%BF%AE%E6%94%B9-UINavigationBar-%E7%9A%84%E8%83%8C%E6%99%AF%E8%89%B2%E5%92%8C%E8%AE%BE%E7%BD%AE%E6%A0%87%E9%A2%98%E7%9A%84%E9%A2%9C%E8%89%B2.html" class="post-title-link" itemprop="url">iOS7 下修改 UINavigationBar 的背景色和设置标题的颜色</a>
         </h2>
 
         <div class="post-meta-container">
@@ -400,7 +1005,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-25 10:26:04 / 修改时间：10:51:57" itemprop="dateCreated datePublished" datetime="2025-06-25T10:26:04+08:00">2025-06-25</time>
+      <time title="创建时间：2025-06-25 11:34:55 / 修改时间：11:41:15" itemprop="dateCreated datePublished" datetime="2025-06-25T11:34:55+08:00">2025-06-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -422,19 +1027,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>首先介绍一下Thinkphp的目录结构</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">|--ThinkPHP（ThinkPHP目录）</span><br><span class="line"></span><br><span class="line">|--Financial(项目目录)</span><br><span class="line"></span><br><span class="line">    |--Common</span><br><span class="line"></span><br><span class="line">    |--Conf</span><br><span class="line"></span><br><span class="line">    |--Lang</span><br><span class="line"></span><br><span class="line">    |--Lib</span><br><span class="line"></span><br><span class="line">    |--Public</span><br><span class="line"></span><br><span class="line">        |--Css</span><br><span class="line"></span><br><span class="line">        |--Js</span><br><span class="line"></span><br><span class="line">        |--Images</span><br><span class="line"></span><br><span class="line">        |--Bootstrap</span><br><span class="line"></span><br><span class="line">    |--Runtime</span><br><span class="line"></span><br><span class="line">    |--Tpl</span><br><span class="line"></span><br><span class="line">    |--Uploads</span><br><span class="line"></span><br><span class="line">    index.php</span><br><span class="line"></span><br><span class="line">    favicon.ico</span><br></pre></td></tr></table></figure>
-
-<p>目录结构如上：</p>
-<p>index.php的文件配置如下：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;APP_NAME&#x27;</span>,<span class="string">&#x27;&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;APP_PATH&#x27;</span>,<span class="string">&#x27;/home/davidzhang/local.ubuntu.new.financial.com/&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;APP_DEBUG&#x27;</span>,<span class="literal">TRUE</span>); <span class="comment">// 开启调试模式</span></span><br><span class="line"><span class="keyword">require</span> <span class="string">&#x27;../ThinkPHP/ThinkPHP.php&#x27;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>&#x2F;home&#x2F;davidzhang&#x2F;local.ubuntu.new.financial.com&#x2F;</p>
-<p>这个目录是我项目的根目录</p>
-<p>ok，之后是这些静态文件在项目中的引用，如下：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;</span> <span class="string">&quot;http://www.w3.org/TR/html4/loose.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html; charset=UTF-8&quot;</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">&#x27;__PUBLIC__/bootstrap/css/bootstrap.min.css&#x27;</span> <span class="attr">type</span>=<span class="string">&#x27;text/css&#x27;</span> <span class="attr">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span>/&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">&#x27;__PUBLIC__/css/google-bootstrap.css&#x27;</span> <span class="attr">type</span>=<span class="string">&#x27;text/css&#x27;</span> <span class="attr">rel</span>=<span class="string">&#x27;stylesheet&#x27;</span>/&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&#x27;__PUBLIC__/bootstrap/js/bootstrap.min.js&#x27;</span> <span class="attr">type</span>=<span class="string">&#x27;text/javascript&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">title</span>&gt;</span>漫步者-财务管家<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&#x27;container-fluid&#x27;</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 导航区 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&#x27;header&#x27;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;$title&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 内容区 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&#x27;container-fluid&#x27;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&#x27;row-fluid&#x27;</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&#x27;span12&#x27;</span>&gt;</span></span><br><span class="line">                       <span class="tag">&lt;<span class="name">p</span>&gt;</span>详细的内容展示<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">                   <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">&lt;!-- 脚步区 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&#x27;footer&#x27;</span>&gt;</span></span><br><span class="line">               @Copyright2013 漫步者-财务管家</span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>欢迎指正。</p>
+          <p>关于修改 UINavigationBar 的背景色和设置标题的颜色，至于以前是如何设置的我到现在已经忘的差不多了，因为总是在不同的平台和语言之间进行切换，偶尔某个会耽搁时间比较久，反正之前的iOS7之前是不是这样设置的，到时候后来的结果出现了问题。</p>
+<p>下面简单的介绍下再iOS7下是如何进行设置的</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//导航条背景色</span></span><br><span class="line"><span class="built_in">NSString</span> *navBackgroundBarImage = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;bg_head&quot;</span></span><br><span class="line">																  ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setBackgroundImage:[<span class="built_in">UIImage</span> imageWithContentsOfFile:navBackgroundBarImage] forBarMetrics:<span class="built_in">UIBarMetricsDefault</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">//字体大小、颜色</span></span><br><span class="line"><span class="built_in">NSDictionary</span> *attributes = [<span class="built_in">NSDictionary</span> dictionaryWithObjectsAndKeys:</span><br><span class="line">							[<span class="built_in">UIColor</span> whiteColor],</span><br><span class="line">							<span class="built_in">NSForegroundColorAttributeName</span>, <span class="literal">nil</span>];</span><br><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setTitleTextAttributes:attributes];</span><br></pre></td></tr></table></figure>
+<p>将这几行代码添加到<code>-(void) viewDidLoad;</code>方法中，顺便将图片改为自己想要的图片，就会有结果了。自己试试看看</p>
 
       
     </div>
@@ -461,7 +1057,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Objective-C-%E6%96%87%E4%BB%B6%E5%88%86%E5%9D%97%E5%86%99%E5%85%A5-NSFileHandle-NSFileManager.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS7-%E4%B8%8B%E6%93%8D%E4%BD%9C-UIToolbar-UINavigationController-UINavigationBar-UIBarButtonItem.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -479,7 +1075,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Objective-C-%E6%96%87%E4%BB%B6%E5%88%86%E5%9D%97%E5%86%99%E5%85%A5-NSFileHandle-NSFileManager.html" class="post-title-link" itemprop="url">Objective-C 文件分块写入 NSFileHandle NSFileManager</a>
+          <a href="/2025/06/25/iOS7-%E4%B8%8B%E6%93%8D%E4%BD%9C-UIToolbar-UINavigationController-UINavigationBar-UIBarButtonItem.html" class="post-title-link" itemprop="url">iOS7 下操作 UIToolbar UINavigationController UINavigationBar UIBarButtonItem</a>
         </h2>
 
         <div class="post-meta-container">
@@ -491,7 +1087,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-25 10:10:08 / 修改时间：10:11:24" itemprop="dateCreated datePublished" datetime="2025-06-25T10:10:08+08:00">2025-06-25</time>
+      <time title="创建时间：2025-06-25 11:34:51 / 修改时间：11:42:13" itemprop="dateCreated datePublished" datetime="2025-06-25T11:34:51+08:00">2025-06-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -513,10 +1109,40 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Objective-C文件的分块写入，实现大文件的copy，嘿嘿，实现起来是很简单的，终于知道，系统里面copy大文件是啥样子的啦，来看个代码</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//读取大文件，并写入大文件中</span></span><br><span class="line"><span class="built_in">NSFileManager</span> *fileManager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"><span class="built_in">NSString</span> *homePath = <span class="built_in">NSHomeDirectory</span>();</span><br><span class="line"><span class="built_in">NSString</span> *srcPath = [homePath stringByAppendingPathComponent:<span class="string">@&quot;android学习路线图介绍.avi&quot;</span>];</span><br><span class="line"><span class="built_in">NSString</span> *targetPath = [homePath stringByAppendingPathComponent:<span class="string">@&quot;android学习路线图介绍1.avi&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="type">BOOL</span> success = [fileManager createFileAtPath:targetPath</span><br><span class="line">                                    contents:<span class="literal">nil</span></span><br><span class="line">                                  attributes:<span class="literal">nil</span>];</span><br><span class="line"><span class="keyword">if</span>(success)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;成功创建文件 ：%@&quot;</span>,targetPath);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSFileHandle</span> *infile = [<span class="built_in">NSFileHandle</span> fileHandleForWritingAtPath:targetPath];</span><br><span class="line"><span class="built_in">NSFileHandle</span> *outfile = [<span class="built_in">NSFileHandle</span> fileHandleForReadingAtPath:srcPath];</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取文件的尺寸</span></span><br><span class="line"><span class="built_in">NSDictionary</span> *fileAttr = [fileManager attributesOfItemAtPath:srcPath</span><br><span class="line">                                                       error:<span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSNumber</span> *fileSizeNum = [fileAttr objectForKey:<span class="built_in">NSFileSize</span>];</span><br><span class="line"></span><br><span class="line"><span class="type">BOOL</span> isEnd = <span class="literal">NO</span>;</span><br><span class="line"><span class="built_in">NSInteger</span> readSize = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">NSInteger</span> fileSie = [fileSizeNum longLongValue];</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (!isEnd) &#123;</span><br><span class="line">    <span class="built_in">NSData</span> *data = <span class="literal">nil</span>;</span><br><span class="line">    <span class="built_in">NSInteger</span> subleng = fileSie - readSize;</span><br><span class="line">    <span class="keyword">if</span>(subleng &lt; <span class="number">500</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        isEnd = <span class="literal">YES</span>;</span><br><span class="line">        data = [outfile readDataToEndOfFile];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        data = [outfile readDataOfLength:<span class="number">500</span>];</span><br><span class="line">        readSize += <span class="number">500</span>;</span><br><span class="line">        [outfile seekToFileOffset:readSize];</span><br><span class="line">    &#125;</span><br><span class="line">    [infile writeData:data];</span><br><span class="line">&#125;</span><br><span class="line">[infile closeFile];</span><br><span class="line">[outfile closeFile];</span><br></pre></td></tr></table></figure>
-
-<p>自己在根目录下面设置一个文件，我的这个文件有44.6M哦，虽然copy比较慢，但是文件是完整的，哈哈</p>
+          <p>关于UIToolbar，UINavigationController，UINavigationBar，UIBarButtonItem在ios7的使用的简单的介绍，经过搜索资料做了如下的一些汇集</p>
+<p>----------------------------UIBarButtonItem----------------------------</p>
+<p>1:  UIBarButtonItem 隐藏的方式</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.btnPunctuation setWidth:<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+<p>2:  UIBarButtonItem 获取所在父视图中的frame 相当于将 UIBarButtonItem 转换成 UIView</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIBarButtonItem</span> *barButtonItem = (<span class="built_in">UIBarButtonItem</span> *)sender;</span><br><span class="line"><span class="built_in">UIView</span> *targetView = (<span class="built_in">UIView</span> *)[barButtonItem performSelector:<span class="keyword">@selector</span>(view)];</span><br></pre></td></tr></table></figure>
+<p>3:设置自定义字体和 系统的self.title 保持风格完全一致.</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIButton</span> *titleButton = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeCustom</span>];</span><br><span class="line">[titleButton setBackgroundColor:[<span class="built_in">UIColor</span> clearColor]];</span><br><span class="line">[titleButton setFrame:(<span class="built_in">CGRect</span>)&#123;<span class="number">0</span>,<span class="number">0</span>,<span class="number">100</span>,<span class="number">44</span>&#125;];</span><br><span class="line">[titleButton setContentEdgeInsets:<span class="built_in">UIEdgeInsetsMake</span>(<span class="number">-2</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)];</span><br><span class="line">[titleButton setTitle:<span class="string">@&quot;社会活动&quot;</span> forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">[titleButton.titleLabel setFont:[<span class="built_in">UIFont</span> boldSystemFontOfSize:<span class="number">20</span>]];</span><br><span class="line">[titleButton.titleLabel setShadowOffset:(<span class="built_in">CGSize</span>)&#123;<span class="number">0</span>,<span class="number">-1</span>&#125;];</span><br><span class="line">[<span class="keyword">self</span>.navigationItem setTitleView:titleButton];</span><br></pre></td></tr></table></figure>
+<p>----------------------------UIBarButtonItem----------------------------</p>
+<p>----------------------------UINavigationBar----------------------------</p>
+<p>1:  修改导航控制器背景图片的方式(IOS5以上)</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UINavigationBar</span> appearance] setBackgroundImage:image forBarMetrics:<span class="built_in">UIBarMetricsDefault</span>];</span><br></pre></td></tr></table></figure>
+<p>注: 通过appearance可以设置全局的控件初始化外观.不过在初始化成功以后,有单独样式需求亦可用同样的方法修改.</p>
+<p>UINavigationBar的标准高度是44,在iOS7之前可以通过44+X的方式实现背景+阴影的效果.从iOS7以后就不行了.</p>
+<p>iOS7对UINavigationBar的标准进行重新的定义,其高度可以延伸到状态栏.所以44+20的高度等于64.</p>
+<p>而刚刚说的44+X方式不再适用于iOS7,iOS7的新规范是64+1.背景图和阴影将单独来设定,代码如下:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//iOS7 新背景图片设置方法 高度 必需是 64</span></span><br><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setBackgroundImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;toolbar_background_iOS7Test&quot;</span>] forBarPosition:<span class="built_in">UIBarPositionTopAttached</span> barMetrics:<span class="built_in">UIBarMetricsDefault</span>];</span><br><span class="line"><span class="comment">//iOS7 阴影需单独设定 UIColor clearColor 是去掉字段 1像素阴影</span></span><br><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setShadowImage:[<span class="built_in">UIImage</span> Help_imageWithColor:[<span class="built_in">UIColor</span> clearColor]]];</span><br></pre></td></tr></table></figure>
+<p>2:为UINavigationBar设置半透明的背景效果:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setTranslucent:<span class="literal">YES</span>];</span><br></pre></td></tr></table></figure>
+<p>注:在iOS7中 默认生成 UINavigationBar的translucent属性为YES. 自动添加遮罩模糊效果.</p>
+<p>3:修改UINavigationBar的背景颜色(iOS7以上)</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UINavigationBar</span> appearance] setBarTintColor:[<span class="built_in">UIColor</span> redColor]];</span><br></pre></td></tr></table></figure>
+<p>----------------------------UINavigationBar----------------------------</p>
+<p>----------------------------UINavigationController----------------------------</p>
+<p>1: 修改UINavigationController的高度</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>,<span class="number">20</span>, <span class="number">320</span>, <span class="number">60</span>)];</span><br></pre></td></tr></table></figure>
+<p>2:激活 UINavigationControllerDelegate的方式</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.navigationController.delegate =<span class="keyword">self</span>;</span><br></pre></td></tr></table></figure>
+<p>3:为  UINavigationController 设置 默认的  navigationBar</p>
+<p>这里只提供一下思路:</p>
+<p>继承:UINavigationController以后重写 如下两个方法:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">id</span>)initWithRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="variable language_">super</span> initWithRootViewController:rootViewController];</span><br><span class="line">    [<span class="keyword">self</span> Base_backAction_initNavigationBar:rootViewController];</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line">-(<span class="type">void</span>)pushViewController:(<span class="built_in">UIViewController</span> *)viewController animated:(<span class="type">BOOL</span>)animated</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> pushViewController:viewController animated:animated];</span><br><span class="line">    [<span class="keyword">self</span> Base_backAction_initNavigationBar:viewController];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>----------------------------UINavigationController----------------------------</p>
+<p>果然使用起来还是有些变化的</p>
 
       
     </div>
@@ -543,7 +1169,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Java%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5-%E5%8F%91%E7%8E%B0%E4%BB%A3%E7%A0%81%E7%9A%84%E7%A5%9E%E5%A5%87%E4%B9%8B%E5%A4%84.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/%E5%88%A9%E7%94%A8%E5%8D%9A%E5%AE%A2%E6%9C%88%E6%94%B6%E5%85%A53000%E7%9A%84%E6%96%B9%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -561,7 +1187,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Java%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5-%E5%8F%91%E7%8E%B0%E4%BB%A3%E7%A0%81%E7%9A%84%E7%A5%9E%E5%A5%87%E4%B9%8B%E5%A4%84.html" class="post-title-link" itemprop="url">Java控制语句 发现代码的神奇之处</a>
+          <a href="/2025/06/25/%E5%88%A9%E7%94%A8%E5%8D%9A%E5%AE%A2%E6%9C%88%E6%94%B6%E5%85%A53000%E7%9A%84%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">利用博客月收入3000的方法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -573,7 +1199,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-25 10:10:00 / 修改时间：10:12:14" itemprop="dateCreated datePublished" datetime="2025-06-25T10:10:00+08:00">2025-06-25</time>
+      <time title="创建时间：2025-06-25 11:34:41 / 修改时间：11:56:41" itemprop="dateCreated datePublished" datetime="2025-06-25T11:34:41+08:00">2025-06-25</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -581,7 +1207,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+          <a href="/categories/%E6%9D%82%E8%B0%88/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a>
         </span>
     </span>
 
@@ -595,609 +1221,43 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>神奇之旅一：九九乘法表</p>
-<p>虽然循环的有点晕，但是一步一步来的话还是蛮清晰的</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Print99</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String args[])</span>&#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;99乘法表&quot;</span>);</span><br><span class="line">		System.out.print(<span class="string">&quot;\t&quot;</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= <span class="number">9</span>; i++)&#123;</span><br><span class="line">			System.out.print(i+<span class="string">&quot;\t&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println();</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">9</span>;i++)&#123;</span><br><span class="line">			System.out.print(i+<span class="string">&quot;\t&quot;</span>);</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">1</span>;j&lt;=<span class="number">9</span>;j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(j&lt;=i)&#123;</span><br><span class="line">					System.out.print(i*j+<span class="string">&quot;\t&quot;</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果如下：</p>
-<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529458276/gowhich/Print99_WX20180620-092730.png"></p>
-<p>神奇之旅二：螺旋型数组。</p>
-<p>仔细看哦，会转圈的哦</p>
-<p>这个比上一个还要晕</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RingDemo</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String args[])</span>&#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">strln</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">		System.out.println(<span class="string">&quot;请输入矩阵的列数&quot;</span>);</span><br><span class="line">		<span class="type">InputStreamReader</span> <span class="variable">input</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(System.in);</span><br><span class="line">		<span class="type">BufferedReader</span> <span class="variable">buff</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(input);</span><br><span class="line">		<span class="keyword">try</span>&#123;</span><br><span class="line">			strln = buff.readLine();</span><br><span class="line">			</span><br><span class="line">		&#125;<span class="keyword">catch</span>(IOException e)&#123;</span><br><span class="line">			System.out.println(e.toString());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="type">int</span> <span class="variable">int1</span> <span class="operator">=</span> Integer.parseInt(strln);</span><br><span class="line">		<span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> int1;</span><br><span class="line">		System.out.println(<span class="string">&quot;这是行列数为&quot;</span>+n+<span class="string">&quot;的螺旋型数组&quot;</span>);</span><br><span class="line">		<span class="type">int</span> <span class="variable">intA</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">		<span class="type">int</span>[][] array = <span class="keyword">new</span> <span class="title class_">int</span>[n][n];</span><br><span class="line">		<span class="comment">//初始化行数</span></span><br><span class="line">		<span class="type">int</span> intB;</span><br><span class="line">		<span class="keyword">if</span>(n%<span class="number">2</span> == <span class="number">0</span>)&#123;</span><br><span class="line">			intB = n / <span class="number">2</span>;</span><br><span class="line">		&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">			intB = n/<span class="number">2</span> + <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;=intB;i++)&#123;</span><br><span class="line">			<span class="comment">//从左到右</span></span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j=i;j&lt;n-i;j++)&#123;</span><br><span class="line">				array[i][j] = intA;</span><br><span class="line">				intA++;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//从上到下</span></span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> i;k&lt;n-i;k++)&#123;</span><br><span class="line">				array[k][n -i - <span class="number">1</span>] = intA;</span><br><span class="line">				intA++;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//从右到左</span></span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">l</span> <span class="operator">=</span> n-i-<span class="number">2</span>;l&gt;=i;l--)&#123;</span><br><span class="line">				array[n -i -<span class="number">1</span>][l] = intA;</span><br><span class="line">				intA++;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//从下到上</span></span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">m</span> <span class="operator">=</span> n-i-<span class="number">2</span>;m &gt; i;m--)&#123;</span><br><span class="line">				array[m][i] = intA;</span><br><span class="line">				intA++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//输出数组</span></span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;j&lt;n;j++)&#123;</span><br><span class="line">				System.out.print(array[i][j]+<span class="string">&quot;\t&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println();</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果如下：</p>
-<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529458276/gowhich/RingDemo_WX20180620-092911.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Java%E4%B8%AD%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5%E7%9A%84%E8%AF%AD%E5%8F%A5%E5%9D%97%E6%A0%87%E8%AE%B0%E6%93%8D%E4%BD%9C.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Java%E4%B8%AD%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5%E7%9A%84%E8%AF%AD%E5%8F%A5%E5%9D%97%E6%A0%87%E8%AE%B0%E6%93%8D%E4%BD%9C.html" class="post-title-link" itemprop="url">Java中控制语句的语句块标记操作</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 10:09:55 / 修改时间：10:12:42" itemprop="dateCreated datePublished" datetime="2025-06-25T10:09:55+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>与break有关的语句块标记操作</p>
-<p>第一个示例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//语句块标记</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Demo12</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String args[])</span>&#123;</span><br><span class="line">		first:&#123;</span><br><span class="line">			second:&#123;</span><br><span class="line">				third:&#123;</span><br><span class="line">					<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;i &lt; <span class="number">3</span>;i++)&#123;</span><br><span class="line">						System.out.println(<span class="string">&quot;third:&quot;</span> + i);</span><br><span class="line">						<span class="keyword">if</span>(i == <span class="number">2</span>)&#123;</span><br><span class="line">							<span class="keyword">break</span> second;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">//该语句永远不会被执行</span></span><br><span class="line">				System.out.println(<span class="string">&quot;在second语句块中&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			System.out.println(<span class="string">&quot;在first语句块中&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二个示例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//带标记的语句块</span></span><br><span class="line"><span class="comment">//break 退出到语句块</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Demo13</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String args[])</span>&#123;</span><br><span class="line">		out:&#123;</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;i &lt; <span class="number">20</span>;i++)&#123;</span><br><span class="line">				System.out.println(<span class="string">&quot;外循环&quot;</span>+i);</span><br><span class="line">				<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;j &lt; <span class="number">20</span>;j++)&#123;</span><br><span class="line">					System.out.println(<span class="string">&quot;内循环&quot;</span>+j);</span><br><span class="line">					<span class="keyword">if</span>(j == <span class="number">10</span>)&#123;</span><br><span class="line">						<span class="keyword">break</span> out;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>与continue有关的语句块标记操作</p>
-<p>第一个示例：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//continue操作语句块的标记</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Demo15</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String args[])</span>&#123;</span><br><span class="line">		out:<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">				<span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;i&lt;<span class="number">10</span>;j++)&#123;</span><br><span class="line">					<span class="keyword">if</span>(j&gt;=i)&#123;</span><br><span class="line">						System.out.println(<span class="string">&quot;&quot;</span>);</span><br><span class="line">						<span class="keyword">continue</span> out;</span><br><span class="line">					&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">						System.out.println(<span class="string">&quot;i = &quot;</span>+i+<span class="string">&quot; j = &quot;</span> + j);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Objective-C-%E6%95%B0%E6%8D%AE%E5%BE%AA%E7%8E%AF%E5%86%99%E5%85%A5.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Objective-C-%E6%95%B0%E6%8D%AE%E5%BE%AA%E7%8E%AF%E5%86%99%E5%85%A5.html" class="post-title-link" itemprop="url">Objective-C 数据循环写入</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 10:09:51 / 修改时间：10:14:38" itemprop="dateCreated datePublished" datetime="2025-06-25T10:09:51+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>gowhich最近手痒写了一个小练习，关于object－c的小练习。</p>
-<p>将日期按照制定的格式，循环写入文件中</p>
-<p>写入的实现方法：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) writeRun</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSFileManager</span> *fileManager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line">    <span class="built_in">NSString</span> *homePath = <span class="built_in">NSHomeDirectory</span>();</span><br><span class="line">    <span class="built_in">NSString</span> *filePath = [homePath stringByAppendingPathComponent:<span class="string">@&quot;data_date.txt&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="type">BOOL</span> success = [fileManager createFileAtPath:filePath</span><br><span class="line">                                        contents:<span class="literal">nil</span></span><br><span class="line">                                      attributes:<span class="literal">nil</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(success)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;创建文件 %@ 成功&quot;</span>,filePath);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSFileHandle</span> *fileHandle = [<span class="built_in">NSFileHandle</span> fileHandleForWritingAtPath:filePath];</span><br><span class="line">    [<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">1</span></span><br><span class="line">                                     target:<span class="keyword">self</span></span><br><span class="line">                                   selector:<span class="keyword">@selector</span>(timerAction:)</span><br><span class="line">                                   userInfo:fileHandle</span><br><span class="line">                                    repeats:<span class="literal">YES</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) timerAction:(<span class="built_in">NSTimer</span> *)timer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="type">int</span> n = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">NSFileHandle</span> *filehandle = timer.userInfo;</span><br><span class="line">    [filehandle seekToEndOfFile];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSDate</span> *nowDate = [<span class="built_in">NSDate</span> date];</span><br><span class="line">    <span class="built_in">NSDateFormatter</span> *formatter = [[<span class="built_in">NSDateFormatter</span> alloc] init];</span><br><span class="line">    [formatter setDateFormat:<span class="string">@&quot;yyyy/MM/dd HH:mm:ss&quot;</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *dateString = [formatter stringFromDate:nowDate];</span><br><span class="line">    dateString = [dateString stringByAppendingString:<span class="string">@&quot;\n&quot;</span>];</span><br><span class="line">    <span class="built_in">NSData</span> *dateData = [dateString dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">    [filehandle writeData:dateData];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">10</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        [timer invalidate];</span><br><span class="line">        [filehandle closeFile];</span><br><span class="line">    &#125;</span><br><span class="line">    n++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>实现运行，进行调用</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&quot;WriteDate.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> main(<span class="type">int</span> argc, <span class="keyword">const</span> <span class="type">char</span> * argv[])</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        WriteDate *write = [[WriteDate alloc] init];</span><br><span class="line"></span><br><span class="line">        [write writeRun];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// insert code here...</span></span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Hello, World!&quot;</span>);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    [[<span class="built_in">NSRunLoop</span> currentRunLoop] run];</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>文件中的数据结果是，如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">2013/11/13 09:22:03</span><br><span class="line">2013/11/13 09:22:04</span><br><span class="line">2013/11/13 09:22:05</span><br><span class="line">2013/11/13 09:22:06</span><br><span class="line">2013/11/13 09:22:07</span><br><span class="line">2013/11/13 09:22:08</span><br><span class="line">2013/11/13 09:22:09</span><br><span class="line">2013/11/13 09:22:10</span><br><span class="line">2013/11/13 09:22:11</span><br><span class="line">2013/11/13 09:22:12</span><br><span class="line">2013/11/13 09:22:13</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/%E5%9C%A8Ubuntu-12-04-Server%E4%B8%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2Ruby-on-Rails%E5%BA%94%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/%E5%9C%A8Ubuntu-12-04-Server%E4%B8%8A%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2Ruby-on-Rails%E5%BA%94%E7%94%A8.html" class="post-title-link" itemprop="url">在Ubuntu 12.04 Server上安装部署Ruby on Rails应用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 10:09:40 / 修改时间：10:16:01" itemprop="dateCreated datePublished" datetime="2025-06-25T10:09:40+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近我对新知识手痒痒啦，嘿嘿，ruby，对不起了，骚扰一下你哈，想自己自己在本机安装一个Ruby on Rails用用（玩玩）。搜索了好多的文章，嘿嘿，结果还挺多的</p>
-<p>这里简单罗列一下我参考的文章地址</p>
-<blockquote>
-<p><span class="exturl" data-url="aHR0cDovL3J1YnktY2hpbmEub3JnL3dpa2kvaW5zdGFsbC1yYWlscy1vbi11YnVudHUtMTItMDQtc2VydmVy">http://ruby-china.org/wiki/install-rails-on-ubuntu-12-04-server<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3J1YnktY2hpbmEub3JnL3dpa2kvaW5zdGFsbF9ydWJ5X2d1aWRl">http://ruby-china.org/wiki/install_ruby_guide<i class="fa fa-external-link-alt"></i></span></p>
-</blockquote>
-<p>基本上过程就是这样这个样子的。如下：（环境：Ubuntu Server 12.04）</p>
-<p>第一步：配置 Ubuntu Server 系统</p>
-<p>如果你是国内服务器，推荐修改网易的源</p>
-<p>1、输入 sudo vi &#x2F;etc&#x2F;apt&#x2F;sources.list 将里面的内容替换成：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">deb http://mirrors.163.com/ubuntu/ precise main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ precise-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ precise-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ precise-proposed main restricted universe multiverse</span><br><span class="line">deb http://mirrors.163.com/ubuntu/ precise-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ precise main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ precise-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ precise-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ precise-proposed main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.163.com/ubuntu/ precise-backports main restricted universe multiverse</span><br></pre></td></tr></table></figure>
-
-<p>然后更新一下:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> apt-get update#(一定要执行)</span><br></pre></td></tr></table></figure>
-
-<p>2、安装必要的三方库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> apt-get install -y wget vim build-essential openssl libreadline6 libreadline6-dev libmysqlclient-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libxml2-dev libxslt-dev libcurl4-openssl-dev autoconf automake libtool imagemagick libmagickwand-dev libpcre3-dev nodejs libpq-dev</span><br></pre></td></tr></table></figure>
-
-<p>第二步：安装 Ruby, Rails 及相关</p>
-<p>1、安装 RVM</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L https://get.rvm.io | bash -s stable</span><br><span class="line">$ <span class="built_in">echo</span> <span class="string">&#x27;[[ -s &quot;$HOME/.rvm/scripts/rvm&quot; ]] &amp;&amp; . &quot;$HOME/.rvm/scripts/rvm&quot;&#x27;</span> &gt;&gt;~/.bashrc</span><br><span class="line">$ <span class="built_in">source</span> ~/.bashrc</span><br><span class="line">$ rvm -v</span><br></pre></td></tr></table></figure>
-
-<p>2、安装 Ruby</p>
-<p>如果你是国内服务器，推荐将 RVM 的安装源替换成 Taobao 的镜像服务器，这样安装能更快！</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sed -i -e <span class="string">&#x27;s/ftp\.ruby-lang\.org\/pub\/ruby/ruby\.taobao\.org\/mirrors\/ruby/g&#x27;</span> ~/.rvm/config/db</span><br></pre></td></tr></table></figure>
-
-<p>3、用 RVM 安装 Ruby:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ rvm pkg install readline openssl</span><br><span class="line">$ rvm install 2.0.0</span><br><span class="line">$ rvm use 2.0.0 --default</span><br><span class="line">$ ruby -v</span><br><span class="line">ruby 2.0.0p247</span><br></pre></td></tr></table></figure>
-
-<p>国内服务器推荐替换 RubyGems 的到淘宝镜像:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ gem sources --remove https://rubygems.org/</span><br><span class="line">$ gem sources -a http://ruby.taobao.org/</span><br><span class="line">$ gem sources -l</span><br><span class="line">*** CURRENT SOURCES ***</span><br><span class="line">http://ruby.taobao.org</span><br></pre></td></tr></table></figure>
-
-<p>4、安装 Rails</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gem install rails</span><br><span class="line">$ rails -v</span><br><span class="line">Rails 4.0.0</span><br></pre></td></tr></table></figure>
-
-<p>第三步：部署你的网站</p>
-<p>接下来你可以通过 Git 或其他方式将你项目的源代码提交到服务器上面，建议放到用户的 ~&#x2F;www 下面。</p>
-<p>为了方便教程，我们假设，用户是 jason (拥有 sudo 权限), 项目名 gitlab 后面遇到类似的地方请更具自己的情况修改</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/</span><br><span class="line">$ <span class="built_in">pwd</span></span><br><span class="line">/home/jason/</span><br><span class="line">$ <span class="built_in">mkdir</span> www</span><br><span class="line">$ <span class="built_in">cd</span> www</span><br><span class="line">$ git <span class="built_in">clone</span> [email protected]:gitlab.git</span><br><span class="line">$ <span class="built_in">cd</span> gitlab</span><br><span class="line">$ bundle install</span><br></pre></td></tr></table></figure>
-
-<p>修改你的数据库配置，创建数据库，合并 migration …这些是 Rails 开发的基础，这里就不细说了，重点是最后你能让你的项目能用 rails s 跑起来！</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rails s -e production</span><br></pre></td></tr></table></figure>
-
-<p>第四步：安装 Passenger 用于部署 Rails 应用</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gem install passenger</span><br><span class="line">$ passenger -v</span><br><span class="line">Phusion Passenger version 4.0.10</span><br></pre></td></tr></table></figure>
-
-<p>由于 Passenger 需要重新编译 Nginx，如果你之前有安装 Nginx 需要卸载掉！</p>
-<p>nginx -v，有的话卸载</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> apt-get remove nginx-common nginx-full nginx</span><br></pre></td></tr></table></figure>
-
-<p>用 Passenger 安装 Nginx</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> passenger-install-nginx-module</span><br></pre></td></tr></table></figure>
-
-<p>接下来会出现提示，选择 Yes: download, compile and install Nginx for me. (recommended) ，对于后面的提示一直选默认哪项，敲回车。</p>
-<p>最后看到</p>
-<p>Nginx with Passenger support was successfully installed.</p>
-<p>表示你人品很好 Nginx 安装成功！否则请看 Passenger 官方安装文档 自行解决……</p>
-<p>第五步：安装 Nginx init script</p>
-<p>接下来你需要安装 Nginx 的启动脚本，以及配置开机自动启动</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/</span><br><span class="line">$ git <span class="built_in">clone</span> git://github.com/jnstq/rails-nginx-passenger-ubuntu.git</span><br><span class="line">$ <span class="built_in">sudo</span> <span class="built_in">mv</span> rails-nginx-passenger-ubuntu/nginx/nginx /etc/init.d/nginx</span><br><span class="line">$ <span class="built_in">sudo</span> <span class="built_in">chmod</span> +x /etc/init.d/nginx</span><br></pre></td></tr></table></figure>
-
-<p>配置 Nginx 开机自启动</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> update-rc.d nginx defaults</span><br></pre></td></tr></table></figure>
-
-<p>配置 Nginx 与网站</p>
-<p>打开 Nginx 的 nginx.conf</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> vim /opt/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
-
-<p>PS: 如果你不是 Passenger 安装的 Nginx，这个配置文件还有可能在 &#x2F;usr&#x2F;local&#x2F;nginx&#x2F; 或 &#x2F;etc&#x2F;nginx 下面</p>
-<p>请参考下面的例子修改：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">user jason<span class="comment">; # 修改成你的系统帐号名，不然项目目录 /home/jason/www 这里没有权限</span></span><br><span class="line">worker_processes 8<span class="comment">; # 修改成和你 CPU 核数一样</span></span><br><span class="line">pid /var/run/nginx.pid<span class="comment">;</span></span><br><span class="line">http &#123;</span><br><span class="line"> include       mime.types<span class="comment">;</span></span><br><span class="line"> default_type  application/octet-stream<span class="comment">;</span></span><br><span class="line"> client_max_body_size 50m<span class="comment">;</span></span><br><span class="line"> sendfile        on<span class="comment">;</span></span><br><span class="line"> access_log /var/log/nginx/access.log<span class="comment">;</span></span><br><span class="line"> error_log /var/log/nginx/error.log<span class="comment">;</span></span><br><span class="line"> gzip on<span class="comment">;</span></span><br><span class="line"> gzip_disable &quot;msie6&quot;<span class="comment">;</span></span><br><span class="line"> <span class="comment">## ------------ 重点修改内容 --------</span></span><br><span class="line"> server &#123;    </span><br><span class="line">   <span class="comment"># 此处用于防止其他的域名绑定到你的网站上面</span></span><br><span class="line">   listen 80 default<span class="comment">;</span></span><br><span class="line">   return 403<span class="comment">;</span></span><br><span class="line"> &#125;</span><br><span class="line"> server &#123;</span><br><span class="line">   listen       80<span class="comment">;</span></span><br><span class="line">   server_name  you.host.name<span class="comment">; # 请替换成你网站的域名</span></span><br><span class="line">   rails_env    production<span class="comment">;</span></span><br><span class="line">   root         /home/jason/www/gitlab/public<span class="comment">;</span></span><br><span class="line">   passenger_enabled on<span class="comment">;</span></span><br><span class="line">   location ~ ^(/assets) &#123;</span><br><span class="line">     access_log        off<span class="comment">;</span></span><br><span class="line">     <span class="comment"># 设置 assets 下面的浏览器缓存时间为最大值（由于 Rails Assets Pipline 的文件名是根据文件修改产生的 MD5 digest 文件名，所以此处可以放心开启）</span></span><br><span class="line">     expires           max<span class="comment">; </span></span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> <span class="comment">## ---------------------------------</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上几个步骤经过我的测试是困难重重啊，毕竟是参看别人的文章，我会在评论中，将相应的错误付给大家的</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Objective-C-%E4%B8%AD-NSFileHandle-%E5%92%8C-NSFileManager%E8%81%94%E5%90%88%E4%BD%BF%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Objective-C-%E4%B8%AD-NSFileHandle-%E5%92%8C-NSFileManager%E8%81%94%E5%90%88%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">Objective-C 中 NSFileHandle 和 NSFileManager联合使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 10:09:37 / 修改时间：10:18:39" itemprop="dateCreated datePublished" datetime="2025-06-25T10:09:37+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>NSFileHandle获取出路文件的手柄</p>
-<p>NSFileManager处理文件的（创建、删除等）</p>
-<p>第一个实例：追加数据</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *homePath = <span class="built_in">NSHomeDirectory</span>();</span><br><span class="line"><span class="built_in">NSString</span> *filePath = [homePath stringByAppendingPathComponent:<span class="string">@&quot;phone/nsfile_test_data.txt&quot;</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;file path = %@&quot;</span>,filePath);</span><br><span class="line"><span class="built_in">NSFileHandle</span> *fileHandle = [<span class="built_in">NSFileHandle</span> fileHandleForUpdatingAtPath:filePath];</span><br><span class="line">[fileHandle seekToEndOfFile];</span><br><span class="line"><span class="built_in">NSString</span> *str = <span class="string">@&quot;要追加的数据&quot;</span>;</span><br><span class="line"><span class="built_in">NSData</span> *data = [str dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">[fileHandle writeData:data];</span><br><span class="line">[fileHandle closeFile];</span><br></pre></td></tr></table></figure>
-
-<p>第二个实例：追加数据到指定的位置</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *homePath = <span class="built_in">NSHomeDirectory</span>();</span><br><span class="line"><span class="built_in">NSString</span> *filePath = [homePath stringByAppendingPathComponent:<span class="string">@&quot;phone/nsfile_test_data.txt&quot;</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;file path = %@&quot;</span>,filePath);</span><br><span class="line"><span class="built_in">NSFileHandle</span> *fileHandle = [<span class="built_in">NSFileHandle</span> fileHandleForUpdatingAtPath:filePath];</span><br><span class="line"></span><br><span class="line">[fileHandle seekToFileOffset:<span class="number">5</span>];</span><br><span class="line"><span class="built_in">NSString</span> *str = <span class="string">@&quot;要追加的数据&quot;</span>;</span><br><span class="line"><span class="built_in">NSData</span> *data = [str dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">[fileHandle writeData:data];</span><br><span class="line">[fileHandle closeFile];</span><br></pre></td></tr></table></figure>
-
-<p>第三个实例：定位读取数据</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *homePath = <span class="built_in">NSHomeDirectory</span>();</span><br><span class="line"><span class="built_in">NSString</span> *filepath = [homePath stringByAppendingPathComponent:<span class="string">@&quot;phone/nsfile_test_data.txt&quot;</span>];</span><br><span class="line"><span class="built_in">NSFileHandle</span> *fileHandle = [<span class="built_in">NSFileHandle</span> fileHandleForReadingAtPath:filepath];</span><br><span class="line"><span class="built_in">NSUInteger</span> length = [[fileHandle availableData] length];</span><br><span class="line">[fileHandle seekToFileOffset:length / <span class="number">2</span>];</span><br><span class="line"><span class="built_in">NSData</span> *data = [fileHandle readDataToEndOfFile];</span><br><span class="line"><span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc] initWithData:data</span><br><span class="line">                                      encoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;str = %@&quot;</span>,str);</span><br></pre></td></tr></table></figure>
-
-<p>第四个实例：复制文件</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *homepath = <span class="built_in">NSHomeDirectory</span>();</span><br><span class="line"><span class="built_in">NSString</span> *sourcepath  = [homepath stringByAppendingPathComponent:<span class="string">@&quot;phone/nsfile_test_data.txt&quot;</span>];</span><br><span class="line"><span class="built_in">NSString</span> *targetpath = [homepath stringByAppendingPathComponent:<span class="string">@&quot;phone/nsfile_test_data_bak.txt&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSFileManager</span> *manager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"><span class="type">BOOL</span> success = [manager createFileAtPath:targetpath</span><br><span class="line">                                contents:<span class="literal">nil</span></span><br><span class="line">                              attributes:<span class="literal">nil</span>];</span><br><span class="line"><span class="keyword">if</span>(success)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;创建目标文件成功&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">NSFileHandle</span> *outfile = [<span class="built_in">NSFileHandle</span> fileHandleForReadingAtPath:sourcepath];</span><br><span class="line"><span class="built_in">NSFileHandle</span> *infile = [<span class="built_in">NSFileHandle</span> fileHandleForWritingAtPath:targetpath];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSData</span> *outdata = [outfile readDataToEndOfFile];</span><br><span class="line"></span><br><span class="line">[infile writeData:outdata];</span><br><span class="line"></span><br><span class="line">[infile closeFile];</span><br><span class="line">[outfile closeFile];</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Yii%E5%BC%82%E5%B8%B8%E4%BF%A1%E6%81%AF%E6%98%BE%E7%A4%BA%E8%AE%BE%E7%BD%AE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Yii%E5%BC%82%E5%B8%B8%E4%BF%A1%E6%81%AF%E6%98%BE%E7%A4%BA%E8%AE%BE%E7%BD%AE.html" class="post-title-link" itemprop="url">Yii异常信息显示设置</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 10:09:34 / 修改时间：10:19:26" itemprop="dateCreated datePublished" datetime="2025-06-25T10:09:34+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="第一步：log设置"></a><a href="#1">第一步：log设置</a></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;log&#x27;</span>=&gt;<span class="keyword">array</span>(</span><br><span class="line">	<span class="string">&#x27;class&#x27;</span>=&gt;<span class="string">&#x27;CLogRouter&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;routes&#x27;</span>=&gt;<span class="keyword">array</span>(</span><br><span class="line">		<span class="keyword">array</span>(</span><br><span class="line">			<span class="string">&#x27;class&#x27;</span>=&gt;<span class="string">&#x27;CFileLogRoute&#x27;</span>,</span><br><span class="line">			<span class="string">&#x27;levels&#x27;</span>=&gt;<span class="string">&#x27;error, warning&#x27;</span>,</span><br><span class="line">		),</span><br><span class="line">        <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">&#x27;class&#x27;</span> =&gt; <span class="string">&#x27;CProfileLogRoute&#x27;</span>,<span class="comment">//显示页面加载的整个流程，包括mysql语句</span></span><br><span class="line">            <span class="string">&#x27;levels&#x27;</span> =&gt; <span class="string">&#x27;profile&#x27;</span>,</span><br><span class="line">        ),</span><br><span class="line">        <span class="comment">// array(</span></span><br><span class="line">                <span class="comment">// &#x27;class&#x27; =&gt; &#x27;CWebLogRoute&#x27;,</span></span><br><span class="line">                <span class="comment">// &#x27;levels&#x27; =&gt; &#x27;profile,trace&#x27;,</span></span><br><span class="line">        <span class="comment">// ),</span></span><br><span class="line">		<span class="comment">// uncomment the following to show log messages on web pages</span></span><br><span class="line">		<span class="keyword">array</span>(</span><br><span class="line">			<span class="string">&#x27;class&#x27;</span>=&gt;<span class="string">&#x27;CWebLogRoute&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;levels&#x27;</span>=&gt;<span class="string">&#x27;profile,error,warning,trace,info,xdebug&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;showInFireBug&#x27;</span>=&gt;<span class="string">&#x27;true&#x27;</span>,<span class="comment">//开启浏览器的firedebug</span></span><br><span class="line">		),</span><br><span class="line">		</span><br><span class="line">	),</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
-
-<p>在log中添加</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">array</span>(</span><br><span class="line">	<span class="string">&#x27;class&#x27;</span>=&gt;<span class="string">&#x27;CWebLogRoute&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;levels&#x27;</span>=&gt;<span class="string">&#x27;profile,error,warning,trace,info,xdebug&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;showInFireBug&#x27;</span>=&gt;<span class="string">&#x27;true&#x27;</span>,<span class="comment">//开启浏览器的firedebug</span></span><br><span class="line">),</span><br></pre></td></tr></table></figure>
-
-<p>‘showInFireBug’&#x3D;&gt;’true’的使用必须开启浏览器的firebug</p>
-<h3 id="2"><a href="#2" class="headerlink" title="第二步：调试"></a><a href="#2">第二步：调试</a></h3><p>开启浏览器，进行测试网站</p>
-<p>从浏览器的firebug中可以看到，所有开启的错误提示</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Yii%E4%B8%BB%E9%A2%98%E5%88%87%E6%8D%A2%E8%AE%BE%E7%BD%AE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Yii%E4%B8%BB%E9%A2%98%E5%88%87%E6%8D%A2%E8%AE%BE%E7%BD%AE.html" class="post-title-link" itemprop="url">Yii主题切换设置</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 10:09:31 / 修改时间：10:21:57" itemprop="dateCreated datePublished" datetime="2025-06-25T10:09:31+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="第一步：配置文件"></a><a href="#1">第一步：配置文件</a></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line">	<span class="string">&#x27;basePath&#x27;</span>=&gt;<span class="title function_ invoke__">dirname</span>(<span class="keyword">__FILE__</span>).DIRECTORY_SEPARATOR.<span class="string">&#x27;..&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;name&#x27;</span>=&gt;<span class="string">&#x27;GoWhich&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;theme&#x27;</span>=&gt;<span class="string">&#x27;flatui&#x27;</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-
-<h3 id="2"><a href="#2" class="headerlink" title="第二步：创建主题文件夹"></a><a href="#2">第二步：创建主题文件夹</a></h3><p>在themes目录下面创建主题flatui</p>
-<p>在flatui文件夹下，创建views,js,css,images等文件夹，views文件夹里面的文件及文件夹请参考<code>./protected/views/</code>下面的内容。</p>
-<h3 id="3"><a href="#3" class="headerlink" title="第三步：theme路径的替换和修改"></a><a href="#3">第三步：theme路径的替换和修改</a></h3><p><code>Yii::app()-&gt;theme-&gt;baseUrl</code>的替换</p>
-<h3 id="4"><a href="#4" class="headerlink" title="第四步：修改相应的layout"></a><a href="#4">第四步：修改相应的layout</a></h3><p>$this-&gt;layout的修改</p>
+          <p>1、首先，你必须拥有10个可以自定义HTML的主流博客。</p>
+<p>2、每天更新文章，注：每个博客每天更新文章数：10篇</p>
+<p>文章内容：去搜狗指数<span class="exturl" data-url="aHR0cDovL3d3dy5zb2dvdS5jb20vdG9wL2luZGV4Lmh0bWw=">http://www.sogou.com/top/index.html<i class="fa fa-external-link-alt"></i></span> 查看瞬间指数，找一些流量大的关键词去百度搜索一下便有一大堆，选前7----15的文章上传到你的博客上（注：标题修改下，但标题中的关键词可不能动哦！）</p>
+<p>3、把每篇文章都收藏进几个网摘，提高文章的反链接和权重</p>
+<p>4、等着来流量吧。</p>
+<p>三人月之后，你的每个博客流量都应该在10000PV（我现在的是2.5Wpv)以上，那你放置GG广告的话，你的收入就很可观的。我的博客广告点击率一般在1%—1.5%之间，少数点。1%就可以了，单价在2—4美分徘徊，少算点，单价2美分便可</p>
+<p><code>10000*0.01*0.02*6.8*10=136元/天</code>，就算没这么理想，减去36，那一天就100元，一个月不就3000元了吗？</p>
+<p>解释：</p>
+<p>认为不可操作的人，原因只有一个字“懒”，只想坐享其成的人，天上会掉馅饼吗？有人说是以前的东西，是不是以前的我不知道，但每一个字都是我辛辛苦苦的敲出来的，每一句话都是经过自己的大脑想出来的，至于与以前哪位前辈的想法不谋而合，那只能说你已经浪费了一段可以让你过上小康的黄金岁月！反过来在乎别人的想法是不是第一个，你不觉得自己很傻吗？找别人的弱点对你来说重要还是快点致富重要……</p>
+<p>相关技巧：</p>
+<p>1，经过反复实践证明以下门户博客权重较高：</p>
+<p>和讯（<span class="exturl" data-url="aHR0cDovL3d3dy5oZXh1bi5jb20=">www.hexun.com<i class="fa fa-external-link-alt"></i></span>）</p>
+<p>中华网（<span class="exturl" data-url="aHR0cDovL3d3dy5jaGluYS5jb20=">www.china.com<i class="fa fa-external-link-alt"></i></span>）</p>
+<p>天涯（<span class="exturl" data-url="aHR0cDovL3d3dy50aWFueWEuY24=">www.tianya.cn<i class="fa fa-external-link-alt"></i></span>）</p>
+<p>百度空间（<span class="exturl" data-url="aHR0cDovL2hpLmJhaWR1LmNvbQ==">hi.baidu.com<i class="fa fa-external-link-alt"></i></span>） 对百度的权重高</p>
+<p>2，关键词的选择：</p>
+<p>百度中文搜索风云榜：<span class="exturl" data-url="aHR0cDovL3RvcC5iYWlkdS5jb20=">http://top.baidu.com<i class="fa fa-external-link-alt"></i></span> （互联网热门搜索词语）</p>
+<p>百度指数：<span class="exturl" data-url="aHR0cDovL2luZGV4LmJhaWR1LmNvbQ==">http://index.baidu.com<i class="fa fa-external-link-alt"></i></span> （某关键词搜索热度）</p>
+<p>相关搜索：<span class="exturl" data-url="aHR0cDovL2QuYmFpZHUuY29tL3JzLnBocA==">http://d.baidu.com/rs.php<i class="fa fa-external-link-alt"></i></span> （用于发掘该类相关热门搜索词语）</p>
+<p>搜狗指数 <span class="exturl" data-url="aHR0cDovL3d3dy5zb2dvdS5jb20vdG9wL2luZGV4Lmh0bWw=">http://www.sogou.com/top/index.html<i class="fa fa-external-link-alt"></i></span></p>
+<p>3，SEO设置：</p>
+<p>拿曾经最热门的“陈冠希”举例，那么博客名字就应该取为chenguanxi，如果chenguanxi已经被别人注册</p>
+<p>了，那么就在后面添加数字，比如chenguanxi8、chenguanxi9等~~~</p>
+<p>标题就应该写上跟陈冠希有关的关键字，比如“陈冠希事件”、“陈冠希视频”等~~~不要太多，大概1-2组关键词即可，剩余的可以多添加几篇文章进行。</p>
+<p>你只需要摘抄一段新闻自己稍加修改，然后把里面包含“陈冠希”的关键词统统加粗，保证在文章的开头、中间和结尾都有这些关键词出现即可。不过不要堆积关键词，这样会被搜索引擎K掉，一篇百字的文章里面包含大概2-3次的关键词就够了。</p>
+<p>4，如何将博客的流量引出并创造现金？</p>
+<p>在文章中加入醒目的图片或者文字，从而把博客浏览者引导到你想推广的产品的网站上。比如一个亚交注册、一个火狐浏览器下载或上面那个博客做的UUSee产品等等，这个时候你需要准备的就是产品推广的网页；通过在博客文章中添加醒目的文字或者图片方式，把流量引到该网页上来。</p>
+<p>分析:</p>
+<p>可以计算下，一般一个每天500IP流量的博客，有300人被引导到了你的产品页根据你的产品页面具体情况，在有足够吸引的前提下，大概会有10-20人注册或者下载，如果该产品每个认证佣金是1-2元，那么做一个博客你就能赚到该产品推广佣金20元左右</p>
+<p>如果你再勤奋点做到10个以上这样的博客，那么你每天的收入也会在200元，一个月做5000-6000绝对不是问题。</p>
+<p>这种操作就很明显了，你花一个星期的时间做出30个博客，每做一个你应该用个表格做好记录。其中包括</p>
+<p>选用关键词：</p>
+<p>使用的博客：</p>
+<p>使用博客的用户名和密码：</p>
+<p>博客网址：</p>
+<p>那么这30个博客如果运气好，做到10个能有如此流量的博客你就及格了，如果你不满足还想赚更多的钱就继续不断重复你的劳动~~</p>
+<p>如果只有少数几个博客做上流量了，那说明可能你还没有完全掌握该技术或运气不佳，也不用气馁再花一个星期的时间这样去做，哪怕每个星期只有1-2个博客做到了，时间长了一样可以凑齐10个以上</p>
 
       
     </div>
@@ -1217,7 +1277,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/19/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/67/">67</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/21/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/19/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/69/">69</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/21/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

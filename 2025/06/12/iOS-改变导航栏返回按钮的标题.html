@@ -193,18 +193,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">665</span>
+          <span class="site-state-item-count">685</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-count">113</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -306,10 +306,9 @@
     <div class="post-body" itemprop="articleBody"><p>新写的App中需要使用UINavigationController对各个页面进行导航，但由于第一级页面的title较长，在进入第二级页面后返回按钮leftButtonItem的title就会变得很长，对NavigationBar空间占用很大，而且不美观，于是使用代码对leftButtonItem的title文本进行修改，无论是设置<code>self.navigationItem.leftBarButtonItem.title = @&quot;返回&quot;;</code>还是<code>self.navigationItem.backBarButtonItem.title = @&quot;返回&quot;;</code>都没有效果，title文本始终不会发生变化。到网上乱搜一通后，得到了以下解决方法，相对来说比较简单，特记录如下：</p>
 <p>在第一级页面的viewDidLoad方法中加入以下代码：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIBarButtonItem</span> *backButtonItem = [[<span class="built_in">UIBarButtonItem</span> alloc] init];</span><br><span class="line">backButtonItem.title = <span class="string">@&quot;返回&quot;</span>;</span><br><span class="line"><span class="keyword">self</span>.navigationItem.backBarButtonItem = backButtonItem;</span><br></pre></td></tr></table></figure>
-
-<p>也就是用一个新的按钮在进行导航前将原来的返回按钮替换掉就可以了。<br>可以如下设置 但是这样的缺点是那个按键会变成方形 可以添加图片来进行修改。</p>
+<p>也就是用一个新的按钮在进行导航前将原来的返回按钮替换掉就可以了。<br>
+可以如下设置 但是这样的缺点是那个按键会变成方形 可以添加图片来进行修改。</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIBarButtonItem</span> *backButton = [[<span class="built_in">UIBarButtonItem</span> alloc] initWithTitle:<span class="string">@&quot;Back&quot;</span></span><br><span class="line">                                                                   style:<span class="built_in">UIBarButtonItemStyleBordered</span></span><br><span class="line">                                                                  target:<span class="keyword">self</span></span><br><span class="line">                                                                  action:<span class="keyword">@selector</span>(backToPrevious)];</span><br><span class="line">    </span><br><span class="line"><span class="keyword">self</span>.navigationItem.leftBarButtonItem = backButton;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)backToPrevious</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span>.navigationController popViewControllerAnimated:<span class="literal">YES</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>添加图片的相关代码如下</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIButton</span> *leftButton = [[<span class="built_in">UIButtonalloc</span>] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">60</span>, <span class="number">40</span>)];</span><br><span class="line">[leftButton setTitle:<span class="string">@&quot;返回&quot;</span>forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">[leftButton setImage:[<span class="built_in">UIImageimageNamed</span>:<span class="string">@&quot;UINavigationBar.png&quot;</span>] forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">[leftButton setImage:[<span class="built_in">UIImageimageNamed</span>:<span class="string">@&quot;UINavigationBar.png&quot;</span>] forState:<span class="built_in">UIControlStateHighlighted</span>];</span><br><span class="line">[leftButton addTarget:selfaction:<span class="keyword">@selector</span>(leftAction:) forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line"><span class="built_in">UIBarButtonItem</span> *leftItem = [[<span class="built_in">UIBarButtonItemalloc</span>] initWithCustomView:leftButton];</span><br><span class="line">[leftButton release];</span><br><span class="line"><span class="keyword">self</span>.navigationItem.leftBarButtonItem = leftItem;</span><br></pre></td></tr></table></figure>
 

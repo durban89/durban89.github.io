@@ -26,12 +26,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="最近服务器空间总是越来越小，找不到原因，其中有一项是这样的 1114648472	&#x2F;var&#x2F;spool&#x2F;clientmqueue  始终不知道这个是什么文件，经过搜索，是一个与cron有关的文件 这篇文章是这样的解决方案也给了，贴到下面  一，问题现象:linux操作系统中的&#x2F;var&#x2F;spool&#x2F;clientmqueue&#x2F;目录下存在大量文件。原因分析：系统中有用户开启了cron，而cron中执行的">
+    <meta name="description" content="最近服务器空间总是越来越小，找不到原因，其中有一项是这样的 1114648472	&#x2F;var&#x2F;spool&#x2F;clientmqueue 始终不知道这个是什么文件，经过搜索，是一个与cron有关的文件 这篇文章是这样的解决方案也给了，贴到下面  一，问题现象: linux操作系统中的&#x2F;var&#x2F;spool&#x2F;clientmqueue&#x2F;目录下存在大量文件。 原因分析：系统中有用户开启了cron，而cron中执行">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Linux  “&#x2F;var&#x2F;spool&#x2F;clientmqueue 下生成太多文件处理”">
 <meta property="og:url" content="https://blog.gowhich.com/2025/06/13/Linux---var-spool-clientmqueue-%E4%B8%8B%E7%94%9F%E6%88%90%E5%A4%AA%E5%A4%9A%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86-.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="最近服务器空间总是越来越小，找不到原因，其中有一项是这样的 1114648472	&#x2F;var&#x2F;spool&#x2F;clientmqueue  始终不知道这个是什么文件，经过搜索，是一个与cron有关的文件 这篇文章是这样的解决方案也给了，贴到下面  一，问题现象:linux操作系统中的&#x2F;var&#x2F;spool&#x2F;clientmqueue&#x2F;目录下存在大量文件。原因分析：系统中有用户开启了cron，而cron中执行的">
+<meta property="og:description" content="最近服务器空间总是越来越小，找不到原因，其中有一项是这样的 1114648472	&#x2F;var&#x2F;spool&#x2F;clientmqueue 始终不知道这个是什么文件，经过搜索，是一个与cron有关的文件 这篇文章是这样的解决方案也给了，贴到下面  一，问题现象: linux操作系统中的&#x2F;var&#x2F;spool&#x2F;clientmqueue&#x2F;目录下存在大量文件。 原因分析：系统中有用户开启了cron，而cron中执行">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-13T06:36:30.000Z">
 <meta property="article:modified_time" content="2025-06-13T06:42:44.188Z">
@@ -193,18 +193,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">665</span>
+          <span class="site-state-item-count">685</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">103</span>
+        <span class="site-state-item-count">113</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -305,48 +305,45 @@
     
     <div class="post-body" itemprop="articleBody"><p>最近服务器空间总是越来越小，找不到原因，其中有一项是这样的</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">114648472	/var/spool/clientmqueue</span><br></pre></td></tr></table></figure>
-
 <p>始终不知道这个是什么文件，经过搜索，是一个与cron有关的文件</p>
 <p>这篇文章是这样的解决方案也给了，贴到下面</p>
 <hr>
-<p>一，问题现象:<br>linux操作系统中的<code>/var/spool/clientmqueue/</code>目录下存在大量文件。<br>原因分析：系统中有用户开启了cron，而cron中执行的程序有输出内容，输出内容会以邮件形式发给cron的用户，而sendmail没有启动所以就产生了这些文件；<br>解决办法: 1、 将crontab里面的命令后面加上<code>&gt; /dev/null 2&gt;&amp;1  </code></p>
-<p>二，知识点：  </p>
+<p>一，问题现象:<br>
+linux操作系统中的<code>/var/spool/clientmqueue/</code>目录下存在大量文件。<br>
+原因分析：系统中有用户开启了cron，而cron中执行的程序有输出内容，输出内容会以邮件形式发给cron的用户，而sendmail没有启动所以就产生了这些文件；<br>
+解决办法: 1、 将crontab里面的命令后面加上<code>&gt; /dev/null 2&gt;&amp;1  </code></p>
+<p>二，知识点：</p>
 <ul>
-<li><code>2&gt;</code>：重定向错误。  </li>
-<li><code>2&gt;&amp;1</code>：把错误重定向到输出要送到的地方。即把上述命令的执行结果重定向到&#x2F;dev&#x2F;null，即抛弃，同时，把产生的错误也抛弃。</li>
+<li><code>2&gt;</code>：重定向错误。</li>
+<li><code>2&gt;&amp;1</code>：把错误重定向到输出要送到的地方。即把上述命令的执行结果重定向到/dev/null，即抛弃，同时，把产生的错误也抛弃。</li>
 </ul>
-<p>三，具体代码： </p>
-<p>（1）、<code># crontab -u cvsroot -l </code> </p>
+<p>三，具体代码：</p>
+<p>（1）、<code># crontab -u cvsroot -l </code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">01 01 * * * /opt/bak/backup  </span><br><span class="line">01 02 * * * /opt/bak/backup2  </span><br></pre></td></tr></table></figure>
-
 <p>（2）、<code># vi /opt/bak/backup  </code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh  </span></span><br><span class="line"><span class="built_in">cd</span> /  </span><br><span class="line">getfacl -R repository &gt; /opt/bak/backup.acl  </span><br></pre></td></tr></table></figure>
-
 <p>（3）、<code># vi /opt/bak/backup2 </code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh  </span></span><br><span class="line">week=`<span class="built_in">date</span> +%w`  </span><br><span class="line">tar zcvfp /opt/bak/cvs<span class="variable">$week</span>/cvs.tar.gz /repository &gt;/dev/null 2&gt;&amp;1  </span><br></pre></td></tr></table></figure>
-
-<p>四，清除&#x2F;var&#x2F;spool&#x2F;clientmqueue&#x2F;目录下的文件：  </p>
+<p>四，清除/var/spool/clientmqueue/目录下的文件：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cd /var/spool/clientmqueue  </span></span><br><span class="line"><span class="comment"># rm -rf \*  </span></span><br></pre></td></tr></table></figure>
-
-<p>如果文件太多，占用空间太大，用上面命令删除慢的话，就执行下面的命令：  </p>
+<p>如果文件太多，占用空间太大，用上面命令删除慢的话，就执行下面的命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cd /var/spool/clientmqueue  </span></span><br><span class="line"><span class="comment"># ls | xargs rm -f</span></span><br></pre></td></tr></table></figure>
-
 <hr>
 <p>话说删除这个大文件还是有说法的，接着下面看</p>
-<p>rm 有最大一次刪除的數量，所以當一個目錄裡有太多的檔案或目錄時，就會出現錯誤，小弟試過應該是在二萬以下，而使用 <code>find ./ | xargs rm -rf</code> 的目的是先使用 find 列出檔案，再導向到 xargs，xargs 再喂給 rm，在這裡，xargs 會分批依照 rm 的最大數量餵給 rm，然後就可以順利刪除檔案了<br>。</p>
+<p>rm 有最大一次刪除的數量，所以當一個目錄裡有太多的檔案或目錄時，就會出現錯誤，小弟試過應該是在二萬以下，而使用 <code>find ./ | xargs rm -rf</code> 的目的是先使用 find 列出檔案，再導向到 xargs，xargs 再喂給 rm，在這裡，xargs 會分批依照 rm 的最大數量餵給 rm，然後就可以順利刪除檔案了<br>
+。</p>
 <p>还举了一个实例</p>
 <p>mk-file.sh的代码如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">for</span> ((i=<span class="number">0</span>;i&lt;<span class="number">20000</span>;i++))</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">	<span class="built_in">echo</span> <span class="string">&quot;This file id is <span class="variable">$i</span>.&quot;</span> &gt; test-file-<span class="variable">$&#123;i&#125;</span>;</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
-
-<p>(這個 shell script 會有目錄下產生 20000 個檔案。)<br>接下來來做個小小測試：</p>
+<p>(這個 shell script 會有目錄下產生 20000 個檔案。)<br>
+接下來來做個小小測試：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root <span class="comment"># mkfile.sh</span></span><br></pre></td></tr></table></figure>
-
-<p>會產生 20000 個小檔案，名稱為 test-file-{1~19999}<br>直接使用 rm 去刪除：</p>
+<p>會產生 20000 個小檔案，名稱為 test-file-{1~19999}<br>
+直接使用 rm 去刪除：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root <span class="comment"># rm -rf test-file-*</span></span><br></pre></td></tr></table></figure>
-
-<p>-bash: &#x2F;bin&#x2F;rm: Argument list too long (會回應引數過長的訊息)<br>该搭配 find 來刪除</p>
+<p>-bash: /bin/rm: Argument list too long (會回應引數過長的訊息)<br>
+该搭配 find 來刪除</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root <span class="comment"># find ./ -iname &#x27;test-file-*&#x27; | xargs rm -rf</span></span><br></pre></td></tr></table></figure>
-
 <p>這樣就順利被刪除了。</p>
 
     </div>
