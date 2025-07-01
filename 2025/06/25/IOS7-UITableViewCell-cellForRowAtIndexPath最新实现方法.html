@@ -26,12 +26,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="最近在开发iOS7的应用发现有个方法似乎是有问题的，就是下面这个 1- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 下面分别查看之前的实现过程和现在的实现过程 之前的实现过程如下： 123456789101112131415161718192">
+    <meta name="description" content="最近在开发iOS7的应用发现有个方法似乎是有问题的，就是下面这个 1- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  下面分别查看之前的实现过程和现在的实现过程 之前的实现过程如下： 12345678910111213141516171819">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="iOS7 UITableViewCell cellForRowAtIndexPath最新实现方法">
 <meta property="og:url" content="https://blog.gowhich.com/2025/06/25/IOS7-UITableViewCell-cellForRowAtIndexPath%E6%9C%80%E6%96%B0%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="最近在开发iOS7的应用发现有个方法似乎是有问题的，就是下面这个 1- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 下面分别查看之前的实现过程和现在的实现过程 之前的实现过程如下： 123456789101112131415161718192">
+<meta property="og:description" content="最近在开发iOS7的应用发现有个方法似乎是有问题的，就是下面这个 1- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath  下面分别查看之前的实现过程和现在的实现过程 之前的实现过程如下： 12345678910111213141516171819">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-25T02:26:15.000Z">
 <meta property="article:modified_time" content="2025-06-25T02:48:51.405Z">
@@ -193,7 +193,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">685</span>
+          <span class="site-state-item-count">705</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">113</span>
+        <span class="site-state-item-count">120</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -305,11 +305,14 @@
     
     <div class="post-body" itemprop="articleBody"><p>最近在开发iOS7的应用发现有个方法似乎是有问题的，就是下面这个</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath</span><br></pre></td></tr></table></figure>
+
 <p>下面分别查看之前的实现过程和现在的实现过程</p>
 <p>之前的实现过程如下：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">NSString</span> *CellIdentifier = <span class="string">@&quot;TeleplayPlayTableCell&quot;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//创建cell</span></span><br><span class="line">    <span class="built_in">UITableViewCell</span> *cell = [_dataTableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(cell == <span class="literal">nil</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cell = [[<span class="built_in">UITableViewCell</span> alloc] initWithStyle:<span class="built_in">UITableViewCellStyleValue1</span></span><br><span class="line">                                      reuseIdentifier:CellIdentifier];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//获取行的个数</span></span><br><span class="line">    <span class="built_in">NSInteger</span> row = [indexPath row];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Configure the cell...</span></span><br><span class="line">    cell.detailTextLabel.text = <span class="string">@&quot;good&quot;</span>;</span><br><span class="line">    cell.textLabel.text = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%d&quot;</span>,row];</span><br><span class="line">    <span class="keyword">return</span> cell;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>iOS7下面的实现过程如下：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">NSString</span> *CellIdentifier = <span class="string">@&quot;TeleplayPlayTableCell&quot;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//注册要使用的cell</span></span><br><span class="line">    [tableView registerClass:[<span class="built_in">UITableViewCell</span> <span class="keyword">class</span>]</span><br><span class="line">      forCellReuseIdentifier:CellIdentifier];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//创建cell</span></span><br><span class="line">    <span class="built_in">UITableViewCell</span> *cell = [_dataTableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(cell == <span class="literal">nil</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cell = [[<span class="built_in">UITableViewCell</span> alloc] initWithStyle:<span class="built_in">UITableViewCellStyleValue1</span></span><br><span class="line">                                      reuseIdentifier:CellIdentifier];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//获取行的个数</span></span><br><span class="line">    <span class="built_in">NSInteger</span> row = [indexPath row];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Configure the cell...</span></span><br><span class="line">    cell.detailTextLabel.text = <span class="string">@&quot;good&quot;</span>;</span><br><span class="line">    cell.textLabel.text = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%d&quot;</span>,row];</span><br><span class="line">    <span class="keyword">return</span> cell;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>大家可以尝试一下，如果有其他问题，请指教。</p>
 
     </div>

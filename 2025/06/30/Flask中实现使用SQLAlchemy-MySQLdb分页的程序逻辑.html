@@ -37,8 +37,8 @@
 <meta property="article:modified_time" content="2025-06-30T06:19:21.522Z">
 <meta property="article:author" content="durban">
 <meta property="article:tag" content="MySQL">
-<meta property="article:tag" content="Python">
 <meta property="article:tag" content="Flask">
+<meta property="article:tag" content="Python">
 <meta property="article:tag" content="SQLAlchemy">
 <meta name="twitter:card" content="summary">
 
@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">685</span>
+          <span class="site-state-item-count">705</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">113</span>
+        <span class="site-state-item-count">120</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -309,6 +309,8 @@
     <div class="post-body" itemprop="articleBody"><p>逻辑的话还是蛮简单的，多查看一个文档就可以了。代码如下</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">page = <span class="built_in">int</span>(request.args.get(<span class="string">&#x27;page&#x27;</span>)) <span class="keyword">if</span> request.args.get(<span class="string">&#x27;page&#x27;</span>) <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line">    pagesize = <span class="number">20</span></span><br><span class="line">    prev_page = page - <span class="number">1</span> <span class="keyword">if</span> page - <span class="number">1</span> <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line">    next_page = page + <span class="number">1</span></span><br><span class="line">      </span><br><span class="line">    <span class="comment"># 关键字查询</span></span><br><span class="line">    keywords = request.args.get(<span class="string">&#x27;keywords&#x27;</span>)</span><br><span class="line">    start_date = request.args.get(<span class="string">&#x27;start_date&#x27;</span>) </span><br><span class="line">    end_date = request.args.get(<span class="string">&#x27;end_date&#x27;</span>)</span><br><span class="line">  </span><br><span class="line">    params_query = &#123;&#125;</span><br><span class="line">    query = Itunes.query</span><br><span class="line">    <span class="keyword">if</span> keywords:</span><br><span class="line">        query = query.<span class="built_in">filter</span>(Itunes.title.startswith(keywords))</span><br><span class="line">        params_query[<span class="string">&#x27;keywords&#x27;</span>] = keywords</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> start_date <span class="keyword">and</span> end_date:</span><br><span class="line">        start = <span class="string">&#x27;%s 00:00:00&#x27;</span> % start_date</span><br><span class="line">        end = <span class="string">&#x27;%s 23:59:59&#x27;</span> % end_date</span><br><span class="line">        start = <span class="built_in">int</span>(time.mktime(time.strptime(start,<span class="string">&#x27;%Y-%m-%d %H:%M:%S&#x27;</span>)))</span><br><span class="line">        end = <span class="built_in">int</span>(time.mktime(time.strptime(end,<span class="string">&#x27;%Y-%m-%d %H:%M:%S&#x27;</span>)))</span><br><span class="line">          </span><br><span class="line">        query = query.<span class="built_in">filter</span>(Itunes.create_time &gt; start)</span><br><span class="line">        query = query.<span class="built_in">filter</span>(Itunes.create_time &lt;= end)</span><br><span class="line">  </span><br><span class="line">        params_query[<span class="string">&#x27;start_date&#x27;</span>] = start_date</span><br><span class="line">        params_query[<span class="string">&#x27;end_date&#x27;</span>] = end_date</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> params_query: </span><br><span class="line">        itunes_sum = query.count()</span><br><span class="line">        itunes = query.offset((page-<span class="number">1</span>)*pagesize).limit(pagesize).<span class="built_in">all</span>()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        itunes_sum = Itunes.query.count()</span><br><span class="line">        itunes = Itunes.query.offset((page-<span class="number">1</span>)*pagesize).limit(pagesize).<span class="built_in">all</span>()</span><br><span class="line">          </span><br><span class="line">      </span><br><span class="line">      </span><br><span class="line">    <span class="keyword">return</span> render_template(</span><br><span class="line">            <span class="string">&#x27;front/spider_apple.html&#x27;</span>,</span><br><span class="line">            itunes=itunes,</span><br><span class="line">            itunes_sum=itunes_sum,</span><br><span class="line">            title=<span class="string">u&quot;Apple爬虫&quot;</span>,</span><br><span class="line">            prev_page=prev_page,</span><br><span class="line">            next_page=next_page,</span><br><span class="line">            params=params_query</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
 
+
+
     </div>
 
     
@@ -353,8 +355,8 @@
 
           <div class="post-tags">
               <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i> MySQL</a>
-              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
               <a href="/tags/Flask/" rel="tag"><i class="fa fa-tag"></i> Flask</a>
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
               <a href="/tags/SQLAlchemy/" rel="tag"><i class="fa fa-tag"></i> SQLAlchemy</a>
           </div>
 
