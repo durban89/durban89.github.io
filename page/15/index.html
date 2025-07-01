@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">664</span>
+          <span class="site-state-item-count">665</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">102</span>
+        <span class="site-state-item-count">103</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,101 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS%E4%B8%AD%E5%A4%9A%E4%B8%AAUITextField%E7%9A%84%E9%94%AE%E7%9B%98%E5%A4%84%E7%90%86-%E8%A7%86%E5%9B%BE%E4%BD%8D%E7%A7%BB.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS%E4%B8%AD%E5%A4%9A%E4%B8%AAUITextField%E7%9A%84%E9%94%AE%E7%9B%98%E5%A4%84%E7%90%86-%E8%A7%86%E5%9B%BE%E4%BD%8D%E7%A7%BB.html" class="post-title-link" itemprop="url">iOS中多个UITextField的键盘处理-视图位移</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:07 / 修改时间：16:41:26" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:07+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>当有多个UITextField的时候，一个比较好的处理方式就是实现视图移位，实现的方法也很简单。</p>
+<p>首先是加入UITextField的代理UITextFieldDelegate。</p>
+<p>其次，在代理的<code>-(void) textFieldDidBeginEditing:(UITextField *)textField</code>方法中实现</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> keyboardHeight = <span class="number">216.0</span>;</span><br><span class="line"><span class="keyword">if</span> ((textField.frame.origin.y + keyboardHeight + textField.frame.size.height) &gt;= ([[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height - <span class="number">100.0</span>))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//此时，编辑框被键盘盖住，则对视图做对应的位移</span></span><br><span class="line">    <span class="built_in">CGRect</span> frame =  <span class="built_in">CGRectMake</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">320</span>, [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height + <span class="number">120.0</span>);</span><br><span class="line">    frame.origin.y -= textField.frame.origin.y + keyboardHeight + textField.frame.size.height - [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height + <span class="number">120.0</span>;<span class="comment">//偏移量=编辑框原点Y值+键盘高度+编辑框高度-屏幕高度</span></span><br><span class="line">    _scrollView.frame=frame;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里面的具体位置可以自己调整，算法也是不唯一的</p>
+<p>当到达最后一个UITextField的时候，要隐藏键盘，这里如何做呢，如下所示：</p>
+<p>在代理</p>
+<p><code>- (BOOL)textFieldShouldReturn:(UITextField *)textField</code></p>
+<p>方法中</p>
+<p>最后一个失去焦点的时候</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[_bloodTextField resignFirstResponder];</span><br><span class="line"><span class="built_in">CGRect</span> frame =  _scrollView.frame;</span><br><span class="line">frame.size.height = [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height;</span><br><span class="line">frame.origin.y = <span class="number">0.0</span>;</span><br><span class="line">_scrollView.frame=frame;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">YES</span>;</span><br></pre></td></tr></table></figure>
+
+<p>判断的话我使用这样子实现的</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([_bloodTextField isFirstResponder])</span><br></pre></td></tr></table></figure>
+
+<p>是不是很简单</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1128,96 +1223,6 @@
 <p>2）当使用单个比较类的操作符时可以一个循环来搞定</p>
 <p>PS，例子 一中尝试使用[@”SELF CONTAINS %@”, arrayFilter] 来过滤会挂调，因为CONTAINS时字符串比较操作符，不是集合操作。</p>
 </blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E9%AA%8C%E8%AF%81%E9%82%AE%E7%AE%B1%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E9%AA%8C%E8%AF%81%E9%82%AE%E7%AE%B1%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7.html" class="post-title-link" itemprop="url">iOS7 验证邮箱的合法性</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:37:36 / 修改时间：12:10:52" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:36+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于用于输入的邮箱地址的内容的合法性，在IOS7中的做法与之前的是一样的。</p>
-<p>第一种方法：最简单的就是利用系统的NSPredicate</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//利用正则表达式验证</span></span><br><span class="line">-(<span class="type">BOOL</span>)isValidateEmail:(<span class="built_in">NSString</span> *)email &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *emailRegex = <span class="string">@&quot;[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]&#123;2,4&#125;&quot;</span>; </span><br><span class="line">    <span class="built_in">NSPredicate</span> *emailTest = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF MATCHES %@&quot;</span>, emailRegex]; </span><br><span class="line">    <span class="keyword">return</span> [emailTest evaluateWithObject:email];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二种方法：通过区分字符串</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>)validateEmail:(<span class="built_in">NSString</span>*)email</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>((<span class="number">0</span> != [email rangeOfString:<span class="string">@&quot;@&quot;</span>].length) &amp;&amp;</span><br><span class="line">       (<span class="number">0</span> != [email rangeOfString:<span class="string">@&quot;.&quot;</span>].length))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSCharacterSet</span>* tmpInvalidCharSet = [[<span class="built_in">NSCharacterSet</span> alphanumericCharacterSet] invertedSet];</span><br><span class="line">        <span class="built_in">NSMutableCharacterSet</span>* tmpInvalidMutableCharSet = [[tmpInvalidCharSet mutableCopy] autorelease];</span><br><span class="line">        [tmpInvalidMutableCharSet removeCharactersInString:<span class="string">@&quot;_-&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         *使用compare option 来设定比较规则，如</span></span><br><span class="line"><span class="comment">         *NSCaseInsensitiveSearch是不区分大小写</span></span><br><span class="line"><span class="comment">         *NSLiteralSearch 进行完全比较,区分大小写</span></span><br><span class="line"><span class="comment">         *NSNumericSearch 只比较定符串的个数，而不比较字符串的字面值</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="built_in">NSRange</span> range1 = [email rangeOfString:<span class="string">@&quot;@&quot;</span></span><br><span class="line">                                      options:<span class="built_in">NSCaseInsensitiveSearch</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//取得用户名部分</span></span><br><span class="line">        <span class="built_in">NSString</span>* userNameString = [email substringToIndex:range1.location];</span><br><span class="line">        <span class="built_in">NSArray</span>* userNameArray   = [userNameString componentsSeparatedByString:<span class="string">@&quot;.&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">NSString</span>* string <span class="keyword">in</span> userNameArray)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">NSRange</span> rangeOfInavlidChars = [string rangeOfCharacterFromSet: tmpInvalidMutableCharSet];</span><br><span class="line">            <span class="keyword">if</span>(rangeOfInavlidChars.length != <span class="number">0</span> || [string isEqualToString:<span class="string">@&quot;&quot;</span>])</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//取得域名部分</span></span><br><span class="line">        <span class="built_in">NSString</span> *domainString = [email substringFromIndex:range1.location+<span class="number">1</span>];</span><br><span class="line">        <span class="built_in">NSArray</span> *domainArray   = [domainString componentsSeparatedByString:<span class="string">@&quot;.&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">NSString</span> *string <span class="keyword">in</span> domainArray)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">NSRange</span> rangeOfInavlidChars=[string rangeOfCharacterFromSet:tmpInvalidMutableCharSet];</span><br><span class="line">            <span class="keyword">if</span>(rangeOfInavlidChars.length !=<span class="number">0</span> || [string isEqualToString:<span class="string">@&quot;&quot;</span>])</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>经过测试第一种方法好用。第二种方法尚未测试。</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanVzdGluamluZzA2MTIvYXJ0aWNsZS9kZXRhaWxzLzczMTAyMzc=">http://blog.csdn.net/justinjing0612/article/details/7310237<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>

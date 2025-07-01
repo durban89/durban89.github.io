@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">664</span>
+          <span class="site-state-item-count">665</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">102</span>
+        <span class="site-state-item-count">103</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,110 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/24/MySQL--Pagination.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/24/MySQL--Pagination.html" class="post-title-link" itemprop="url">MySQL: Pagination - SQL_CALC_FOUND_ROWS vs COUNT()-Query</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-24 15:04:25 / 修改时间：15:16:04" itemprop="dateCreated datePublished" datetime="2025-06-24T15:04:25+08:00">2025-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>关于Mysql的<code>SQL_CALC_FOUND_ROWS</code>的使用，网上有好多种说法，为了求证事实，google一搜索的话，就有好多，但是还是经过实际的测试才知道是不是好用或者不好用</p>
+<blockquote>
+<p>When using pagination for let’s say a list of offers that where never clicked, you have to know the exact amount of offers (which were never clicked) in order to know how many pages you have. Now there are 2 possible ways of calculating the exact amount of offers: You can use either SQL_CALC_FOUND_ROWS or you can setup a second query with a COUNT() in it. I did the tests with SQL_NO_CACHE in order to get the best results possible. The clicks table has about 18.000.000 rows, the offer table about 800.000. Let’s start with some time results.</p>
+</blockquote>
+<h3 id="1"><a href="#1" class="headerlink" title="Using SQL_CALC_FOUND_ROWS（使用SQL_CALC_FOUND_ROWS进行的测试）"></a><a href="#1">Using SQL_CALC_FOUND_ROWS（使用SQL_CALC_FOUND_ROWS进行的测试）</a></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT SQL_NO_CACHE SQL_CALC_FOUND_ROWS o.offer_id  </span><br><span class="line">    -&gt; FROM offer AS o  </span><br><span class="line">    -&gt; LEFT JOIN clicks AS c  </span><br><span class="line">    -&gt; ON (o.offer_id = c.offer_id)  </span><br><span class="line">    -&gt; WHERE c.offer_id IS NULL  </span><br><span class="line">    -&gt; LIMIT 50,50;  </span><br><span class="line">50 rows <span class="keyword">in</span> <span class="built_in">set</span> (30.84 sec)  </span><br><span class="line">  </span><br><span class="line">mysql&gt; SELECT FOUND_ROWS();  </span><br><span class="line">1 row <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>Using a second query with COUNT()（使用COUNT进行的测试）:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; SELECT SQL_NO_CACHE o.offer_id  </span><br><span class="line">    -&gt; FROM offer AS o  </span><br><span class="line">    -&gt; LEFT JOIN clicks AS c  </span><br><span class="line">    -&gt; ON (o.offer_id = c.offer_id)  </span><br><span class="line">    -&gt; WHERE c.offer_id IS NULL  </span><br><span class="line">    -&gt; LIMIT 50,50;  </span><br><span class="line">50 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.03 sec)</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">mysql&gt; SELECT SQL_NO_CACHE COUNT(o.offer_id)  </span><br><span class="line">    -&gt; FROM offer AS o  </span><br><span class="line">    -&gt; LEFT JOIN clicks AS c  </span><br><span class="line">    -&gt; ON (o.offer_id = c.offer_id)  </span><br><span class="line">    -&gt; WHERE c.offer_id IS NULL;  </span><br><span class="line">1 row <span class="keyword">in</span> <span class="built_in">set</span> (30.97 sec)</span><br></pre></td></tr></table></figure>
+
+<p>对于上面的是普通的情况下，看看下面这种情况：</p>
+<blockquote>
+<p>At a first glance they look equally fast, both taking about 30 seconds. But: They are only equally fast, when query caching is turned off. Let’s assume we’re on a high-traffic website where performance matters, so we turn the query cache on. MySQL Query caching is like a key-value cache with the key being the EXACT query and the resultset being the value. Once we turn on the cache, the pagination is way faster with the second query using COUNT().</p>
+</blockquote>
+<p>为什么?</p>
+<blockquote>
+<p>When using SQL_CALC_FOUND_ROWS the application has to calculate the found rows every single time we turn the page, because the query changes, while the COUNT()-Query always remains the same, meaning that its result comes from the query cache from the second time on. Let’s emulate:</p>
+</blockquote>
+<h3 id="2"><a href="#2" class="headerlink" title="Using SQL_CALC_FOUND_ROWS（使用SQL_CALC_FOUND_ROWS进行的测试）"></a><a href="#2">Using SQL_CALC_FOUND_ROWS（使用SQL_CALC_FOUND_ROWS进行的测试）</a></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> SQL_CALC_FOUND_ROWS o.offer_id  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">FROM</span> offer <span class="keyword">AS</span> o  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> clicks <span class="keyword">AS</span> c  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> (o.offer_id <span class="operator">=</span> c.offer_id)  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> c.offer_id <span class="keyword">IS</span> <span class="keyword">NULL</span>  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> LIMIT <span class="number">50</span>,<span class="number">50</span>;  </span><br><span class="line"><span class="number">50</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">31.13</span> sec)  </span><br><span class="line">  </span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> FOUND_ROWS();  </span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)  </span><br><span class="line">  </span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> SQL_CALC_FOUND_ROWS o.offer_id  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">FROM</span> offer <span class="keyword">AS</span> o  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> clicks <span class="keyword">AS</span> c <span class="keyword">ON</span> (o.offer_id <span class="operator">=</span> c.offer_id)  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> c.offer_id <span class="keyword">IS</span> <span class="keyword">NULL</span>  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> LIMIT <span class="number">100</span>,<span class="number">50</span>;  </span><br><span class="line"><span class="number">50</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">30.71</span> sec)  </span><br><span class="line">  </span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> FOUND_ROWS();  </span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3"><a href="#3" class="headerlink" title="Using a second query with COUNT()（使用COUNT进行的测试）"></a><a href="#3">Using a second query with COUNT()（使用COUNT进行的测试）</a></h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> o.offer_id  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">FROM</span> offer <span class="keyword">AS</span> o  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> clicks <span class="keyword">AS</span> c  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> (o.offer_id <span class="operator">=</span> c.offer_id)  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> c.offer_id <span class="keyword">IS</span> <span class="keyword">NULL</span>  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> LIMIT <span class="number">50</span>,<span class="number">50</span>;  </span><br><span class="line"><span class="number">50</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.03</span> sec)  </span><br><span class="line">  </span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(o.offer_id)  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">FROM</span> offer <span class="keyword">AS</span> o  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> clicks <span class="keyword">AS</span> c  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> (o.offer_id <span class="operator">=</span> c.offer_id)  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> c.offer_id <span class="keyword">IS</span> <span class="keyword">NULL</span>;  </span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">31.11</span> sec)  </span><br><span class="line">  </span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> o.offer_id  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">FROM</span> offer <span class="keyword">AS</span> o  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> clicks <span class="keyword">AS</span> c  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> (o.offer_id <span class="operator">=</span> c.offer_id)  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> c.offer_id <span class="keyword">IS</span> <span class="keyword">NULL</span>  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> LIMIT <span class="number">100</span>,<span class="number">50</span>;  </span><br><span class="line"><span class="number">50</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.04</span> sec)  </span><br><span class="line">  </span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(o.offer_id)  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">FROM</span> offer <span class="keyword">AS</span> o  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> clicks <span class="keyword">AS</span> c  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> (o.offer_id <span class="operator">=</span> c.offer_id)  </span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">WHERE</span> c.offer_id <span class="keyword">IS</span> <span class="keyword">NULL</span>;  </span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>While the SQL_CALC_FOUND_ROWS Queries took more than one minute together, the queries with the second COUNT() query only took a bit more than 30 seconds together, meaning they are twice as fast.</p>
+<p>I’m pretty sure there are situations where SQL_CALC_FOUND_ROWS is the way to go, but in cases like this one you definately wanna go for the COUNT()-Query.</p>
+</blockquote>
+<p>看出来了吧，其实网上大家的说法都是差不多的，也没有说不对或者对，因为如果加上一个前提的话，就很明显了，也说明，只有在一定的情况下才可以使用，不然不但不起作用，还会起到相反的作用</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1199,125 +1303,6 @@
 
 <p>输出如下结果：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3.2.0-23-generic-pae</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/24/%E6%97%8B%E8%BD%AC%E7%9A%84%E5%B0%8F%E7%82%AE%E5%8F%B0-%E4%BD%BF%E7%94%A8cocos2d%E5%88%B6%E4%BD%9C%E4%B8%80%E6%AC%BE%E7%AE%80%E5%8D%95%E7%9A%84iphone%E6%B8%B8%E6%88%8F-2.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/24/%E6%97%8B%E8%BD%AC%E7%9A%84%E5%B0%8F%E7%82%AE%E5%8F%B0-%E4%BD%BF%E7%94%A8cocos2d%E5%88%B6%E4%BD%9C%E4%B8%80%E6%AC%BE%E7%AE%80%E5%8D%95%E7%9A%84iphone%E6%B8%B8%E6%88%8F-2.html" class="post-title-link" itemprop="url">旋转的小炮台：使用cocos2d制作一款简单的iphone游戏-2</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-24 14:45:48 / 修改时间：15:00:19" itemprop="dateCreated datePublished" datetime="2025-06-24T14:45:48+08:00">2025-06-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="准备工作Getting Set Up"></a><a href="#1">准备工作Getting Set Up</a></h3><p>如果你跟着<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy80MDk=">如何使用Cocos2D制作一款简单的iphone游戏<i class="fa fa-external-link-alt"></i></span>并完成了上一篇教学，那么使用你目前的工程即可。</p>
-<p>下一步，下载新的<span class="exturl" data-url="aHR0cDovL2QxeHp1eGpsYWZueTdsLmNsb3VkZnJvbnQubmV0L2Rvd25sb2Fkcy9QbGF5ZXIyLmpwZw==">player sprite<i class="fa fa-external-link-alt"></i></span>和<span class="exturl" data-url="aHR0cDovL2QxeHp1eGpsYWZueTdsLmNsb3VkZnJvbnQubmV0L2Rvd25sb2Fkcy9Qcm9qZWN0aWxlMi5qcGc=">projectile sprite<i class="fa fa-external-link-alt"></i></span>图片，并把它们加入到你的工程，从工程中删除旧的Player.jpg和Projectile.jpg。把创建每个sprite的地方修改如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// In the init method</span></span><br><span class="line">CCSprite *player = [CCSprite spriteWithFile:<span class="string">@&quot;Player2.jpg&quot;</span>];</span><br><span class="line"><span class="comment">// In the ccTouchesEnded method</span></span><br><span class="line">CCSprite *projectile = [CCSprite spriteWithFile:<span class="string">@&quot;Projectile2.jpg&quot;</span>];</span><br></pre></td></tr></table></figure>
-
-<p>注意，这次我们没有特别指定sprite的高度和宽度，并让Cocos2D替我们处理之。</p>
-<p>编译并运行工程，如果一切顺利你会看到一个不断射击的小炮台。不过，它看起来不是很好，因为他完全没有向着该冲着的方向射击-让我们来修复它！</p>
-<h3 id="2"><a href="#2" class="headerlink" title="旋转射击Rotating To Shoot"></a><a href="#2">旋转射击Rotating To Shoot</a></h3><p>在我们让炮台转起来之前，先存储一个主人公（现在是炮台了）sprite的引用，以便之后可以旋转它。打开HelloWorldLayer.m并修改类使其包含以下成员变量：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CCSprite *_player;</span><br></pre></td></tr></table></figure>
-
-<p>然后修改init方法里边的代码，加入player对象到层中：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">_player = [[CCSprite spriteWithFile:<span class="string">@&quot;Player2.jpg&quot;</span>] <span class="keyword">retain</span>];</span><br><span class="line">_player.position = ccp(_player.contentSize.width/<span class="number">2</span>, winSize.height/<span class="number">2</span>);</span><br><span class="line">[<span class="keyword">self</span> addChild:_player];</span><br></pre></td></tr></table></figure>
-
-<p>最后一定要在我们忘记释放内存这件事之前释放内存，在dealloc中加入：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[_player release];</span><br><span class="line">_player = <span class="literal">nil</span>;</span><br></pre></td></tr></table></figure>
-
-<p>好的，现在我们获得了player对象的引用，旋转它的时刻到啦！为了旋转它，我们必须先计算出它需要转到的角度。</p>
-<p>回想一下中学时学过的三角几何学吧。还记得方便记忆的SOH CAH TOA（译者注：其实就是对应的sin cos和tan）吗？那么，tangent就是对边&#x2F;临边</p>
-<p>我们想要的角度即等于，Y offset除以X offset的结果的反正切arctangent。</p>
-<p>然而有两件事儿我们要牢记在心，第一，当我们计算得到反正切arctangent(offY &#x2F; offX)，结果是弧度，但是Cocos2D使用的是角度。幸运的是，Cocos2D提供了一个方便使用的弧度转角度的宏。</p>
-<p>第二，我们一般会认为上图中的角度是正的（大概20度左右），但在Cocos2D里边正向是顺时针的（并不是平常认为的逆时针）。</p>
-<p>所以为了得到正确的方向，我们需要把结果乘上-1。比如上图中的20度，乘上-1，就得到能表示逆时针的20度角了。</p>
-<p>好了不多说了，让我们付诸代码！在ccTouchesEnded里你调用projectile的runAction之前加入以下代码：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGPoint</span> shootVector = ccpSub(location, _nextProjectile.position);</span><br><span class="line"><span class="built_in">CGFloat</span> shootAngle = ccpToAngle(shootVector);</span><br><span class="line"><span class="built_in">CGFloat</span> cocosAngle = CC_RADIANS_TO_DEGREES(<span class="number">-1</span> * shootAngle);</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGFloat</span> curAngle = _player.rotation;</span><br><span class="line"><span class="built_in">CGFloat</span> rotateDiff = cocosAngle - curAngle;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(rotateDiff &gt; <span class="number">180</span>) rotateDiff -= <span class="number">360</span>;</span><br><span class="line"><span class="keyword">if</span>(rotateDiff &lt; <span class="number">-180</span>) rotateDiff += <span class="number">360</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGFloat</span> rotateSpeed = <span class="number">360</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> rotateDuration = fabs(rotateDiff / rotateSpeed);</span><br><span class="line">_player.rotation = cocosAngle;</span><br></pre></td></tr></table></figure>
-
-<p>编译并运行，小炮台就可以自由地旋转着发射了！</p>
-<h3 id="3"><a href="#3" class="headerlink" title="旋转之后才射击Rotate Then Shoot"></a><a href="#3">旋转之后才射击Rotate Then Shoot</a></h3><p>到目前为止都很好，除了有一点有点儿奇怪的，炮台会突然转到一个方向并射击，而不是缓慢的转动过去。我们可以修复这个，但是需要稍微重构下我们的代码。</p>
-<p>首先打开HelloWorldLayer.h并在类中加入如下成员变量：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CCSprite *_nextProjectile;</span><br></pre></td></tr></table></figure>
-
-<p>然后修改ccTouchesEnded 并加入一个叫finishShoot的方法，如下所示：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)ccTouchesEnded:(<span class="built_in">NSSet</span> *)touches withEvent:(<span class="built_in">UIEvent</span> *)event &#123;</span><br><span class="line">    <span class="comment">//播放音乐</span></span><br><span class="line">    [[SimpleAudioEngine sharedEngine] playEffect:<span class="string">@&quot;pew-pew-lei.caf&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (_nextProjectile != <span class="literal">nil</span>) <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Choose one of the touches to work with</span></span><br><span class="line">    <span class="built_in">UITouch</span> *touch = [touches anyObject];</span><br><span class="line">    <span class="built_in">CGPoint</span> location = [touch locationInView:[touch view]];</span><br><span class="line">    location = [[CCDirector sharedDirector] convertToGL:location];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Set up initial location of projectile</span></span><br><span class="line">    <span class="built_in">CGSize</span> winSize = [[CCDirector sharedDirector] winSize];</span><br><span class="line">    _nextProjectile = [CCSprite spriteWithFile:<span class="string">@&quot;Projectile2.jpg&quot;</span>];</span><br><span class="line">    _nextProjectile.position = _player.position;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGPoint</span> shootVector = ccpSub(location, _nextProjectile.position);</span><br><span class="line">    <span class="built_in">CGFloat</span> shootAngle = ccpToAngle(shootVector);</span><br><span class="line">    <span class="built_in">CGFloat</span> cocosAngle = CC_RADIANS_TO_DEGREES(<span class="number">-1</span> * shootAngle);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGFloat</span> curAngle = _player.rotation;</span><br><span class="line">    <span class="built_in">CGFloat</span> rotateDiff = cocosAngle - curAngle;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(rotateDiff &gt; <span class="number">180</span>) rotateDiff -= <span class="number">360</span>;</span><br><span class="line">    <span class="keyword">if</span>(rotateDiff &lt; <span class="number">-180</span>) rotateDiff += <span class="number">360</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGFloat</span> rotateSpeed = <span class="number">360</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> rotateDuration = fabs(rotateDiff / rotateSpeed);</span><br><span class="line">    </span><br><span class="line">    [_player runAction:[CCSequence actions:</span><br><span class="line">                        [CCRotateTo actionWithDuration:rotateDuration angle:cocosAngle],</span><br><span class="line">                        [CCCallFunc actionWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(finishShoot)],</span><br><span class="line">                        <span class="literal">nil</span>]];</span><br><span class="line">    </span><br><span class="line">    ccTime delta = <span class="number">1.0</span>;</span><br><span class="line">    <span class="built_in">CGPoint</span> normalizedShootVector = ccpNormalize(shootVector);</span><br><span class="line">    <span class="built_in">CGPoint</span> overshotVector = ccpMult(normalizedShootVector, <span class="number">420</span>);</span><br><span class="line">    <span class="built_in">CGPoint</span> offscreenPoint = ccpAdd(_nextProjectile.position, overshotVector);</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Move projectile to actual endpoint</span></span><br><span class="line">    [_nextProjectile runAction:[CCSequence actions:</span><br><span class="line">                           [CCMoveTo actionWithDuration:delta position:offscreenPoint],</span><br><span class="line">                           [CCCallFuncN actionWithTarget:<span class="keyword">self</span> selector:<span class="keyword">@selector</span>(spriteMoveFinished:)],</span><br><span class="line">                           <span class="literal">nil</span>]];</span><br><span class="line">    _nextProjectile.tag = <span class="number">2</span>;</span><br><span class="line">    [_projectiles addObject:_nextProjectile];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) finishShoot</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> addChild:_nextProjectile];</span><br><span class="line">    [_projectiles addObject:_nextProjectile];</span><br><span class="line">    </span><br><span class="line">    [_nextProjectile release];</span><br><span class="line">    _nextProjectile = <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>代码有点儿多，不过我们实际上并没有做很大个改动，很大部分都是一些小小的重构而已。罗列一下我们所做的改动：</p>
-<ul>
-<li>在一开始我们检查nextProjectile是否为nil，如果不为nil，则意味着炮台正在旋转到射击的移动过程中。</li>
-<li>之前（<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy80MDk=">如何使用Cocos2D制作一款简单的iphone游戏<i class="fa fa-external-link-alt"></i></span>中），我们使用的是一个叫做projectile的局部变量，创建的时候就将其加入到场景中了。现在我们使用成员变量创建它，但是并不立即加入到场景，而是稍后再加入。</li>
-<li>我们定义炮台旋转的速度，使其每半秒旋转半个圆的弧度，一个圆有2 PI个弧度。</li>
-<li>我们用弧度乘上速度（译者注：这里指的速度实际上是速度的倒数，单位是秒&#x2F;弧度），得到旋转需要的时间。</li>
-<li>用以前学过的方法把这些actions组合成一个sequence，让炮台转动到正确的角度后，再把飞镖加到场景中去。</li>
-</ul>
-<p>让我们试一试！编译并运行，现在炮台旋转的流畅的多了。</p>
 
       
     </div>

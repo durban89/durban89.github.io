@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">664</span>
+          <span class="site-state-item-count">665</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">102</span>
+        <span class="site-state-item-count">103</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,129 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/09/Memcache%E5%9F%BA%E7%A1%80%E4%BB%8B%E7%BB%8D.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/09/Memcache%E5%9F%BA%E7%A1%80%E4%BB%8B%E7%BB%8D.html" class="post-title-link" itemprop="url">Memcache基础介绍</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-09 16:22:04 / 修改时间：16:28:43" itemprop="dateCreated datePublished" datetime="2025-06-09T16:22:04+08:00">2025-06-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>memcached 是以LiveJournal 旗下Danga Interactive 公司的Brad Fitzpatric 为首开发的一款软件。现在已成为 mixi、 hatena、 Facebook、 Vox、LiveJournal等众多服务中 提高Web应用扩展性的重要因素。</p>
+<p>许多Web应用都将数据保存到RDBMS中，应用服务器从中读取数据并在浏览器中显示。 但随着数据量的增大、访问的集中，就会出现RDBMS的负担加重、数据库响应恶化、 网站显示延迟等重大影响。</p>
+<p>这时就该memcached大显身手了。memcached是高性能的分布式内存缓存服务器。 一般的使用目的是，通过缓存数据库查询结果，减少数据库访问次数，以提高动态Web应用的速度、 提高可扩展性。</p>
+<h3 id="1"><a href="#1" class="headerlink" title="memcached的特征"></a><a href="#1">memcached的特征</a></h3><p>memcached作为高速运行的分布式缓存服务器，具有以下的特点。</p>
+<ol>
+<li>协议简单</li>
+<li>基于libevent的事件处理</li>
+<li>内置内存存储方式</li>
+<li>memcached不互相通信的分布式</li>
+</ol>
+<h4 id="11"><a href="#11" class="headerlink" title="协议简单"></a><a href="#11">协议简单</a></h4><p>memcached的服务器客户端通信并不使用复杂的XML等格式， 而使用简单的基于文本行的协议。因此，通过telnet 也能在memcached上保存数据、取得数据。下面是例子。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">telnet localhost 11211</span></span><br><span class="line">Trying 127.0.0.1...</span><br><span class="line">Connected to localhost.localdomain (127.0.0.1).</span><br><span class="line">Escape character is &#x27;^]&#x27;.</span><br><span class="line">set foo 0 0 3     （保存命令）</span><br><span class="line">bar               （数据）</span><br><span class="line">STORED            （结果）</span><br><span class="line">get foo           （取得命令）</span><br><span class="line">VALUE foo 0 3     （数据）</span><br><span class="line">bar               （数据）</span><br></pre></td></tr></table></figure>
+
+<p>协议文档位于memcached的源代码内，也可以参考以下的URL。</p>
+<p><span class="exturl" data-url="aHR0cDovL2NvZGUuc2l4YXBhcnQuY29tL3N2bi9tZW1jYWNoZWQvdHJ1bmsvc2VydmVyL2RvYy9wcm90b2NvbC50eHQ=">http://code.sixapart.com/svn/memcached/trunk/server/doc/protocol.txt<i class="fa fa-external-link-alt"></i></span></p>
+<h4 id="12"><a href="#12" class="headerlink" title="基于libevent的事件处理"></a><a href="#12">基于libevent的事件处理</a></h4><p>libevent是个程序库，它将Linux的epoll、BSD类操作系统的kqueue等事件处理功能 封装成统一的接口。即使对服务器的连接数增加，也能发挥O(1)的性能。 memcached使用这个libevent库，因此能在Linux、BSD、Solaris等操作系统上发挥其高性能。 可以参考Dan Kegel的The C10K Problem。</p>
+<p>libevent: <span class="exturl" data-url="aHR0cDovL3d3dy5tb25rZXkub3JnL35wcm92b3MvbGliZXZlbnQv">http://www.monkey.org/~provos/libevent/<i class="fa fa-external-link-alt"></i></span><br>The C10K Problem: <span class="exturl" data-url="aHR0cDovL3d3dy5rZWdlbC5jb20vYzEway5odG1s">http://www.kegel.com/c10k.html<i class="fa fa-external-link-alt"></i></span></p>
+<h4 id="13"><a href="#13" class="headerlink" title="内置内存存储方式"></a><a href="#13">内置内存存储方式</a></h4><p>为了提高性能，memcached中保存的数据都存储在memcached内置的内存存储空间中。 由于数据仅存在于内存中，因此重启memcached、重启操作系统会导致全部数据消失。 另外，内容容量达到指定值之后，就基于LRU(Least Recently Used)算法自动删除不使用的缓存。 memcached本身是为缓存而设计的服务器，因此并没有过多考虑数据的永久性问题。</p>
+<h4 id="14"><a href="#14" class="headerlink" title="memcached不互相通信的分布式"></a><a href="#14">memcached不互相通信的分布式</a></h4><p>memcached尽管是“分布式”缓存服务器，但服务器端并没有分布式功能。 各个memcached不会互相通信以共享信息。那么，怎样进行分布式呢？ 这完全取决于客户端的实现。</p>
+<p>接下来简单介绍一下memcached的使用方法。</p>
+<h3 id="2"><a href="#2" class="headerlink" title="安装memcached"></a><a href="#2">安装memcached</a></h3><p>memcached的安装比较简单，这里稍加说明。</p>
+<p>memcached支持许多平台。 * Linux * FreeBSD * Solaris (memcached 1.2.5以上版本) * Mac OS X</p>
+<p>另外也能安装在Windows上。这里使用Fedora Core 8进行说明。</p>
+<p>memcached的安装<br>运行memcached需要本文开头介绍的libevent库。Fedora 8中有现成的rpm包， 通过yum命令安装即可。</p>
+<p><code>$ sudo yum install libevent libevent-devel</code></p>
+<p>memcached的源代码可以从memcached网站上下载。本文执笔时的最新版本为1.2.5。 Fedora 8虽然也包含了memcached的rpm，但版本比较老。因为源代码安装并不困难， 这里就不使用rpm了。</p>
+<p>下载memcached：<span class="exturl" data-url="aHR0cDovL3d3dy5kYW5nYS5jb20vbWVtY2FjaGVkL2Rvd25sb2FkLmJtbA==">http://www.danga.com/memcached/download.bml<i class="fa fa-external-link-alt"></i></span></p>
+<p>memcached安装与一般应用程序相同，configure、make、make install就行了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">wget http://www.danga.com/memcached/dist/memcached-1.2.5.tar.gz</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">tar zxf memcached-1.2.5.tar.gz</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">cd</span> memcached-1.2.5</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">./configure</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">make</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> make install</span></span><br></pre></td></tr></table></figure>
+
+<p>默认情况下memcached安装到&#x2F;usr&#x2F;local&#x2F;bin下。</p>
+<h3 id="3"><a href="#3" class="headerlink" title="memcached的启动"></a><a href="#3">memcached的启动</a></h3><p>从终端输入以下命令，启动memcached。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">/usr/local/bin/memcached -p 11211 -m 64m -vv</span></span><br><span class="line">slab class   1: chunk size     88 perslab 11915</span><br><span class="line">slab class   2: chunk size    112 perslab  9362</span><br><span class="line">slab class   3: chunk size    144 perslab  7281</span><br><span class="line"></span><br><span class="line">中间省略...</span><br><span class="line"></span><br><span class="line">slab class  38: chunk size 391224 perslab     2</span><br><span class="line">slab class  39: chunk size 489032 perslab     2</span><br><span class="line">&lt;23 server listening</span><br><span class="line">&lt;24 send buffer was 110592, now 268435456</span><br><span class="line">&lt;24 server listening (udp)</span><br><span class="line">&lt;24 server listening (udp)</span><br><span class="line">&lt;24 server listening (udp)</span><br><span class="line">&lt;24 server listening (udp)</span><br></pre></td></tr></table></figure>
+
+<p>这里显示了调试信息。这样就在前台启动了memcached，监听TCP端口11211 最大内存使用量为64M。</p>
+<p>作为daemon后台启动时，只需</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">/usr/local/bin/memcached -p 11211 -m 64m -d</span></span><br></pre></td></tr></table></figure>
+
+<p>这里使用的memcached启动选项的内容如下。</p>
+<blockquote>
+<p>选项  说明<br>-p  使用的TCP端口。默认为11211<br>-m  最大内存大小。默认为64M<br>-vv 用very vrebose模式启动，调试信息和错误输出到控制台<br>-d  作为daemon在后台启动</p>
+</blockquote>
+<p>上面四个是常用的启动选项，其他还有很多，通过</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">/usr/local/bin/memcached -h</span></span><br></pre></td></tr></table></figure>
+<p>命令可以显示。许多选项可以改变memcached的各种行为， 推荐读一读。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1072,86 +1195,6 @@
     <div class="post-body" itemprop="articleBody">
           <p>我学过网页制作，多多少少的能理解一下table这个元素，关于ios的uitableview应该也有这些类似的东西，觉得在uitableview中，都能够找与table对应的部分，看下面代码：</p>
 <figure class="highlight c"><figcaption><span>MasterViewController.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  MasterViewController.m</span></span><br><span class="line"><span class="comment">//  vlinkagePerson</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-4-14.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 david. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;MasterViewController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">@interface <span class="title function_">MasterViewController</span> <span class="params">()</span></span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation MasterViewController</span><br><span class="line"></span><br><span class="line">@synthesize navbar,navItem,searchButton,attentionButton,personTable,keys,objects,content;</span><br><span class="line"></span><br><span class="line">- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil</span><br><span class="line">&#123;</span><br><span class="line">    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];</span><br><span class="line">    <span class="keyword">if</span> (self) &#123;</span><br><span class="line">        <span class="comment">// Custom initialization</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    </span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    <span class="comment">// Do any additional setup after loading the view from its nib.</span></span><br><span class="line">    self.keys = [NSArray arrayWithObjects:@<span class="string">&quot;mainTitleKey&quot;</span>,@<span class="string">&quot;secondaryTitleKey&quot;</span>,@<span class="string">&quot;imageKey&quot;</span>,nil];</span><br><span class="line">    self.objects = [NSArray arrayWithObjects:@<span class="string">&quot;How&quot;</span>,@<span class="string">&quot;Are&quot;</span>,@<span class="string">&quot;You&quot;</span>,nil];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//表格添加内容</span></span><br><span class="line">    self.content = [[NSDictionary alloc] initWithObjects:objects forKeys:keys];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//创建一个导航栏</span></span><br><span class="line">    self.navbar = [[UINavigationBar alloc] initWithFrame:CGRectMake(<span class="number">0</span>, <span class="number">0</span>, <span class="number">320</span>, <span class="number">44</span>)];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//创建一个导航栏集合</span></span><br><span class="line">    self.navItem = [[UINavigationItem alloc] initWithTitle:@<span class="string">&quot;艺人列表&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//在这个集合Item中添加标题，按钮</span></span><br><span class="line">    <span class="comment">//style:设置按钮的风格，一共有三种选择</span></span><br><span class="line">    <span class="comment">//action：@selector:设置按钮的点击事件</span></span><br><span class="line">    <span class="comment">//创建一个左边按钮</span></span><br><span class="line">    self.searchButton = [[UIBarButtonItem alloc] initWithTitle:@<span class="string">&quot;搜索&quot;</span> style:UIBarButtonItemStylePlain target:self action:@selector(searchEvent)];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//创建一个右边按钮</span></span><br><span class="line">    self.attentionButton = [[UIBarButtonItem alloc] initWithTitle:@<span class="string">&quot;我的关注&quot;</span> style:UIBarButtonItemStylePlain target:self action:@selector(attentionList)];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//把导航栏集合添加到导航栏中，设置动画关闭</span></span><br><span class="line">    [self.navbar pushNavigationItem:self.navItem animated:YES];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//把左右两个按钮添加到导航栏集合中去</span></span><br><span class="line">    [self.navItem setLeftBarButtonItem:self.searchButton];</span><br><span class="line">    [self.navItem setRightBarButtonItem:self.attentionButton];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">//添加UITableView</span></span><br><span class="line">    self.personTable = [[UITableView alloc] initWithFrame:CGRectMake(<span class="number">0</span>, <span class="number">44</span>, <span class="number">320</span>, <span class="number">460</span>)</span><br><span class="line">                                                      style:UITableViewStyleGrouped];</span><br><span class="line">    [self.personTable setDataSource:self];</span><br><span class="line">    [self.personTable setDelegate:self];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//将标题栏中的内容全部添加到主视图当中</span></span><br><span class="line">    [self.view addSubview:self.navbar];</span><br><span class="line">    <span class="comment">//将表格添加到主视图中</span></span><br><span class="line">    [self.view addSubview:self.personTable];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) searchEvent&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) attentionList&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//Section总数</span></span><br><span class="line">- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView&#123;</span><br><span class="line">    <span class="keyword">return</span> self.objects;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//每个section显示的标题</span></span><br><span class="line"><span class="comment">//设置caption</span></span><br><span class="line">- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section&#123;</span><br><span class="line">    <span class="keyword">return</span> @<span class="string">&quot;大家好&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//指定有多少个分区(Section)，默认为1</span></span><br><span class="line"><span class="comment">//需要多少个table</span></span><br><span class="line">-(NSInteger) numberOfSectionsInTableView:(UITableView *)tableView&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">4</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//指定每个分区中有多少行，默认为1</span></span><br><span class="line"><span class="comment">//table的行数</span></span><br><span class="line">-(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//绘制Cell</span></span><br><span class="line"><span class="comment">//为每个表格赋值</span></span><br><span class="line">-(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath&#123;</span><br><span class="line">    </span><br><span class="line">    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@<span class="string">&quot;MyIdentifier&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (cell == nil) &#123;</span><br><span class="line">        </span><br><span class="line">        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@<span class="string">&quot;MyIdentifier&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        cell.selectionStyle = UITableViewCellSelectionStyleNone;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    cell.textLabel.text = [self.content objectForKey:@<span class="string">&quot;mainTitleKey&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    cell.detailTextLabel.text = [self.content objectForKey:@<span class="string">&quot;secondaryTitleKey&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    NSString *path = [[NSBundle mainBundle] pathForResource:[self.content objectForKey:@<span class="string">&quot;imageKey&quot;</span>] ofType:@<span class="string">&quot;png&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    UIImage *theImage = [UIImage imageWithContentsOfFile:path];</span><br><span class="line">    </span><br><span class="line">    cell.imageView.image = theImage;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> cell;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [super didReceiveMemoryWarning];</span><br><span class="line">    <span class="comment">// Dispose of any resources that can be recreated.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/06/iOS-NSDictionary%E6%93%8D%E4%BD%9C%E7%AE%80%E4%BB%8B.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/06/iOS-NSDictionary%E6%93%8D%E4%BD%9C%E7%AE%80%E4%BB%8B.html" class="post-title-link" itemprop="url">iOS NSDictionary操作简介</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-06 18:01:44 / 修改时间：18:02:42" itemprop="dateCreated datePublished" datetime="2025-06-06T18:01:44+08:00">2025-06-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>iOS NSDictionary 操作代码如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)loopThrough</span><br><span class="line">   &#123;</span><br><span class="line">        NSArray * keys=[NSArray arrayWithObjects:@<span class="string">&quot;key1“，@&quot;</span>key2<span class="string">&quot;,@&quot;</span>key3<span class="string">&quot;,nill];</span></span><br><span class="line"><span class="string">        NSArray *objects=[NSArray arrayWithOjbects:@&quot;</span>how<span class="string">&quot;,@&quot;</span>are<span class="string">&quot;,@&quot;</span>yo<span class="string">u&quot;,nill];</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">        NSDictionary *dic=[NSDictionary dictionaryWithObjects:objects,forKeys:keys];</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        //loop 1</span></span><br><span class="line"><span class="string">        for(id key in dic)</span></span><br><span class="line"><span class="string">        &#123;</span></span><br><span class="line"><span class="string">            NSLog(@&quot;</span>key:%@,value:%@<span class="string">&quot;，key,[dic objectForKey:key]);</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        //loop 2</span></span><br><span class="line"><span class="string">        NSEnumerator *enumerator;</span></span><br><span class="line"><span class="string">        id key;</span></span><br><span class="line"><span class="string">        enumerator=[dic keyEnumerator];</span></span><br><span class="line"><span class="string">        while((key=[enumerator nextObject]))</span></span><br><span class="line"><span class="string">          &#123;</span></span><br><span class="line"><span class="string">            NSLog(@&quot;</span>key:%@,value:%@<span class="string">&quot;,key,objectForKey:key]);</span></span><br><span class="line"><span class="string">          &#125;</span></span><br><span class="line"><span class="string">   &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-(void)testNsMutableDictionary</span></span><br><span class="line"><span class="string">   &#123;</span></span><br><span class="line"><span class="string">      NSMutableDictionary *dic=[NSMutableDictionary dictionaryWithCapacity:30];</span></span><br><span class="line"><span class="string">      //dictionaryWithObjectsAndKeys:[NSMuble numberWithInt:1] @&quot;</span>math1<span class="string">&quot;,[NSMuble numberWithInt:2] @&quot;</span>math2<span class="string">&quot;];</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">      [dic setObject:@&quot;</span>one<span class="string">&quot; forKey:@&quot;</span>dog<span class="string">&quot;];</span></span><br><span class="line"><span class="string">      [dic setObject:@&quot;</span>two<span class="string">&quot; forKey:@&quot;</span>cat<span class="string">&quot;];</span></span><br><span class="line"><span class="string">      [dic setValue:[NSString stringWithFormat:@&quot;</span>three<span class="string">&quot;] forKey:@&quot;</span>pig<span class="string">&quot;];</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">      [dic removeObjectForkey:@&quot;</span>cat<span class="string">&quot;];</span></span><br><span class="line"><span class="string">      [dic removeAllObjects];</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">      NSMutableArray arraylist=[[NSMutableArray alloc] init];</span></span><br><span class="line"><span class="string">      [arrarlist addObject:dic];</span></span><br><span class="line"><span class="string">      [dic release];</span></span><br><span class="line"><span class="string">   &#125;</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
