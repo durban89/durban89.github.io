@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">705</span>
+          <span class="site-state-item-count">744</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">120</span>
+        <span class="site-state-item-count">132</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Django-%E4%BD%BF%E7%94%A8%E9%AA%8C%E8%AF%81%E7%A0%81%E5%B7%A5%E5%85%B7django-simple-captcha%E7%9A%84%E9%81%87%E5%88%B0%E9%97%AE%E9%A2%98-imagingft-IndexError--list-index-out-of-range.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/%E9%BB%84%E6%B8%A4.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Django-%E4%BD%BF%E7%94%A8%E9%AA%8C%E8%AF%81%E7%A0%81%E5%B7%A5%E5%85%B7django-simple-captcha%E7%9A%84%E9%81%87%E5%88%B0%E9%97%AE%E9%A2%98-imagingft-IndexError--list-index-out-of-range.html" class="post-title-link" itemprop="url">Django 使用验证码工具django-simple-captcha的遇到问题{_imagingft,IndexError: list index out of range}</a>
+          <a href="/2025/06/26/%E9%BB%84%E6%B8%A4.html" class="post-title-link" itemprop="url">黄渤</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,976 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 10:32:12 / 修改时间：11:02:24" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:12+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="先来看看第一个问题"></a><a href="#1">先来看看第一个问题</a></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IndexError: list index out of range</span><br></pre></td></tr></table></figure>
-
-<p>就是这个简单的错误是因为我在django中使用django-simple-captcha的时候，没有在项目中运行下面的命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py syncdb</span><br></pre></td></tr></table></figure>
-
-<p>就是一定要记得要进行数据库表的同步</p>
-<h3 id="2"><a href="#2" class="headerlink" title="第二个问题就是比较验证的操作量比较大的“_imagingft”问题"></a><a href="#2">第二个问题就是比较验证的操作量比较大的“<code>_imagingft</code>”问题</a></h3><p>不过经过google的查找，按照下面的步骤进行就解决了问题，步骤如下</p>
-<p>这个是由于PIL没有编译freetype导致的</p>
-<p>查看 lib&#x2F;python2.7&#x2F;site-packages&#x2F;PIL&#x2F;</p>
-<p>看看 <code>_imagingft.so</code> 是否存在</p>
-<h3 id="3"><a href="#3" class="headerlink" title="第一步安装ipeg库"></a><a href="#3">第一步安装ipeg库</a></h3><p>最新的可以到<span class="exturl" data-url="aHR0cDovL3d3dy5pamcub3JnL2ZpbGVz">http://www.ijg.org/files<i class="fa fa-external-link-alt"></i></span> 这里去下载</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.ijg.org/files/jpegsrc.v7.tar.gz</span><br><span class="line">tar -zxvf jpegsrc.v7.tar.gz</span><br><span class="line"><span class="built_in">cd</span> jpeg-7</span><br><span class="line">CC=<span class="string">&quot;gcc -arch x86_64&quot;</span></span><br><span class="line">./configure --enable-shared --enable-static</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<h3 id="4"><a href="#4" class="headerlink" title="第二步安装freetype开发库"></a><a href="#4">第二步安装freetype开发库</a></h3><p>让PIL支持freetype的方法</p>
-<p>1、安装freetype开发库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install freetype-devel</span><br></pre></td></tr></table></figure>
-
-<p>2、下载源代码<span class="exturl" data-url="aHR0cDovL2VmZmJvdC5vcmcvZG93bmxvYWRzL0ltYWdpbmctMS4xLjcudGFyLmd6">http://effbot.org/downloads/Imaging-1.1.7.tar.gz<i class="fa fa-external-link-alt"></i></span></p>
-<p>3、修改setup.py文件</p>
-<p>修改</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">JPEG_ROOT = libinclude(<span class="string">&quot;/usr/local&quot;</span>)</span><br><span class="line"></span><br><span class="line">FREETYPE_ROOT = <span class="string">&#x27;/usr/lib64&#x27;</span>,<span class="string">&#x27;/usr/include/freetype2/freetype&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>关于freetype的安装我因为是在ubuntu环境下，不想运行yum，我是自己下载的，最近的源码可以到这个网址<span class="exturl" data-url="aHR0cDovL2Rvd25sb2FkLnNhdmFubmFoLmdudS5vcmcvcmVsZWFzZXMvZnJlZXR5cGUv">http://download.savannah.gnu.org/releases/freetype/<i class="fa fa-external-link-alt"></i></span> 下载，然后进行手动源码安装</p>
-<p>第三步重新编译PIL进行安装（这里我采用的也是源码安装，源码的最新库的地址在<span class="exturl" data-url="aHR0cDovL2VmZmJvdC5vcmcvZG93bmxvYWRz">http://effbot.org/downloads<i class="fa fa-external-link-alt"></i></span> ）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py build_ext -i</span><br></pre></td></tr></table></figure>
-
-<p>— FREETYPE2 support available  注意这一项</p>
-<p>编译安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
-
-<hr>
-<blockquote>
-<p>若上面的设置都失败，则只能拿出下面的杀手锏（我是没有经过这一步就成功了）：</p>
-<p>sudo apt-get build-dep python-imaging</p>
-<p>sudo ln -s &#x2F;usr&#x2F;lib&#x2F;<code>uname -i</code>-linux-gnu&#x2F;libfreetype.so &#x2F;usr&#x2F;lib&#x2F;</p>
-<p>sudo ln -s &#x2F;usr&#x2F;lib&#x2F;<code>uname -i</code>-linux-gnu&#x2F;libjpeg.so &#x2F;usr&#x2F;lib&#x2F;</p>
-<p>sudo ln -s &#x2F;usr&#x2F;lib&#x2F;<code>uname -i</code>-linux-gnu&#x2F;libz.so &#x2F;usr&#x2F;lib&#x2F;</p>
-<p>pip install -U PIL</p>
-</blockquote>
-<p>安装成功的结果是</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------------</span><br><span class="line">PIL 1.1.7 SETUP SUMMARY</span><br><span class="line">--------------------------------------------------------------------</span><br><span class="line">version       1.1.7</span><br><span class="line">platform      linux2 2.7.3 (default, Sep 26 2013, 20:08:41)</span><br><span class="line">              [GCC 4.6.3]</span><br><span class="line">--------------------------------------------------------------------</span><br><span class="line">*** TKINTER support not available</span><br><span class="line">--- JPEG support available</span><br><span class="line">--- ZLIB (PNG/ZIP) support available</span><br><span class="line">--- FREETYPE2 support available</span><br><span class="line">*** LITTLECMS support not available</span><br><span class="line">--------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
-
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9kZXNjdXNyL3AvMzIyNTg3NC5odG1s">http://www.cnblogs.com/descusr/p/3225874.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Django-%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84%E4%BD%BF%E7%94%A8-django-simple-captcha%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Django-%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84%E4%BD%BF%E7%94%A8-django-simple-captcha%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">Django 验证码的使用django-simple-captcha使用方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 10:32:07 / 修改时间：11:03:24" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:07+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于Django的验证码的问题，进行再次的追究，找到了第二种方法</p>
-<p>简单的简介和使用方法。并且关于在这里出现的问题我会在下篇文章进行说明，因为我在安装和使用的过程中还是遇到了问题的。大概的步骤如下</p>
-<p>一、简介</p>
-<p>项目地址：<span class="exturl" data-url="aHR0cDovL2NvZGUuZ29vZ2xlLmNvbS9wL2RqYW5nby1zaW1wbGUtY2FwdGNoYS8=">http://code.google.com/p/django-simple-captcha/<i class="fa fa-external-link-alt"></i></span></p>
-<p>简介：是一个第三方django APP，用于为表单添加验证码图片</p>
-<p>二、一般的使用方法</p>
-<p>下载后python setup.py install进行安装</p>
-<p>将下载包解压，将里面的captcha包复制到项目目录下，如myblog&#x2F;captcha</p>
-<p>settings.py里添加：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSTALLED_APPS(‘captcha’,)</span><br></pre></td></tr></table></figure>
-
-<p>urls.py里添加：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">url(<span class="string">r&#x27;^captcha/&#x27;</span>, include(<span class="string">&#x27;captcha.urls&#x27;</span>)),</span><br></pre></td></tr></table></figure>
-
-<p>执行python manage.py syncdb生成所需数据库表</p>
-<p>在需要用到captcha的forms.py文件里的合适位置添加下面的代码，增加验证码字段：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> captcha.fields <span class="keyword">import</span> CaptchaField</span><br><span class="line">captcha=CaptchaField()</span><br></pre></td></tr></table></figure>
-
-<p>在处理表单提交的业务逻辑代码块里添加：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> form.is_valid():</span><br><span class="line">    human = <span class="literal">True</span></span><br></pre></td></tr></table></figure>
-
-<p>三、与django的comments组件结合使用的方法（这里目前我是没有加到自己的项目里面）</p>
-<p>如果你的项目里的评论系统直接使用的django内置的comments库，则comments库与此验证码库结合使用的方法如下：</p>
-<p>执行前面的1至5步</p>
-<p>在 <code>Python27\Lib\site-packages\django\contrib\comments\forms.py</code>文件中（windows环境下的路径），在CommentDetailsForm类里面添加验证码字段：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> captcha.fields <span class="keyword">import</span> CaptchaField</span><br><span class="line">captcha= CaptchaField()</span><br></pre></td></tr></table></figure>
-
-<p>在<code>Python27\Lib\site-packages\django\contrib\comments\views\comments.py</code>文件中，在# Otherwise create the comment这句下面添加：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">human=<span class="literal">True</span></span><br></pre></td></tr></table></figure>
-
-<p>修改表单模板：如果评论表单模板直接用的则什么都不用修改；如果是自己定制的表单模板，则可添加如下：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;id_captcha&quot;</span>&gt;</span>验证（必填）：<span class="tag">&lt;/<span class="name">label</span>&gt;</span> &#123;&#123;form.captcha&#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这样就基本能够使用了</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL25ld2xpdS5jb20vcG9zdC81Lw==">http://newliu.com/post/5/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS96YWNrbGluZS9wLzMzNjUwMDIuaHRtbA==">http://www.cnblogs.com/zackline/p/3365002.html<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5teXNqdHUuY29tL3BhZ2UvTTAvUzkxMS85MTEwODAuaHRtbA==">http://www.mysjtu.com/page/M0/S911/911080.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Django-%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84%E4%BD%BF%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Django-%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">Django 验证码的使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 11:35:16 / 修改时间：11:35:57" itemprop="dateCreated datePublished" datetime="2025-06-25T11:35:16+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于django的验证码的使用，我在网上搜索的时候，目前只发现了两种，这里简单的记录下DjangoVerifyCode的使用方法。</p>
-<hr>
-<p>在django中生成英文单词验证码,提供验证码图片生成,检查验证码等功能.</p>
-<h3 id="1"><a href="#1" class="headerlink" title="安装"></a><a href="#1">安装</a></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install DjangoVerifyCode</span><br></pre></td></tr></table></figure>
-
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">easy_install DjangoVerifyCode</span><br></pre></td></tr></table></figure>
-
-<p>显示验证码(views.py)</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> DjangoVerifyCode <span class="keyword">import</span> Code</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">code</span>(<span class="params">request</span>):</span><br><span class="line">    code = Code(request)</span><br><span class="line">    <span class="keyword">return</span> code.display()</span><br></pre></td></tr></table></figure>
-
-<p>检查用户输入的验证码是否正确(views.py)</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> DjangoVerifyCode <span class="keyword">import</span> Code</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>(<span class="params">request</span>):</span><br><span class="line">    _code = request.GET.get(<span class="string">&#x27;code&#x27;</span>) <span class="keyword">or</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> _code:</span><br><span class="line">        <span class="keyword">return</span> render(<span class="string">&#x27;index.html&#x27;</span>,<span class="built_in">locals</span>())</span><br><span class="line"> </span><br><span class="line">    code = Code(request)</span><br><span class="line">    <span class="keyword">if</span> code.check(_code):</span><br><span class="line">        <span class="keyword">return</span> HttpResponse(<span class="string">&#x27;验证成功&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> HttpResponse(<span class="string">&#x27;验证失败&#x27;</span>)</span><br><span class="line"> <span class="comment">#该代码片段来自于: http://www.sharejs.com/codes/python/7377</span></span><br></pre></td></tr></table></figure>
-
-<p>自定义</p>
-<p>用户可根据自己的需要对DjangoVerifyCode.Code对象的属性进行设置</p>
-<p>输出图片的宽度</p>
-<p>code.img_width &#x3D; 150</p>
-<p>输出图片的高度</p>
-<p>code.img_height &#x3D; 30</p>
-<p>验证码字体颜色</p>
-<p>code.font_color &#x3D; [‘black’,’darkblue’,’darkred’]</p>
-<p>字体大小</p>
-<p>font_size &#x3D; 24</p>
-<p>依赖包</p>
-<p>PIL</p>
-<p>安装PIL可以使用：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pil</span><br></pre></td></tr></table></figure>
-
-<p>我没有采用这种方法，一直还不知道如何在模板中使用，有哪位大神知道的，可以指教一二。</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5zaGFyZWpzLmNvbS9jb2Rlcy9weXRob24vNzM3Nw==">http://www.sharejs.com/codes/python/7377<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy4xMDAwMDAwMDBkdS5jb20vY2FwdGNoYS84MTU1Ni5odG1s">http://www.100000000du.com/captcha/81556.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS7-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8iOS%E6%89%8B%E5%8A%BFUIGestureRecognizer.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/iOS7-%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8iOS%E6%89%8B%E5%8A%BFUIGestureRecognizer.html" class="post-title-link" itemprop="url">iOS7 如何使用iOS手势UIGestureRecognizer</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 11:35:12 / 修改时间：11:36:31" itemprop="dateCreated datePublished" datetime="2025-06-25T11:35:12+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>今天终于有时间接触了UIGestureRecognizer，果然很好玩，下面关于他的一些使用，以下内容完全来自于网上，尚未做过测试。</p>
-<p>UIKit中包含了UIGestureRecognizer类，用于检测发生在设备中的手势。UIGestureRecognizer是一个抽象类，定义了所有手势的基本行为，它有下面一些子类用于处理具体的手势：</p>
-<ul>
-<li>拍击UITapGestureRecognizer (任意次数的拍击)</li>
-<li>向里或向外捏UIPinchGestureRecognizer (用于缩放)</li>
-<li>摇动或者拖拽UIPanGestureRecognizer</li>
-<li>滑动UISwipeGestureRecognizer (以任意方向)</li>
-<li>旋转UIRotationGestureRecognizer (手指朝相反方向移动)</li>
-<li>长按UILongPressGestureRecognizer</li>
-</ul>
-<p>对于不同类型的手势识别器，具有不同的配置属性。比如UITapGestureRecognizer，可以配置拍击次数。界面接收到手势之后，可以发送一 个消息，用于处理响应手势动作后的任务。当然，不同的手势识别器，发送的消息方法也会有所不同。下面列举几个具体示例代码：</p>
-<p>一个手指，拍击两次手势</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个手势识别器</span></span><br><span class="line"><span class="built_in">UITapGestureRecognizer</span> *oneFingerTwoTaps =</span><br><span class="line">[[[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(oneFingerTwoTaps)] autorelease];</span><br><span class="line"><span class="comment">// Set required taps and number of touches</span></span><br><span class="line">[oneFingerTwoTaps setNumberOfTapsRequired:<span class="number">2</span>];</span><br><span class="line">[oneFingerTwoTaps setNumberOfTouchesRequired:<span class="number">1</span>];</span><br><span class="line"><span class="comment">// Add the gesture to the view</span></span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:oneFingerTwoTaps];</span><br><span class="line">消息方法oneFingerTwoTaps</span><br><span class="line">- (<span class="type">void</span>)oneFingerTwoTaps</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Action: One finger, two taps&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>两个手指，拍击两次手势</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UITapGestureRecognizer</span> *twoFingersTwoTaps =</span><br><span class="line">[[[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(twoFingersTwoTaps)] autorelease];</span><br><span class="line">[twoFingersTwoTaps setNumberOfTapsRequired:<span class="number">2</span>];</span><br><span class="line">[twoFingersTwoTaps setNumberOfTouchesRequired:<span class="number">2</span>];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:twoFingersTwoTaps];</span><br><span class="line">消息方法twoFingersTwoTaps</span><br><span class="line">- (<span class="type">void</span>)twoFingersTwoTaps &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Action: Two fingers, two taps&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>一个手指向上、向下滑动手势</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 向上滑动</span></span><br><span class="line"><span class="built_in">UISwipeGestureRecognizer</span> *oneFingerSwipeUp =</span><br><span class="line">[[[<span class="built_in">UISwipeGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(oneFingerSwipeUp:)] autorelease];</span><br><span class="line">[oneFingerSwipeUp setDirection:<span class="built_in">UISwipeGestureRecognizerDirectionUp</span>];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:oneFingerSwipeUp];</span><br><span class="line">- (<span class="type">void</span>)oneFingerSwipeUp:(<span class="built_in">UISwipeGestureRecognizer</span> *)recognizer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGPoint</span> point = [recognizer locationInView:[<span class="keyword">self</span> view]];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Swipe up - start location: %f,%f&quot;</span>, point.x, point.y);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 向下滑动</span></span><br><span class="line"><span class="built_in">UISwipeGestureRecognizer</span> *oneFingerSwipeDown =</span><br><span class="line">[[[<span class="built_in">UISwipeGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(oneFingerSwipeDown:)] autorelease];</span><br><span class="line">[oneFingerSwipeDown setDirection:<span class="built_in">UISwipeGestureRecognizerDirectionDown</span>];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:oneFingerSwipeDown];</span><br><span class="line">- (<span class="type">void</span>)oneFingerSwipeDown:(<span class="built_in">UISwipeGestureRecognizer</span> *)recognizer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGPoint</span> point = [recognizer locationInView:[<span class="keyword">self</span> view]];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Swipe down - start location: %f,%f&quot;</span>, point.x, point.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>旋转手势</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIRotationGestureRecognizer</span> *twoFingersRotate =</span><br><span class="line">[[[<span class="built_in">UIRotationGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(twoFingersRotate:)] autorelease];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:twoFingersRotate];</span><br><span class="line">- (<span class="type">void</span>)twoFingersRotate:(<span class="built_in">UIRotationGestureRecognizer</span> *)recognizer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Convert the radian value to show the degree of rotation</span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Rotation in degrees since last change: %f&quot;</span>, [recognizer rotation] * (<span class="number">180</span> / M_PI));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>向里或向外捏的手势</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIPinchGestureRecognizer</span> *twoFingerPinch =</span><br><span class="line">[[[<span class="built_in">UIPinchGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(twoFingerPinch:)] autorelease];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:twoFingerPinch];</span><br><span class="line">- (<span class="type">void</span>)twoFingerPinch:(<span class="built_in">UIPinchGestureRecognizer</span> *)recognizer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Pinch scale: %f&quot;</span>, recognizer.scale);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UITapGestureRecognizer</span> *twoFingersTwoTaps =</span><br><span class="line">[[[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(twoFingersTwoTaps)] autorelease];</span><br><span class="line">[twoFingersTwoTaps setNumberOfTapsRequired:<span class="number">2</span>];</span><br><span class="line">[twoFingersTwoTaps setNumberOfTouchesRequired:<span class="number">2</span>];</span><br><span class="line">[[<span class="keyword">self</span> view] addGestureRecognizer:twoFingersTwoTaps];</span><br><span class="line"><span class="comment">// 消息方法twoFingersTwoTaps</span></span><br><span class="line">- (<span class="type">void</span>)twoFingersTwoTaps &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Action: Two fingers, two taps&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>参考文章：</p>
-<ul>
-<li><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS95MDQxMDM5L2FyY2hpdmUvMjAxMi8wNy8xMS8yNTg2NjI5Lmh0bWw=">http://www.cnblogs.com/y041039/archive/2012/07/11/2586629.html<i class="fa fa-external-link-alt"></i></span></li>
-<li><span class="exturl" data-url="aHR0cDovL3d3dy5jb2NvYWNoaW5hLmNvbS9uZXdiaWUvYmFzaWMvMjAxMi8wNjA0LzQzMjIuaHRtbA==">http://www.cocoachina.com/newbie/basic/2012/0604/4322.html<i class="fa fa-external-link-alt"></i></span></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS7-%E4%B8%8B%E4%BD%BF%E7%94%A8UITapGestureRecognizer-%E5%AE%9E%E7%8E%B0%E5%9B%BE%E7%89%87%E6%94%BE%E5%A4%A7%E7%BC%A9%E5%B0%8F%E7%9A%84%E5%8E%9F%E7%90%86-%E8%87%AA%E5%88%9B.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/iOS7-%E4%B8%8B%E4%BD%BF%E7%94%A8UITapGestureRecognizer-%E5%AE%9E%E7%8E%B0%E5%9B%BE%E7%89%87%E6%94%BE%E5%A4%A7%E7%BC%A9%E5%B0%8F%E7%9A%84%E5%8E%9F%E7%90%86-%E8%87%AA%E5%88%9B.html" class="post-title-link" itemprop="url">iOS7 下使用UITapGestureRecognizer 实现图片放大缩小的原理（自创）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 11:35:08 / 修改时间：11:37:00" itemprop="dateCreated datePublished" datetime="2025-06-25T11:35:08+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于在IOS7下实现点击UIImageView是实现放大图片的原理（完全是自己参考其他的文脏，自己总结出来的，如有雷同，那咱就是心有灵犀啦）</p>
-<p>我这里的情况是，在UITableView中的UITableviewCell中使用UIImageView，UIImageView是放在cell中的。这里的实现代码如下</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *imagepath = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;girl&quot;</span></span><br><span class="line">                                                      ofType:<span class="string">@&quot;jpg&quot;</span>];</span><br><span class="line"><span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageWithContentsOfFile:imagepath];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">GBPathImageView *headImageView = [[GBPathImageView alloc] initWithFrame:<span class="built_in">CGRectMake</span>(imageX,</span><br><span class="line">                                                                                   imageY,</span><br><span class="line">                                                                                   imageWidth,</span><br><span class="line">                                                                                   imageHeight)</span><br><span class="line">                                                                  image:image</span><br><span class="line">                                                               pathType:GBPathImageViewTypeCircle</span><br><span class="line">                                                              pathColor:[<span class="built_in">UIColor</span> whiteColor]</span><br><span class="line">                                                            borderColor:[<span class="built_in">UIColor</span> whiteColor]</span><br><span class="line">                                                              pathWidth:<span class="number">1.0</span>];</span><br><span class="line">headImageView.userInteractionEnabled = <span class="literal">YES</span>;</span><br><span class="line">headImageView.multipleTouchEnabled = <span class="literal">YES</span>;</span><br><span class="line">headImageView.tag = row;</span><br><span class="line"><span class="built_in">UITapGestureRecognizer</span> *tap = [[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span></span><br><span class="line">                                                                      action:<span class="keyword">@selector</span>(showBigImage:)];</span><br><span class="line">tap.view.tag= (<span class="type">int</span>)headImageView.image;</span><br><span class="line">tap.delegate = <span class="keyword">self</span>;</span><br><span class="line">[headImageView addGestureRecognizer:tap];</span><br><span class="line"></span><br><span class="line">[cell.contentView addSubview:headImageView];</span><br></pre></td></tr></table></figure>
-
-<p>这里就是使用了UITapGestureRecognizer，添加了排击的事件。</p>
-<p>注意点：</p>
-<ul>
-<li>第一点：UIImageview的userInteractionEnabled和multipleTouchEnabled的设置，不然不起作用</li>
-<li>第二点：代理UIGestureRecognizerDelegate的引入</li>
-<li>第三点：tag的使用，这个是为了后面的操作，主要是因为加了tag我们就会知道是哪个UIImageView被点击了，从而做一些其他的处理。</li>
-</ul>
-<p>那么关于方法图片和缩小图片的方法如下：</p>
-<p>放大图片的代码：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) showBigImage:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UITapGestureRecognizer</span> *tap = (<span class="built_in">UITapGestureRecognizer</span>*)sender;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;tag = %d&quot;</span>,tap.view.tag);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIImageView</span> *imageViewer=[[<span class="built_in">UIImageView</span> alloc] init];</span><br><span class="line">    <span class="built_in">UITapGestureRecognizer</span> *closeTap = [[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span></span><br><span class="line">                                                                              action:<span class="keyword">@selector</span>(hideBigImage:)];</span><br><span class="line">    closeTap.delegate = <span class="keyword">self</span>;</span><br><span class="line">    imageViewer.multipleTouchEnabled = <span class="literal">YES</span>;</span><br><span class="line">    imageViewer.userInteractionEnabled = <span class="literal">YES</span>;</span><br><span class="line">    [imageViewer addGestureRecognizer:closeTap];</span><br><span class="line">    imageViewer.animationDuration = <span class="number">2.0</span>;</span><br><span class="line">    imageViewer.animationRepeatCount = <span class="number">1</span>;</span><br><span class="line">    [imageViewer setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0.0</span>,</span><br><span class="line">                                     _tableview.frame.origin.y,</span><br><span class="line">                                     _tableview.frame.size.width,</span><br><span class="line">                                     _tableview.frame.size.height)];</span><br><span class="line">    [imageViewer startAnimating];</span><br><span class="line">    <span class="built_in">NSString</span> *imagepath = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;girl&quot;</span></span><br><span class="line">                                                          ofType:<span class="string">@&quot;jpg&quot;</span>];</span><br><span class="line">    <span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageWithContentsOfFile:imagepath];</span><br><span class="line">    [imageViewer setImage:image];</span><br><span class="line">    <span class="built_in">UIWindow</span> *mainWindow=[<span class="built_in">UIApplication</span> sharedApplication].delegate.window;</span><br><span class="line">    [mainWindow.rootViewController.view addSubview:imageViewer];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>缩小图片的方法：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) hideBigImage:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UITapGestureRecognizer</span> *tap = (<span class="built_in">UITapGestureRecognizer</span>*)sender;</span><br><span class="line">    [tap.view removeFromSuperview];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>大概的原理全在代码中了，如何放大图片，如何做出图片更加好的效果，这个是后面优化要做的。</p>
-<p>参考文章：</p>
-<ul>
-<li><span class="exturl" data-url="aHR0cDovL2hpLmJhaWR1LmNvbS9qdF9vbmUvaXRlbS85NWJhYmUzNTU4M2YzNTk4YjgwYzAzMTY=">http://hi.baidu.com/jt_one/item/95babe35583f3598b80c0316<i class="fa fa-external-link-alt"></i></span></li>
-<li><span class="exturl" data-url="aHR0cDovL3d3dy5jb2NvYWNoaW5hLmNvbS9iYnMvc2ltcGxlLz90NzA1MDMuaHRtbA==">http://www.cocoachina.com/bbs/simple/?t70503.html<i class="fa fa-external-link-alt"></i></span></li>
-<li><span class="exturl" data-url="aHR0cDovL3N0YWNrb3ZlcmZsb3cuY29tL3F1ZXN0aW9ucy8xMTU1MjE4NC91aXRhcGdlc3R1cmVyZWNvZ25pemVyLW5vdC13b3JraW5nLWluLXVpaW1hZ2V2aWV3">http://stackoverflow.com/questions/11552184/uitapgesturerecognizer-not-working-in-uiimageview<i class="fa fa-external-link-alt"></i></span></li>
-<li><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvemp3ZW4xMDA2L2FydGljbGUvZGV0YWlscy82OTE2NTkx">http://blog.csdn.net/zjwen1006/article/details/6916591<i class="fa fa-external-link-alt"></i></span></li>
-<li><span class="exturl" data-url="aHR0cDovL2hpLmJhaWR1LmNvbS9tb29uXzIwMDkvaXRlbS9iM2VjYTgzMjYyNTgyZDg2YzJjZjI5MWY=">http://hi.baidu.com/moon_2009/item/b3eca83262582d86c2cf291f<i class="fa fa-external-link-alt"></i></span></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS7-%E5%B1%8F%E5%B9%95%E9%AB%98%E5%BA%A6-%E7%8A%B6%E6%80%81%E6%A0%8F%E9%AB%98%E5%BA%A6-%E6%A0%87%E7%AD%BE%E6%A0%8F%E5%B0%BA%E5%AF%B8%E7%AD%89%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/iOS7-%E5%B1%8F%E5%B9%95%E9%AB%98%E5%BA%A6-%E7%8A%B6%E6%80%81%E6%A0%8F%E9%AB%98%E5%BA%A6-%E6%A0%87%E7%AD%BE%E6%A0%8F%E5%B0%BA%E5%AF%B8%E7%AD%89%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F.html" class="post-title-link" itemprop="url">iOS7 屏幕高度，状态栏高度，标签栏尺寸等获取方式</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 11:35:04 / 修改时间：11:38:10" itemprop="dateCreated datePublished" datetime="2025-06-25T11:35:04+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于新的获取屏幕高度，状态栏尺寸，标签栏尺寸的获取方法，找了多个资料和文章，其方法总结如下</p>
-<h3 id="1"><a href="#1" class="headerlink" title="App尺寸，去掉状态栏"></a><a href="#1">App尺寸，去掉状态栏</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGRect</span> r = [ <span class="built_in">UIScreen</span> mainScreen ].applicationFrame;</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;r.height = %f,r.width = %f,r.x = %f,r.y = %f&quot;</span>,r.size.height,r.size.width,r.origin.x,r.origin.y);</span><br></pre></td></tr></table></figure>
-
-<p>gowhich得到的结果如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2013-11-28 12:09:22.188 寻艺[49308:70b] r.height = 548.000000,r.width = 320.000000,r.x = 0.000000,r.y = 20.000000</span><br></pre></td></tr></table></figure>
-
-<h3 id="2"><a href="#2" class="headerlink" title="屏幕尺寸"></a><a href="#2">屏幕尺寸</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGRect</span> rx = [<span class="built_in">UIScreen</span> mainScreen].bounds;</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;rx.height = %f,rx.width = %f,rx.x = %f,rx.y = %f&quot;</span>,rx.size.height,rx.size.width,rx.origin.x,rx.origin.y);</span><br></pre></td></tr></table></figure>
-
-<p>得到的结果如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2013-11-28 12:09:22.189 寻艺[49308:70b] rx.height = 568.000000,rx.width = 320.000000,rx.x = 0.000000,rx.y = 0.000000</span><br></pre></td></tr></table></figure>
-
-<h3 id="3"><a href="#3" class="headerlink" title="状态栏尺寸"></a><a href="#3">状态栏尺寸</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGRect</span> rect  = [[<span class="built_in">UIApplication</span> sharedApplication] statusBarFrame];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;rect.height = %f,rect.width = %f,rect.x = %f,rect.y = %f&quot;</span>,rect.size.height,rect.size.width,rect.origin.x,rect.origin.y);</span><br></pre></td></tr></table></figure>
-
-<p>得到的结果如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2013-11-28 12:14:18.972 寻艺[49617:70b] rect.height = 20.000000,rect.width = 320.000000,rect.x = 0.000000,rect.y = 0.000000</span><br></pre></td></tr></table></figure>
-
-<h3 id="4"><a href="#4" class="headerlink" title="iPhone中获取屏幕分辨率的方法"></a><a href="#4">iPhone中获取屏幕分辨率的方法</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGRect</span> rect = [[<span class="built_in">UIScreen</span> mainScreen] bounds];</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGSize</span> size = rect.size;</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGFloat</span> width = size.width;</span><br><span class="line"></span><br><span class="line"><span class="built_in">CGFloat</span> height = size.height;</span><br></pre></td></tr></table></figure>
-
-<p>另外，设计UI的时候，注意用户最小的触控面积。有2种说法</p>
-<p><code>44*44</code> 好像是来自sdk</p>
-<p><code>64*64</code> 来自standford讲义</p>
-<p>参考文章:</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGluemhpamkvYXJ0aWNsZS9kZXRhaWxzLzY3NjQ3Mzg=">http://blog.csdn.net/linzhiji/article/details/6764738<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Django-Strip-Remove-HTML-tags.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Django-Strip-Remove-HTML-tags.html" class="post-title-link" itemprop="url">Django Strip/Remove HTML tags</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 11:35:00 / 修改时间：14:35:15" itemprop="dateCreated datePublished" datetime="2025-06-25T11:35:00+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在php中我们知道如果想要去掉html的标签的话，使用函数<code>strip_tags</code>在django中如何去去掉html的标签呢,下面是我在google中搜索到的结果。</p>
-<p>To strip&#x2F;remove HTML tags from an existing string we can use the <code>strip_tags</code> function.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># import the strip_tags</span></span><br><span class="line"><span class="keyword">from</span> django.utils.html <span class="keyword">import</span> strip_tags</span><br><span class="line"><span class="comment"># simple string with html inside.</span></span><br><span class="line">html = <span class="string">&#x27;&lt;p&gt;paragraph&lt;/p&gt;&#x27;</span></span><br><span class="line"><span class="built_in">print</span> html <span class="comment"># will produce: &lt;p&gt;paragraph&lt;/p&gt;</span></span><br><span class="line">stripped = strip_tags(html)</span><br><span class="line"><span class="built_in">print</span> stripped <span class="comment"># will produce: paragraph</span></span><br></pre></td></tr></table></figure>
-
-<p>This is also available as a template tag:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; somevalue|striptags &#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>If you want to remove only specific tags you need to use the removetags</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.template.defaultfilters <span class="keyword">import</span> removetags</span><br><span class="line">html = <span class="string">&#x27;&lt;strong&gt;Bold...&lt;/strong&gt;&lt;p&gt;paragraph....&lt;/p&gt;&#x27;</span></span><br><span class="line">stripped = removetags(html, <span class="string">&#x27;strong&#x27;</span>) <span class="comment"># removes the strong only.</span></span><br><span class="line">stripped2 = removetags(html, <span class="string">&#x27;strong p&#x27;</span>) <span class="comment"># removes the strong AND p tags.</span></span><br></pre></td></tr></table></figure>
-
-<p>Also available in template:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; value|removetags:&quot;a span&quot;|safe &#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在模板里面是使用去掉html标签的方法是不是很简单，嘿嘿。</p>
-<hr>
-<p>参考的文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3NuaXBwbHIuY29tL3ZpZXcvNTA4MzUv">http://snipplr.com/view/50835/<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS7-%E4%B8%8B%E4%BF%AE%E6%94%B9-UINavigationBar-%E7%9A%84%E8%83%8C%E6%99%AF%E8%89%B2%E5%92%8C%E8%AE%BE%E7%BD%AE%E6%A0%87%E9%A2%98%E7%9A%84%E9%A2%9C%E8%89%B2.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/iOS7-%E4%B8%8B%E4%BF%AE%E6%94%B9-UINavigationBar-%E7%9A%84%E8%83%8C%E6%99%AF%E8%89%B2%E5%92%8C%E8%AE%BE%E7%BD%AE%E6%A0%87%E9%A2%98%E7%9A%84%E9%A2%9C%E8%89%B2.html" class="post-title-link" itemprop="url">iOS7 下修改 UINavigationBar 的背景色和设置标题的颜色</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 11:34:55 / 修改时间：11:41:15" itemprop="dateCreated datePublished" datetime="2025-06-25T11:34:55+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于修改 UINavigationBar 的背景色和设置标题的颜色，至于以前是如何设置的我到现在已经忘的差不多了，因为总是在不同的平台和语言之间进行切换，偶尔某个会耽搁时间比较久，反正之前的iOS7之前是不是这样设置的，到时候后来的结果出现了问题。</p>
-<p>下面简单的介绍下再iOS7下是如何进行设置的</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//导航条背景色</span></span><br><span class="line"><span class="built_in">NSString</span> *navBackgroundBarImage = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;bg_head&quot;</span></span><br><span class="line">																  ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setBackgroundImage:[<span class="built_in">UIImage</span> imageWithContentsOfFile:navBackgroundBarImage] forBarMetrics:<span class="built_in">UIBarMetricsDefault</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">//字体大小、颜色</span></span><br><span class="line"><span class="built_in">NSDictionary</span> *attributes = [<span class="built_in">NSDictionary</span> dictionaryWithObjectsAndKeys:</span><br><span class="line">							[<span class="built_in">UIColor</span> whiteColor],</span><br><span class="line">							<span class="built_in">NSForegroundColorAttributeName</span>, <span class="literal">nil</span>];</span><br><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setTitleTextAttributes:attributes];</span><br></pre></td></tr></table></figure>
-
-<p>将这几行代码添加到<code>-(void) viewDidLoad;</code>方法中，顺便将图片改为自己想要的图片，就会有结果了。自己试试看看</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/iOS7-%E4%B8%8B%E6%93%8D%E4%BD%9C-UIToolbar-UINavigationController-UINavigationBar-UIBarButtonItem.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/iOS7-%E4%B8%8B%E6%93%8D%E4%BD%9C-UIToolbar-UINavigationController-UINavigationBar-UIBarButtonItem.html" class="post-title-link" itemprop="url">iOS7 下操作 UIToolbar UINavigationController UINavigationBar UIBarButtonItem</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 11:34:51 / 修改时间：11:42:13" itemprop="dateCreated datePublished" datetime="2025-06-25T11:34:51+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于UIToolbar，UINavigationController，UINavigationBar，UIBarButtonItem在ios7的使用的简单的介绍，经过搜索资料做了如下的一些汇集</p>
-<p>—————————-UIBarButtonItem—————————-</p>
-<p>1:  UIBarButtonItem 隐藏的方式</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.btnPunctuation setWidth:<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
-
-<p>2:  UIBarButtonItem 获取所在父视图中的frame 相当于将 UIBarButtonItem 转换成 UIView</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIBarButtonItem</span> *barButtonItem = (<span class="built_in">UIBarButtonItem</span> *)sender;</span><br><span class="line"><span class="built_in">UIView</span> *targetView = (<span class="built_in">UIView</span> *)[barButtonItem performSelector:<span class="keyword">@selector</span>(view)];</span><br></pre></td></tr></table></figure>
-
-<p>3:设置自定义字体和 系统的self.title 保持风格完全一致.</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIButton</span> *titleButton = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeCustom</span>];</span><br><span class="line">[titleButton setBackgroundColor:[<span class="built_in">UIColor</span> clearColor]];</span><br><span class="line">[titleButton setFrame:(<span class="built_in">CGRect</span>)&#123;<span class="number">0</span>,<span class="number">0</span>,<span class="number">100</span>,<span class="number">44</span>&#125;];</span><br><span class="line">[titleButton setContentEdgeInsets:<span class="built_in">UIEdgeInsetsMake</span>(<span class="number">-2</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)];</span><br><span class="line">[titleButton setTitle:<span class="string">@&quot;社会活动&quot;</span> forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">[titleButton.titleLabel setFont:[<span class="built_in">UIFont</span> boldSystemFontOfSize:<span class="number">20</span>]];</span><br><span class="line">[titleButton.titleLabel setShadowOffset:(<span class="built_in">CGSize</span>)&#123;<span class="number">0</span>,<span class="number">-1</span>&#125;];</span><br><span class="line">[<span class="keyword">self</span>.navigationItem setTitleView:titleButton];</span><br></pre></td></tr></table></figure>
-
-<p>—————————-UIBarButtonItem—————————-</p>
-<p>—————————-UINavigationBar—————————-</p>
-<p>1:  修改导航控制器背景图片的方式(IOS5以上)</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UINavigationBar</span> appearance] setBackgroundImage:image forBarMetrics:<span class="built_in">UIBarMetricsDefault</span>];</span><br></pre></td></tr></table></figure>
-
-<p>注: 通过appearance可以设置全局的控件初始化外观.不过在初始化成功以后,有单独样式需求亦可用同样的方法修改.</p>
-<p>UINavigationBar的标准高度是44,在iOS7之前可以通过44+X的方式实现背景+阴影的效果.从iOS7以后就不行了.</p>
-<p>iOS7对UINavigationBar的标准进行重新的定义,其高度可以延伸到状态栏.所以44+20的高度等于64.</p>
-<p>而刚刚说的44+X方式不再适用于iOS7,iOS7的新规范是64+1.背景图和阴影将单独来设定,代码如下:</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//iOS7 新背景图片设置方法 高度 必需是 64</span></span><br><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setBackgroundImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;toolbar_background_iOS7Test&quot;</span>] forBarPosition:<span class="built_in">UIBarPositionTopAttached</span> barMetrics:<span class="built_in">UIBarMetricsDefault</span>];</span><br><span class="line"><span class="comment">//iOS7 阴影需单独设定 UIColor clearColor 是去掉字段 1像素阴影</span></span><br><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setShadowImage:[<span class="built_in">UIImage</span> Help_imageWithColor:[<span class="built_in">UIColor</span> clearColor]]];</span><br></pre></td></tr></table></figure>
-
-<p>2:为UINavigationBar设置半透明的背景效果:</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setTranslucent:<span class="literal">YES</span>];</span><br></pre></td></tr></table></figure>
-
-<p>注:在iOS7中 默认生成 UINavigationBar的translucent属性为YES. 自动添加遮罩模糊效果.</p>
-<p>3:修改UINavigationBar的背景颜色(iOS7以上)</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UINavigationBar</span> appearance] setBarTintColor:[<span class="built_in">UIColor</span> redColor]];</span><br></pre></td></tr></table></figure>
-
-<p>—————————-UINavigationBar—————————-</p>
-<p>—————————-UINavigationController—————————-</p>
-<p>1: 修改UINavigationController的高度</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.navigationController.navigationBar setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>,<span class="number">20</span>, <span class="number">320</span>, <span class="number">60</span>)];</span><br></pre></td></tr></table></figure>
-
-<p>2:激活 UINavigationControllerDelegate的方式</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.navigationController.delegate =<span class="keyword">self</span>;</span><br></pre></td></tr></table></figure>
-
-<p>3:为  UINavigationController 设置 默认的  navigationBar</p>
-<p>这里只提供一下思路:</p>
-<p>继承:UINavigationController以后重写 如下两个方法:</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">id</span>)initWithRootViewController:(<span class="built_in">UIViewController</span> *)rootViewController</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="variable language_">super</span> initWithRootViewController:rootViewController];</span><br><span class="line">    [<span class="keyword">self</span> Base_backAction_initNavigationBar:rootViewController];</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line">-(<span class="type">void</span>)pushViewController:(<span class="built_in">UIViewController</span> *)viewController animated:(<span class="type">BOOL</span>)animated</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> pushViewController:viewController animated:animated];</span><br><span class="line">    [<span class="keyword">self</span> Base_backAction_initNavigationBar:viewController];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>—————————-UINavigationController—————————-</p>
-<p>果然使用起来还是有些变化的</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/%E5%88%A9%E7%94%A8%E5%8D%9A%E5%AE%A2%E6%9C%88%E6%94%B6%E5%85%A53000%E7%9A%84%E6%96%B9%E6%B3%95.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/%E5%88%A9%E7%94%A8%E5%8D%9A%E5%AE%A2%E6%9C%88%E6%94%B6%E5%85%A53000%E7%9A%84%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">利用博客月收入3000的方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 11:34:41 / 修改时间：11:56:41" itemprop="dateCreated datePublished" datetime="2025-06-25T11:34:41+08:00">2025-06-25</time>
+      <time title="创建时间：2025-06-26 17:53:09 / 修改时间：17:53:37" itemprop="dateCreated datePublished" datetime="2025-06-26T17:53:09+08:00">2025-06-26</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1263,43 +294,824 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>1、首先，你必须拥有10个可以自定义HTML的主流博客。</p>
-<p>2、每天更新文章，注：每个博客每天更新文章数：10篇</p>
-<p>文章内容：去搜狗指数<span class="exturl" data-url="aHR0cDovL3d3dy5zb2dvdS5jb20vdG9wL2luZGV4Lmh0bWw=">http://www.sogou.com/top/index.html<i class="fa fa-external-link-alt"></i></span> 查看瞬间指数，找一些流量大的关键词去百度搜索一下便有一大堆，选前7—-15的文章上传到你的博客上（注：标题修改下，但标题中的关键词可不能动哦！）</p>
-<p>3、把每篇文章都收藏进几个网摘，提高文章的反链接和权重</p>
-<p>4、等着来流量吧。</p>
-<p>三人月之后，你的每个博客流量都应该在10000PV（我现在的是2.5Wpv)以上，那你放置GG广告的话，你的收入就很可观的。我的博客广告点击率一般在1%—1.5%之间，少数点。1%就可以了，单价在2—4美分徘徊，少算点，单价2美分便可</p>
-<p><code>10000*0.01*0.02*6.8*10=136元/天</code>，就算没这么理想，减去36，那一天就100元，一个月不就3000元了吗？</p>
-<p>解释：</p>
-<p>认为不可操作的人，原因只有一个字“懒”，只想坐享其成的人，天上会掉馅饼吗？有人说是以前的东西，是不是以前的我不知道，但每一个字都是我辛辛苦苦的敲出来的，每一句话都是经过自己的大脑想出来的，至于与以前哪位前辈的想法不谋而合，那只能说你已经浪费了一段可以让你过上小康的黄金岁月！反过来在乎别人的想法是不是第一个，你不觉得自己很傻吗？找别人的弱点对你来说重要还是快点致富重要……</p>
-<p>相关技巧：</p>
-<p>1，经过反复实践证明以下门户博客权重较高：</p>
-<p>和讯（<span class="exturl" data-url="aHR0cDovL3d3dy5oZXh1bi5jb20pLw==">www.hexun.com）<i class="fa fa-external-link-alt"></i></span></p>
-<p>中华网（<span class="exturl" data-url="aHR0cDovL3d3dy5jaGluYS5jb20pLw==">www.china.com）<i class="fa fa-external-link-alt"></i></span></p>
-<p>天涯（<span class="exturl" data-url="aHR0cDovL3d3dy50aWFueWEuY24pLw==">www.tianya.cn）<i class="fa fa-external-link-alt"></i></span></p>
-<p>百度空间（hi.baidu.com） 对百度的权重高</p>
-<p>2，关键词的选择：</p>
-<p>百度中文搜索风云榜：<span class="exturl" data-url="aHR0cDovL3RvcC5iYWlkdS5jb20v">http://top.baidu.com<i class="fa fa-external-link-alt"></i></span> （互联网热门搜索词语）</p>
-<p>百度指数：<span class="exturl" data-url="aHR0cDovL2luZGV4LmJhaWR1LmNvbS8=">http://index.baidu.com<i class="fa fa-external-link-alt"></i></span> （某关键词搜索热度）</p>
-<p>相关搜索：<span class="exturl" data-url="aHR0cDovL2QuYmFpZHUuY29tL3JzLnBocA==">http://d.baidu.com/rs.php<i class="fa fa-external-link-alt"></i></span> （用于发掘该类相关热门搜索词语）</p>
-<p>搜狗指数 <span class="exturl" data-url="aHR0cDovL3d3dy5zb2dvdS5jb20vdG9wL2luZGV4Lmh0bWw=">http://www.sogou.com/top/index.html<i class="fa fa-external-link-alt"></i></span></p>
-<p>3，SEO设置：</p>
-<p>拿曾经最热门的“陈冠希”举例，那么博客名字就应该取为chenguanxi，如果chenguanxi已经被别人注册</p>
-<p>了，那么就在后面添加数字，比如chenguanxi8、chenguanxi9等~~~</p>
-<p>标题就应该写上跟陈冠希有关的关键字，比如“陈冠希事件”、“陈冠希视频”等~~~不要太多，大概1-2组关键词即可，剩余的可以多添加几篇文章进行。</p>
-<p>你只需要摘抄一段新闻自己稍加修改，然后把里面包含“陈冠希”的关键词统统加粗，保证在文章的开头、中间和结尾都有这些关键词出现即可。不过不要堆积关键词，这样会被搜索引擎K掉，一篇百字的文章里面包含大概2-3次的关键词就够了。</p>
-<p>4，如何将博客的流量引出并创造现金？</p>
-<p>在文章中加入醒目的图片或者文字，从而把博客浏览者引导到你想推广的产品的网站上。比如一个亚交注册、一个火狐浏览器下载或上面那个博客做的UUSee产品等等，这个时候你需要准备的就是产品推广的网页；通过在博客文章中添加醒目的文字或者图片方式，把流量引到该网页上来。</p>
-<p>分析:</p>
-<p>可以计算下，一般一个每天500IP流量的博客，有300人被引导到了你的产品页根据你的产品页面具体情况，在有足够吸引的前提下，大概会有10-20人注册或者下载，如果该产品每个认证佣金是1-2元，那么做一个博客你就能赚到该产品推广佣金20元左右</p>
-<p>如果你再勤奋点做到10个以上这样的博客，那么你每天的收入也会在200元，一个月做5000-6000绝对不是问题。</p>
-<p>这种操作就很明显了，你花一个星期的时间做出30个博客，每做一个你应该用个表格做好记录。其中包括</p>
-<p>选用关键词：</p>
-<p>使用的博客：</p>
-<p>使用博客的用户名和密码：</p>
-<p>博客网址：</p>
-<p>那么这30个博客如果运气好，做到10个能有如此流量的博客你就及格了，如果你不满足还想赚更多的钱就继续不断重复你的劳动~~</p>
-<p>如果只有少数几个博客做上流量了，那说明可能你还没有完全掌握该技术或运气不佳，也不用气馁再花一个星期的时间这样去做，哪怕每个星期只有1-2个博客做到了，时间长了一样可以凑齐10个以上</p>
+          <p>黄渤 28 岁时，考上了北影成人学院，但学费不够，女同学小欧给了 2.4 万元，后来黄渤成名了，他娶了小欧为妻，但他妻子长相平平，因此有人问他：你有没有想过要换老婆？谁知黄渤却说：“糟糠之妻，不可抛弃，给我 100 亿都不会换老婆！”<br>别看黄渤颜值并不出众，但他非常受女明星欢迎，特别是林志玲，从不掩饰对他的喜欢，更是多次主动向黄渤表白说：“黄渤是我的理想伴侣，如果他单身，我一定会把他追到手，然后嫁给他。”<br>但就算林志玲貌美如花，黄渤也看不上她，因为他心中只有一个人，那就是他的初恋女友小欧。<br>小欧是黄渤的高中同学，那时的小欧很喜欢跳舞，而黄渤则是唱歌跳舞都喜欢，因为志同道合，两人经常一起练习舞蹈，久而久之，他们也从同学变成了无话不谈的好朋友。<br>高中毕业后，黄渤选择去追梦，因为他的梦想是成为一名歌手，于是他和朋友组建了一个乐队，开始四处表演，但中途其中一名队员因为一些事情离开了，这时黄渤想让小欧加入，没想到她二话不说就答应了。<br>就这样小欧跟着黄渤开始到各个歌舞厅卖唱，只为了完成他的梦想。<br>但卖唱多年，黄渤还是默默无闻，并不是他唱的不行，而是他的长相太一般了，因此一直没有遇到伯乐。<br>但他也不是没有收获，因为他和小欧成为了恋人。<br>后来，黄渤的父亲得知儿子有了女朋友后，便让他带回家看看，没想到黄渤的父亲看到小欧的长相后，顿时非常满意，也把她当成了准儿媳，于是他让儿子别出去折腾了，在家乡给他开间工厂，让他们两人去管理。<br>可没想到，工厂做不到一年，就倒闭了，这让黄渤非常自责，对什么都不提起兴趣，小欧便想让他出去走走，放松下心情。<br>刚好这时，黄渤认识的演员好朋友得知了他的情况，于是推荐黄渤来北京跟他一起拍戏，但黄渤对演戏一窍不通，本想拒绝，但小欧却觉得这是个机会，就当是散散心也好。<br>谁料，拍完这部戏后，黄渤就爱上了表演，觉得当演员也挺好的，于是好朋友建议他说，如果你真想当演员，那么可以去报考北影的表演系，这样有个正式的文凭，以后接戏也方便。<br>对此，小欧也觉得很有道理，她也非常支持黄渤去考北影，更是决定跟他一起留在北京，陪他一起奋斗。<br>可黄渤报考两次，都考不上，因为北影的表演系还是很有难度的，而这时的黄渤也已经 28 岁了，没有那么多时间去浪费，于是他改变思路，报考了播音系，因为这个相对表演系来说，简单点，没想到一考就通过了，这让他非常高興。<br>然而，付了一万多学费后，黄渤身上就再也没有多余的钱了，那么接下来几个学期的生活费该怎么办，想到这他就非常发愁。<br>这时，小欧拿出了 6000 块给他当生活费，并且对他说：你好好学，生活费我会帮你解决。<br>这让黄渤非常感动，他对小欧说：等我几年，我一定娶你。<br>在接下来的日子里，小欧在外打工，省吃俭用，住的是地下室，吃得也是最简单，只为了省下更多的钱，两年里，她一共资助了黄渤 2.4 万，也是有了她的支持，黄渤才能够顺利拿到文凭。<br>果然，有了文凭后，找黄渤拍戏的人也变多了，没多久他就凭借《疯狂的石头》一炮而红。<br>成名后，黄渤做得第一件事，就是与小欧结束多年的恋爱长跑，正式娶她为妻。<br>婚后，小欧负责家庭，而黄渤则是在外打拼，因为家里有小欧照顾，所以黄渤没有后顾之忧，可以专心于事业，最终凭借《心花路放》《一出好戏》等影片，成为百亿票房里的一员，更是稳居一线演员多年，事业可谓顺风顺水。<br>也是这个时候，有很多女明星主动向黄渤示好，其中就包括林志玲，但黄渤却是非常直接地对她们说：我是已婚男人。<br>一句话，就和她们保持了距离。<br>但黄渤虽然说自己结婚了，可却很少有人见过他的妻子，因为黄渤不喜欢带妻子出席活动，可见过他妻子后，很多人都表示，他的妻子长相平平，可能是这个原因，所以黄渤才不愿带她一起。<br>于是，有次主持人问黄渤说：你跟那么多女明星合作过，其中很多人对你有好感，那你有没有想过要换老婆？<br>没想到，黄渤笑着说：“想是想过，身边扑上来的也有，但换老婆这种事情咱们干不出来，就算给我一百万我也不换，因为在我一穷二白的时候，妻子就已经陪在我身边了，我们同甘共苦，让我抛弃糟糠之妻，我做不来！”<br>如今，黄渤和妻子小欧已经结婚 16 年，依旧恩爱如初，他们夫妻白手起家，同甘共苦，彼此互相扶持，互相信任，互相理解，都希望对方能够过得更好，因此他们夫妻的感情一直很好，这才是爱情最好的模样。<br>不得不说，小欧嫁对了人，其实，一个成功男人的背后都有一个默默付出的女人，而小欧就是黄渤背后的女人，黄渤的成功离不开她的付出，好男人是懂得感恩的，绝不会抛弃糟糠之妻，而黄渤成名后，没有抛弃糟糠之妻，而是对妻子一直那么专一，是个好男人，而他妻子也是好妻子，两人非常般配，也非常有夫妻相，对此你怎么看？</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/%E4%BF%AE%E6%94%B9navigationItem%E4%B8%8A%E7%9A%84title-%E9%A2%9C%E8%89%B2%E5%92%8C%E6%A0%B7%E5%BC%8F.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/%E4%BF%AE%E6%94%B9navigationItem%E4%B8%8A%E7%9A%84title-%E9%A2%9C%E8%89%B2%E5%92%8C%E6%A0%B7%E5%BC%8F.html" class="post-title-link" itemprop="url">修改navigationItem上的title 颜色和样式</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:30 / 修改时间：16:26:08" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:30+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>今天正好做到这里，以为之前的设计是通过view的跳转，然后直接传递title过来，然后在viewDidLoad里面直接赋值，但是有遇到了一个比较傻眼的情况，接口只给我id，木有title，于是我就只有获取完title在赋值啦，于是找到了一个策略，就是在获取完数据后，直接使用下面的代码就好了，既可以修改样式还可以修改标题</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] initWithFrame:<span class="built_in">CGRectZero</span>];</span><br><span class="line">label.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br><span class="line">label.font = [<span class="built_in">UIFont</span> boldSystemFontOfSize:<span class="number">18.0</span>];</span><br><span class="line">label.textAlignment = <span class="built_in">NSTextAlignmentCenter</span>;</span><br><span class="line">label.textColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line"><span class="keyword">self</span>.navigationItem.titleView = label;</span><br><span class="line">label.text = _personName;</span><br><span class="line">[label sizeToFit];</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>文章参考：</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdG9uZ3poaXRhby9hcnRpY2xlL2RldGFpbHMvOTg1MjYzMw==">http://blog.csdn.net/tongzhitao/article/details/9852633<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-UIViewController%E4%B8%AD%E4%BD%BF%E7%94%A8UIRefreshControl-%E5%AE%9E%E7%8E%B0-UITableView%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS7-UIViewController%E4%B8%AD%E4%BD%BF%E7%94%A8UIRefreshControl-%E5%AE%9E%E7%8E%B0-UITableView%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0.html" class="post-title-link" itemprop="url">iOS7 UIViewController中使用UIRefreshControl  实现 UITableView下拉刷新</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:28 / 修改时间：16:27:25" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:28+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>之前做了一个使用UITableViewController中实现刷新的方法，这里实现一个使用UIViewController实现下拉刷新，当果然要使用到UIRefreshControl。</p>
+<p>创建啥的我就不记录了，文件列一下</p>
+<p>MeCelebrityViewController.m</p>
+<p>MeCelebrityViewController.h</p>
+<p>MeCelebrityViewController.xib</p>
+<p>下面列出主要的实现过程</p>
+<p>第一步：组件的添加</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UIRefreshControl</span>* refreshControl;</span><br></pre></td></tr></table></figure>
+
+<p>viewDidLoad的初始化</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//添加刷新</span></span><br><span class="line">_refreshControl = [[<span class="built_in">UIRefreshControl</span> alloc] init];</span><br><span class="line">[_refreshControl addTarget:<span class="keyword">self</span></span><br><span class="line">                  action:<span class="keyword">@selector</span>(refreshView:)</span><br><span class="line">        forControlEvents:<span class="built_in">UIControlEventValueChanged</span>];</span><br><span class="line">[_refreshControl setAttributedTitle:[[<span class="built_in">NSAttributedString</span> alloc] initWithString:<span class="string">@&quot;松手更新数据&quot;</span>]];</span><br><span class="line">[_dataTableView addSubview:_refreshControl];</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>_dataTableView</code>是要自己添加的</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> tableViewX = <span class="number">0.0</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> tableViewY = <span class="number">0.0</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> tableWidth = <span class="keyword">self</span>.navigationController.navigationBar.frame.size.width;</span><br><span class="line"><span class="built_in">CGFloat</span> tableHeight = [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height;</span><br><span class="line">_dataTableView = [[<span class="built_in">UITableView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(tableViewX,</span><br><span class="line">                                                               tableViewY,</span><br><span class="line">                                                               tableWidth,</span><br><span class="line">                                                               tableHeight)</span><br><span class="line">                                              style:<span class="built_in">UITableViewStylePlain</span>];</span><br><span class="line"></span><br><span class="line">_cellHeight = <span class="number">70.0</span>;</span><br><span class="line">_dataTableView.delegate = <span class="keyword">self</span>;</span><br><span class="line">_dataTableView.dataSource = <span class="keyword">self</span>;</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:_dataTableView];</span><br></pre></td></tr></table></figure>
+
+<p>第二步：实现下拉刷新的动作</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) refreshView:(<span class="built_in">UIRefreshControl</span> *)refresh</span><br><span class="line">&#123;</span><br><span class="line">    refresh.attributedTitle = [[<span class="built_in">NSAttributedString</span> alloc] initWithString:<span class="string">@&quot;更新数据中...&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSDateFormatter</span> *formatter = [[<span class="built_in">NSDateFormatter</span> alloc] init];</span><br><span class="line">    [formatter setDateFormat:<span class="string">@&quot;MMM d, h:mm a&quot;</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *lastUpdated = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;上次更新日期 %@&quot;</span>,</span><br><span class="line">                             [formatter stringFromDate:[<span class="built_in">NSDate</span> date]]];</span><br><span class="line">    refresh.attributedTitle = [[<span class="built_in">NSAttributedString</span> alloc] initWithString:lastUpdated];</span><br><span class="line">    [<span class="keyword">self</span> initData];</span><br><span class="line">    [_dataTableView reloadData];</span><br><span class="line">    [refresh endRefreshing];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果不是很完美，因为有遮挡的现象，不过流程走通了，下面开始自己的制作吧，如果有需要的帮助的话，请看下面的QQ群，加群交流</p>
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy55b3VyZGV2ZWxvcGVyLm5ldC9pdGVtL3Byb2dyYW0tYS11aXRhYmxldmlldy13aXRoLXB1bGxkb3duLXRvLXJlZnJlc2gv">http://www.yourdeveloper.net/item/program-a-uitableview-with-pulldown-to-refresh/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy50ZWNocmVwdWJsaWMuY29tL2Jsb2cvc29mdHdhcmUtZW5naW5lZXIvaW9zLTYtYmVzdC1wcmFjdGljZXMtaW50cm9kdWNpbmctdGhlLXVpcmVmcmVzaGNvbnRyb2wv">http://www.techrepublic.com/blog/software-engineer/ios-6-best-practices-introducing-the-uirefreshcontrol/<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3iOS%E7%80%91%E5%B8%83%E6%B5%81-UIScrollView%E6%88%96UITableView-%E8%BF%90%E8%A1%8C%E4%B8%8D%E6%B5%81%E7%95%85.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS7-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3iOS%E7%80%91%E5%B8%83%E6%B5%81-UIScrollView%E6%88%96UITableView-%E8%BF%90%E8%A1%8C%E4%B8%8D%E6%B5%81%E7%95%85.html" class="post-title-link" itemprop="url">iOS7 如何解决iOS瀑布流(UIScrollView或UITableView)运行不流畅</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:24 / 修改时间：16:28:07" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:24+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>如果UITableView滑动太快，可能同时就发出了比如10个图片请求。这些请求虽然都在后台运行，但是它们可能在同一个时间点返回UI线程。这个时候如果加载图片到UIImageView太频繁，就会造成UI卡得严重。（虽然在new iPad和iPhone4s上看不出来）</p>
+<p>在找到这个问题的同时，也发现performSelectorAfterDelay这个方法，会堆积到UI线程空闲的时候执行。而dispatch_after或者dispatch_async都会直接插入UI线程当场执行。所以这个问题其实可以用performSelectorAfterDelay来解决，测试也是非常流畅，感觉不出一点点的卡。但会出现新的问题，那就是在滑动过程中，不会加载任何图片。知道scrollView停止的时候，图片才会出来。当然这不是理想的解决方法了。这个方法也没有解决异步过程集中到达UI线程的问题。然后采用了NSOperationQueue来解决这个问题。</p>
+<p>问题本身和UITableView加载不流畅是一样的。</p>
+<h4 id="1"><a href="#1" class="headerlink" title="解决办法"></a><a href="#1">解决办法</a></h4><p>主要要做到一下几个方面：</p>
+<ol>
+<li>除了UI部分，所有的加载操作都在后台完成。<br>这一点可以通过dispatch或者performSelectorInBackground或者NSOperationQueue来实现。见：<br>在iOS开发中利用GCD进行多线程编程<br>iOS开发中使用NSOperationQueue进行多线程操作</li>
+<li>避免后台加载完成多个资源之后集中到达占用UI线程的处理时间太长。<br>这一点可以通过NSOperationQueue来实现，将资源到UI的展现过程放在队列中逐个执行，且在每个操作完成之后进行强制等待，可以用usleep(int microSeconds)来解决。</li>
+<li>重用cell。<br>创建cell一般是很慢的，一定要重用，甚至为了performance，可以在view创建之初就创建足够多的cell在重用队列中。</li>
+</ol>
+<hr>
+<p>参考文章</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cudW5pZWFnbGUubmV0LzIwMTIvMDgvMzEvJUU1JUE2JTgyJUU0JUJEJTk1JUU4JUE3JUEzJUU1JTg2JUIzaW9zJUU3JTgwJTkxJUU1JUI4JTgzJUU2JUI1JTgxdWlzY3JvbGx2aWV3JUU2JTg4JTk2dWl0YWJsZXZpZXclRTglQkYlOTAlRTglQTElOEMlRTQlQjglOEQlRTYlQjUlODElRTclOTUlODUv">http://blog.unieagle.net/2012/08/31/如何解决ios瀑布流uiscrollview或uitableview运行不流畅/<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E5%9C%A8Appdelegate.m%E4%B8%AD%E5%A4%84%E7%90%86%E5%A4%9A%E4%B8%AAhandleopenURL.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS7-%E5%9C%A8Appdelegate.m%E4%B8%AD%E5%A4%84%E7%90%86%E5%A4%9A%E4%B8%AAhandleopenURL.html" class="post-title-link" itemprop="url">iOS7 在Appdelegate.m中处理多个handleopenURL</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:22 / 修改时间：16:28:53" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:22+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>类似的情况如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span>  [WeiboSDK handleOpenURL:url delegate:<span class="keyword">self</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> [FBAppCall handleOpenURL:url</span><br><span class="line">              sourceApplication:sourceApplication</span><br><span class="line">                fallbackHandler:^(FBAppCall *call) &#123;</span><br><span class="line">                    </span><br><span class="line">                    <span class="built_in">NSLog</span>(<span class="string">@&quot;In fallback handler&quot;</span>);</span><br><span class="line">                    </span><br><span class="line">                &#125;];</span><br></pre></td></tr></table></figure>
+
+<p>facebook要调用我的handleOpenUrl，但是Sina Weibo也要调用,导致的结果是如何进行区分，然后进行不同的url调用。</p>
+<p>其实很简单，对于这样的接口其实在ios中有过scheme的设置，完全可以判断url的前缀是否含有你自己设置的前缀，可以如下</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string =[url absoluteString];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ([string hasPrefix:<span class="string">@&quot;微博url的前缀&quot;</span>])</span><br><span class="line">&#123;</span><br><span class="line">     <span class="keyword">return</span> [WeiboSDK handleOpenURL:url delegate:<span class="keyword">self</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ([string hasPrefix:<span class="string">@&quot;Facebook的url的前缀&quot;</span>])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> [WXApi handleOpenURL:url delegate:<span class="keyword">self</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>嗯，记录下</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Java-%E4%BD%BF%E7%94%A8%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/Java-%E4%BD%BF%E7%94%A8%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F.html" class="post-title-link" itemprop="url">Java 使用数组进行 选择排序</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:19 / 修改时间：16:32:25" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:19+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Java 使用数组进行 选择排序，简单的实现过程是这样子的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SelectionSort</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span> <span class="params">(String[] args)</span>&#123;</span><br><span class="line">		<span class="type">int</span>[] intArray = &#123;<span class="number">12</span>,<span class="number">11</span>,<span class="number">45</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">43</span>,<span class="number">40</span>,<span class="number">57</span>,<span class="number">3</span>,<span class="number">20</span>&#125;;</span><br><span class="line">		<span class="type">int</span> keyValue;</span><br><span class="line">		<span class="type">int</span> index;</span><br><span class="line">		<span class="type">int</span> temp;</span><br><span class="line">		System.out.println(<span class="string">&quot;排序前的数组&quot;</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;intArray.length;i++)&#123;</span><br><span class="line">			System.out.print(intArray[i]+<span class="string">&quot; &quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println();</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i &lt; intArray.length; i++)&#123;</span><br><span class="line">			index = i;</span><br><span class="line">			keyValue = intArray[i];</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j=i;j&lt;intArray.length;j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(intArray[j] &lt; keyValue)&#123;</span><br><span class="line">					index = j;</span><br><span class="line">					keyValue = intArray[j];</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			temp = intArray[i];</span><br><span class="line">			intArray[i] = intArray[index];</span><br><span class="line">			intArray[index] = temp;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">&quot;排序后的数组&quot;</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;intArray.length;i++)&#123;</span><br><span class="line">			System.out.print(intArray[i]+<span class="string">&quot; &quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">排序前的数组</span><br><span class="line">12 11 45 6 8 43 40 57 3 20 </span><br><span class="line">排序后的数组</span><br><span class="line">3 6 8 11 12 20 40 43 45 57</span><br></pre></td></tr></table></figure>
+
+<p>嗯，是这个样子的，</p>
+<p>选择排序的特点就是：</p>
+<p>效率低，但是实现很简单。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/MacOS-%E4%B8%89%E6%8B%9B%E5%BC%B7%E5%88%B6%E5%85%B3%E9%97%ADMAC%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/MacOS-%E4%B8%89%E6%8B%9B%E5%BC%B7%E5%88%B6%E5%85%B3%E9%97%ADMAC%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F.html" class="post-title-link" itemprop="url">MacOS 三招強制关闭MAC应用程序</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:16 / 修改时间：16:33:30" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:16+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>第一招：同时按Option(Alt)+Command(苹果)+ESC键，这时会跳出一个，像工作管理员的面板，这时对应着应用程序点一下，再按强制结束就可以了。</p>
+<p>第二招：按住Option(Alt)键不放，再对应着应用程序的图标按鼠标右键，选择强制结束就可以了。</p>
+<p>第三招：按住Command(苹果)+Option(Alt)+Shift+ESC按住三秒不放，就会强制关闭应用程序。</p>
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5taW53dC5jb20vbWFjLzM5ODcuaHRtbA==">http://www.minwt.com/mac/3987.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E5%A6%82%E4%BD%95%E5%9C%A8Objective-C%E4%B8%AD%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A9%BA%E7%99%BD%E7%9A%84%E9%80%8F%E6%98%8EPNG.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS7-%E5%A6%82%E4%BD%95%E5%9C%A8Objective-C%E4%B8%AD%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E7%A9%BA%E7%99%BD%E7%9A%84%E9%80%8F%E6%98%8EPNG.html" class="post-title-link" itemprop="url">iOS7 - 如何在Objective C中创建一个空白的透明PNG</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:13 / 修改时间：16:39:00" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:13+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>google后的结果很神奇，这里就是一小段的代码</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(<span class="built_in">CGSizeMake</span>(<span class="number">36</span>, <span class="number">36</span>), <span class="literal">NO</span>, <span class="number">0.0</span>); </span><br><span class="line"><span class="built_in">UIImage</span> *blank = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>(); </span><br><span class="line"><span class="built_in">UIGraphicsEndImageContext</span>();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>参考文章</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy4xNmthbi5jb20vcXVlc3Rpb24vZGV0YWlsLzEwOTM4NS5odG1s">http://www.16kan.com/question/detail/109385.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-UIScrollView%E6%BB%9A%E5%8A%A8%E8%A7%86%E5%9B%BE%E5%92%8CUIPageControl%E5%88%86%E9%A1%B5%E6%8E%A7%E4%BB%B6%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS7-UIScrollView%E6%BB%9A%E5%8A%A8%E8%A7%86%E5%9B%BE%E5%92%8CUIPageControl%E5%88%86%E9%A1%B5%E6%8E%A7%E4%BB%B6%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8.html" class="post-title-link" itemprop="url">IOS7 UIScrollView滚动视图和UIPageControl分页控件的简单应用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:10 / 修改时间：16:40:15" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:10+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>我这里是使用故事版（storyboard）实现的。</p>
+<p>创建一个简单的storyboard，在里面添加一个UIViewContoller，在view里面添加一个PageControl和一个ScrollView，并做链接。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UIScrollView</span> *pageScroll;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UIPageControl</span> *pageControl;</span><br></pre></td></tr></table></figure>
+
+<p>在监听一个pageControl的value change事件，这里不知道怎么添加的话，请关注这里341268380，我们的技术交流群。</p>
+<p>同时添加一个存储要展示图片的数组变量</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSArray</span> *photoList;</span><br><span class="line">- (<span class="keyword">IBAction</span>)changePage:(<span class="type">id</span>)sender;</span><br></pre></td></tr></table></figure>
+
+<p>同时要加入</p>
+<p>UIScrollViewDelegate</p>
+<p>代理</p>
+<p>基础工作做完之后，开始我们的过程实现</p>
+<p>初始化的工作如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">	<span class="comment">// Do any additional setup after loading the view.</span></span><br><span class="line">    <span class="built_in">NSString</span> *img1 = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;bg_welcome1&quot;</span></span><br><span class="line">                                                     ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *img2 = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;bg_welcome2&quot;</span></span><br><span class="line">                                                     ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *img3 = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;bg_welcome3&quot;</span></span><br><span class="line">                                                     ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    _photoList = [[<span class="built_in">NSArray</span> alloc] initWithObjects:</span><br><span class="line">                  [<span class="built_in">UIImage</span> imageWithContentsOfFile:img1],</span><br><span class="line">                  [<span class="built_in">UIImage</span> imageWithContentsOfFile:img2],</span><br><span class="line">                  [<span class="built_in">UIImage</span> imageWithContentsOfFile:img3],</span><br><span class="line">                  [<span class="keyword">self</span> getEmptyUIImage],<span class="literal">nil</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSInteger</span> pageCount = [_photoList count];</span><br><span class="line">    _pageControl.currentPage = <span class="number">0</span>;</span><br><span class="line">    _pageControl.numberOfPages = pageCount;</span><br><span class="line">    </span><br><span class="line">    _pageScroll.frame = <span class="built_in">CGRectMake</span>(<span class="number">0.0</span>,</span><br><span class="line">                                   <span class="number">0.0</span>,</span><br><span class="line">                                   <span class="number">320.0</span>,</span><br><span class="line">                                   <span class="number">568.0</span>);</span><br><span class="line">    _pageScroll.delegate = <span class="keyword">self</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">NSInteger</span> i=<span class="number">0</span>;i&lt;pageCount;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">CGRect</span> frame;</span><br><span class="line">        frame.origin.x = _pageScroll.frame.size.width * i;</span><br><span class="line">        frame.origin.y = <span class="number">0</span>;</span><br><span class="line">        frame.size = _pageScroll.frame.size;</span><br><span class="line"><span class="comment">//        frame = CGRectInset(frame, 10.0, 10.0);</span></span><br><span class="line">        <span class="built_in">UIImageView</span> *pageView = [[<span class="built_in">UIImageView</span> alloc] initWithImage:[_photoList objectAtIndex:i]];</span><br><span class="line">        pageView.contentMode = <span class="built_in">UIViewContentModeScaleAspectFill</span>;</span><br><span class="line">        pageView.frame = frame;</span><br><span class="line">        [_pageScroll addSubview:pageView];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) viewWillAppear:(<span class="type">BOOL</span>)animated</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGSize</span> pageScrollViewSize = _pageScroll.frame.size;</span><br><span class="line">    _pageScroll.contentSize = <span class="built_in">CGSizeMake</span>(pageScrollViewSize.width * _photoList.count, pageScrollViewSize.height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>监控PageControl的方法</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)changePage:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 更新Scroll View到正确的页面</span></span><br><span class="line">    <span class="built_in">CGRect</span> frame;</span><br><span class="line">    frame.origin.x = _pageScroll.frame.size.width * _pageControl.currentPage;</span><br><span class="line">    frame.origin.y = <span class="number">0</span>;</span><br><span class="line">    frame.size = _pageScroll.frame.size;</span><br><span class="line">    [_pageScroll scrollRectToVisible:frame animated:<span class="literal">YES</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>视图滚动的方法</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) scrollViewDidScroll:(<span class="built_in">UIScrollView</span> *)scrollView</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGFloat</span> pageWidth = _pageScroll.frame.size.width;</span><br><span class="line">    <span class="comment">// 在滚动超过页面宽度的50%的时候，切换到新的页面</span></span><br><span class="line">    <span class="type">int</span> page = floor((_pageScroll.contentOffset.x + pageWidth/<span class="number">2</span>)/pageWidth) ;</span><br><span class="line">    _pageControl.currentPage = page;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (page &gt;= <span class="number">3</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//点击登陆按钮后切换到storyboard界面</span></span><br><span class="line">        <span class="built_in">UIStoryboard</span> *storyboard = [<span class="built_in">UIStoryboard</span> storyboardWithName:<span class="string">@&quot;MainStoryboardIOS7Iphone5&quot;</span> bundle:<span class="literal">nil</span>];</span><br><span class="line">        [<span class="keyword">self</span> presentViewController:[storyboard instantiateInitialViewController]</span><br><span class="line">                           animated:<span class="literal">YES</span></span><br><span class="line">                         completion:<span class="literal">nil</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面可以看出，其实我是加了一个空白的图片</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="built_in">UIImage</span> *)getEmptyUIImage</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(<span class="built_in">CGSizeMake</span>(_pageScroll.frame.size.width,</span><br><span class="line">                                                      _pageScroll.frame.size.height), <span class="literal">NO</span>, <span class="number">0.0</span>);</span><br><span class="line">    <span class="built_in">UIImage</span> *blank = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> blank;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGColorSpaceRef</span> colorSpace=<span class="built_in">CGColorSpaceCreateDeviceRGB</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextRef</span> context=<span class="built_in">CGBitmapContextCreate</span>(<span class="literal">NULL</span>,</span><br><span class="line">                                               _pageScroll.frame.size.width,</span><br><span class="line">                                               _pageScroll.frame.size.height,</span><br><span class="line">                                               <span class="number">0.0</span>,</span><br><span class="line">                                               _pageScroll.frame.size.width*<span class="keyword">sizeof</span>(uint32_t), colorSpace, kCGBitmapByteOrder32Little|kCGImageAlphaNoneSkipLast);</span><br><span class="line">    [[<span class="built_in">UIColor</span> clearColor] setFill];</span><br><span class="line">    <span class="built_in">CGContextSetFillColorWithColor</span>(context, [<span class="built_in">UIColor</span> clearColor].CGColor);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGImageRef</span> image=<span class="built_in">CGBitmapContextCreateImage</span>(context);</span><br><span class="line">    <span class="built_in">CGContextRelease</span>(context);</span><br><span class="line">    <span class="built_in">CGColorSpaceRelease</span>(colorSpace);</span><br><span class="line">    <span class="built_in">UIImage</span> *emptyUIImage=[<span class="built_in">UIImage</span> imageWithCGImage:image];</span><br><span class="line">    <span class="built_in">CGImageRelease</span>(image);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> emptyUIImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>基本上就可以了。github代码地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3poYW5nZGE4OS9Vc2VyR3VpZC5naXQ=">https://github.com/zhangda89/UserGuid.git<i class="fa fa-external-link-alt"></i></span></p>
+<hr>
+<p>参考文章</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5lbnRsaWIubmV0Lz9wPTI2Mjc=">http://www.entlib.net/?p=2627<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS%E4%B8%AD%E5%A4%9A%E4%B8%AAUITextField%E7%9A%84%E9%94%AE%E7%9B%98%E5%A4%84%E7%90%86-%E8%A7%86%E5%9B%BE%E4%BD%8D%E7%A7%BB.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS%E4%B8%AD%E5%A4%9A%E4%B8%AAUITextField%E7%9A%84%E9%94%AE%E7%9B%98%E5%A4%84%E7%90%86-%E8%A7%86%E5%9B%BE%E4%BD%8D%E7%A7%BB.html" class="post-title-link" itemprop="url">iOS中多个UITextField的键盘处理-视图位移</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:07 / 修改时间：16:41:26" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:07+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>当有多个UITextField的时候，一个比较好的处理方式就是实现视图移位，实现的方法也很简单。</p>
+<p>首先是加入UITextField的代理UITextFieldDelegate。</p>
+<p>其次，在代理的<code>-(void) textFieldDidBeginEditing:(UITextField *)textField</code>方法中实现</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> keyboardHeight = <span class="number">216.0</span>;</span><br><span class="line"><span class="keyword">if</span> ((textField.frame.origin.y + keyboardHeight + textField.frame.size.height) &gt;= ([[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height - <span class="number">100.0</span>))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//此时，编辑框被键盘盖住，则对视图做对应的位移</span></span><br><span class="line">    <span class="built_in">CGRect</span> frame =  <span class="built_in">CGRectMake</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">320</span>, [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height + <span class="number">120.0</span>);</span><br><span class="line">    frame.origin.y -= textField.frame.origin.y + keyboardHeight + textField.frame.size.height - [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height + <span class="number">120.0</span>;<span class="comment">//偏移量=编辑框原点Y值+键盘高度+编辑框高度-屏幕高度</span></span><br><span class="line">    _scrollView.frame=frame;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里面的具体位置可以自己调整，算法也是不唯一的</p>
+<p>当到达最后一个UITextField的时候，要隐藏键盘，这里如何做呢，如下所示：</p>
+<p>在代理</p>
+<p><code>- (BOOL)textFieldShouldReturn:(UITextField *)textField</code></p>
+<p>方法中</p>
+<p>最后一个失去焦点的时候</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[_bloodTextField resignFirstResponder];</span><br><span class="line"><span class="built_in">CGRect</span> frame =  _scrollView.frame;</span><br><span class="line">frame.size.height = [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height;</span><br><span class="line">frame.origin.y = <span class="number">0.0</span>;</span><br><span class="line">_scrollView.frame=frame;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">YES</span>;</span><br></pre></td></tr></table></figure>
+
+<p>判断的话我使用这样子实现的</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([_bloodTextField isFirstResponder])</span><br></pre></td></tr></table></figure>
+
+<p>是不是很简单</p>
 
       
     </div>
@@ -1319,7 +1131,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/21/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><span class="space">&hellip;</span><a class="page-number" href="/page/71/">71</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/23/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/21/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><span class="page-number current">22</span><a class="page-number" href="/page/23/">23</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/23/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
