@@ -191,18 +191,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">744</span>
+          <span class="site-state-item-count">746</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">132</span>
+        <span class="site-state-item-count">134</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,180 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS%E4%B9%8B%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82-%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82-GET%E8%AF%B7%E6%B1%82-POST%E8%AF%B7%E6%B1%82.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/iOS%E4%B9%8B%E5%90%8C%E6%AD%A5%E8%AF%B7%E6%B1%82-%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82-GET%E8%AF%B7%E6%B1%82-POST%E8%AF%B7%E6%B1%82.html" class="post-title-link" itemprop="url">iOS之同步请求、异步请求、GET请求、POST请求</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:25:49 / 修改时间：10:50:03" itemprop="dateCreated datePublished" datetime="2025-06-27T10:25:49+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>都知道网站有GET请求和POST请求，但是在开发IOS的时候，会有哪些方法呢，网上有篇文章写的不错很有力度。入门者应该也可以看的明白，不明白者，可以看下方的QQ群，进行交流</p>
+<p>1、同步请求可以从因特网请求数据，一旦发送同步请求，程序将停止用户交互，直至服务器返回数据完成，才可以进行下一步操作，<br>2、异步请求不会阻塞主线程，而会建立一个新的线程来操作，用户发出异步请求后，依然可以对UI进行操作，程序可以继续运行<br>3、GET请求，将参数直接写在访问路径上。操作简单，不过容易被外界看到，安全性不高，地址最多255字节；<br>4、POST请求，将参数放到body里面。POST请求操作相对复杂，需要将参数和地址分开，不过安全性高，参数放在body里面，不易被捕获。</p>
+<h4 id="1"><a href="#1" class="headerlink" title="同步GET请求"></a><a href="#1">同步GET请求</a></h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一步，创建URL</span></span><br><span class="line"><span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;http://api.hudong.com/iphonexml.do?type=focus-c&quot;</span>];</span><br><span class="line"><span class="comment">//第二步，通过URL创建网络请求</span></span><br><span class="line"><span class="built_in">NSURLRequest</span> *request = [[<span class="built_in">NSURLRequest</span> alloc]initWithURL:url cachePolicy:<span class="built_in">NSURLRequestUseProtocolCachePolicy</span> timeoutInterval:<span class="number">10</span>];</span><br><span class="line"><span class="comment">//NSURLRequest初始化方法第一个参数：请求访问路径，第二个参数：缓存协议，第三个参数：网络请求超时时间（秒）</span></span><br><span class="line">其中缓存协议是个枚举类型包含：</span><br><span class="line"><span class="built_in">NSURLRequestUseProtocolCachePolicy</span>（基础策略）</span><br><span class="line"><span class="built_in">NSURLRequestReloadIgnoringLocalCacheData</span>（忽略本地缓存）</span><br><span class="line"><span class="built_in">NSURLRequestReturnCacheDataElseLoad</span>（首先使用缓存，如果没有本地缓存，才从原地址下载）</span><br><span class="line"><span class="built_in">NSURLRequestReturnCacheDataDontLoad</span>（使用本地缓存，从不下载，如果本地没有缓存，则请求失败，此策略多用于离线操作）</span><br><span class="line"><span class="built_in">NSURLRequestReloadIgnoringLocalAndRemoteCacheData</span>（无视任何缓存策略，无论是本地的还是远程的，总是从原地址重新下载）</span><br><span class="line"><span class="built_in">NSURLRequestReloadRevalidatingCacheData</span>（如果本地缓存是有效的则不下载，其他任何情况都从原地址重新下载）</span><br><span class="line"><span class="comment">//第三步，连接服务器</span></span><br><span class="line"><span class="built_in">NSData</span> *received = [<span class="built_in">NSURLConnection</span> sendSynchronousRequest:request returningResponse:<span class="literal">nil</span> error:<span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSString</span> *str = [[<span class="built_in">NSString</span> alloc]initWithData:received encoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,str);</span><br></pre></td></tr></table></figure>
+
+<h4 id="2"><a href="#2" class="headerlink" title="同步POST请求"></a><a href="#2">同步POST请求</a></h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一步，创建URL</span></span><br><span class="line"><span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;http://api.hudong.com/iphonexml.do&quot;</span>];</span><br><span class="line"><span class="comment">//第二步，创建请求</span></span><br><span class="line"><span class="built_in">NSMutableURLRequest</span> *request = [[<span class="built_in">NSMutableURLRequest</span> alloc]initWithURL:url cachePolicy:<span class="built_in">NSURLRequestUseProtocolCachePolicy</span> timeoutInterval:<span class="number">10</span>];</span><br><span class="line">[request setHTTPMethod:<span class="string">@&quot;POST&quot;</span>];<span class="comment">//设置请求方式为POST，默认为GET</span></span><br><span class="line"><span class="built_in">NSString</span> *str = <span class="string">@&quot;type=focus-c&quot;</span>;<span class="comment">//设置参数</span></span><br><span class="line"><span class="built_in">NSData</span> *data = [str dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">[request setHTTPBody:data];</span><br><span class="line"><span class="comment">//第三步，连接服务器</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">NSData</span> *received = [<span class="built_in">NSURLConnection</span> sendSynchronousRequest:request returningResponse:<span class="literal">nil</span> error:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSString</span> *str1 = [[<span class="built_in">NSString</span> alloc]initWithData:received encoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,str1);</span><br></pre></td></tr></table></figure>
+
+<h4 id="3"><a href="#3" class="headerlink" title="异步GET请求"></a><a href="#3">异步GET请求</a></h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一步，创建url</span></span><br><span class="line"><span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;http://api.hudong.com/iphonexml.do?type=focus-c&quot;</span>];</span><br><span class="line"><span class="comment">//第二步，创建请求</span></span><br><span class="line"><span class="built_in">NSURLRequest</span> *request = [[<span class="built_in">NSURLRequest</span> alloc]initWithURL:url cachePolicy:<span class="built_in">NSURLRequestUseProtocolCachePolicy</span> timeoutInterval:<span class="number">10</span>];</span><br><span class="line"><span class="comment">//第三步，连接服务器</span></span><br><span class="line"><span class="built_in">NSURLConnection</span> *connection = [[<span class="built_in">NSURLConnection</span> alloc]initWithRequest:request delegate:<span class="keyword">self</span>];</span><br></pre></td></tr></table></figure>
+
+<h4 id="4"><a href="#4" class="headerlink" title="异步POST请求"></a><a href="#4">异步POST请求</a></h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一步，创建url</span></span><br><span class="line"><span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;http://api.hudong.com/iphonexml.do&quot;</span>];</span><br><span class="line"><span class="comment">//第二步，创建请求</span></span><br><span class="line"><span class="built_in">NSMutableURLRequest</span> *request = [[<span class="built_in">NSMutableURLRequest</span> alloc]initWithURL:url cachePolicy:<span class="built_in">NSURLRequestUseProtocolCachePolicy</span> timeoutInterval:<span class="number">10</span>];</span><br><span class="line">[request setHTTPMethod:<span class="string">@&quot;POST&quot;</span>];</span><br><span class="line"><span class="built_in">NSString</span> *str = <span class="string">@&quot;type=focus-c&quot;</span>;</span><br><span class="line"><span class="built_in">NSData</span> *data = [str dataUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">[request setHTTPBody:data];</span><br><span class="line"><span class="comment">//第三步，连接服务器</span></span><br><span class="line"><span class="built_in">NSURLConnection</span> *connection = [[<span class="built_in">NSURLConnection</span> alloc]initWithRequest:request delegate:<span class="keyword">self</span>];</span><br></pre></td></tr></table></figure>
+
+<h4 id="5"><a href="#5" class="headerlink" title="异步请求的代理方法"></a><a href="#5">异步请求的代理方法</a></h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接收到服务器回应的时候调用此方法</span></span><br><span class="line">- (<span class="type">void</span>)connection:(<span class="built_in">NSURLConnection</span> *)connection didReceiveResponse:(<span class="built_in">NSURLResponse</span> *)response</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSHTTPURLResponse</span> *res = (<span class="built_in">NSHTTPURLResponse</span> *)response;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,[res allHeaderFields]);</span><br><span class="line">    <span class="keyword">self</span>.receiveData = [<span class="built_in">NSMutableData</span> data];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//接收到服务器传输数据的时候调用，此方法根据数据大小执行若干次</span></span><br><span class="line">-(<span class="type">void</span>)connection:(<span class="built_in">NSURLConnection</span> *)connection didReceiveData:(<span class="built_in">NSData</span> *)data</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span>.receiveData appendData:data];</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//数据传完之后调用此方法</span></span><br><span class="line">-(<span class="type">void</span>)connectionDidFinishLoading:(<span class="built_in">NSURLConnection</span> *)connection</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *receiveStr = [[<span class="built_in">NSString</span> alloc]initWithData:<span class="keyword">self</span>.receiveData encoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,receiveStr);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//网络请求过程中，出现任何错误（断网，连接超时等）会进入此方法</span></span><br><span class="line">-(<span class="type">void</span>)connection:(<span class="built_in">NSURLConnection</span> *)connection</span><br><span class="line"> didFailWithError:(<span class="built_in">NSError</span> *)error</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;%@&quot;</span>,[error localizedDescription]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/NSString-%E4%B8%AD%E7%9A%84-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5-%E5%92%8C-%E5%A4%9A%E8%A1%8C%E4%B9%A6%E5%86%99%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%98%E9%87%8F.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/NSString-%E4%B8%AD%E7%9A%84-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%8B%BC%E6%8E%A5-%E5%92%8C-%E5%A4%9A%E8%A1%8C%E4%B9%A6%E5%86%99%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8F%98%E9%87%8F.html" class="post-title-link" itemprop="url">NSString 中的 字符串拼接 和 多行书写字符串变量</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:25:46 / 修改时间：10:49:16" itemprop="dateCreated datePublished" datetime="2025-06-27T10:25:46+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="1"><a href="#1" class="headerlink" title="字符串拼接"></a><a href="#1">字符串拼接</a></h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *str1 = <span class="string">@&quot;我是durban&quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *str2 = <span class="string">@&quot;我是wenwen&quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *result;</span><br><span class="line"><span class="comment">//方法1</span></span><br><span class="line">result = [str1 stringByAppendingString:str2];</span><br><span class="line"><span class="built_in">NSLog</span>(result, <span class="literal">nil</span>);</span><br><span class="line"><span class="comment">//方法2</span></span><br><span class="line">result = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@%@&quot;</span>, str1, str2];</span><br><span class="line"><span class="built_in">NSLog</span>(result, <span class="literal">nil</span>);</span><br><span class="line"><span class="comment">//方法3</span></span><br><span class="line">result = [<span class="string">@&quot;&quot;</span> stringByAppendingFormat:<span class="string">@&quot;%@%@&quot;</span>, str1, str2];</span><br><span class="line"><span class="built_in">NSLog</span>(result, <span class="literal">nil</span>);</span><br><span class="line"><span class="comment">//方法4</span></span><br><span class="line"><span class="built_in">NSMutableString</span> *ms = [[<span class="built_in">NSMutableString</span> alloc] init];</span><br><span class="line">[ms appendString:str1];</span><br><span class="line">[ms appendString:str2];</span><br><span class="line"><span class="built_in">NSLog</span>(ms, <span class="literal">nil</span>);</span><br><span class="line">[ms release];</span><br><span class="line">    </span><br><span class="line"><span class="comment">//结果都是：我是durban我是wenwen</span></span><br></pre></td></tr></table></figure>
+
+<p>一般推荐使用方法1，如果需要大量字符串连接推荐使用方法4，需要更少的内存开销。</p>
+<h4 id="2"><a href="#2" class="headerlink" title="多行书写字符串变量"></a><a href="#2">多行书写字符串变量</a></h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *str1 = <span class="string">@&quot;SELECT [CustomerID], [CustomerName] &quot;</span></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;FROM [Customer] &quot;</span></span><br><span class="line"></span><br><span class="line"><span class="string">&quot;WHERE [CustomerName] LIKE &#x27;%durban%&#x27;&quot;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">NSString</span> *str2 = <span class="string">@&quot;SELECT [CustomerID], [CustomerName] \</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">FROM [Customer] \</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">WHERE [CustomerName] LIKE &#x27;%durban%&#x27;&quot;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(str1, <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(str2, <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//结果都是：SELECT [CustomerID], [CustomerName] FROM [Customer] WHERE [CustomerName] LIKE &#x27;%durban%&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意字符串中每行结尾处的空格。这种字符串声明方式虽然看上去是多行，实际上字符串中并没有换行符，也就是说整个字符串实际上是一行。如果需要在字符串中换行，可以在字符串中加入换行符”\n”。这种声明方式一般用在需要在代码中多行显示字符串以便提高可读性，例如：SQL语句往往需要多行显示来提高可读性、较长的文本的段落之间需要分行显示以便更容易找到分段位置。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1052,193 +1226,6 @@
 <hr>
 <p>参考文章：</p>
 <p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9zdGFyc3BhY2UvYXJjaGl2ZS8yMDA5LzAyLzEzLzEzOTAwNjIuaHRtbA==">http://www.cnblogs.com/starspace/archive/2009/02/13/1390062.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/Java7-Tomcat%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/27/Java7-Tomcat%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">Java7 Tomcat缓存的问题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-27 10:06:59 / 修改时间：10:20:16" itemprop="dateCreated datePublished" datetime="2025-06-27T10:06:59+08:00">2025-06-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>一般的在做jsp的开发的时候，会出现一个问题就是，将jsp文件提交后，刷新页面，内容没有改变。</p>
-<p>我这里总结了几条方法，在实施之前先做如下操作。</p>
-<p>1，删除work里面对应的项目的缓存文件，比如我的app是news，那么我就删除news就好了</p>
-<p>2，清空浏览器的缓存，或者是重新打开一个浏览器</p>
-<p>然后做如下的操作，使得我们的操作起作用：</p>
-<p>1，修改server.xml文件，在相应的context中加上或者修改</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reloadable=<span class="string">&quot;true&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>结果就是:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Context path=<span class="string">&quot;/news&quot;</span> docBase=<span class="string">&quot;/home/www/jspweb/news&quot;</span> debug=<span class="string">&quot;0&quot;</span> privileged=<span class="string">&quot;true&quot;</span> reloadable=<span class="string">&quot;true&quot;</span>&gt; </span><br><span class="line">&lt;/Context&gt;</span><br></pre></td></tr></table></figure>
-
-<p>3，在相应的jsp文件中加入如下代码：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">      response.setHeader(<span class="string">&quot;Cache-Control&quot;</span>, <span class="string">&quot;no-cache&quot;</span>);</span><br><span class="line">      response.setHeader(<span class="string">&quot;Pragma&quot;</span>, <span class="string">&quot;no-cache&quot;</span>);</span><br><span class="line">      response.setDateHeader(<span class="string">&quot;Expires&quot;</span>, -1);</span><br><span class="line">      response.setDateHeader(<span class="string">&quot;max-age&quot;</span>, 0);</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
-
-<p>然后打开页面试试吧，修改文件之后在重新传一下试试，如果没有效果可以联系下方的QQ群。</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcmVkYXJteV9jaGVuL2FydGljbGUvZGV0YWlscy83MDMyNjcx">http://blog.csdn.net/redarmy_chen/article/details/7032671<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL2cua2Vob3UuY29tL3QxMDA3MDg2NjY4Lmh0bWw=">http://g.kehou.com/t1007086668.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/NetBeans%E8%BF%9B%E8%A1%8Cjsp%E5%BC%80%E5%8F%91%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/27/NetBeans%E8%BF%9B%E8%A1%8Cjsp%E5%BC%80%E5%8F%91%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html" class="post-title-link" itemprop="url">NetBeans进行jsp开发乱码解决方案</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-27 10:06:56 / 修改时间：10:21:41" itemprop="dateCreated datePublished" datetime="2025-06-27T10:06:56+08:00">2025-06-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>NetBeans进行jsp开发乱码解决方案:方案如下</p>
-<p>很多人在使用NetBeans进行JSP开发的时候总会出现页面汉字乱码的情况，很是头疼，其实这根NetBeans默认的编码方式有关。常用的编码方式有UTF-8、GBK、gb2312以及ISO-8859-1等。</p>
-<p>ISO8859-1，通常叫做Latin-1。Latin-1包括了书写所有西方欧洲语言不可缺少的附加字符。<br>而gb2312是标准中文字符集<br>而如果只是英文字符，那么使用哪种编码格式都没问题，甚至是gb2312.</p>
-<p>UTF-8（8 位元 Universal Character Set／Unicode Transformation Format）是一种针对 Unicode的可变长度字符编码。它可以用来表示 Unicode标准中的任何字符，且其编码中的第一个字节仍与 ASCII相容，这使得原来处理 ASCII 字符的软件无须或只须做少部份修改，即可继续使用。因此，它逐渐成为电子邮件、网页及其他储存或传送文字的应用中，优先采用的编码。</p>
-<p>为此，我们要在页面头部加上pageEncoding的标签并将其指定为utf-8的编码格式，即可解决页面中文出现一列?的乱码问题，如下所示：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> pageEncoding=<span class="string">&quot;UTF-8&quot;</span>%&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这样的话在页面中，就不会出现乱码</p>
-<p>此法我已经测试过，是可以的，这里仅供参考</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3c3N0dHQuYmxvZy41MWN0by5jb20vMTI4OTY1MS8zODIxNTE=">http://wwssttt.blog.51cto.com/1289651/382151<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>

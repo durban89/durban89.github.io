@@ -191,18 +191,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">744</span>
+          <span class="site-state-item-count">746</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">132</span>
+        <span class="site-state-item-count">134</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,260 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Objective-C-%E6%B7%B1copy-%E6%B5%85copy-%E8%87%AA%E5%AE%9A%E4%B9%89copy.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/Objective-C-%E6%B7%B1copy-%E6%B5%85copy-%E8%87%AA%E5%AE%9A%E4%B9%89copy.html" class="post-title-link" itemprop="url">Objective-C 深copy 浅copy 自定义copy</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 10:26:11 / 修改时间：10:50:12" itemprop="dateCreated datePublished" datetime="2025-06-25T10:26:11+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>深copy指的是对象内的属性的copy，但是深copy的前提是，这个变量是可变的</p>
+<p>浅copy值的是只copy对象</p>
+<p>自定义copy调用的是NSCopying协议进行的copy</p>
+<p>gowhich举了一个例子</p>
+<p>第一个例子，看一下copy与retain的区别，来显示一下copy的作用</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//retain操作</span></span><br><span class="line"><span class="built_in">NSMutableArray</span> *array = [[<span class="built_in">NSMutableArray</span> alloc] initWithObjects:<span class="string">@&quot;one&quot;</span>,<span class="string">@&quot;two&quot;</span>,<span class="string">@&quot;three&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSMutableArray</span> *array1 = [array <span class="keyword">retain</span>];</span><br><span class="line">[array1 removeLastObject];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;array = %@&quot;</span>,array);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;array retaincount = %ld&quot;</span>,[array retainCount]);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;array1 = %@&quot;</span>,array1);</span><br><span class="line"></span><br><span class="line"><span class="comment">//copy操作</span></span><br><span class="line"><span class="built_in">NSMutableArray</span> *copyArray = [[<span class="built_in">NSMutableArray</span> alloc] initWithObjects:<span class="string">@&quot;one&quot;</span>,<span class="string">@&quot;two&quot;</span>,<span class="string">@&quot;three&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSMutableArray</span> *copyArray1 = [copyArray mutableCopy];</span><br><span class="line">[copyArray1 removeLastObject];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;copyArray = %@&quot;</span>,copyArray);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;copyArray1 %@&quot;</span>,copyArray1);</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">2013-11-19 10:13:01.166 CopyDemo[73423:303] array = (</span><br><span class="line">    one,</span><br><span class="line">    two</span><br><span class="line">)</span><br><span class="line">2013-11-19 10:13:01.168 CopyDemo[73423:303] array retaincount = 2</span><br><span class="line">2013-11-19 10:13:01.168 CopyDemo[73423:303] array1 = (</span><br><span class="line">    one,</span><br><span class="line">    two</span><br><span class="line">)</span><br><span class="line">2013-11-19 10:13:01.169 CopyDemo[73423:303] copyArray = (</span><br><span class="line">    one,</span><br><span class="line">    two,</span><br><span class="line">    three</span><br><span class="line">)</span><br><span class="line">2013-11-19 10:13:01.169 CopyDemo[73423:303] copyArray1 (</span><br><span class="line">    one,</span><br><span class="line">    two</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>copy的结果是，copy后得到的对象的操作不影响源对象</p>
+<p>第二个例子：copy的一般应用</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//copy操作</span></span><br><span class="line"><span class="built_in">NSArray</span> *array3 = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;one&quot;</span>,<span class="string">@&quot;two&quot;</span>,<span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *array31 = [array3 <span class="keyword">copy</span>];</span><br><span class="line"><span class="built_in">NSMutableArray</span> *array32 = [array3 mutableCopy];</span><br><span class="line">[array32 addObject:<span class="string">@&quot;three&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;array3 = %@&quot;</span>,array3);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;array31 = %@&quot;</span>,array31);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;array32 = %@&quot;</span>,array32);</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">2013-11-19 10:15:01.853 CopyDemo[73470:303] array3 = (</span><br><span class="line">    one,</span><br><span class="line">    two</span><br><span class="line">)</span><br><span class="line">2013-11-19 10:15:01.855 CopyDemo[73470:303] array31 = (</span><br><span class="line">    one,</span><br><span class="line">    two</span><br><span class="line">)</span><br><span class="line">2013-11-19 10:15:01.856 CopyDemo[73470:303] array32 = (</span><br><span class="line">    one,</span><br><span class="line">    two,</span><br><span class="line">    three</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>第三个例子：一个简单的浅copy</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//浅copy</span></span><br><span class="line"><span class="built_in">NSMutableArray</span> *array = [<span class="built_in">NSMutableArray</span> array];</span><br><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i =<span class="number">0</span>;i &lt; <span class="number">3</span>;i++)&#123;</span><br><span class="line">    <span class="built_in">NSObject</span> *obj = [[<span class="built_in">NSObject</span> alloc] init];</span><br><span class="line">    [array addObject:obj];</span><br><span class="line">    [obj release];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">NSObject</span> *obj <span class="keyword">in</span> array) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;指针地址：%p, 应用计数：%ld&quot;</span>,obj, obj.retainCount);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSArray</span> *array2 = [array <span class="keyword">copy</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="built_in">NSObject</span> *obj <span class="keyword">in</span> array2) &#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;指针地址：%p, 应用计数：%ld&quot;</span>,obj, obj.retainCount);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2013-11-19 10:16:07.092 CopyDemo[73505:303] 指针地址：0x100202590, 应用计数：1</span><br><span class="line">2013-11-19 10:16:07.094 CopyDemo[73505:303] 指针地址：0x100202e70, 应用计数：1</span><br><span class="line">2013-11-19 10:16:07.094 CopyDemo[73505:303] 指针地址：0x100202ec0, 应用计数：1</span><br><span class="line">2013-11-19 10:16:07.095 CopyDemo[73505:303] 指针地址：0x100202590, 应用计数：2</span><br><span class="line">2013-11-19 10:16:07.095 CopyDemo[73505:303] 指针地址：0x100202e70, 应用计数：2</span><br><span class="line">2013-11-19 10:16:07.095 CopyDemo[73505:303] 指针地址：0x100202ec0, 应用计数：2</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，里面的属性并没有改变，只是计数增加了。</p>
+<p>第四个例子：看一下自定义的copy</p>
+<p>先定义一个类，在类里面实现NSCopying协议的-(id)copyWithZone:(NSZone *)zone;</p>
+<p>Person.m</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Person.m</span></span><br><span class="line"><span class="comment">//  CopyDemo</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-11-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;Person.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line">-(<span class="type">id</span>)copyWithZone:(<span class="built_in">NSZone</span> *)zone</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//浅copy - 第一种方法</span></span><br><span class="line"><span class="comment">//    Person *person = [[[self class] allocWithZone:zone] init];</span></span><br><span class="line"><span class="comment">//    person.name = _name;</span></span><br><span class="line"><span class="comment">//    person.age = _age;</span></span><br><span class="line"><span class="comment">//    return person;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//浅copy - 第二种方法</span></span><br><span class="line"><span class="comment">//    Person *person = [[[self class] allocWithZone:zone] init];</span></span><br><span class="line"><span class="comment">//    person.name = [_name copy];</span></span><br><span class="line"><span class="comment">//    person.age = [_age copy];</span></span><br><span class="line"><span class="comment">//    return person;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//深copy</span></span><br><span class="line">    Person *person = [[[<span class="keyword">self</span> <span class="keyword">class</span>] allocWithZone:zone] init];</span><br><span class="line">    person.name = [_name mutableCopy];</span><br><span class="line">    person.age = [_age <span class="keyword">copy</span>];<span class="comment">//因为age是一个不可变变量</span></span><br><span class="line">    <span class="keyword">return</span> person;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>Person.h</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Person.h</span></span><br><span class="line"><span class="comment">//  CopyDemo</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-11-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span>&lt;<span class="title">NSCopying</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">copy</span>) <span class="built_in">NSString</span> *name;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">retain</span>) <span class="built_in">NSNumber</span> *age;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>在main.m中调用</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//深copy</span></span><br><span class="line">Person *person = [[Person alloc] init];</span><br><span class="line">person.name  = <span class="string">@&quot;Durban&quot;</span>;</span><br><span class="line">person.age = @<span class="number">12</span>;</span><br><span class="line"></span><br><span class="line">Person *person2 = [person <span class="keyword">copy</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;person 的地址:%p&quot;</span>,person);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;person2 的地址:%p&quot;</span>,person2);</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;person.name 的地址:%p&quot;</span>,person.name);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;person2.name 的地址:%p&quot;</span>,person2.name);</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;person.age 的地址:%p&quot;</span>,person.age);</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;person2.age 的地址:%p&quot;</span>,person2.age);</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2013-11-19 10:21:34.246 CopyDemo[73625:303] person 的地址:0x100202e60</span><br><span class="line">2013-11-19 10:21:34.248 CopyDemo[73625:303] person2 的地址:0x100200380</span><br><span class="line">2013-11-19 10:21:34.249 CopyDemo[73625:303] person.name 的地址:0x100002350</span><br><span class="line">2013-11-19 10:21:34.249 CopyDemo[73625:303] person2.name 的地址:0x100204650</span><br><span class="line">2013-11-19 10:21:34.250 CopyDemo[73625:303] person.age 的地址:0xc27</span><br><span class="line">2013-11-19 10:21:34.250 CopyDemo[73625:303] person2.age 的地址:0xc27</span><br></pre></td></tr></table></figure>
+
+<p>如果我们把<code>-(id)copyWithZone:(NSZone *)zone;</code>里面的代码改成</p>
+<p>这个样子的</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Person *person = [[[<span class="keyword">self</span> <span class="keyword">class</span>] allocWithZone:zone] init];</span><br><span class="line">person.name = _name;</span><br><span class="line">person.age = _age;</span><br><span class="line"><span class="keyword">return</span> person;</span><br></pre></td></tr></table></figure>
+
+<p>或者是这个样子的试试</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Person *person = [[[<span class="keyword">self</span> <span class="keyword">class</span>] allocWithZone:zone] init];</span><br><span class="line">person.name = [_name <span class="keyword">copy</span>];</span><br><span class="line">person.age = [_age <span class="keyword">copy</span>];</span><br><span class="line"><span class="keyword">return</span> person;</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">2013-11-19 10:24:25.746 CopyDemo[73692:303] person 的地址:0x100202e60</span><br><span class="line">2013-11-19 10:24:25.748 CopyDemo[73692:303] person2 的地址:0x100200380</span><br><span class="line">2013-11-19 10:24:25.748 CopyDemo[73692:303] person.name 的地址:0x100002350</span><br><span class="line">2013-11-19 10:24:25.749 CopyDemo[73692:303] person2.name 的地址:0x100002350</span><br><span class="line">2013-11-19 10:24:25.749 CopyDemo[73692:303] person.age 的地址:0xc27</span><br><span class="line">2013-11-19 10:24:25.749 CopyDemo[73692:303] person2.age 的地址:0xc27</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Eclipse-%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/25/Eclipse-%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6.html" class="post-title-link" itemprop="url">Eclipse 安装插件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-25 10:26:07 / 修改时间：10:51:17" itemprop="dateCreated datePublished" datetime="2025-06-25T10:26:07+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p>PyDev插件</p>
+<p>插件地址：<span class="exturl" data-url="aHR0cDovL3B5ZGV2Lm9yZy91cGRhdGVz">http://pydev.org/updates<i class="fa fa-external-link-alt"></i></span></p>
+<p>安装方式：</p>
+<p>线上安装（原因：下载后安装报错，线上安装也比较快）</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Django Editor插件</p>
+<p>插件地址：<span class="exturl" data-url="aHR0cDovL2VjbGlwc2Uua2FjcHJ6YWsub3JnLw==">http://eclipse.kacprzak.org/<i class="fa fa-external-link-alt"></i></span></p>
+<p>安装方式：</p>
+<p>下载-&gt;解压-&gt;本地文件安装</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>PHPEclipse插件</p>
+<p>插件地址：<span class="exturl" data-url="aHR0cHM6Ly9zb3VyY2Vmb3JnZS5uZXQvcHJvamVjdHMvcGhwZWNsaXBzZS9maWxlcy8=">https://sourceforge.net/projects/phpeclipse/files/<i class="fa fa-external-link-alt"></i></span></p>
+<p>安装方式：</p>
+<p>下载-&gt;解压-&gt;本地文件安装</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Color Theme插件</p>
+<p>插件地址:<span class="exturl" data-url="aHR0cDovL2VjbGlwc2UtY29sb3ItdGhlbWUuZ2l0aHViLmNvbS91cGRhdGU=">http://eclipse-color-theme.github.com/update<i class="fa fa-external-link-alt"></i></span></p>
+<p>安装方式:</p>
+<p>线上安装（比较快）</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Aptana插件</p>
+<p>插件地址：<span class="exturl" data-url="aHR0cDovL3d3dy5hcHRhbmEuY29tL2Rvd25sb2Fkcy9zdGFydA==">http://www.aptana.com/downloads/start<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL2Rvd25sb2FkLmFwdGFuYS5jb20vc3R1ZGlvMy9wbHVnaW4vaW5zdGFsbA==">http://download.aptana.com/studio3/plugin/install<i class="fa fa-external-link-alt"></i></span></p>
+<p>安装方式：</p>
+<p>1，下载-&gt;解压-&gt;本地文件安装</p>
+<p>2，线上安装</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Java EE 插件</p>
+<p>插件地址：<span class="exturl" data-url="aHR0cDovL2Rvd25sb2FkLmVjbGlwc2Uub3JnL3JlbGVhc2VzL2luZGlnbw==">http://download.eclipse.org/releases/indigo<i class="fa fa-external-link-alt"></i></span></p>
+<p>安装方式：</p>
+<p>在线安装</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>svn 插件</p>
+<p>插件地址：<span class="exturl" data-url="aHR0cDovL3d3dy5lY2xpcHNlLm9yZy9zdWJ2ZXJzaXZlL2xhdGVzdC1yZWxlYXNlcy5waHA=">http://www.eclipse.org/subversive/latest-releases.php<i class="fa fa-external-link-alt"></i></span></p>
+<p>安装方式：</p>
+<p>下载-&gt;解压-&gt;本地文件安装</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -986,172 +1240,6 @@
 <p>‘showInFireBug’&#x3D;&gt;’true’的使用必须开启浏览器的firebug</p>
 <h3 id="2"><a href="#2" class="headerlink" title="第二步：调试"></a><a href="#2">第二步：调试</a></h3><p>开启浏览器，进行测试网站</p>
 <p>从浏览器的firebug中可以看到，所有开启的错误提示</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Yii%E4%B8%BB%E9%A2%98%E5%88%87%E6%8D%A2%E8%AE%BE%E7%BD%AE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Yii%E4%B8%BB%E9%A2%98%E5%88%87%E6%8D%A2%E8%AE%BE%E7%BD%AE.html" class="post-title-link" itemprop="url">Yii主题切换设置</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 10:09:31 / 修改时间：10:21:57" itemprop="dateCreated datePublished" datetime="2025-06-25T10:09:31+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="第一步：配置文件"></a><a href="#1">第一步：配置文件</a></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line">	<span class="string">&#x27;basePath&#x27;</span>=&gt;<span class="title function_ invoke__">dirname</span>(<span class="keyword">__FILE__</span>).DIRECTORY_SEPARATOR.<span class="string">&#x27;..&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;name&#x27;</span>=&gt;<span class="string">&#x27;GoWhich&#x27;</span>,</span><br><span class="line">	<span class="string">&#x27;theme&#x27;</span>=&gt;<span class="string">&#x27;flatui&#x27;</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-
-<h3 id="2"><a href="#2" class="headerlink" title="第二步：创建主题文件夹"></a><a href="#2">第二步：创建主题文件夹</a></h3><p>在themes目录下面创建主题flatui</p>
-<p>在flatui文件夹下，创建views,js,css,images等文件夹，views文件夹里面的文件及文件夹请参考<code>./protected/views/</code>下面的内容。</p>
-<h3 id="3"><a href="#3" class="headerlink" title="第三步：theme路径的替换和修改"></a><a href="#3">第三步：theme路径的替换和修改</a></h3><p><code>Yii::app()-&gt;theme-&gt;baseUrl</code>的替换</p>
-<h3 id="4"><a href="#4" class="headerlink" title="第四步：修改相应的layout"></a><a href="#4">第四步：修改相应的layout</a></h3><p>$this-&gt;layout的修改</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/25/Python-assert-%E5%92%8C-repr%E5%B0%8F%E5%AE%9E%E4%BE%8B.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/25/Python-assert-%E5%92%8C-repr%E5%B0%8F%E5%AE%9E%E4%BE%8B.html" class="post-title-link" itemprop="url">Python assert 和 repr小实例</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-25 10:09:29 / 修改时间：10:22:21" itemprop="dateCreated datePublished" datetime="2025-06-25T10:09:29+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于assert和repr的使用，对我来说还是很迷糊，于是有搜索了一些资料进行了整理</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#!-*-coding=utf-8-*-</span></span><br><span class="line"><span class="comment">#!Filename:more_example.py</span></span><br><span class="line"><span class="comment">#assert 实例</span></span><br><span class="line"><span class="comment">#assert语句用来声明某个条件是真的</span></span><br><span class="line">mylist = [<span class="string">&#x27;items&#x27;</span>]</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">len</span>(mylist) &gt;= <span class="number">1</span></span><br><span class="line">mylist.pop()</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">assert</span> <span class="built_in">len</span>(mylist) &gt;= <span class="number">1</span></span><br><span class="line"><span class="keyword">except</span> Exception:</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;AssertionError assert 报错&#x27;</span></span><br><span class="line"><span class="comment">#repr实例</span></span><br><span class="line"><span class="comment">#repr函数用来取得对象的规范字符串表示。反引号（也称转换符）可以完成相同的功能。</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>i  = []</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>i.append(<span class="string">&#x27;item&#x27;</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>i</span><br><span class="line">[<span class="string">&#x27;item&#x27;</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>`i`</span><br><span class="line"><span class="string">&quot;[&#x27;item&#x27;]&quot;</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="built_in">repr</span>(i)</span><br><span class="line"><span class="string">&quot;[&#x27;item&#x27;]&quot;</span></span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
-
-<p>虽然简短，但是我觉得容易理解</p>
 
       
     </div>

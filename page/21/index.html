@@ -191,18 +191,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">744</span>
+          <span class="site-state-item-count">746</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">132</span>
+        <span class="site-state-item-count">134</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,193 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/Java7-Tomcat%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/Java7-Tomcat%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">Java7 Tomcat缓存的问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:06:59 / 修改时间：10:20:16" itemprop="dateCreated datePublished" datetime="2025-06-27T10:06:59+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>一般的在做jsp的开发的时候，会出现一个问题就是，将jsp文件提交后，刷新页面，内容没有改变。</p>
+<p>我这里总结了几条方法，在实施之前先做如下操作。</p>
+<p>1，删除work里面对应的项目的缓存文件，比如我的app是news，那么我就删除news就好了</p>
+<p>2，清空浏览器的缓存，或者是重新打开一个浏览器</p>
+<p>然后做如下的操作，使得我们的操作起作用：</p>
+<p>1，修改server.xml文件，在相应的context中加上或者修改</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reloadable=<span class="string">&quot;true&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>结果就是:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Context path=<span class="string">&quot;/news&quot;</span> docBase=<span class="string">&quot;/home/www/jspweb/news&quot;</span> debug=<span class="string">&quot;0&quot;</span> privileged=<span class="string">&quot;true&quot;</span> reloadable=<span class="string">&quot;true&quot;</span>&gt; </span><br><span class="line">&lt;/Context&gt;</span><br></pre></td></tr></table></figure>
+
+<p>3，在相应的jsp文件中加入如下代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">      response.setHeader(<span class="string">&quot;Cache-Control&quot;</span>, <span class="string">&quot;no-cache&quot;</span>);</span><br><span class="line">      response.setHeader(<span class="string">&quot;Pragma&quot;</span>, <span class="string">&quot;no-cache&quot;</span>);</span><br><span class="line">      response.setDateHeader(<span class="string">&quot;Expires&quot;</span>, -1);</span><br><span class="line">      response.setDateHeader(<span class="string">&quot;max-age&quot;</span>, 0);</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后打开页面试试吧，修改文件之后在重新传一下试试，如果没有效果可以联系下方的QQ群。</p>
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcmVkYXJteV9jaGVuL2FydGljbGUvZGV0YWlscy83MDMyNjcx">http://blog.csdn.net/redarmy_chen/article/details/7032671<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL2cua2Vob3UuY29tL3QxMDA3MDg2NjY4Lmh0bWw=">http://g.kehou.com/t1007086668.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/NetBeans%E8%BF%9B%E8%A1%8Cjsp%E5%BC%80%E5%8F%91%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/NetBeans%E8%BF%9B%E8%A1%8Cjsp%E5%BC%80%E5%8F%91%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html" class="post-title-link" itemprop="url">NetBeans进行jsp开发乱码解决方案</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:06:56 / 修改时间：10:21:41" itemprop="dateCreated datePublished" datetime="2025-06-27T10:06:56+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>NetBeans进行jsp开发乱码解决方案:方案如下</p>
+<p>很多人在使用NetBeans进行JSP开发的时候总会出现页面汉字乱码的情况，很是头疼，其实这根NetBeans默认的编码方式有关。常用的编码方式有UTF-8、GBK、gb2312以及ISO-8859-1等。</p>
+<p>ISO8859-1，通常叫做Latin-1。Latin-1包括了书写所有西方欧洲语言不可缺少的附加字符。<br>而gb2312是标准中文字符集<br>而如果只是英文字符，那么使用哪种编码格式都没问题，甚至是gb2312.</p>
+<p>UTF-8（8 位元 Universal Character Set／Unicode Transformation Format）是一种针对 Unicode的可变长度字符编码。它可以用来表示 Unicode标准中的任何字符，且其编码中的第一个字节仍与 ASCII相容，这使得原来处理 ASCII 字符的软件无须或只须做少部份修改，即可继续使用。因此，它逐渐成为电子邮件、网页及其他储存或传送文字的应用中，优先采用的编码。</p>
+<p>为此，我们要在页面头部加上pageEncoding的标签并将其指定为utf-8的编码格式，即可解决页面中文出现一列?的乱码问题，如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> pageEncoding=<span class="string">&quot;UTF-8&quot;</span>%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这样的话在页面中，就不会出现乱码</p>
+<p>此法我已经测试过，是可以的，这里仅供参考</p>
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3c3N0dHQuYmxvZy41MWN0by5jb20vMTI4OTY1MS8zODIxNTE=">http://wwssttt.blog.51cto.com/1289651/382151<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -931,250 +1118,6 @@
           <p>UIActionSheet简单的应用</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIActionSheet</span> *actionSheet = [[<span class="built_in">UIActionSheet</span> alloc] initWithTitle:<span class="string">@&quot;请选择背景图片的来源&quot;</span></span><br><span class="line">                                                         delegate:<span class="keyword">self</span></span><br><span class="line">                                                cancelButtonTitle:<span class="string">@&quot;取消&quot;</span></span><br><span class="line">                                           destructiveButtonTitle:<span class="literal">nil</span></span><br><span class="line">                                                otherButtonTitles:<span class="string">@&quot;拍照&quot;</span>,<span class="string">@&quot;相册&quot;</span>,<span class="string">@&quot;图片库&quot;</span>,<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">actionSheet.actionSheetStyle = <span class="built_in">UIActionSheetStyleDefault</span>;</span><br><span class="line">[actionSheet showInView: <span class="keyword">self</span>.view];</span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/jQuery-hash%E8%A7%A3%E6%9E%90url-hash-%E7%9B%91%E5%90%AChashchange.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/27/jQuery-hash%E8%A7%A3%E6%9E%90url-hash-%E7%9B%91%E5%90%AChashchange.html" class="post-title-link" itemprop="url">jQuery.hash解析url hash，监听hashchange</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-27 09:45:18 / 修改时间：10:06:01" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:18+08:00">2025-06-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="1"><a href="#1" class="headerlink" title="什么是hashsearch、hashpath"></a><a href="#1">什么是hashsearch、hashpath</a></h4><p>其实那，hashsearch、hashpath这两个词是我自造的。在javascript语言里称url改变该部分不会影响页面重新加载的部分为hash，在后台语言里称之为fragment（碎片）。在这里，我们统称为hash。</p>
-<p>在js里获取hash部分，可以使用如下语句获取：</p>
-<p>&#x2F;&#x2F; 获取当前浏览器的hash部分</p>
-<p>&#x2F;&#x2F; 如浏览器的url为：<span class="exturl" data-url="aHR0cDovL3FpYW5kdWFuYmxvZy5jb20vI2hlbGxvd29ybGQ=">http://qianduanblog.com/#helloworld<i class="fa fa-external-link-alt"></i></span></p>
-<p>var hash&#x3D;location.hash;&#x2F;&#x2F;&#x3D;&gt;”#helloworld”</p>
-<p>在html发展的历史中，以前使用hash的作用很简单，就是做锚点使用。hash的“#”和CSS里的“#”是相同的意思，表示id。url的hash部分为#123，那么就会在页面打开的时候直接定位到id&#x3D;123的元素位置。这个特性，已经被所有浏览器所接受并支持。通常这一功能用作于文章的目录部分，表示索引作用。</p>
-<p>如下示例：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>指向id=123的内容<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">	<span class="selector-tag">div</span></span></span><br><span class="line"><span class="language-css">	&#123;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">margin-bottom</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">background</span>: <span class="number">#eee</span>;</span></span><br><span class="line"><span class="language-css">	&#125;</span></span><br><span class="line"><span class="language-css">	</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#123&quot;</span>&gt;</span>点击这里立即跳转到id=123的元素位置<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;121&quot;</span>&gt;</span>id=121<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;122&quot;</span>&gt;</span>id=122<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;123&quot;</span>&gt;</span>id=123<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;124&quot;</span>&gt;</span>id=124<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;125&quot;</span>&gt;</span>id=125<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>如上例子，点击a链接就改变了当前url的hash，指向了hash指向的位置。当前了，如果为hash的id的元素不存在的话，那么各个浏览器的反应是各不相同的，部分高级浏览器不会改变页面滚动条的位置，部分低级浏览器会直接跳转到页面顶部。</p>
-<p>说到这里，要解释下什么是hashsearch、hashpath了。从字面可以理解，<code>hashsearch=hash+search</code>，<code>hashpath=hash+path</code>。可能在专业术语里已经有这两个字了，但都与这篇文章无关，因为这俩个词是自造的。什么是hash，我们已经知道了。</p>
-<p>那什么是search呢？</p>
-<p>在url中有一部分是search部分，如：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/?name=aaa&amp;age=100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/?name=bbb&amp;age=10</span></span><br></pre></td></tr></table></figure>
-
-<p>url的“?”后面的部分称之为search值，是被后台程序所接收的。</p>
-<p>path又是什么呢？</p>
-<p>如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/name/aaa/age/100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/name/bbb/age/10</span></span><br></pre></td></tr></table></figure>
-
-<p>一眼就看出来了，search和path的不同点，通常我们都把search的url重定向成path类型的。</p>
-<p>所以，由上可知，hashsearch、hashpath分别指的是：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#?name=aaa&amp;age=100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!name/aaa/age/100</span></span><br></pre></td></tr></table></figure>
-
-<p>规范1：hashsearch的开头部分为“#?”，而hashpath的开头部分为“#!”，多个“#”会被忽略，多个“?”或“!”会被最后一个“?”或“!”所覆盖，如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!name/aaa/age/100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#####!!!!!!name/aaa/age/100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#####????!name/aaa/age/100</span></span><br></pre></td></tr></table></figure>
-
-<p>以上3个url的hash会被解析成相同的结果。</p>
-<p>规范2：hash部分的解析以开头的协议规定（“?”表示search类型，“!”表示path类型），与后面的内容无关，不符合规范的部分会被抛弃解析。</p>
-<h4 id="2"><a href="#2" class="headerlink" title="哪些地方可以用hashsearch、hashpath"></a><a href="#2">哪些地方可以用hashsearch、hashpath</a></h4><p>也许我们都认为url的hash是个小角色，它的作用微乎其微，就像当初我们认为ajax很渺小一样可笑。值得回味的是，把ajax发扬光大的谷歌同样在把url的hash也再次推向时代的前言，它是随着ajax的出现，诞生的一种新型url结构。</p>
-<p>先看看如下几个url：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/aaa</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/bbb</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/ccc</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/ddd</span></span><br></pre></td></tr></table></figure>
-
-<p>从url的结构，很明显的看出来，这四个url的目的肯定是不同的，分别表示aaa、bbb、ccc、ddd四个用户所见的页面，但是有一点相同的是，这四个url是同一个页面，在浏览器打开的时候，只请求一次，不会分别请求。这是hash在url中发挥的重要特性。</p>
-<p>有这样一个疑问了，既然页面相同的，那么四个用户的页面又如何区分呢？这里必须用到ajax，在页面载入之后，ajax载入四个用户独特的内容。</p>
-<p>在当今，hash部分通常应用于单页面应用的丰富表现里，国外很多网站（twitter、谷歌等）已经这样做了，同样国内的如网易邮箱也这样做了。这样做的好处是：</p>
-<ol>
-<li>页面只需要一次加载。</li>
-<li>页面体验流畅，反应速度快。</li>
-<li>页面内容按需加载，减轻服务器压力。</li>
-<li>页面可以适配搜索引擎。</li>
-</ol>
-<p>前3条的意思很明显，第4条的详细内容，我在这里就不说了，大家有兴趣可以去查看谷歌的介绍文字：jquery插件2：jquery.hash解析url hash，监听hashchange <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vd2VibWFzdGVycy9hamF4LWNyYXdsaW5nL2RvY3MvZ2V0dGluZy1zdGFydGVkJUUzJTgwJTgyJUU1JUE0JUE3JUU2JUE2JTgyJUU3JTlBJTg0JUU2JTg0JThGJUU2JTgwJTlEJUU2JTk4JUFGaGFzaHBhdGglRTYlOTglQUYlRTUlOEYlQUYlRTQlQkIlQTUlRTglQTIlQUIlRTYlOTAlOUMlRTclQjQlQTIlRTUlQkMlOTUlRTYlOTMlOEUlRTglQUUlQTQlRTglQUYlODYlRTclOUElODQlRUYlQkMlOEMlRTglODAlOENoYXNoc2VhcmNoJUU1JTg4JTk5JUU0JUI4JThEJUU1JThGJUFGJUU0JUJCJUE1JUVGJUJDJTg4JUU3JTlCJUFFJUU1JTg5JThEJUVGJUJDJTg5JUUzJTgwJTgyJUU2JTg5JTgwJUU0JUJCJUE1JUVGJUJDJThDJUU2JTg4JTkxJUU0JUJCJUFDJUU1JThGJUFGJUU0JUJCJUE1JUU2JUEwJUI5JUU2JThEJUFFJUU1JTg2JTg1JUU1JUFFJUI5JUU3JTlBJTg0JUU0JUI4JThEJUU1JTkwJThDJUU2JTlEJUE1JUU5JTgwJTg5JUU2JThCJUE5JUU0JUI4JThEJUU1JTkwJThDJUU3JTlBJTg0aGFzaCVFNyVCMSVCQiVFNSU5RSU4QiVFMyU4MCU4Mg==">https://developers.google.com/webmasters/ajax-crawling/docs/getting-started。大概的意思是hashpath是可以被搜索引擎认识的，而hashsearch则不可以（目前）。所以，我们可以根据内容的不同来选择不同的hash类型。<i class="fa fa-external-link-alt"></i></span></p>
-<h4 id="3"><a href="#3" class="headerlink" title="jquery.hash及hashchange"></a><a href="#3">jquery.hash及hashchange</a></h4><p>说明：jquery.hash.js默认的hashType为hashpath，其标示符为”!“，而hashsearch的标示符为”?”。</p>
-<p>3.1、解析hash</p>
-<p>按照以上的hash规则，我们可以把hash解析成键值对，$.hash();就可以直接解析，例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://qianduanblog.com/#!a/1/b/2/c/3</span></span><br><span class="line"><span class="comment">// http://qianduanblog.com/#?a=1&amp;b=2&amp;c=3</span></span><br><span class="line"><span class="comment">// $.hash();</span></span><br><span class="line"><span class="comment">// =&gt;&#123;a:&quot;1&quot;,b:&quot;2&quot;,c:&quot;3&quot;&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p> 3.2、读取hash</p>
-<p>把hash解析成了键值对（json对象），读取它就很好办了，例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://qianduanblog.com/#!a/1/b/2/c/3</span></span><br><span class="line"><span class="comment">// http://qianduanblog.com/#?a=1&amp;b=2&amp;c=3</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;&quot;1&quot;</span></span><br><span class="line">$.<span class="title function_">hash</span>([<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>]);</span><br><span class="line"><span class="comment">// =&gt;&#123;a:&quot;1&quot;,b:&quot;2&quot;&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>3.3、设置hash</p>
-<p>设置hash的值也很简单，如：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 单个设置</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;11&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!a/11/b/2/c/3</span></span><br><span class="line"><span class="comment">// 单个设置的时候同时修改hash类型</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;11&quot;</span>,<span class="string">&quot;?&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#?a=11&amp;b=2&amp;c=3</span></span><br><span class="line"><span class="comment">// 多个设置</span></span><br><span class="line">$.<span class="title function_">hash</span>(&#123;<span class="attr">a</span>:<span class="number">111</span>,<span class="attr">b</span>:<span class="number">222</span>&#125;);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#?a=111&amp;b=222&amp;c=3</span></span><br><span class="line"><span class="comment">// 多个设置的时候同时修改hash类型</span></span><br><span class="line">$.<span class="title function_">hash</span>(&#123;<span class="attr">a</span>:<span class="number">111</span>,<span class="attr">b</span>:<span class="number">222</span>&#125;,<span class="string">&quot;!&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!a/111/b/222/c/3</span></span><br></pre></td></tr></table></figure>
-
-<p>3.4、删除hash</p>
-<p>删除hash操作也很简单，例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 删除单个</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>,<span class="literal">null</span>)</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!b/222/c/3</span></span><br><span class="line"><span class="comment">// 删除多个</span></span><br><span class="line">$.<span class="title function_">hash</span>([<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>],<span class="literal">null</span>)</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!c/3</span></span><br></pre></td></tr></table></figure>
-
-<p>3.5、清空hash</p>
-<p>清空操作一如既往的方便，例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">hash</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#</span></span><br></pre></td></tr></table></figure>
-
-<p>3.6、监听hashchange</p>
-<p>监听的使用方法也很便捷，例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 单监听，当监听的变量发生变化时触发</span></span><br><span class="line"><span class="comment">// 假设a值由1变化为2</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;listen&quot;</span>,<span class="string">&quot;a&quot;</span>,<span class="keyword">function</span>(<span class="params">oldObj,newObj</span>)&#123;</span><br><span class="line"><span class="comment">// 当hash中的a值发生变化就会触发监听事件</span></span><br><span class="line"><span class="comment">// 回调函数有2个参数</span></span><br><span class="line"><span class="comment">// 参数1：旧值的对象，如这里监听的是a，那么其为&#123;a:1&#125;</span></span><br><span class="line"><span class="comment">// 参数2：现值的对象，如这里监听的是a，那么其为&#123;a:2&#125;</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 并监听，当监听的变量都同时发生变化时才触发</span></span><br><span class="line"><span class="comment">// 假设b由2=&gt;3</span></span><br><span class="line"><span class="comment">// 假设c由3=&gt;4</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;listenAnd&quot;</span>,[<span class="string">&quot;b&quot;</span>,<span class="string">&quot;c&quot;</span>],<span class="keyword">function</span>(<span class="params">oldObj,newObj</span>)&#123;</span><br><span class="line"><span class="comment">// 参数1：旧值的对象，如这里监听的是b、c，那么其为&#123;b:2,c:3&#125;</span></span><br><span class="line"><span class="comment">// 参数2：现值的对象，如这里监听的是b、c，那么其为&#123;b:3,c:4&#125;</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 或监听，当监听的变量任何一个发生变化时都触发</span></span><br><span class="line"><span class="comment">// 假设d由4=&gt;5</span></span><br><span class="line"><span class="comment">// 假设e没变5=&gt;5</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;listenOr&quot;</span>,[<span class="string">&quot;d&quot;</span>,<span class="string">&quot;e&quot;</span>],<span class="keyword">function</span>(<span class="params">oldObj,newObj</span>)&#123;</span><br><span class="line"><span class="comment">// 参数1：旧值的对象，如这里监听的是d、e，那么其为&#123;d:4,e:5&#125;</span></span><br><span class="line"><span class="comment">// 参数2：现值的对象，如这里监听的是d、e，那么其为&#123;b:5,e:5&#125;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h4 id="4"><a href="#4" class="headerlink" title="插件下载及演示"></a><a href="#4">插件下载及演示</a></h4><p>下载地址：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Zlc3RhdGljLmFsaWFwcC5jb20vI2pxdWVyeS5oYXNo">http://festatic.aliapp.com/#jquery.hash<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL2Zlc3RhdGljLmFsaWFwcC5jb20vanMvanF1ZXJ5Lmhhc2gvIyFhLzEvYi8yL2MvMw==">http://festatic.aliapp.com/js/jquery.hash/#!a/1/b/2/c/3<i class="fa fa-external-link-alt"></i></span></p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3FpYW5kdWFuYmxvZy5jb20vMjAwMy5odG1s">http://qianduanblog.com/2003.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/window.location.hash%E5%B1%9E%E6%80%A7%E4%BB%8B%E7%BB%8D.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/27/window.location.hash%E5%B1%9E%E6%80%A7%E4%BB%8B%E7%BB%8D.html" class="post-title-link" itemprop="url">window.location.hash属性介绍</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-27 09:45:15 / 修改时间：10:02:16" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:15+08:00">2025-06-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>来了解一下hash，javascript中的hash是啥。</p>
-<p>location是javascript里边管理地址栏的内置对象，比如location.href就管理页面的url，用location.href&#x3D;url就可以直接将页面重定向url。而location.hash则可以用来获取或设置页面的标签值。比如<span class="exturl" data-url="aHR0cDovL2RvbWFpbi8jYWRtaW4lRTclOUElODRsb2NhdGlvbi5oYXNoPSUyMiNhZG1pbg==">http://domain/#admin的location.hash=&quot;#admin<i class="fa fa-external-link-alt"></i></span>“ 。利用这个属性值可以做一个非常有意义的事情。</p>
-<p>很多人都喜欢收藏网页，以便于以后的浏览。不过对于Ajax页面来说的话，一般用一个页面来处理所有的事务，也就是说，如果你浏览到一个Ajax页面里边有意思的内容，想将它收藏起来，可是地址只有一个呀，下次你打开这个地址，还是得像以往一样不断地去点击网页，找到你钟情的那个页面。另外的话，浏览器上的“前进”“后退”按钮也会失效，这于很多习惯了传统页面的用户来说，是一个很大的使用障碍。</p>
-<p>那么，怎么用location.hash来解决这两个问题呢？其实一点也不神秘。</p>
-<p>比如，某人的管理系统，主要功能有三个：普通搜索、高级搜索、后台管理，我分别给它们分配一个hash值：#search、#advsearch、#admin，在页面初始化的时候，通过window.location.hash来判断用户需要访问的页面，然后通过javascript来调整显示页面</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> hash; </span><br><span class="line">hash=(!<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">hash</span>)?<span class="string">&quot;#search&quot;</span>:<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">hash</span>; </span><br><span class="line"><span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">hash</span>=hash; </span><br><span class="line"><span class="comment">//调整地址栏地址，使前进、后退按钮能使用 </span></span><br><span class="line"><span class="keyword">switch</span>(hash)&#123;   </span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;#search&quot;</span>:  </span><br><span class="line">        <span class="title function_">selectPanel</span>(<span class="string">&quot;pnlSearch&quot;</span>);   <span class="comment">//显示普通搜索面板  </span></span><br><span class="line">        <span class="keyword">break</span>;    </span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;#advsearch&quot;</span>:    </span><br><span class="line">        <span class="title function_">selectPanel</span>(<span class="string">&quot;adSearch&quot;</span>);    <span class="comment">//显示高级搜索面板</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;#admin&quot;</span>:  </span><br><span class="line">        <span class="title function_">selectPanel</span>(<span class="string">&quot;adminSearch&quot;</span>); <span class="comment">//显示后台搜索面板</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>通过<code>window.location.hash=hash</code>这个语句来调整地址栏的地址，使得浏览器里边的“前进”、“后退”按钮能正常使用（实质上欺骗了浏览器）。然后再根据hash值的不同来显示不同的面板（用户可以收藏对应的面板了），这就使得Ajax页面的浏览趋于传统化了。</p>
-<p>不过现在有一个比较简单的解决方式。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">history.<span class="title function_">pushState</span>()</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9jaGluYS1hc3B4L2FyY2hpdmUvMjAwOC8wNC8yMC8xMTYyNTk3Lmh0bWw=">http://www.cnblogs.com/china-aspx/archive/2008/04/20/1162597.html<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>

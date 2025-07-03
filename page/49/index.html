@@ -191,18 +191,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">744</span>
+          <span class="site-state-item-count">746</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">132</span>
+        <span class="site-state-item-count">134</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,176 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/NSNotification%E5%B9%BF%E6%92%AD%E5%AE%9E%E7%8E%B0%E8%A7%86%E5%9B%BE%E8%B7%B3%E8%BD%AC%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/19/NSNotification%E5%B9%BF%E6%92%AD%E5%AE%9E%E7%8E%B0%E8%A7%86%E5%9B%BE%E8%B7%B3%E8%BD%AC%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE.html" class="post-title-link" itemprop="url">NSNotification广播实现视图跳转传递数据</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-19 09:58:19 / 修改时间：10:07:28" itemprop="dateCreated datePublished" datetime="2025-06-19T09:58:19+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>NSNotification广播实现视图跳转传递数据<br>广播机制分为：注册-&gt;发送-&gt;接收(接收方)<br>第一步，在要发送数据的视图页面.m文件处理发送逻辑的方法里注册+发送</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)pressed:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    </span><br><span class="line"><span class="comment">//    [self performSegueWithIdentifier:@&quot;second&quot; sender:self];</span></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;send message:%@&quot;</span>,firstField.text);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">//页面跳转传值方法二：利用notification</span></span><br><span class="line">    <span class="built_in">NSDictionary</span> *dicts = [<span class="built_in">NSDictionary</span> dictionaryWithObjectsAndKeys:<span class="string">@&quot;one1&quot;</span>,<span class="string">@&quot;one&quot;</span>,<span class="string">@&quot;two2&quot;</span>,<span class="string">@&quot;two&quot;</span>,<span class="string">@&quot;three3&quot;</span>,<span class="string">@&quot;three&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line">    <span class="comment">//注册(第一步)</span></span><br><span class="line">    <span class="built_in">NSNotification</span> *notification  =[<span class="built_in">NSNotification</span> notificationWithName:<span class="string">@&quot;mynotification&quot;</span> object:firstField.text];</span><br><span class="line">    <span class="comment">//发送（第二步）</span></span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] postNotification:notification];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//注册+发送也可以一行完成(等效于以上两行)</span></span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] postNotificationName:<span class="string">@&quot;mynotification2&quot;</span> object:dicts];<span class="comment">//发送一个字典过去</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>notificationWithName:参数的值是自己定义，接收方以此名称为接收标识。<br>第二步，在跳转后，接收数据视图页面.m文件中处理逻辑的方法里 接收</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">    <span class="comment">// Do any additional setup after loading the view.</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//接受端：接受（第一步）</span></span><br><span class="line">   </span><br><span class="line"> [[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span> </span><br><span class="line">selector:<span class="keyword">@selector</span>(notificationHandler:) name:<span class="string">@&quot;mynotification&quot;</span> </span><br><span class="line">object:<span class="literal">nil</span>];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> </span><br><span class="line">defaultCenter] addObserver:<span class="keyword">self</span> </span><br><span class="line">selector:<span class="keyword">@selector</span>(notificationHandler2:) name:<span class="string">@&quot;mynotification2&quot;</span> </span><br><span class="line">object:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//自定义接收信息和处理的方法（第二步）</span></span><br><span class="line">-(<span class="type">void</span>) notificationHandler:(<span class="built_in">NSNotification</span> *) notification&#123;</span><br><span class="line">    </span><br><span class="line">    secondField.text = [notification object];<span class="comment">//收到消息后在UItextField中显示出来</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//自定义接收字典信息的方法</span></span><br><span class="line">-(<span class="type">void</span>) notificationHandler2:(<span class="built_in">NSNotification</span> *) notification2&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSDictionary</span> *dict = [notification2 object];</span><br><span class="line">     <span class="built_in">NSLog</span>(<span class="string">@&quot;receive dict :%@,forkey:%@&quot;</span>,dict,[dict objectForKey:<span class="string">@&quot;one&quot;</span>]);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：如果注册的notification在目标视图没有收到或名称写错，目标视图的相关方法就不会执行</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Yii%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E9%A6%96%E9%A1%B5%E5%9C%B0%E5%9D%80%E5%92%8C%E5%BD%93%E5%89%8D%E5%9F%9F%E5%90%8D%E5%92%8C%E6%A0%B9%E7%9B%AE%E5%BD%95%E5%9C%B0%E5%9D%80.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/19/Yii%E8%8E%B7%E5%8F%96%E5%BD%93%E5%89%8D%E9%A6%96%E9%A1%B5%E5%9C%B0%E5%9D%80%E5%92%8C%E5%BD%93%E5%89%8D%E5%9F%9F%E5%90%8D%E5%92%8C%E6%A0%B9%E7%9B%AE%E5%BD%95%E5%9C%B0%E5%9D%80.html" class="post-title-link" itemprop="url">Yii获取当前首页地址和当前域名和根目录地址</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-19 09:58:12 / 修改时间：10:05:04" itemprop="dateCreated datePublished" datetime="2025-06-19T09:58:12+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="1"><a href="#1" class="headerlink" title="当前域名"></a><a href="#1">当前域名</a></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;request-&gt;hostInfo;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2"><a href="#2" class="headerlink" title="除域名外的URL"></a><a href="#2">除域名外的URL</a></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;request-&gt;<span class="title function_ invoke__">getUrl</span>();</span><br></pre></td></tr></table></figure>
+
+<h3 id="3"><a href="#3" class="headerlink" title="除域名外的首页地址"></a><a href="#3">除域名外的首页地址</a></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;user-&gt;returnUrl;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4"><a href="#4" class="headerlink" title="除域名外的根目录地址"></a><a href="#4">除域名外的根目录地址</a></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;homeUrl;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -980,178 +1150,6 @@
 <li>findAll()的使用;</li>
 </ul>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$params</span> = [</span><br><span class="line">    <span class="string">&#x27;select&#x27;</span> =&gt; <span class="string">&#x27;id,name,image&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;order&#x27;</span> =&gt; <span class="string">&#x27;total_point DESC&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;limit&#x27;</span> =&gt; <span class="number">5</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/18/Yii-%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84action%E7%9A%84%E8%AE%BF%E9%97%AE%E9%99%90%E5%88%B6%E4%B8%AD%E7%9A%84-post%E6%8F%90%E4%BA%A4%E9%99%90%E5%88%B6%E7%9A%84%E7%AE%80%E5%8D%95%E6%96%B9%E6%B3%95.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/18/Yii-%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84action%E7%9A%84%E8%AE%BF%E9%97%AE%E9%99%90%E5%88%B6%E4%B8%AD%E7%9A%84-post%E6%8F%90%E4%BA%A4%E9%99%90%E5%88%B6%E7%9A%84%E7%AE%80%E5%8D%95%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">Yii 控制器的action的访问限制中的 post提交限制的简单方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-18 11:28:16 / 修改时间：11:33:25" itemprop="dateCreated datePublished" datetime="2025-06-18T11:28:16+08:00">2025-06-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>对于我跟人来说，关于在一个控制器的中做action的post限制，一般的话我是这样做的</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">actionDownload</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;request-&gt;isPOSTRequest) &#123;</span><br><span class="line">        <span class="variable">$message</span> = [];</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;id&#x27;</span>]) &amp;&amp; <span class="keyword">isset</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>])) &#123;&#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">fileClick</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;id&#x27;</span>], <span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>])) &#123;</span><br><span class="line">            <span class="variable">$message</span>[<span class="string">&#x27;code&#x27;</span>] = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable">$message</span>[<span class="string">&#x27;code&#x27;</span>] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>(<span class="variable">$message</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">CHttpException</span>(<span class="number">400</span>, <span class="string">&#x27;请求的页面不存在.&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>感觉还不错，但是今天通过设置权限总是遇到错误，结果我发现了一个小角落的问题被我忽视了</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">filters</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [</span><br><span class="line">        <span class="string">&#x27;accessControl&#x27;</span>, <span class="comment">// perform access control for CRUD operations</span></span><br><span class="line">        <span class="string">&#x27;postOnly + delete&#x27;</span>, <span class="comment">// we only allow deletion via POST request</span></span><br><span class="line">    ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>postOnly + delete就是这里</p>
-<p>yii的控制还是不错的，继续感悟</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/18/Yii%E7%9A%84AR%E6%98%AF%E5%90%A6%E5%B8%A6%E5%AE%89%E5%85%A8%E8%BF%87%E6%BB%A4-%E9%98%B2SQL%E6%B3%A8%E5%85%A5-XSS%E6%94%BB%E5%87%BB%E7%9A%84%E8%AF%B4%E6%98%8E.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/18/Yii%E7%9A%84AR%E6%98%AF%E5%90%A6%E5%B8%A6%E5%AE%89%E5%85%A8%E8%BF%87%E6%BB%A4-%E9%98%B2SQL%E6%B3%A8%E5%85%A5-XSS%E6%94%BB%E5%87%BB%E7%9A%84%E8%AF%B4%E6%98%8E.html" class="post-title-link" itemprop="url">Yii的AR是否带安全过滤 防SQL注入 XSS攻击的说明</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-18 11:28:12 / 修改时间：11:33:04" itemprop="dateCreated datePublished" datetime="2025-06-18T11:28:12+08:00">2025-06-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于这个说明，我引用了<span class="exturl" data-url="aHR0cDovL3d3dy55aWlmcmFtZXdvcmsuY29tLw==">www.yiiframework.com<i class="fa fa-external-link-alt"></i></span> 里面的qiang哥的</p>
-<p>提到了两个问题：一是SQL Injection攻击，一个是XSS攻击。</p>
-<blockquote>
-<p>对于前者，需要避免的是直接把用户输入嵌入到SQL里，例如：”<code>SELECT * FROM tbl_user WHERE id=&#123;$_GET[&#39;id&#39;]&#125;</code>“。<br>恶意用户可以让<code>$_GET[&#39;id&#39;]</code>等于”<code>1; DELETE FROM tbl_user</code>“，这样就把所有的用户数据都删除了！非常危险！  </p>
-<p>解决办法有好几种。最简单的就是用param binding，请阅读PHP PDO获得相关知识。如果知道id是整数，也可以先把输入强制为整数。或者如果id是字串，可以用<code>CDbConnection::quoteValue()</code>把输入加上引号。如果你用的是AR，那么save()函数自动会使用param binding。如果你用findAll()之类的函数，自己生成condition部分，那就要特别小心不要直接嵌入输入。  </p>
-<p>XSS攻击主要是要避免直接显示用户的输入数据。例如echo $user-&gt;description（假设description的数据来自用户的输入）。恶意用户可以让id为一段js代码，使得其它用户查看该页面后隐式执行该代码，从而被恶意用户获得登录cookie等安全信息。  </p>
-<p>解决办法很简单，就是用<code>CHtml::encode()</code>。如果输入是HTML，可以用<code>CHtmlPurifier::purify()</code>来过滤有害代码。</p>
-</blockquote>
 
       
     </div>

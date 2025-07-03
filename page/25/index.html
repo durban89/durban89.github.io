@@ -191,18 +191,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">744</span>
+          <span class="site-state-item-count">746</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">132</span>
+        <span class="site-state-item-count">134</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,192 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/%E5%9C%A8Django-%E6%A8%A1%E6%9D%BFtemplate-%E4%B8%AD%E5%AE%9E%E7%8E%B0%E5%8A%A0%E6%B3%95-%E5%87%8F%E6%B3%95-%E4%B9%98%E6%B3%95-%E9%99%A4%E6%B3%95%E8%BF%90%E7%AE%97.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/%E5%9C%A8Django-%E6%A8%A1%E6%9D%BFtemplate-%E4%B8%AD%E5%AE%9E%E7%8E%B0%E5%8A%A0%E6%B3%95-%E5%87%8F%E6%B3%95-%E4%B9%98%E6%B3%95-%E9%99%A4%E6%B3%95%E8%BF%90%E7%AE%97.html" class="post-title-link" itemprop="url">在Django 模板template 中实现加法，减法，乘法，除法运算</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 11:15:41 / 修改时间：17:48:46" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:41+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>感觉很赞的一个设计，django的模板里面是用一个tags可以实现，加法，减法，乘法，除法的运算。嘿嘿</p>
+<p>先看一下django 官方的解释</p>
+<blockquote>
+<p> For creating bar charts and such, this tag calculates the ratio of a given<br>    value to a maximum value, and then applies that ratio to a constant.  </p>
+<pre><code>For example::  
+
+    &lt;img src=&#39;bar.gif&#39; height=&#39;10&#39; width=&#39;&#123;% widthratio this_value max_value 100 %&#125;&#39; /&gt;  
+
+Above, if `this_value` is 175 and `max_value` is 200, the image in  
+the above example will be 88 pixels wide (because 175/200 = .875;  
+.875 * 100 = 87.5 which is rounded up to 88).
+</code></pre>
+</blockquote>
+<p>这说明，widthratio 通常用来显示图表，比例时用的，一个数字占了多少百分比等。但仔细想想，如果将某些数字变成特定的数字，不就是乘除法运算了吗？请看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">乘法 A*B: &#123;% widthratio A 1 B %&#125;</span><br><span class="line">除法 A/B: &#123;% widthratio A B 1 %&#125;</span><br><span class="line"></span><br><span class="line">利用 add 这个filter ,可以做更疯狂的事:</span><br><span class="line"></span><br><span class="line">计算 A^2: &#123;% widthratio A 1 A %&#125;</span><br><span class="line">计算 (A+B)^2: &#123;% widthratio A|add:B 1 A|add:B %&#125;</span><br><span class="line">计算 (A+B) * (C+D): &#123;% widthratio A|add:B 1 C|add:D %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>变量也是可以加的哦</p>
+<hr>
+<p>当然，这种方法在django中实现乘除法比较变态，看起来也不爽，更好的方法，是可以扩展自己的标签。在后面打算自己扩展一个计算乘法的标签，应该好很多。  </p>
+<p>在django中实现其它一些简单的计算，参考这篇文章：<span class="exturl" data-url="aHR0cDovL3d3dy55aWhhb21lbi5jb20vYXJ0aWNsZS9weXRob24vMTg2Lmh0bQ==">http://www.yihaomen.com/article/python/186.htm<i class="fa fa-external-link-alt"></i></span>  </p>
+<p>用django template tag 的方式实现可以参考这篇文章：<br><span class="exturl" data-url="aHR0cDovL3d3dy55aWhhb21lbi5jb20vYXJ0aWNsZS9weXRob24vMzM5Lmh0bQ==">http://www.yihaomen.com/article/python/339.htm<i class="fa fa-external-link-alt"></i></span></p>
+<hr>
+<p>参看文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy55aWhhb21lbi5jb20vYXJ0aWNsZS9weXRob24vMzM4Lmh0bQ==">http://www.yihaomen.com/article/python/338.htm<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5zaGFyZWpzLmNvbS9jb2Rlcy9weXRob24vNjQ2Mw==">http://www.sharejs.com/codes/python/6463<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E4%B8%AD-%E7%BB%99UIScrollView-%E6%B7%BB%E5%8A%A0%E8%87%AA%E9%80%82%E5%BA%94%E7%9A%84%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS7-%E4%B8%AD-%E7%BB%99UIScrollView-%E6%B7%BB%E5%8A%A0%E8%87%AA%E9%80%82%E5%BA%94%E7%9A%84%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87.html" class="post-title-link" itemprop="url">iOS7 中 给UIScrollView 添加自适应的背景图片</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 11:15:38 / 修改时间：11:28:51" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:38+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>要做一个长的能滚动的页面，在IOS7中这个能滚动的话，可以使用UIScrollView，然后使用背景图片来解决我们大部分的ui问题，可以节省我们写ui的时间。</p>
+<p>下面来看看代码</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIScrollView</span> *scrollView=[[<span class="built_in">UIScrollView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>,<span class="number">320</span>, <span class="number">1000</span>)];</span><br><span class="line">scrollView.backgroundColor = [<span class="built_in">UIColor</span> colorWithPatternImage:[<span class="built_in">UIImageimageNamed</span>:<span class="string">@&quot;detail.png&quot;</span>]];</span><br><span class="line">[scrollView setContentSize:<span class="built_in">CGSizeMake</span>(<span class="number">320</span>, <span class="number">960</span>)];</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:scrollView];</span><br></pre></td></tr></table></figure>
+
+<p>实现很简单，下面你就可以自己去添加一些其他的view到上面去了，嘿嘿</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1242,225 +1428,6 @@
 <p>9、forEach传递函数显示信息</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.things.find(&#123;x:4&#125;).forEach(<span class="keyword">function</span>(x) &#123;<span class="built_in">print</span>(tojson(x));&#125;);</span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Linux-%E4%B8%8Bdf%E5%92%8Cdu%E7%9A%84%E4%BD%BF%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Linux-%E4%B8%8Bdf%E5%92%8Cdu%E7%9A%84%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">Linux下df和du的使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 10:32:15 / 修改时间：10:59:54" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:15+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>df命令的简单使用，可以显示目前所有文件系统的可用空间及使用情形，命令如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">df</span> -h</span><br></pre></td></tr></table></figure>
-
-<p>gowhich得到的结果是</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Filesystem     1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/xvda1      20903812 2378972  17476368  12% /</span><br><span class="line">udev             2015444       4   2015440   1% /dev</span><br><span class="line">tmpfs             757268     268    757000   1% /run</span><br><span class="line">none                5120       0      5120   0% /run/lock</span><br><span class="line">none             1893168       0   1893168   0% /run/shm</span><br><span class="line">/dev/xvdb       51606140 1915528  47069172   4% /wwwroot</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>du命令的简单的使用，查询文件或文件夹的磁盘使用空间。可以指定目录进行查询。</p>
-<p>如果当前目录下文件和文件夹很多，使用不带参数du的命令，可以循环列出所有文件和文件夹所使用的空间。这对查看究竟是那个地方过大是不利的，所以得指定深入目录的层数，参数：–max-depth&#x3D;，这是个极为有用的参数！如下，注意使用“*”，可以得到文件的使用空间大小.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">du</span> -h --max-depth=1 /</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>得到的结果是</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">4.0K	/opt</span><br><span class="line">18M	/home</span><br><span class="line">6.8M	/sbin</span><br><span class="line">8.0K	/media</span><br><span class="line">203M	/lib</span><br><span class="line"><span class="built_in">du</span>: cannot access `/proc/29005/task/29005/fd/4<span class="string">&#x27;: No such file or directory</span></span><br><span class="line"><span class="string">du: cannot access `/proc/29005/task/29005/fdinfo/4&#x27;</span>: No such file or directory</span><br><span class="line"><span class="built_in">du</span>: cannot access `/proc/29005/fd/4<span class="string">&#x27;: No such file or directory</span></span><br><span class="line"><span class="string">du: cannot access `/proc/29005/fdinfo/4&#x27;</span>: No such file or directory</span><br><span class="line">0	/proc</span><br><span class="line">4.0K	/lib64</span><br><span class="line">16K	/lost+found</span><br><span class="line">0	/sys</span><br><span class="line">4.0K	/dev</span><br><span class="line">4.0K	/selinux</span><br><span class="line">4.0K	/srv</span><br><span class="line">5.2M	/etc</span><br><span class="line">268K	/run</span><br><span class="line">1.7G	/wwwroot</span><br><span class="line">27M	/boot</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>参考的文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy55YXl1Lm9yZy9sb29rLnBocD9pZD0xNjI=">http://www.yayu.org/look.php?id=162<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Django-%E4%BD%BF%E7%94%A8%E9%AA%8C%E8%AF%81%E7%A0%81%E5%B7%A5%E5%85%B7django-simple-captcha%E7%9A%84%E9%81%87%E5%88%B0%E9%97%AE%E9%A2%98-imagingft-IndexError--list-index-out-of-range.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Django-%E4%BD%BF%E7%94%A8%E9%AA%8C%E8%AF%81%E7%A0%81%E5%B7%A5%E5%85%B7django-simple-captcha%E7%9A%84%E9%81%87%E5%88%B0%E9%97%AE%E9%A2%98-imagingft-IndexError--list-index-out-of-range.html" class="post-title-link" itemprop="url">Django 使用验证码工具django-simple-captcha的遇到问题{_imagingft,IndexError: list index out of range}</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 10:32:12 / 修改时间：11:02:24" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:12+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="先来看看第一个问题"></a><a href="#1">先来看看第一个问题</a></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IndexError: list index out of range</span><br></pre></td></tr></table></figure>
-
-<p>就是这个简单的错误是因为我在django中使用django-simple-captcha的时候，没有在项目中运行下面的命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python manage.py syncdb</span><br></pre></td></tr></table></figure>
-
-<p>就是一定要记得要进行数据库表的同步</p>
-<h3 id="2"><a href="#2" class="headerlink" title="第二个问题就是比较验证的操作量比较大的“_imagingft”问题"></a><a href="#2">第二个问题就是比较验证的操作量比较大的“<code>_imagingft</code>”问题</a></h3><p>不过经过google的查找，按照下面的步骤进行就解决了问题，步骤如下</p>
-<p>这个是由于PIL没有编译freetype导致的</p>
-<p>查看 lib&#x2F;python2.7&#x2F;site-packages&#x2F;PIL&#x2F;</p>
-<p>看看 <code>_imagingft.so</code> 是否存在</p>
-<h3 id="3"><a href="#3" class="headerlink" title="第一步安装ipeg库"></a><a href="#3">第一步安装ipeg库</a></h3><p>最新的可以到<span class="exturl" data-url="aHR0cDovL3d3dy5pamcub3JnL2ZpbGVz">http://www.ijg.org/files<i class="fa fa-external-link-alt"></i></span> 这里去下载</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wget http://www.ijg.org/files/jpegsrc.v7.tar.gz</span><br><span class="line">tar -zxvf jpegsrc.v7.tar.gz</span><br><span class="line"><span class="built_in">cd</span> jpeg-7</span><br><span class="line">CC=<span class="string">&quot;gcc -arch x86_64&quot;</span></span><br><span class="line">./configure --enable-shared --enable-static</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<h3 id="4"><a href="#4" class="headerlink" title="第二步安装freetype开发库"></a><a href="#4">第二步安装freetype开发库</a></h3><p>让PIL支持freetype的方法</p>
-<p>1、安装freetype开发库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install freetype-devel</span><br></pre></td></tr></table></figure>
-
-<p>2、下载源代码<span class="exturl" data-url="aHR0cDovL2VmZmJvdC5vcmcvZG93bmxvYWRzL0ltYWdpbmctMS4xLjcudGFyLmd6">http://effbot.org/downloads/Imaging-1.1.7.tar.gz<i class="fa fa-external-link-alt"></i></span></p>
-<p>3、修改setup.py文件</p>
-<p>修改</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">JPEG_ROOT = libinclude(<span class="string">&quot;/usr/local&quot;</span>)</span><br><span class="line"></span><br><span class="line">FREETYPE_ROOT = <span class="string">&#x27;/usr/lib64&#x27;</span>,<span class="string">&#x27;/usr/include/freetype2/freetype&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>关于freetype的安装我因为是在ubuntu环境下，不想运行yum，我是自己下载的，最近的源码可以到这个网址<span class="exturl" data-url="aHR0cDovL2Rvd25sb2FkLnNhdmFubmFoLmdudS5vcmcvcmVsZWFzZXMvZnJlZXR5cGUv">http://download.savannah.gnu.org/releases/freetype/<i class="fa fa-external-link-alt"></i></span> 下载，然后进行手动源码安装</p>
-<p>第三步重新编译PIL进行安装（这里我采用的也是源码安装，源码的最新库的地址在<span class="exturl" data-url="aHR0cDovL2VmZmJvdC5vcmcvZG93bmxvYWRz">http://effbot.org/downloads<i class="fa fa-external-link-alt"></i></span> ）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py build_ext -i</span><br></pre></td></tr></table></figure>
-
-<p>— FREETYPE2 support available  注意这一项</p>
-<p>编译安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
-
-<hr>
-<blockquote>
-<p>若上面的设置都失败，则只能拿出下面的杀手锏（我是没有经过这一步就成功了）：</p>
-<p>sudo apt-get build-dep python-imaging</p>
-<p>sudo ln -s &#x2F;usr&#x2F;lib&#x2F;<code>uname -i</code>-linux-gnu&#x2F;libfreetype.so &#x2F;usr&#x2F;lib&#x2F;</p>
-<p>sudo ln -s &#x2F;usr&#x2F;lib&#x2F;<code>uname -i</code>-linux-gnu&#x2F;libjpeg.so &#x2F;usr&#x2F;lib&#x2F;</p>
-<p>sudo ln -s &#x2F;usr&#x2F;lib&#x2F;<code>uname -i</code>-linux-gnu&#x2F;libz.so &#x2F;usr&#x2F;lib&#x2F;</p>
-<p>pip install -U PIL</p>
-</blockquote>
-<p>安装成功的结果是</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">--------------------------------------------------------------------</span><br><span class="line">PIL 1.1.7 SETUP SUMMARY</span><br><span class="line">--------------------------------------------------------------------</span><br><span class="line">version       1.1.7</span><br><span class="line">platform      linux2 2.7.3 (default, Sep 26 2013, 20:08:41)</span><br><span class="line">              [GCC 4.6.3]</span><br><span class="line">--------------------------------------------------------------------</span><br><span class="line">*** TKINTER support not available</span><br><span class="line">--- JPEG support available</span><br><span class="line">--- ZLIB (PNG/ZIP) support available</span><br><span class="line">--- FREETYPE2 support available</span><br><span class="line">*** LITTLECMS support not available</span><br><span class="line">--------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
-
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9kZXNjdXNyL3AvMzIyNTg3NC5odG1s">http://www.cnblogs.com/descusr/p/3225874.html<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
