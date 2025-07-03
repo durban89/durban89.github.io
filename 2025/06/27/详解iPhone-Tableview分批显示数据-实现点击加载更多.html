@@ -193,7 +193,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">808</span>
+          <span class="site-state-item-count">818</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">145</span>
+        <span class="site-state-item-count">148</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -307,21 +307,16 @@
 <p>iPhone屏幕尺寸是有限的，如果需要显示的数据很多，可以先数据放到一个table中，先显示10条，table底部有一察看更多选项，点击察看更多查看解析的剩余数据。基本上就是数据源里先只放10条, 点击最后一个cell时, 添加更多的数据到数据源中. 比如:</p>
 <p>数据源是个array:</p>
 <p><code>NSMutableArray *items;</code></p>
-<p>ViewController的这个方法返回数据条数: +1是为了显示”加载更多”的那个cell</p>
+<p>ViewController的这个方法返回数据条数: +1是为了显示&quot;加载更多&quot;的那个cell</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">NSInteger</span>)tableViewUITableView *)tableView numberOfRowsInSectionNSInteger)section </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="type">int</span> count = [items count];  </span><br><span class="line">    <span class="keyword">return</span>  count + <span class="number">1</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个方法定制cell的显示, 尤其是”加载更多”的那个cell:</p>
+<p>这个方法定制cell的显示, 尤其是&quot;加载更多&quot;的那个cell:</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableViewUITableView *)tableView cellForRowAtIndexPathNSIndexPath *)indexPath &#123;  </span><br><span class="line">    <span class="keyword">if</span>([indexPath row] == ([items count])) </span><br><span class="line">	&#123;  </span><br><span class="line">        <span class="comment">//创建loadMoreCell  </span></span><br><span class="line">        <span class="keyword">return</span> loadMoreCell;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="comment">//create your data cell  </span></span><br><span class="line">    <span class="keyword">return</span> cell;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>还要处理”加载更多”的那个cell的选择事件,触发一个方法来加载更多数据到列表</p>
+<p>还要处理&quot;加载更多&quot;的那个cell的选择事件,触发一个方法来加载更多数据到列表</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)tableViewUITableView *)tableView didSelectRowAtIndexPathNSIndexPath *)indexPath &#123;  </span><br><span class="line">      </span><br><span class="line">    <span class="keyword">if</span> (indexPath.row == [items count]) </span><br><span class="line">&#123;  </span><br><span class="line">        [loadMoreCell setDisplayText:<span class="string">@&quot;loading more ...&quot;</span>];  </span><br><span class="line">        [loadMoreCell setAnimating:<span class="literal">YES</span>];  </span><br><span class="line">        [<span class="keyword">self</span> performSelectorInBackgroundselector(loadMore) withObject:<span class="literal">nil</span>];  </span><br><span class="line">        <span class="comment">//[loadMoreCell setHighlighted:NO];  </span></span><br><span class="line">        [tableView deselectRowAtIndexPath:indexPath animated:<span class="literal">YES</span>];  </span><br><span class="line">        <span class="keyword">return</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="comment">//其他cell的事件  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>加载数据的方法:</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)loadMore  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="built_in">NSMutableArray</span> *more;   </span><br><span class="line">    <span class="comment">//加载你的数据  </span></span><br><span class="line">    [<span class="keyword">self</span> performSelectorOnMainThreadselector(appendTableWith withObject:more waitUntilDone:<span class="literal">NO</span>];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>添加数据到列表:</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) appendTableWithNSMutableArray *)data  </span><br><span class="line">&#123;  </span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i=<span class="number">0</span>;i&lt;[data count];i++) </span><br><span class="line">	&#123;  </span><br><span class="line">		[items addObject:[data objectAtIndex:i]];  </span><br><span class="line">	&#125;  </span><br><span class="line">	<span class="built_in">NSMutableArray</span> *insertIndexPaths = [<span class="built_in">NSMutableArray</span> arrayWithCapacity:<span class="number">10</span>];  </span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> ind = <span class="number">0</span>; ind &lt; [data count]; ind++) </span><br><span class="line">	&#123; </span><br><span class="line">		<span class="built_in">NSIndexPath</span> *newPath =  [<span class="built_in">NSIndexPath</span> indexPathForRow:[items indexOfObject:[data objectAtIndex:ind]] inSection:<span class="number">0</span>];   </span><br><span class="line">	    [insertIndexPaths addObject:newPath];  </span><br><span class="line">	&#125;  </span><br><span class="line">	[<span class="keyword">self</span>.tableView insertRowsAtIndexPaths:insertIndexPaths withRowAnimation:<span class="built_in">UITableViewRowAnimationFade</span>];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 
     </div>
 

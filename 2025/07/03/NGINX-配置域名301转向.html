@@ -193,7 +193,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">808</span>
+          <span class="site-state-item-count">818</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">145</span>
+        <span class="site-state-item-count">148</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -303,21 +303,18 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>嗯，今晚记录下，由于最近观察google 分析工具发现我网站存在 <span class="exturl" data-url="aHR0cDovL3d3dy5nb3doaWNoLmNvbS8=">www.gowhich.com<i class="fa fa-external-link-alt"></i></span> 和 gowhich.com 同时存在的一些问题，建议将其中的一个做301跳转，这个还是超级简单，不过还是记录一下吧，方便记性不好的。</p>
+    <div class="post-body" itemprop="articleBody"><p>嗯，今晚记录下，由于最近观察google 分析工具发现我网站存在 <span class="exturl" data-url="aHR0cDovL3d3dy5nb3doaWNoLmNvbQ==">www.gowhich.com<i class="fa fa-external-link-alt"></i></span> 和 <span class="exturl" data-url="aHR0cDovL2dvd2hpY2guY29t">gowhich.com<i class="fa fa-external-link-alt"></i></span> 同时存在的一些问题，建议将其中的一个做301跳转，这个还是超级简单，不过还是记录一下吧，方便记性不好的。</p>
 <p>绑定对应的域名当然没有问题了。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name gowhich.com www.gowhich.com *.gowhich.com ;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>上面主要展示了主要的部分，后面还是要根据你自己的需要去配置。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name gowhich.com www.gowhich.com *.gowhich.com ;    </span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$host</span> != <span class="string">&#x27;www.gowhich.com&#x27;</span>) &#123;</span><br><span class="line">      rewrite ^/(.*)$ http://www.gowhich.com/<span class="variable">$1</span> permanent;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>或者可以使用等于的判断</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name gowhich.com www.gowhich.com *.gowhich.com ;    </span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$host</span> = <span class="string">&#x27;gowhich.com&#x27;</span>) &#123;</span><br><span class="line">      rewrite ^/(.*)$ http://www.gowhich.com/<span class="variable">$1</span> permanent;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>第二个更有针对性吧。</p>
 <p>这里有几个问题需要注意一下：</p>
 <ol>
 <li>上述配置文件的if语句与括号必须以一个空格隔开，否则Nginx会报nginx: [emerg] unknown directive “if($host” in…错误。</li>
-<li>Nginx的条件判断不等于是!&#x3D;，等于是&#x3D;，注意这里的等于只有一个等于号，如果写成&#x3D;&#x3D;，则Nginx会报nginx: [emerg] unexpected “&#x3D;&#x3D;” in condition in…错误。</li>
+<li>Nginx的条件判断不等于是!=，等于是=，注意这里的等于只有一个等于号，如果写成==，则Nginx会报nginx: [emerg] unexpected “==” in condition in…错误。</li>
 <li>301永久转向配置成功后，浏览器可能会有记忆效应，比如说IE。所以一旦配置并利用浏览器访问过页面，那么你更改了301转向配置后，这个页面可能依旧是上次的转向，建议清除浏览器缓存，或者尝试访问其他页面，也可以在url的?问号后面加上一些随机的参数，避免浏览器的缓存记忆效应。</li>
 </ol>
 <p>配置完成后，可以使用nginx -s reload命令进行平滑的更新配置（不重启Nginx）。</p>
