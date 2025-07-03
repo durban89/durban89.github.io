@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/black/pace-theme-flat-top.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.gowhich.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js" defer></script>
+
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+    <meta name="description" content="给你一个淘宝客的短链，如果获取他跳转后的地址，这是我最近在做个一个程序，使用node开发总体来说还是挺简答的。 大概说下流程 第一步：解析出这个短链最终的真实地址 我的第一个想法是，是不是需要啥啥接口才可以哇。但是我又想，这也太麻烦了，如果我访问了这个链接是不是就可以得到真实的链接了。好，到网上找到了一个request库，还是有实例哦，简单的不要不要的，赶紧弄了下，果然是有结果的。 1234var">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Nodejs 接口之 解析淘宝客短链">
+<meta property="og:url" content="https://blog.gowhich.com/2025/07/03/Nodejs-%E6%8E%A5%E5%8F%A3%E4%B9%8B-%E8%A7%A3%E6%9E%90%E6%B7%98%E5%AE%9D%E5%AE%A2%E7%9F%AD%E9%93%BE.html">
+<meta property="og:site_name" content="Gowhich">
+<meta property="og:description" content="给你一个淘宝客的短链，如果获取他跳转后的地址，这是我最近在做个一个程序，使用node开发总体来说还是挺简答的。 大概说下流程 第一步：解析出这个短链最终的真实地址 我的第一个想法是，是不是需要啥啥接口才可以哇。但是我又想，这也太麻烦了，如果我访问了这个链接是不是就可以得到真实的链接了。好，到网上找到了一个request库，还是有实例哦，简单的不要不要的，赶紧弄了下，果然是有结果的。 1234var">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-03T03:07:37.000Z">
+<meta property="article:modified_time" content="2025-07-03T03:37:43.490Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="Nodejs">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E6%8E%A5%E5%8F%A3%E4%B9%8B-%E8%A7%A3%E6%9E%90%E6%B7%98%E5%AE%9D%E5%AE%A2%E7%9F%AD%E9%93%BE.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.gowhich.com/2025/07/03/Nodejs-%E6%8E%A5%E5%8F%A3%E4%B9%8B-%E8%A7%A3%E6%9E%90%E6%B7%98%E5%AE%9D%E5%AE%A2%E7%9F%AD%E9%93%BE.html","path":"2025/07/03/Nodejs-接口之-解析淘宝客短链.html","title":"Nodejs 接口之 解析淘宝客短链"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Nodejs 接口之 解析淘宝客短链 | Gowhich</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BZ00EJSZ9"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-3BZ00EJSZ9","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js" defer></script>
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js","integrity":"sha256-2obLuIPcceEhkE3G09G33hBdmE55ivVcZUlcKcGNHjU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+  <script src="/js/third-party/addtoany.js" defer></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":true,"archive":true,"delay":true,"timeout":3000,"priority":true,"url":"https://blog.gowhich.com/2025/07/03/Nodejs-%E6%8E%A5%E5%8F%A3%E4%B9%8B-%E8%A7%A3%E6%9E%90%E6%B7%98%E5%AE%9D%E5%AE%A2%E7%9F%AD%E9%93%BE.html"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Gowhich" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Gowhich</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Durban's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="durban"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">durban</p>
+  <div class="site-description" itemprop="description">人最大的烦恼，就是记性太好</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">787</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">145</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2R1cmJhbjg5" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;durban89"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmR1cmJhbi56aGFuZ0BnbWFpbC5jb20=" title="E-Mail → mailto:durban.zhang@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly94LmNvbS9kdXJiYW5femhhbmc=" title="Twitter → https:&#x2F;&#x2F;x.com&#x2F;durban_zhang"><i class="fab fa-twitter fa-fw"></i>Twitter</span>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E6%8E%A5%E5%8F%A3%E4%B9%8B-%E8%A7%A3%E6%9E%90%E6%B7%98%E5%AE%9D%E5%AE%A2%E7%9F%AD%E9%93%BE.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Nodejs 接口之 解析淘宝客短链 | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nodejs 接口之 解析淘宝客短链
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 11:07:37 / 修改时间：11:37:43" itemprop="dateCreated datePublished" datetime="2025-07-03T11:07:37+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>给你一个淘宝客的短链，如果获取他跳转后的地址，这是我最近在做个一个程序，使用node开发总体来说还是挺简答的。</p>
+<p>大概说下流程</p>
+<p>第一步：解析出这个短链最终的真实地址</p>
+<p>我的第一个想法是，是不是需要啥啥接口才可以哇。但是我又想，这也太麻烦了，如果我访问了这个链接是不是就可以得到真实的链接了。好，到网上找到了一个request库，还是有实例哦，简单的不要不要的，赶紧弄了下，果然是有结果的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> r = <span class="title function_">request</span>(url, <span class="keyword">function</span>(<span class="params">err, res, body</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> uri = res.<span class="property">request</span>.<span class="property">uri</span>.<span class="property">href</span>;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(uri);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以了。地址拿到了，用浏览器打开试试，结果还是有问题，这个地址不是产品的真实地址，还是要做一个跳转的，好吧。</p>
+<p>我又想，这个页面究竟是个啥，打开一看，其实里面就是个js函数，执行了就简单了，这个对于node来说真实小菜一碟哇。</p>
+<p>突然让我想起来urllib这个库，嗯，不错很好用的。</p>
+<p>开始用的时候，直接请求就以为能得到结果了，结果不是的，还需要在请求中加上referer，哈哈，也许是个漏洞吧，这样我就能解析出真实的地址了。</p>
+<p>那先解决第一个问题就是node如何营造一个dom的环境，玩过dom的人肯定知道jsdom啦，然后在进行urllib请求根据302跳转获取到。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jsdom.<span class="title function_">env</span>(uri, <span class="keyword">function</span>(<span class="params">err, <span class="variable language_">window</span></span>) &#123;</span><br><span class="line">  <span class="comment">//都有window了，想干嘛就干嘛吧</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后就是获取最终headers里面的location</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> urlRes = urllib.<span class="title function_">request</span>(real_jump_address, &#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;GET&#x27;</span>,</span><br><span class="line">  <span class="attr">headers</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Upgrade-Insecure-Requests&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">&#x27;Host&#x27;</span>: <span class="string">&#x27;s.click.taobao.com&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Referer&#x27;</span>: uri</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="keyword">function</span>(<span class="params">err, data, res</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> err; <span class="comment">// you need to handle error</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// console.log(res.statusCode);</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">headers</span>.<span class="property">location</span>);</span><br><span class="line">  <span class="comment">// data is Buffer instance</span></span><br><span class="line">  <span class="comment">// console.log(&#x27;body &#x27;, data.toString());</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechat.png" alt="durban 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="durban 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>durban
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.gowhich.com/2025/07/03/Nodejs-%E6%8E%A5%E5%8F%A3%E4%B9%8B-%E8%A7%A3%E6%9E%90%E6%B7%98%E5%AE%9D%E5%AE%A2%E7%9F%AD%E9%93%BE.html" title="Nodejs 接口之 解析淘宝客短链">https://blog.gowhich.com/2025/07/03/Nodejs-接口之-解析淘宝客短链.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Nodejs/" rel="tag"><i class="fa fa-tag"></i> Nodejs</a>
+          </div>
+
+        
+  <div class="social-like a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_facebook"></a>
+      <a class="a2a_button_twitter"></a>
+  </div>
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/03/PHP-%E4%B9%8B-Composer-%E7%9A%84-NpmRepository%E9%94%99%E8%AF%AF.html" rel="prev" title="PHP 之 Composer 的 NpmRepository错误">
+                  <i class="fa fa-angle-left"></i> PHP 之 Composer 的 NpmRepository错误
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/03/Android-webview%E4%B8%AD%E7%9A%84%E9%A1%B5%E9%9D%A2%E5%87%BA%E7%8E%B0%E7%9A%84%E9%83%A8%E5%88%86Bug%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html" rel="next" title="Android webview中的页面出现的部分Bug及解决方案">
+                  Android webview中的页面出现的部分Bug及解决方案 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2014 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Copyright © durban. All Rights Reserved.</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZw==">NexT.Gemini</span> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">746</span>
+          <span class="site-state-item-count">787</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">134</span>
+        <span class="site-state-item-count">145</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/%E5%9C%A8Django-%E6%A8%A1%E6%9D%BFtemplate-%E4%B8%AD%E5%AE%9E%E7%8E%B0%E5%8A%A0%E6%B3%95-%E5%87%8F%E6%B3%95-%E4%B9%98%E6%B3%95-%E9%99%A4%E6%B3%95%E8%BF%90%E7%AE%97.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/Shell%E8%8E%B7%E5%8F%96%E6%9C%AC%E6%9C%BA%E7%BD%91%E5%8D%A1ip.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/%E5%9C%A8Django-%E6%A8%A1%E6%9D%BFtemplate-%E4%B8%AD%E5%AE%9E%E7%8E%B0%E5%8A%A0%E6%B3%95-%E5%87%8F%E6%B3%95-%E4%B9%98%E6%B3%95-%E9%99%A4%E6%B3%95%E8%BF%90%E7%AE%97.html" class="post-title-link" itemprop="url">在Django 模板template 中实现加法，减法，乘法，除法运算</a>
+          <a href="/2025/06/27/Shell%E8%8E%B7%E5%8F%96%E6%9C%AC%E6%9C%BA%E7%BD%91%E5%8D%A1ip.html" class="post-title-link" itemprop="url">Shell获取本机网卡ip</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:15:41 / 修改时间：17:48:46" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:41+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 10:07:02 / 修改时间：10:24:58" itemprop="dateCreated datePublished" datetime="2025-06-27T10:07:02+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,31 +294,322 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>感觉很赞的一个设计，django的模板里面是用一个tags可以实现，加法，减法，乘法，除法的运算。嘿嘿</p>
-<p>先看一下django 官方的解释</p>
-<blockquote>
-<p> For creating bar charts and such, this tag calculates the ratio of a given<br>    value to a maximum value, and then applies that ratio to a constant.  </p>
-<pre><code>For example::  
+          <h4 id="1"><a href="#1" class="headerlink" title="获取本机的ip的地址（应该是内网）"></a><a href="#1">获取本机的ip的地址（应该是内网）</a></h4><p>第一个方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig <span class="variable">$1</span>|sed -n 2p|awk  <span class="string">&#x27;&#123; print $2 &#125;&#x27;</span>|awk -F : <span class="string">&#x27;&#123; print $2 &#125;&#x27;</span></span><br></pre></td></tr></table></figure>
 
-    &lt;img src=&#39;bar.gif&#39; height=&#39;10&#39; width=&#39;&#123;% widthratio this_value max_value 100 %&#125;&#39; /&gt;  
+<p>第二个方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig <span class="variable">$1</span>|sed -n 2p|awk  <span class="string">&#x27;&#123; print $2 &#125;&#x27;</span>|<span class="built_in">tr</span> -d <span class="string">&#x27;addr:&#x27;</span></span><br></pre></td></tr></table></figure>
 
-Above, if `this_value` is 175 and `max_value` is 200, the image in  
-the above example will be 88 pixels wide (because 175/200 = .875;  
-.875 * 100 = 87.5 which is rounded up to 88).
-</code></pre>
-</blockquote>
-<p>这说明，widthratio 通常用来显示图表，比例时用的，一个数字占了多少百分比等。但仔细想想，如果将某些数字变成特定的数字，不就是乘除法运算了吗？请看：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">乘法 A*B: &#123;% widthratio A 1 B %&#125;</span><br><span class="line">除法 A/B: &#123;% widthratio A B 1 %&#125;</span><br><span class="line"></span><br><span class="line">利用 add 这个filter ,可以做更疯狂的事:</span><br><span class="line"></span><br><span class="line">计算 A^2: &#123;% widthratio A 1 A %&#125;</span><br><span class="line">计算 (A+B)^2: &#123;% widthratio A|add:B 1 A|add:B %&#125;</span><br><span class="line">计算 (A+B) * (C+D): &#123;% widthratio A|add:B 1 C|add:D %&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2"><a href="#2" class="headerlink" title="获取本机的ip的地址（应该是外网）"></a><a href="#2">获取本机的ip的地址（应该是外网）</a></h4><p>第一个方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">local_host=<span class="string">&quot;`hostname --fqdn`&quot;</span></span><br><span class="line">local_ip=`host <span class="variable">$local_host</span> 2&gt;/dev/null | awk <span class="string">&#x27;&#123;print $NF&#125;&#x27;</span>`</span><br></pre></td></tr></table></figure>
 
-<p>变量也是可以加的哦</p>
+<p>第二个方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">local_host=<span class="string">&quot;`hostname --fqdn`&quot;</span></span><br><span class="line">nslookup -sil <span class="variable">$local_host</span> 2&gt;/dev/null | grep Address: | sed <span class="string">&#x27;1d&#x27;</span> | sed <span class="string">&#x27;s/Address://g&#x27;</span></span><br></pre></td></tr></table></figure>
+
 <hr>
-<p>当然，这种方法在django中实现乘除法比较变态，看起来也不爽，更好的方法，是可以扩展自己的标签。在后面打算自己扩展一个计算乘法的标签，应该好很多。  </p>
-<p>在django中实现其它一些简单的计算，参考这篇文章：<span class="exturl" data-url="aHR0cDovL3d3dy55aWhhb21lbi5jb20vYXJ0aWNsZS9weXRob24vMTg2Lmh0bQ==">http://www.yihaomen.com/article/python/186.htm<i class="fa fa-external-link-alt"></i></span>  </p>
-<p>用django template tag 的方式实现可以参考这篇文章：<br><span class="exturl" data-url="aHR0cDovL3d3dy55aWhhb21lbi5jb20vYXJ0aWNsZS9weXRob24vMzM5Lmh0bQ==">http://www.yihaomen.com/article/python/339.htm<i class="fa fa-external-link-alt"></i></span></p>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9zdGFyc3BhY2UvYXJjaGl2ZS8yMDA5LzAyLzEzLzEzOTAwNjIuaHRtbA==">http://www.cnblogs.com/starspace/archive/2009/02/13/1390062.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/Java7-Tomcat%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/Java7-Tomcat%E7%BC%93%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">Java7 Tomcat缓存的问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:06:59 / 修改时间：10:20:16" itemprop="dateCreated datePublished" datetime="2025-06-27T10:06:59+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>一般的在做jsp的开发的时候，会出现一个问题就是，将jsp文件提交后，刷新页面，内容没有改变。</p>
+<p>我这里总结了几条方法，在实施之前先做如下操作。</p>
+<p>1，删除work里面对应的项目的缓存文件，比如我的app是news，那么我就删除news就好了</p>
+<p>2，清空浏览器的缓存，或者是重新打开一个浏览器</p>
+<p>然后做如下的操作，使得我们的操作起作用：</p>
+<p>1，修改server.xml文件，在相应的context中加上或者修改</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reloadable=<span class="string">&quot;true&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>结果就是:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Context path=<span class="string">&quot;/news&quot;</span> docBase=<span class="string">&quot;/home/www/jspweb/news&quot;</span> debug=<span class="string">&quot;0&quot;</span> privileged=<span class="string">&quot;true&quot;</span> reloadable=<span class="string">&quot;true&quot;</span>&gt; </span><br><span class="line">&lt;/Context&gt;</span><br></pre></td></tr></table></figure>
+
+<p>3，在相应的jsp文件中加入如下代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">      response.setHeader(<span class="string">&quot;Cache-Control&quot;</span>, <span class="string">&quot;no-cache&quot;</span>);</span><br><span class="line">      response.setHeader(<span class="string">&quot;Pragma&quot;</span>, <span class="string">&quot;no-cache&quot;</span>);</span><br><span class="line">      response.setDateHeader(<span class="string">&quot;Expires&quot;</span>, -1);</span><br><span class="line">      response.setDateHeader(<span class="string">&quot;max-age&quot;</span>, 0);</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后打开页面试试吧，修改文件之后在重新传一下试试，如果没有效果可以联系下方的QQ群。</p>
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcmVkYXJteV9jaGVuL2FydGljbGUvZGV0YWlscy83MDMyNjcx">http://blog.csdn.net/redarmy_chen/article/details/7032671<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL2cua2Vob3UuY29tL3QxMDA3MDg2NjY4Lmh0bWw=">http://g.kehou.com/t1007086668.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/NetBeans%E8%BF%9B%E8%A1%8Cjsp%E5%BC%80%E5%8F%91%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/NetBeans%E8%BF%9B%E8%A1%8Cjsp%E5%BC%80%E5%8F%91%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html" class="post-title-link" itemprop="url">NetBeans进行jsp开发乱码解决方案</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:06:56 / 修改时间：10:21:41" itemprop="dateCreated datePublished" datetime="2025-06-27T10:06:56+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>NetBeans进行jsp开发乱码解决方案:方案如下</p>
+<p>很多人在使用NetBeans进行JSP开发的时候总会出现页面汉字乱码的情况，很是头疼，其实这根NetBeans默认的编码方式有关。常用的编码方式有UTF-8、GBK、gb2312以及ISO-8859-1等。</p>
+<p>ISO8859-1，通常叫做Latin-1。Latin-1包括了书写所有西方欧洲语言不可缺少的附加字符。<br>而gb2312是标准中文字符集<br>而如果只是英文字符，那么使用哪种编码格式都没问题，甚至是gb2312.</p>
+<p>UTF-8（8 位元 Universal Character Set／Unicode Transformation Format）是一种针对 Unicode的可变长度字符编码。它可以用来表示 Unicode标准中的任何字符，且其编码中的第一个字节仍与 ASCII相容，这使得原来处理 ASCII 字符的软件无须或只须做少部份修改，即可继续使用。因此，它逐渐成为电子邮件、网页及其他储存或传送文字的应用中，优先采用的编码。</p>
+<p>为此，我们要在页面头部加上pageEncoding的标签并将其指定为utf-8的编码格式，即可解决页面中文出现一列?的乱码问题，如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=<span class="string">&quot;java&quot;</span> pageEncoding=<span class="string">&quot;UTF-8&quot;</span>%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这样的话在页面中，就不会出现乱码</p>
+<p>此法我已经测试过，是可以的，这里仅供参考</p>
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3c3N0dHQuYmxvZy41MWN0by5jb20vMTI4OTY1MS8zODIxNTE=">http://wwssttt.blog.51cto.com/1289651/382151<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/Java-Web%E5%BC%80%E5%8F%91Tomcat%E4%B8%AD%E4%B8%89%E7%A7%8D%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%96%B9%E6%B3%95.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/Java-Web%E5%BC%80%E5%8F%91Tomcat%E4%B8%AD%E4%B8%89%E7%A7%8D%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">Java Web开发Tomcat中三种部署项目的方法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 09:45:54 / 修改时间：09:50:00" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:54+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Java Web开发Tomcat中三种部署项目的方法,开始java web开发必不可少的步骤，经过查找，觉得有篇文章介绍的不错</p>
+<p>第一种方法：在tomcat中的conf目录中，在server.xml中的，<host/>节点中添加： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Context path=<span class="string">&quot;/hello&quot;</span> docBase=<span class="string">&quot;D:\eclipse3.2.2forwebtools\workspace\hello\WebRoot&quot;</span> debug=<span class="string">&quot;0&quot;</span> privileged=<span class="string">&quot;true&quot;</span>&gt; </span><br><span class="line">&lt;/Context&gt;</span><br></pre></td></tr></table></figure>
+
+<p>至于Context 节点属性，可详细见相关文档。   </p>
+<p>第二种方法：将web项目文件件拷贝到webapps 目录中。   </p>
+<p>第三种方法：很灵活，在conf目录中，新建 Catalina（注意大小写）＼localhost目录，在该目录中新建一个xml文件，名字可以随意取，只要和当前文件中的文件名不重复就行了，该xml文件的内容为： </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Context path=<span class="string">&quot;/hello&quot;</span> docBase=<span class="string">&quot;D:\eclipse3.2.2forwebtools\workspace\hello\WebRoot&quot;</span> debug=<span class="string">&quot;0&quot;</span> privileged=<span class="string">&quot;true&quot;</span>&gt; </span><br><span class="line">&lt;/Context&gt;</span><br></pre></td></tr></table></figure>
+
+<p>第3个方法有个优点，可以定义别名。服务器端运行的项目名称为path，外部访问的URL则使用XML的文件名。这个方法很方便的隐藏了项目的名称，对一些项目名称被固定不能更换，但外部访问时又想换个路径，非常有效。   </p>
+<p>第2、3还有优点，可以定义一些个性配置，如数据源的配置等。   </p>
+<p>还有一篇 详细的 </p>
+<p>1、直接放到Webapps目录下  </p>
+<p>Tomcat的Webapps目录是Tomcat默认的应用目录，当服务器启动时，会加载所有这个目录下的应用。也可以将JSP程序打包成一个war包放在目录下，服务器会自动解开这个war包，并在这个目录下生成一个同名的文件夹。一个war包就是有特性格式的jar包，它是将一个Web程序的所有内容进行压缩得到。具体如何打包，可以使用许多开发工具的IDE环境，如Eclipse、NetBeans、ant、JBuilder等。也可以用cmd 命令：<code>jar -cvf applicationname.war package.*</code>；  </p>
+<p>甚至可以在程序执行中打包：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;     </span><br><span class="line">  <span class="type">string</span> <span class="variable">strjavahome</span> <span class="operator">=</span> system.getproperty(<span class="string">&quot;java.home&quot;</span>);</span><br><span class="line">  strjavahome = strjavahome.substring(<span class="number">0</span>, strjavahome.lastindexof(\\))+<span class="string">&quot;\\bin\\&quot;</span>;</span><br><span class="line">  runtime.getruntime().exec(<span class="string">&quot;cmd /c start &quot;</span>+strjavahome+<span class="string">&quot;jar cvf hello.war c:\\tomcat5.0\\webapps\\root\\*&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span>(exception e) &#123;</span><br><span class="line">  system.out.println(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>webapps这个默认的应用目录也是可以改变。打开Tomcat的conf目录下的server.xml文件，找到下面内容：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Host name=<span class="string">&quot;localhost&quot;</span> debug=<span class="string">&quot;0&quot;</span> appBase=<span class="string">&quot;webapps&quot;</span> unpackWARs=<span class="string">&quot;true&quot;</span> autoDeloy=<span class="string">&quot;true&quot;</span> xmlValidation=<span class="string">&quot;falase&quot;</span> xmlNamespaceAware=<span class="string">&quot;false&quot;</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2、在server.xml中指定  </p>
+<p>在Tomcat的配置文件中，一个Web应用就是一个特定的Context，可以通过在server.xml中新建Context里部署一个JSP应用程序。打开server.xml文件，在Host标签内建一个Context，内容如下。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Context path=<span class="string">&quot;/myapp&quot;</span> reloadable=<span class="string">&quot;true&quot;</span> docBase=<span class="string">&quot;D:\myapp&quot;</span> workDir=<span class="string">&quot;D:\myapp\work&quot;</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中path是虚拟路径，docBase是JSP应用程序的物理路径，workDir是这个应用的工作目录，存放运行是生成的于这个应用相关的文件。</p>
+<p>3、创建一个Context文件  </p>
+<p>以上两种方法，Web应用被服务器加载后都会在Tomcat的conf\catalina\localhost目录下生成一个XML文件，其内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Context path=<span class="string">&quot;/admin&quot;</span> docBase=<span class="string">&quot;<span class="variable">$&#123;catalina.home&#125;</span>/server/webapps/admin&quot;</span> debug=<span class="string">&quot;0&quot;</span> privileged=<span class="string">&quot;true&quot;</span>&gt;&lt;/Context&gt;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出，文件中描述一个应用程序的Context信息，其内容和server.xml中的Context信息格式是一致的，文件名便是虚拟目录名。您可以直接建立这样的一个xml文件，放在Tomcat的<code>conf\catalina\localhost</code>目录下。例子如下：<br>注意：删除一个Web应用同时也要删除webapps下相应的文件夹祸server.xml中相应的Context，还要将Tomcat的<code>conf   \catalina\localhost</code>目录下相应的xml文件删除。否则Tomcat仍会岸配置去加载。。。 </p>
+<p>tomcat部署web应用主要有以下几种方式：</p>
+<p>1．拷贝你的WAR文件或者你的web应用文件夹（包括该web的所有内容）到$CATALINA_BASE&#x2F;webapps目录下。<br>2．为你的web服务建立一个只包括context内容的XML片断文件，并把该文件放到$CATALINA_BASE&#x2F;webapps目录下。这个web应用本身可以存储在硬盘上的任何地方。这种context片断提供了一种便利的方法来部署web应用，你不需要编辑server.xml，除非你想改变缺省的部署特性，安装一个新的web应用时不需要重启动Tomcat。<br>3． 同方法2,只是将context片断放在CATALINA_BASE\conf\Catalina\localhost目录下.这种方法比方法2&gt;要有效,笔者经过多次实验发现方法2不如后面这种方法好用.前者多次出现系统打不开的情况.<br>4．直接在server.xml中</Host>前加上Context片断,使用这种方法时,tomcat会自动在CATALINA_BASE\conf\Catalina\localhost目录下生成一个文件片断.方法同方法3具有同样效果.这种方式需要将ROOT目录删除才行.</p>
+<p>另外，为了让tomcat只运行<code>conf/server.xml</code>中指定的web应用，可以有以下几种办法：<br>实现一:<br>     1)将要部署的WEB应用放在webapps以外的路径, 并在server.xml相应的context中的docBase指定.<br>     2)删除webapps中的所有文件夹, 以及conf&#x2F;catalina&#x2F;localhost下所有xml文件.<br>     注: webapps是server.xml中的Host元素的appBase属性的值.<br>实现二:<br>     1) 修改server.xml中Host元素的属性, 添加或修改: <code>deployXML=&quot;false&quot;</code> <code>deployOnStartup=&quot;false&quot;</code> <code>autoDeploy=&quot;false&quot;</code><br>     2) 含义:<br>     <code>deployXML=&quot;false&quot;</code>: 不部署conf&#x2F;catalina&#x2F;localhost下的xml相应的WEB应用<br>     <code>deployOnStartup=&quot;false&quot;</code> : tomcat启动时, 不部署webapps下的所有web应用<br>     <code>autoDeploy=&quot;false&quot;</code>: 避免tomcat在扫描改动时, 再次把webapps下的web应用给部署进来.</p>
 <hr>
 <p>参看文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy55aWhhb21lbi5jb20vYXJ0aWNsZS9weXRob24vMzM4Lmh0bQ==">http://www.yihaomen.com/article/python/338.htm<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5zaGFyZWpzLmNvbS9jb2Rlcy9weXRob24vNjQ2Mw==">http://www.sharejs.com/codes/python/6463<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3NodXlhbmd5YW5nLmJsb2cuNTFjdG8uY29tLzE2ODU3NjgvMTA0MDEyNw==">http://shuyangyang.blog.51cto.com/1685768/1040127<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -345,7 +636,7 @@ the above example will be 88 pixels wide (because 175/200 = .875;
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E4%B8%AD-%E7%BB%99UIScrollView-%E6%B7%BB%E5%8A%A0%E8%87%AA%E9%80%82%E5%BA%94%E7%9A%84%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/SVN-update%E6%8A%A5no-such-revision-%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -363,7 +654,7 @@ the above example will be 88 pixels wide (because 175/200 = .875;
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E4%B8%AD-%E7%BB%99UIScrollView-%E6%B7%BB%E5%8A%A0%E8%87%AA%E9%80%82%E5%BA%94%E7%9A%84%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87.html" class="post-title-link" itemprop="url">iOS7 中 给UIScrollView 添加自适应的背景图片</a>
+          <a href="/2025/06/27/SVN-update%E6%8A%A5no-such-revision-%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html" class="post-title-link" itemprop="url">svn update报no such revision * 的解决办法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -375,7 +666,7 @@ the above example will be 88 pixels wide (because 175/200 = .875;
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:15:38 / 修改时间：11:28:51" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:38+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 09:45:52 / 修改时间：09:51:28" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:52+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -397,361 +688,14 @@ the above example will be 88 pixels wide (because 175/200 = .875;
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>要做一个长的能滚动的页面，在IOS7中这个能滚动的话，可以使用UIScrollView，然后使用背景图片来解决我们大部分的ui问题，可以节省我们写ui的时间。</p>
-<p>下面来看看代码</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIScrollView</span> *scrollView=[[<span class="built_in">UIScrollView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>,<span class="number">320</span>, <span class="number">1000</span>)];</span><br><span class="line">scrollView.backgroundColor = [<span class="built_in">UIColor</span> colorWithPatternImage:[<span class="built_in">UIImageimageNamed</span>:<span class="string">@&quot;detail.png&quot;</span>]];</span><br><span class="line">[scrollView setContentSize:<span class="built_in">CGSizeMake</span>(<span class="number">320</span>, <span class="number">960</span>)];</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:scrollView];</span><br></pre></td></tr></table></figure>
-
-<p>实现很简单，下面你就可以自己去添加一些其他的view到上面去了，嘿嘿</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E4%B8%AD-UIImageview%E5%9B%BE%E7%89%87%E5%8F%98%E6%88%90%E5%9C%86%E8%A7%92.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E4%B8%AD-UIImageview%E5%9B%BE%E7%89%87%E5%8F%98%E6%88%90%E5%9C%86%E8%A7%92.html" class="post-title-link" itemprop="url">iOS7 中 UIImageview图片变成圆角</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:15:35 / 修改时间：11:31:33" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:35+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>之前做图片的圆角是使用了一个别人写的类库叫做GBPathImageView，实现起来是相当的复杂啊，重写了UIImageview这个类，不过呢用起来也是很不错的，但是遇到的问题是，在进行图片异步加载的时候，要怎么处理呢，首先是要拿到这个图片，但是图片异步的话，图片首先是不在本地的，那么你重新绘制的话就是一张默认的空图片，最后你要获取新图片再进行绘制，导致的结果就是重复做了两次操作，但是在cell这样的操作，感觉起来是相当的复杂，在你进行这个操作的时候，滑动的cell要做什么呢？</p>
-<p>好了，不多说说了，解决方法其实很简答，只怪自己对原生的类库不了解，也不怪别人的。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *defaultImageString = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;person_default&quot;</span> ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">    <span class="built_in">UIImageView</span> *imageView = [[<span class="built_in">UIImageView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(imageViewX,</span><br><span class="line">                                                                           imageViewY,</span><br><span class="line">                                                                           imageViewWidth,</span><br><span class="line">                                                                           imageViewHeight)];</span><br><span class="line">    [imageView setImageWithURL:[<span class="built_in">NSURL</span> URLWithString:[storage fetchCelebrityPicWithId:_personId]]</span><br><span class="line">              placeholderImage:[<span class="built_in">UIImage</span> imageWithContentsOfFile:defaultImageString]</span><br><span class="line">   usingActivityIndicatorStyle:<span class="built_in">UIActivityIndicatorViewStyleWhiteLarge</span>];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CALayer</span> *lay  = imageView.layer;<span class="comment">//获取ImageView的层</span></span><br><span class="line">    [lay setMasksToBounds:<span class="literal">YES</span>];</span><br><span class="line">    [lay setCornerRadius:<span class="number">45.0</span>];</span><br></pre></td></tr></table></figure>
-
-<p>圆角的尺寸大家自己定义就好了。</p>
-<p>效果很明显。大家可以尝试一下。</p>
+          <h4 id="1"><a href="#1" class="headerlink" title="出现问题的原因"></a><a href="#1">出现问题的原因</a></h4><p>1，版本库因断电等出错；这个通过svn verify来验证服务器是否有问题，如果验证么有错误，那么服务器需要版本修正，如果没有错误，则是客户端的问题；</p>
+<p>2，客户端可能由于文件自动变化等原因等出现；具体不是非常清楚；</p>
+<h4 id="2"><a href="#2" class="headerlink" title="解决的办法"></a><a href="#2">解决的办法</a></h4><p>a,checkout 一个版本库到临时文件夹<code>/tmp/</code></p>
+<p>b,复制<code>/tmp/</code>工作副本中的<code>.svn/</code>目录到正式工作目录</p>
+<p>c, 在正式工作目录执行<code>svn update</code>，OK 了</p>
 <hr>
-<p>参考的文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL215Lm9zY2hpbmEubmV0L21lamlua2UvYmxvZy83MDYzNA==">http://my.oschina.net/mejinke/blog/70634<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Django-%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%B0%83%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Django-%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%B0%83%E7%94%A8.html" class="post-title-link" itemprop="url">Django 静态页面的调用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 10:32:48 / 修改时间：10:35:29" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:48+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于django的静态页面的调用方法很是简单，也是最近google后发现的</p>
-<p>只要在urls.py添加类似如下的代码就可以了</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns += patterns(<span class="string">&#x27;django.views.generic.simple&#x27;</span>,</span><br><span class="line">    (<span class="string">r&#x27;^zhanzhang\.html&#x27;</span>, <span class="string">&#x27;direct_to_template&#x27;</span>, &#123;<span class="string">&#x27;template&#x27;</span>: <span class="string">&#x27;zhanzhang.html&#x27;</span>&#125;),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码的意思是追加了一条url匹配规则</p>
-<hr>
-<p>参考的文章：</p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kb2NzLmRqYW5nb3Byb2plY3QuY29tL2VuLzEuMi9yZWYvZ2VuZXJpYy12aWV3cy8=">https://docs.djangoproject.com/en/1.2/ref/generic-views/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3B5dGhvbi1jaGluYS5vcmcvdG9waWMvMzI2">http://python-china.org/topic/326<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Objective-C%E5%AE%9E%E7%8E%B0%E7%9A%84-%E5%9C%A8PHP%E4%B8%ADoauth%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Objective-C%E5%AE%9E%E7%8E%B0%E7%9A%84-%E5%9C%A8PHP%E4%B8%ADoauth%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95.html" class="post-title-link" itemprop="url">Objective-C实现的在PHP中oauth加密算法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 10:32:45 / 修改时间：10:36:30" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:45+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>说起这个算法，在php中我是这么实现的</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">generateSig</span> (<span class="params"><span class="variable">$params</span>, <span class="variable">$secret</span> = <span class="string">&#x27;&#x27;</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$secret</span>)) &#123;</span><br><span class="line">        <span class="variable">$secret</span> = <span class="variable language_">$this</span>-&gt;appSecret;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$str</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="title function_ invoke__">ksort</span>(<span class="variable">$params</span>);</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$params</span> <span class="keyword">as</span> <span class="variable">$k</span> =&gt; <span class="variable">$v</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (! <span class="title function_ invoke__">is_array</span>(<span class="variable">$v</span>)) &#123;</span><br><span class="line">            <span class="variable">$str</span> .= <span class="string">&quot;<span class="subst">$k</span>=<span class="subst">$v</span>&quot;</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="title function_ invoke__">ksort</span>(<span class="variable">$v</span>);</span><br><span class="line">            <span class="variable">$str</span> .= <span class="string">&quot;<span class="subst">$k</span>=&quot;</span> . <span class="title function_ invoke__">json_encode</span>(<span class="variable">$v</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_ invoke__">bin2hex</span>(<span class="title function_ invoke__">hash_hmac</span>(<span class="string">&#x27;sha1&#x27;</span>, <span class="variable">$str</span>, <span class="variable">$secret</span>, <span class="literal">TRUE</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>那么在ios的应用中，应该如何实现呢，纠结了半天，其实是很简单的，只是自己错把secret放进了加密数据中，导致结果出现问题。下面展示一下自己的object-c在ios中的实现过程。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="built_in">NSString</span> *)getSignature:(<span class="built_in">NSDictionary</span> *)parameters secret:(<span class="built_in">NSString</span> *)secret</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSMutableString</span> *baseString = [[<span class="built_in">NSMutableString</span> alloc] init];</span><br><span class="line">    <span class="comment">//排序</span></span><br><span class="line">    <span class="built_in">NSArray</span> *sortArray = [parameters.allKeys sortedArrayUsingSelector:<span class="keyword">@selector</span>(compare:)];</span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">NSString</span> *key <span class="keyword">in</span> sortArray)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSString</span> *value = [parameters objectForKey:key];</span><br><span class="line">        <span class="keyword">if</span>(value &amp;&amp; [value isKindOfClass:[<span class="built_in">NSString</span> <span class="keyword">class</span>]])</span><br><span class="line">        &#123;</span><br><span class="line">            [baseString appendFormat:<span class="string">@&quot;%@=%@&quot;</span>, key, value];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">const</span> <span class="type">char</span> *cKey  = [secret cStringUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">    <span class="keyword">const</span> <span class="type">char</span> *cData = [baseString cStringUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>];</span><br><span class="line">    </span><br><span class="line">    uint8_t cHMAC[CC_SHA1_DIGEST_LENGTH];</span><br><span class="line">    </span><br><span class="line">    CCHmac(kCCHmacAlgSHA1, cKey, strlen(cKey), cData, strlen(cData), cHMAC);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSString</span> *hash;</span><br><span class="line">    <span class="built_in">NSMutableString</span>* output = [<span class="built_in">NSMutableString</span> stringWithCapacity:CC_SHA1_DIGEST_LENGTH * <span class="number">2</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; CC_SHA1_DIGEST_LENGTH; i++)</span><br><span class="line">        [output appendFormat:<span class="string">@&quot;%02x&quot;</span>, cHMAC[i]];</span><br><span class="line">    hash = output;</span><br><span class="line">    <span class="keyword">return</span> hash;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在这里不能缺少的库是</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;CommonCrypto/CommonDigest.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&lt;CommonCrypto/CommonHMAC.h&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>应该是下面这个，如果使用到MD5，上面那个是不能缺少的</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E8%A7%A3%E5%86%B3%E5%88%B7%E6%96%B0%E9%87%8D%E7%94%A8cell%E6%97%B6%E5%AD%97%E4%BD%93%E9%87%8D%E5%A4%8D%E9%97%AE%E9%A2%98.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E8%A7%A3%E5%86%B3%E5%88%B7%E6%96%B0%E9%87%8D%E7%94%A8cell%E6%97%B6%E5%AD%97%E4%BD%93%E9%87%8D%E5%A4%8D%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">iOS7 解决刷新重用cell时字体重复问题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 10:32:40 / 修改时间：10:38:25" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:40+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>不知道为啥刷新Cell的时候出现字体的重复，字体的覆盖现象。</p>
-<p>google了下，发现解决的方法很简单的。如下代码</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">NSString</span> *CellIdentifier = <span class="string">@&quot;CelebrityCheckTableCell&quot;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//注册要使用的cell</span></span><br><span class="line">    [tableView registerClass:[<span class="built_in">UITableViewCell</span> <span class="keyword">class</span>]</span><br><span class="line">      forCellReuseIdentifier:CellIdentifier];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//创建cell</span></span><br><span class="line">    <span class="built_in">UITableViewCell</span> *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(cell == <span class="literal">nil</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        cell = [[<span class="built_in">UITableViewCell</span> alloc] initWithStyle:<span class="built_in">UITableViewCellStyleValue1</span></span><br><span class="line">                                      reuseIdentifier:CellIdentifier];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//解决刷新重用cell事字体重复问题</span></span><br><span class="line">    <span class="built_in">NSArray</span> *subviews = [[<span class="built_in">NSArray</span> alloc] initWithArray:cell.contentView.subviews];</span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">UIView</span> *subview <span class="keyword">in</span> subviews) &#123;</span><br><span class="line">        [subview removeFromSuperview];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//获取行的个数</span></span><br><span class="line">    <span class="built_in">NSInteger</span> row = [indexPath row];</span><br><span class="line">    <span class="built_in">NSDictionary</span> *dict = [_dataDic objectAtIndex:row];</span><br><span class="line"><span class="comment">//    NSLog(@&quot;dict = %@&quot;,dict);</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//cell高度参数</span></span><br><span class="line">    <span class="built_in">CGFloat</span> cellHeight = cell.frame.size.height;</span><br><span class="line">    <span class="built_in">UIColor</span> *rankBgColor = [[<span class="built_in">UIColor</span> alloc] initWithRed:<span class="number">178.0</span>/<span class="number">255.0</span> green:<span class="number">178.0</span>/<span class="number">255.0</span> blue:<span class="number">178.0</span>/<span class="number">255.0</span> alpha:<span class="number">1.0</span>];</span><br><span class="line">    <span class="keyword">if</span>(row &lt;= <span class="number">2</span>)&#123;</span><br><span class="line">        rankBgColor = [[<span class="built_in">UIColor</span> alloc] initWithRed:<span class="number">218.0</span>/<span class="number">255.0</span> green:<span class="number">118.0</span>/<span class="number">255.0</span> blue:<span class="number">159.0</span>/<span class="number">255.0</span> alpha:<span class="number">1.0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//排名 计算x,y</span></span><br><span class="line">    <span class="built_in">CGFloat</span> rankWidth = <span class="number">21.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> rankHeight = <span class="number">21.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> rankX = <span class="number">5.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> rankY = (cellHeight - rankHeight) / <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">UILabel</span> *rank = [[<span class="built_in">UILabel</span> alloc] init];</span><br><span class="line">    [rank setFrame:<span class="built_in">CGRectMake</span>(rankX, rankY, rankWidth, rankHeight)];</span><br><span class="line">    rank.backgroundColor = rankBgColor;</span><br><span class="line">    rank.textColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">    rank.font = [<span class="built_in">UIFont</span> boldSystemFontOfSize:<span class="number">17.0</span>];</span><br><span class="line">    rank.textAlignment = <span class="built_in">NSTextAlignmentCenter</span>;</span><br><span class="line">    [rank.layer setCornerRadius:<span class="number">2.0</span>];</span><br><span class="line">    rank.text = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%d&quot;</span>,row+<span class="number">1</span>];</span><br><span class="line">    [cell.contentView addSubview:rank];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//名称 计算x,y</span></span><br><span class="line">    <span class="built_in">CGFloat</span> nameWidth = <span class="number">150.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> nameHeight = <span class="number">21.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> nameX = rankX + rankWidth + <span class="number">5.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> nameY = (cellHeight - nameHeight) / <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">UILabel</span> *name = [[<span class="built_in">UILabel</span> alloc] init];</span><br><span class="line">    [name setFrame:<span class="built_in">CGRectMake</span>(nameX, nameY, nameWidth, nameHeight)];</span><br><span class="line">    name.textColor = [<span class="built_in">UIColor</span> blackColor];</span><br><span class="line">    name.font = [<span class="built_in">UIFont</span> boldSystemFontOfSize:<span class="number">17.0</span>];</span><br><span class="line">    name.textAlignment = <span class="built_in">NSTextAlignmentLeft</span>;</span><br><span class="line">    [name.layer setCornerRadius:<span class="number">2.0</span>];</span><br><span class="line">    name.text = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@&quot;</span>,[dict valueForKey:<span class="string">@&quot;title&quot;</span>]];</span><br><span class="line">    [cell.contentView addSubview:name];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//分数 计算x,y</span></span><br><span class="line">    <span class="built_in">CGFloat</span> scoreWidth = <span class="number">100.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> scoreHeight = <span class="number">21.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> scoreX = nameX + nameWidth + <span class="number">5.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> scoreY = (cellHeight - scoreHeight) / <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">UILabel</span> *score = [[<span class="built_in">UILabel</span> alloc] init];</span><br><span class="line">    [score setFrame:<span class="built_in">CGRectMake</span>(scoreX, scoreY, scoreWidth, scoreHeight)];</span><br><span class="line">    score.textColor = [<span class="built_in">UIColor</span> blackColor];</span><br><span class="line">    score.font = [<span class="built_in">UIFont</span> boldSystemFontOfSize:<span class="number">16.0</span>];</span><br><span class="line">    score.textAlignment = <span class="built_in">NSTextAlignmentRight</span>;</span><br><span class="line">    [score.layer setCornerRadius:<span class="number">2.0</span>];</span><br><span class="line">    score.text = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@&quot;</span>,[dict valueForKey:<span class="string">@&quot;check_sum&quot;</span>]];</span><br><span class="line">    [cell.contentView addSubview:score];</span><br><span class="line">    </span><br><span class="line">    cell.accessoryType = <span class="built_in">UITableViewCellAccessoryDisclosureIndicator</span>;</span><br><span class="line">    cell.selectionStyle = <span class="built_in">UITableViewCellSelectionStyleNone</span>;</span><br><span class="line">    <span class="keyword">return</span> cell;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>得到的结果是，效果很好，解决了我的问题。</p>
 <p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZGV2ZWxvcGVyX3poYW5nL2FydGljbGUvZGV0YWlscy8xNTAyNjA5Nw==">http://blog.csdn.net/developer_zhang/article/details/15026097<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL2p1c3Rjb2RpbmcuaXRleWUuY29tL2Jsb2cvMTQ3NjE5Nw==">http://justcoding.iteye.com/blog/1476197<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL2Rka2FuZ2Z1LmJsb2cuNTFjdG8uY29tLzMxMTk4OS80NjU1NTcv">http://ddkangfu.blog.51cto.com/311989/465557/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5teWV4Y2VwdGlvbi5jbi9wb3dlcmRlc2lnbmVyLzU0OTI0Ni5odG1s">http://www.myexception.cn/powerdesigner/549246.html<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -778,7 +722,7 @@ the above example will be 88 pixels wide (because 175/200 = .875;
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7%E5%BC%80%E5%8F%91-%E5%AE%9E%E7%8E%B0%E6%89%93%E7%94%B5%E8%AF%9D-%E5%8F%91%E7%9F%AD%E4%BF%A1-%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6%E7%9A%84%E5%8A%9F%E8%83%BD.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS7-%E4%B8%AD-UITableView-%E4%BF%AE%E6%94%B9-header%E7%9A%84%E6%A0%B7%E5%BC%8F%E5%92%8C%E9%A2%9C%E8%89%B2.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -796,7 +740,7 @@ the above example will be 88 pixels wide (because 175/200 = .875;
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7%E5%BC%80%E5%8F%91-%E5%AE%9E%E7%8E%B0%E6%89%93%E7%94%B5%E8%AF%9D-%E5%8F%91%E7%9F%AD%E4%BF%A1-%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6%E7%9A%84%E5%8A%9F%E8%83%BD.html" class="post-title-link" itemprop="url">iOS7开发 实现打电话 发短信 发送邮件的功能</a>
+          <a href="/2025/06/27/iOS7-%E4%B8%AD-UITableView-%E4%BF%AE%E6%94%B9-header%E7%9A%84%E6%A0%B7%E5%BC%8F%E5%92%8C%E9%A2%9C%E8%89%B2.html" class="post-title-link" itemprop="url">IOS7 中 UITableView 修改 header的样式和颜色</a>
         </h2>
 
         <div class="post-meta-container">
@@ -808,7 +752,7 @@ the above example will be 88 pixels wide (because 175/200 = .875;
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 10:32:37 / 修改时间：10:39:38" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:37+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 09:45:49 / 修改时间：09:52:13" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:49+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -830,33 +774,9 @@ the above example will be 88 pixels wide (because 175/200 = .875;
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>最近搞ios开发遇到一个很小的问题，就是在你的应用里面给你一个号码，如何用这个号码进行拨打电话，想了半天，还是google给力。找到了一篇帖子，so，总结如下</p>
-<p>1、调用 自带mail</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication] openURL:[<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;mailto://[email protected]&quot;</span>]];</span><br></pre></td></tr></table></figure>
+          <p>IOS7 中 UITableView 如何 修改 header的样式和颜色，只需要使用下面的方法就好了</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="built_in">UIView</span> *) tableView:(<span class="built_in">UITableView</span> *)tableView viewForHeaderInSection:(<span class="built_in">NSInteger</span>)section</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *sectionTitle = [[<span class="keyword">self</span>.list objectAtIndex:section] valueForKey:<span class="string">@&quot;title&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Create header view and add label as a subview</span></span><br><span class="line">    <span class="built_in">UIView</span> *view = [[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">10.0</span>,</span><br><span class="line">                                                            <span class="number">0.0</span>,</span><br><span class="line">                                                            <span class="number">320.0</span>,</span><br><span class="line">                                                            <span class="number">100.0</span>)];</span><br><span class="line">    view.backgroundColor = [<span class="built_in">UIColor</span> lightGrayColor];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Create label with section title</span></span><br><span class="line">    <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] init];</span><br><span class="line">    label.frame = <span class="built_in">CGRectMake</span>(<span class="number">5.0</span>,</span><br><span class="line">                             <span class="number">12.0</span>,</span><br><span class="line">                             <span class="number">284.0</span>,</span><br><span class="line">                             <span class="number">24.0</span>);</span><br><span class="line">    label.textColor = [<span class="built_in">UIColor</span> blackColor];</span><br><span class="line">    label.font = [<span class="built_in">UIFont</span> systemFontOfSize:<span class="number">16.0</span>];</span><br><span class="line">    label.text = sectionTitle;</span><br><span class="line">    label.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br><span class="line">    </span><br><span class="line">    [view addSubview:label];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> view;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>2、调用 电话phone</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication] openURL:[<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;tel://8008808888&quot;</span>]];</span><br></pre></td></tr></table></figure>
-
-<p>3、调用 SMS</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication] openURL:[<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;sms://800888&quot;</span>]];</span><br></pre></td></tr></table></figure>
-
-<p>4、调用自带 浏览器 safari</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">UIApplication</span> sharedApplication] openURL:[<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;http://www.hzlzh.com&quot;</span>]];</span><br></pre></td></tr></table></figure>
-
-<h4 id="1"><a href="#1" class="headerlink" title="发送短信"></a><a href="#1">发送短信</a></h4><p>调用phone可以传递号码，调用SMS 只能设定号码，不能初始化SMS内容。</p>
-<p>若需要传递内容可以做如下操作：</p>
-<p>加入：MessageUI.framework</p>
-<p><code>#import &lt;MessageUI/MFMessageComposeViewController.h&gt;</code></p>
-<p>实现代理：MFMessageComposeViewControllerDelegate</p>
-<p>调用sendSMS函数</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//内容，收件人列表</span></span><br><span class="line">- (<span class="type">void</span>)sendSMS:(<span class="built_in">NSString</span> *)bodyOfMessage recipientList:(<span class="built_in">NSArray</span> *)recipients</span><br><span class="line">&#123;</span><br><span class="line">    </span><br><span class="line">    MFMessageComposeViewController *controller = [[[MFMessageComposeViewController alloc] init] autorelease];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>([MFMessageComposeViewController canSendText])</span><br><span class="line">        </span><br><span class="line">    &#123;</span><br><span class="line">        </span><br><span class="line">        controller.body = bodyOfMessage;</span><br><span class="line">        </span><br><span class="line">        controller.recipients = recipients;</span><br><span class="line">        </span><br><span class="line">        controller.messageComposeDelegate = <span class="keyword">self</span>;</span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span> presentModalViewController:controller animated:<span class="literal">YES</span>];</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 处理发送完的响应结果</span></span><br><span class="line">- (<span class="type">void</span>)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> dismissModalViewControllerAnimated:<span class="literal">YES</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (result == MessageComposeResultCancelled)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Message cancelled&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(result == MessageComposeResultSent)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Message sent&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Message failed&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">                </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="2"><a href="#2" class="headerlink" title="发送邮件"></a><a href="#2">发送邮件</a></h4><p>导入<code>#import &lt;MessageUI/MFMailComposeViewController.h&gt;</code></p>
-<p>实现代理：MFMailComposeViewControllerDelegate</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//发送邮件</span></span><br><span class="line">-(<span class="type">void</span>)sendMail:(<span class="built_in">NSString</span> *)subject content:(<span class="built_in">NSString</span> *)content&#123;</span><br><span class="line">    </span><br><span class="line">    MFMailComposeViewController *controller = [[[MFMailComposeViewController alloc] init] autorelease];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>([MFMailComposeViewController canSendMail])</span><br><span class="line">        </span><br><span class="line">    &#123;</span><br><span class="line">        </span><br><span class="line">        [controller setSubject:subject];</span><br><span class="line">        </span><br><span class="line">        [controller setMessageBody:content isHTML:<span class="literal">NO</span>];</span><br><span class="line">        </span><br><span class="line">        controller.mailComposeDelegate = <span class="keyword">self</span>;</span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span> presentModalViewController:controller animated:<span class="literal">YES</span>];</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//邮件完成处理</span></span><br><span class="line">-(<span class="type">void</span>)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(<span class="built_in">NSError</span> *)error&#123;</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> dismissModalViewControllerAnimated:<span class="literal">YES</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (result == MessageComposeResultCancelled)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Message cancelled&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(result == MessageComposeResultSent)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Message sent&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Message failed&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>默认发送短信的界面为英文的，解决办法为：</p>
-<p>在.xib 中的Localization添加一組chinese就ok了</p>
 
       
     </div>
@@ -883,7 +803,7 @@ the above example will be 88 pixels wide (because 175/200 = .875;
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/NGINX%E7%BB%91%E5%AE%9A%E5%9F%9F%E5%90%8D-NGINX%E7%BB%91%E5%AE%9A%E5%A4%9A%E4%B8%AA%E5%9F%9F%E5%90%8D.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS7-ASIHTTPRequest-documentation-%E5%AE%9E%E7%8E%B0%E5%90%84%E7%A7%8D%E8%AF%B7%E6%B1%82-%E5%8C%85%E6%8B%AC%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0-put-get-post.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -901,7 +821,7 @@ the above example will be 88 pixels wide (because 175/200 = .875;
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/NGINX%E7%BB%91%E5%AE%9A%E5%9F%9F%E5%90%8D-NGINX%E7%BB%91%E5%AE%9A%E5%A4%9A%E4%B8%AA%E5%9F%9F%E5%90%8D.html" class="post-title-link" itemprop="url">NGINX绑定域名 NGINX绑定多个域名</a>
+          <a href="/2025/06/27/iOS7-ASIHTTPRequest-documentation-%E5%AE%9E%E7%8E%B0%E5%90%84%E7%A7%8D%E8%AF%B7%E6%B1%82-%E5%8C%85%E6%8B%AC%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0-put-get-post.html" class="post-title-link" itemprop="url">iOS7 ASIHTTPRequest documentation 实现各种请求，包括图片上传，put,get.post</a>
         </h2>
 
         <div class="post-meta-container">
@@ -913,7 +833,7 @@ the above example will be 88 pixels wide (because 175/200 = .875;
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 10:32:35 / 修改时间：10:43:52" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:35+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 09:45:44 / 修改时间：09:54:13" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:44+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -935,499 +855,281 @@ the above example will be 88 pixels wide (because 175/200 = .875;
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>nginx中配置域名的方法很简单，实现nginx的域名跳转我知道了如下的方法。</p>
+          <p>关于ASIHTTPRequest的具体使用，这里不做详细记载，因为官方也有其示例</p>
+<p>这里会列出几个简单的示例</p>
+<h4 id="1"><a href="#1" class="headerlink" title="第一个：创建一个异步请求"></a><a href="#1">第一个：创建一个异步请求</a></h4><p>Creating an asynchronous request（创建一个异步请求）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)grabURLInBackground:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">   <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@&quot;http://allseeing-i.com/&quot;</span>];</span><br><span class="line">   ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];</span><br><span class="line">   [request setDelegate:<span class="keyword">self</span>];</span><br><span class="line">   [request startAsynchronous];</span><br><span class="line">&#125; </span><br><span class="line">- (<span class="type">void</span>)requestFinished:(ASIHTTPRequest *)request&#123;</span><br><span class="line">   <span class="comment">// Use when fetching text data</span></span><br><span class="line">   <span class="built_in">NSString</span> *responseString = [request responseString];</span><br><span class="line"> </span><br><span class="line">   <span class="comment">// Use when fetching binary data</span></span><br><span class="line">   <span class="built_in">NSData</span> *responseData = [request responseData];</span><br><span class="line">&#125; </span><br><span class="line">- (<span class="type">void</span>)requestFailed:(ASIHTTPRequest *)request</span><br><span class="line">&#123;</span><br><span class="line">   <span class="built_in">NSError</span> *error = [request error];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2"><a href="#2" class="headerlink" title="第二个：使用ASIFormDataRequest发送一个POST请求"></a><a href="#2">第二个：使用ASIFormDataRequest发送一个POST请求</a></h4><p>Sending a form POST with ASIFormDataRequest（使用ASIFormDataRequest发送一个POST请求）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ASIFormDataRequest *request = [ASIFormDataRequest requestWithURL:url];</span><br><span class="line">[request setPostValue:<span class="string">@&quot;Ben&quot;</span> forKey:<span class="string">@&quot;first_name&quot;</span>];</span><br><span class="line">[request setPostValue:<span class="string">@&quot;Copsey&quot;</span> forKey:<span class="string">@&quot;last_name&quot;</span>];</span><br><span class="line">[request setFile:<span class="string">@&quot;/Users/ben/Desktop/ben.jpg&quot;</span> forKey:<span class="string">@&quot;photo&quot;</span>];</span><br></pre></td></tr></table></figure>
+
+<h4 id="3"><a href="#3" class="headerlink" title="第三个：直接下载文件"></a><a href="#3">第三个：直接下载文件</a></h4><p>Downloading the response directly to a file（直接下载文件）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];</span><br><span class="line">[request setDownloadDestinationPath:<span class="string">@&quot;/Users/ben/Desktop/my_file.txt&quot;</span>];</span><br></pre></td></tr></table></figure>
+
 <hr>
-<p>Server 名称使用 “server_name” 指令来定义，并决定用哪一个 server 区块来处理请求</p>
-<h4 id="1"><a href="#1" class="headerlink" title="一、每个域名一个文件的写法"></a><a href="#1">一、每个域名一个文件的写法</a></h4><p>首先打开nginx域名配置文件存放目录：<code>/usr/local/nginx/conf/servers</code> ，如要绑定域名 <span class="exturl" data-url="aHR0cDovL3d3dy5nb3doaWNoLmNvbS8=">www.gowhich.com<i class="fa fa-external-link-alt"></i></span> 则在此目录建一个文件：<span class="exturl" data-url="aHR0cDovL3d3dy5nb3doaWNoLmNvbS5jb25mLw==">www.gowhich.com.conf<i class="fa fa-external-link-alt"></i></span> 然后在此文件中写规则，如：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server</span><br><span class="line">&#123;</span><br><span class="line">    listen       80<span class="comment">;</span></span><br><span class="line">    server_name www.gowhich.com<span class="comment">;#绑定域名</span></span><br><span class="line">    index index.htm index.html index.php<span class="comment">;#默认文件</span></span><br><span class="line">    root /home/www/www.gowhich.com<span class="comment">;#网站根目录</span></span><br><span class="line">    include location.conf<span class="comment">; #调用其他规则，也可去除</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然后重起nginx服务器，域名就绑定成功了</p>
-<p>nginx服务器重起命令：<code>/etc/init.d/nginx restart</code></p>
-<h4 id="2"><a href="#2" class="headerlink" title="二、一个文件多个域名的写法"></a><a href="#2">二、一个文件多个域名的写法</a></h4><p>一个文件添加多个域名的规则也是一样，只要把上面单个域名重复写下来就ok了，如：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">server</span><br><span class="line">&#123;</span><br><span class="line">	listen       80<span class="comment">;</span></span><br><span class="line">	server_name www.gowhich.com<span class="comment">;             #绑定域名</span></span><br><span class="line">	index index.htm index.html index.php<span class="comment">;      #默认文件</span></span><br><span class="line">	root /home/www/gowhich.com<span class="comment">;               #网站根目录</span></span><br><span class="line">	include location.conf<span class="comment">;  #调用其他规则，也可去除</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server</span><br><span class="line">&#123;</span><br><span class="line">	listen       80<span class="comment">;</span></span><br><span class="line">	server_name  a.gowhich.com<span class="comment">;    #绑定域名</span></span><br><span class="line">	index index.htm index.html index.php<span class="comment">;      #默认文件</span></span><br><span class="line">	root /home/www/msn.gowhich.com<span class="comment">;        #网站根目录</span></span><br><span class="line">	include location.conf<span class="comment">;  #调用其他规则，也可去除</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="3"><a href="#3" class="headerlink" title="三、不带www的域名加301跳转"></a><a href="#3">三、不带www的域名加301跳转</a></h4><p>如果不带www的域名要加301跳转，那也是和绑定域名一样，先绑定不带www的域名，只是不用写网站目录，而是进行301跳转，如：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">server</span><br><span class="line">&#123;</span><br><span class="line">	listen 80<span class="comment">;</span></span><br><span class="line">	server_name gowhich.com<span class="comment">;</span></span><br><span class="line">	rewrite ^/(.*) http://www.gowhich.com/$1 permanent<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="4"><a href="#4" class="headerlink" title="四、添加404网页"></a><a href="#4">四、添加404网页</a></h4><p>添加404网页，都可又直接在里面添加，如：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server</span><br><span class="line">&#123;</span><br><span class="line">	listen       80<span class="comment">;</span></span><br><span class="line">	server_name  www.gowhich.com<span class="comment">;             #绑定域名</span></span><br><span class="line">	index index.htm index.html index.php<span class="comment">;      #默认文件</span></span><br><span class="line">	root /home/www/gowhich.com<span class="comment">;               #网站根目录</span></span><br><span class="line">	include location.conf<span class="comment">;#调用其他规则，也可去除</span></span><br><span class="line">	error_page 404  /404.html<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="5"><a href="#5" class="headerlink" title="附Nginx批量配置多域名绑定"></a><a href="#5">附Nginx批量配置多域名绑定</a></h4><p>下面接着看，多域名绑定与解析另一方法</p>
-<p>先给出我的全部配置吧，然后再一一解释</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">server </span><br><span class="line">&#123;</span><br><span class="line">	listen       80<span class="comment">;</span></span><br><span class="line">    server_name  localhost<span class="comment">;</span></span><br><span class="line">    set $mdomain &#x27;ip&#x27;<span class="comment">;</span></span><br><span class="line">    if ( $host ~* (w+.<span class="section">[a-zA-Z]</span>+)$ ) &#123;</span><br><span class="line">    	set $mdomain $1<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">    if ( $host ~* (b(?!wwwb)w+).w+.<span class="section">[a-zA-Z]</span>+$ ) &#123;</span><br><span class="line">    	set $mdir /$1<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">    location / &#123;</span><br><span class="line">	    index index.html index.php<span class="comment">;</span></span><br><span class="line">	    root /home/www/$mdomain$mdir<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">    location ~ .php$ &#123;</span><br><span class="line">        root           /home/www/$mdomain$mdir<span class="comment">;</span></span><br><span class="line">        fastcgi_pass   127.0.0.1:9000<span class="comment">;</span></span><br><span class="line">        fastcgi_index  index.php<span class="comment">;</span></span><br><span class="line">        fastcgi_param  SCRIPT_FILENAME  /home/www/$mdomain$mdir/$fastcgi_script_name<span class="comment">;</span></span><br><span class="line">        include        fastcgi_params<span class="comment">;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这是 server 下的，server 要放在 http 内。</p>
-<h5 id="5-1"><a href="#5-1" class="headerlink" title="1.多域名解析"></a><a href="#5-1">1.多域名解析</a></h5><p>我的配置文件是根据正则表达式判断域名，然后域名赋给变量，然后变量组成路径</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">set $mdomain &#x27;ip&#x27;<span class="comment">;</span></span><br><span class="line">//设置变量 mdomain 的默认值为字符串&quot;ip&quot;</span><br><span class="line">if ( $host ~* (w+.<span class="section">[a-zA-Z]</span>+)$ ) &#123;</span><br><span class="line">    //对输入的域名进行正则表达式匹配；</span><br><span class="line">    set $mdomain $1<span class="comment">;</span></span><br><span class="line">    //若匹配则设置变量 mdomain 为正则表达式括号的值；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>匹配成功就把结果存入变量 mdomain 中，待用;</p>
-<h5 id="5-2"><a href="#5-2" class="headerlink" title="2.二级域名解析到子文件夹"></a><a href="#5-2">2.二级域名解析到子文件夹</a></h5><p>二级域名还是根据正则表达式匹配</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if ( $host ~* (b(?!wwwb)w+).w+.<span class="section">[a-zA-Z]</span>+$ ) &#123;</span><br><span class="line">    set $mdir /$1<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这是正则表达式的匹配结果。</p>
-<p>还是取子域名加上”&#x2F;“到变量 mdir 中；</p>
-<p>location 解析</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    index index.html index.php<span class="comment">;</span></span><br><span class="line">    root /home/www/$mdomain$mdir<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最后 root 到匹配的结果路径中，没有匹配的变量就为空了；例如：<span class="exturl" data-url="aHR0cDovL3d3dy5nb3doaWNoLmNvbS8=">www.gowhich.com<i class="fa fa-external-link-alt"></i></span> 解析的路径是 <code>/home/www/gowhich.com/www;</code>gowhich.com 解析的路径就是 <code>/home/www/gowhich.com;</code></p>
-<p>以上搜索的到的结果数据来源于网络，稍加做过修改，在使用过程中要根据具体情况进行具体设置。</p>
-<p>参考文章:</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy4xMTFjbi5uZXQvc3lzL25naW54LzUyODUyLmh0bQ==">http://www.111cn.net/sys/nginx/52852.htm<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Django-%E5%90%8E%E5%8F%B0%E8%A1%A8%E5%8D%95%E6%A0%87%E7%AD%BE%E7%9A%84%E8%87%AA%E5%AE%9A%E4%B9%89.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Django-%E5%90%8E%E5%8F%B0%E8%A1%A8%E5%8D%95%E6%A0%87%E7%AD%BE%E7%9A%84%E8%87%AA%E5%AE%9A%E4%B9%89.html" class="post-title-link" itemprop="url">Django 后台表单标签的自定义</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 10:32:31 / 修改时间：10:44:21" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:31+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>一直在使用django的后台，自动生成的表单的里面的标签让我着实模糊了一下。</p>
-<p>其实很简单的，只要自己在创建表单的时候，稍加注意一下，加一个字段就可以搞定了。</p>
-<p>代码示例：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!-*-coding=utf8-*-</span></span><br><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Category</span>(models.Model):</span><br><span class="line">    <span class="built_in">id</span> = models.AutoField(primary_key=<span class="literal">True</span>,db_index=<span class="literal">True</span>)</span><br><span class="line">    title = models.CharField(<span class="string">&quot;分类名称&quot;</span>,max_length=<span class="number">100</span>,db_index=<span class="literal">True</span>,unique=<span class="literal">True</span>)</span><br><span class="line">    created = models.DateTimeField(<span class="string">&quot;创建日期&quot;</span>,auto_now_add=<span class="literal">True</span>)</span><br><span class="line">    updated = models.DateTimeField(<span class="string">&quot;更新日期&quot;</span>,auto_now=<span class="literal">True</span>,null=<span class="literal">True</span>,blank=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__unicode__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.title</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Meta</span>:</span><br><span class="line">        db_table = <span class="string">&quot;gifts_category&quot;</span></span><br><span class="line">        verbose_name = <span class="string">&quot;Gifts分类&quot;</span></span><br><span class="line">        verbose_name_plural = <span class="string">&quot;Gifts分类&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>主要是这里</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">title = models.CharField(<span class="string">&quot;分类名称&quot;</span>,max_length=<span class="number">100</span>,db_index=<span class="literal">True</span>,unique=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-
-<p>在传递参数的时候，前面加了一个自定义的名称,这里是”分类名称”</p>
-<p>重新运行一下试试，就会有结果了</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/MongoDB%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/MongoDB%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">MongoDB基本使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 10:32:28 / 修改时间：10:54:03" itemprop="dateCreated datePublished" datetime="2025-06-26T10:32:28+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于MongoDB的基本使用，经过google的查找做了如下的总结，一下内容由某位大侠总结。</p>
+<p>这里给出一个中文的文档地址和一个英文的文档地址，适用于初级入门者</p>
+<p>官方文档网址：<span class="exturl" data-url="aHR0cDovL2FsbHNlZWluZy1pLmNvbS9BU0lIVFRQUmVxdWVzdC9Ib3ctdG8tdXNl">http://allseeing-i.com/ASIHTTPRequest/How-to-use<i class="fa fa-external-link-alt"></i></span></p>
+<p>中文的文档网址：<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvemtkZW1vbi9hcnRpY2xlL2RldGFpbHMvNzA2NjgwNw==">http://blog.csdn.net/zkdemon/article/details/7066807<i class="fa fa-external-link-alt"></i></span></p>
 <hr>
-<p>成功启动MongoDB后，再打开一个命令行窗口输入mongo，就可以进行数据库的一些操作。</p>
-<p>输入help可以看到基本操作命令：</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS7-%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8E%A5%E8%A7%A6ALAssetsLibrary-%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8BALAssetsLibrary%E7%9A%84%E4%BD%9C%E7%94%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/iOS7-%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8E%A5%E8%A7%A6ALAssetsLibrary-%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D%E4%B8%80%E4%B8%8BALAssetsLibrary%E7%9A%84%E4%BD%9C%E7%94%A8.html" class="post-title-link" itemprop="url">iOS7 第一次接触ALAssetsLibrary，简单介绍一下ALAssetsLibrary的作用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 09:45:41 / 修改时间：09:55:51" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:41+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>IOS7 第一次接触<code>ALAssetsLibrary</code>，简单介绍一下<code>ALAssetsLibrary</code>的作用</p>
+<p>ALAssetsLibrary介绍</p>
 <ul>
-<li>show dbs:显示数据库列表</li>
-<li>show collections：显示当前数据库中的集合（类似关系数据库中的表）</li>
-<li>show users：显示用户</li>
-<li>use <db name>：切换当前数据库，这和MS-SQL里面的意思一样</li>
-<li>db.help()：显示数据库操作命令，里面有很多的命令</li>
-<li>db.foo.help()：显示集合操作命令，同样有很多的命令，foo指的是当前数据库下，一个叫foo的集合，并非真正意义上的命令</li>
-<li>db.foo.find()：对于当前数据库中的foo集合进行数据查找（由于没有条件，会列出所有数据）</li>
-<li>db.foo.find( { a : 1 } )：对于当前数据库中的foo集合进行查找，条件是数据中有一个属性叫a，且a的值为1</li>
+<li><p>ALAssetsLibrary提供了访问iOS设备下”照片”应用下所有照片和视频的接口；</p>
+</li>
+<li><p>从ALAssetsLibrary中可读取所有的相册数据,即ALAssetsGroup对象列表；</p>
+</li>
+<li><p>从每个ALAssetsGroup中可获取到其中包含的照片或视频列表,即ALAsset对象列表；<br>每个ALAsset可能有多个representations表示,即ALAssetRepresentation对象，使用其defaultRepresentation方法可获得其默认representations，使用<code>[assetvalueForProperty:ALAssetPropertyRepresentations]</code>可获取其所有representations的UTI数组。</p>
+</li>
+<li><p>从ALAsset对象可获取缩略图thumbnail或aspectRatioThumbnail；<br>从ALAssetRepresentation对象可获取全尺寸图片（fullResolutionImage），全屏图片（fullScreenImage）及图片的各种属性:orientation，dimensions，scale，url，metadata等。</p>
+</li>
 </ul>
-<p>MongoDB没有创建数据库的命令，但有类似的命令。</p>
-<p>如：如果你想创建一个“myTest”的数据库，先运行use myTest命令，之后就做一些操作（如：<code>db.createCollection(&#39;user&#39;)</code>）,这样就可以创建一个名叫“myTest”的数据库。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="数据库常用命令"></a><a href="#1">数据库常用命令</a></h3><p>1、Help查看命令提示</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">help</span></span><br><span class="line">db.help();</span><br><span class="line">db.yourColl.<span class="built_in">help</span>();</span><br><span class="line">db.youColl.find().<span class="built_in">help</span>();</span><br><span class="line">rs.help();</span><br></pre></td></tr></table></figure>
-
-<p>2、切换&#x2F;创建数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use yourDB;</span><br></pre></td></tr></table></figure>
-
-<p>当创建一个集合(table)的时候会自动创建当前数据库</p>
-<p>3、查询所有数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show dbs;</span><br></pre></td></tr></table></figure>
-
-<p>4、删除当前使用数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.dropDatabase();</span><br></pre></td></tr></table></figure>
-
-<p>5、从指定主机上克隆数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.cloneDatabase(<span class="string">&quot;127.0.0.1&quot;</span>); </span><br></pre></td></tr></table></figure>
-
-<p>将指定机器上的数据库的数据克隆到当前数据库</p>
-<p>6、从指定的机器上复制指定数据库数据到某个数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.copyDatabase(<span class="string">&quot;mydb&quot;</span>, <span class="string">&quot;temp&quot;</span>, <span class="string">&quot;127.0.0.1&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>将本机的mydb的数据复制到temp数据库中</p>
-<p>7、修复当前数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.repairDatabase();</span><br></pre></td></tr></table></figure>
-
-<p>8、查看当前使用的数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">db.getName();</span><br><span class="line">db;</span><br></pre></td></tr></table></figure>
-
-<p>db和getName方法是一样的效果，都可以查询当前使用的数据库</p>
-<p>9、显示当前db状态</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.stats();</span><br></pre></td></tr></table></figure>
-
-<p>10、当前db版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.version();</span><br></pre></td></tr></table></figure>
-
-<p>11、查看当前db的链接机器地址</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getMongo();</span><br></pre></td></tr></table></figure>
-
-<h3 id="2"><a href="#2" class="headerlink" title="Collection聚集集合"></a><a href="#2">Collection聚集集合</a></h3><hr>
-<p>1、创建一个聚集集合（table）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.createCollection(<span class="string">&quot;collName&quot;</span>, &#123;size: 20, capped: 5, max: 100&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>2、得到指定名称的聚集集合（table）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">&quot;account&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>3、得到当前db的所有聚集集合</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getCollectionNames();</span><br></pre></td></tr></table></figure>
-
-<p>4、显示当前db所有聚集索引的状态</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.printCollectionStats();</span><br></pre></td></tr></table></figure>
-
-<h3 id="3"><a href="#3" class="headerlink" title="用户相关"></a><a href="#3">用户相关</a></h3><hr>
-<p>1、添加一个用户</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">db.addUser(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">db.addUser(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;pwd123&quot;</span>, <span class="literal">true</span>); </span><br></pre></td></tr></table></figure>
-
-<p>添加用户、设置密码、是否只读</p>
-<p>2、数据库认证、安全模式</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.auth(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;123123&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>3、显示当前所有用户</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show <span class="built_in">users</span>;</span><br></pre></td></tr></table></figure>
-
-<p>4、删除用户</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.removeUser(<span class="string">&quot;userName&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="4"><a href="#4" class="headerlink" title="其他"></a><a href="#4">其他</a></h3><hr>
-<p>1、查询之前的错误信息</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.getPrevError();</span><br></pre></td></tr></table></figure>
-
-<p>2、清除错误记录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.resetError();</span><br></pre></td></tr></table></figure>
-
-<p>查看聚集集合基本信息</p>
+<p>其层次关系为ALAssetsLibrary -&gt; ALAssetsGroup -&gt; ALAsset -&gt; ALAssetRepresentation。</p>
+<p>具体的使用详情可以去这边看下的<span class="exturl" data-url="aHR0cDovL3d3dy53aW5kZGlzay5jb20vMjAxMy8wNi8zMC8lRTQlQkQlQkYlRTclOTQlQThhbGFzc2V0c2xpYnJhcnklRTglQUYlQkIlRTUlOEYlOTYlRTYlODklODAlRTYlOUMlODklRTclODUlQTclRTclODklODcv">使用ALAssetsLibrary读取所有照片<i class="fa fa-external-link-alt"></i></span>，有中文的翻译的，记录吧</p>
 <hr>
-<ol>
-<li>查看帮助  db.yourColl.help();</li>
-<li>查询当前集合的数据条数  db.yourColl.count();</li>
-<li>查看数据空间大小 db.userInfo.dataSize();</li>
-<li>得到当前聚集集合所在的db db.userInfo.getDB();</li>
-<li>得到当前聚集的状态 db.userInfo.stats();</li>
-<li>得到聚集集合总大小 db.userInfo.totalSize();</li>
-<li>聚集集合储存空间大小 db.userInfo.storageSize();</li>
-<li>Shard版本信息  db.userInfo.getShardVersion()</li>
-<li>聚集集合重命名 db.userInfo.renameCollection(“users”); 将userInfo重命名为users</li>
-<li>删除当前聚集集合 db.userInfo.drop();</li>
-</ol>
-<h3 id="5"><a href="#5" class="headerlink" title="聚集集合查询"></a><a href="#5">聚集集合查询</a></h3><hr>
-<p>1、查询所有记录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find();</span><br></pre></td></tr></table></figure>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3QuY24velJWTTMzUQ==">http://t.cn/zRVM33Q<i class="fa fa-external-link-alt"></i></span></p>
 
-<p>相当于：<code>select * from userInfo;</code></p>
-<p>默认每页显示20条记录，当显示不下的情况下，可以用it迭代命令查询下一页数据。注意：键入it命令不能带“；”</p>
-<p>但是你可以设置每页显示数据的大小，用DBQuery.shellBatchSize&#x3D; 50;这样每页就显示50条记录了。</p>
-<p>2、查询去掉后的当前聚集集合中的某列的重复数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.distinct(<span class="string">&quot;name&quot;</span>);</span><br></pre></td></tr></table></figure>
+      
+    </div>
 
-<p>会过滤掉name中的相同数据</p>
-<p>相当于：select distict name from userInfo;</p>
-<p>3、查询age &#x3D; 22的记录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;<span class="string">&quot;age&quot;</span>: 22&#125;);</span><br></pre></td></tr></table></figure>
+    
+    
+    
 
-<p>相当于： select * from userInfo where age &#x3D; 22;</p>
-<p>4、查询age &gt; 22的记录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;age: &#123;<span class="variable">$gt</span>: 22&#125;&#125;);</span><br></pre></td></tr></table></figure>
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
 
-<p>相当于：select * from userInfo where age &gt;22;</p>
-<p>5、查询age &lt; 22的记录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;age: &#123;<span class="variable">$lt</span>: 22&#125;&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>相当于：select * from userInfo where age &lt;22;</p>
-<p>6、查询age &gt;&#x3D; 25的记录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;age: &#123;<span class="variable">$gte</span>: 25&#125;&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>相当于：select * from userInfo where age &gt;&#x3D; 25;</p>
-<p>7、查询age &lt;&#x3D; 25的记录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;age: &#123;<span class="variable">$lte</span>: 25&#125;&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>8、查询age &gt;&#x3D; 23 并且 age &lt;&#x3D; 26</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;age: &#123;<span class="variable">$gte</span>: 23, <span class="variable">$lte</span>: 26&#125;&#125;);</span><br></pre></td></tr></table></figure>
+    
 
-<p>9、查询name中包含 mongo的数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;name: /mongo/&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>相当于%%</p>
-<p><code>select * from userInfo where name like ‘%mongo%’;</code></p>
-<p>10、查询name中以mongo开头的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;name: /^mongo/&#125;);</span><br></pre></td></tr></table></figure>
+<div class="post-block">
+  
+  
 
-<p>相当于mysql中的 select * from userInfo where name like ‘mongo%’;</p>
-<p>11、查询指定列name、age数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;&#125;, &#123;name: 1, age: 1&#125;);</span><br></pre></td></tr></table></figure>
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS7-%E4%B8%AD-%E9%80%9A%E8%BF%87UIImagePickerController%E9%80%89%E6%8B%A9%E5%9B%BE%E7%89%87%E5%90%8E-UIImagePickerControllerDelegate%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8.html">
 
-<p>相当于：select name, age from userInfo;</p>
-<p>当然name也可以用true或false,当用ture的情况下和name:1效果一样，如果用false就是排除name，显示name以外的列信息。</p>
-<p>12、查询指定列name、age数据, age &gt; 25</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;age: &#123;<span class="variable">$gt</span>: 25&#125;&#125;, &#123;name: 1, age: 1&#125;);</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
 
-<p>相当于：select name, age from userInfo where age &gt;25;</p>
-<p>13、按照年龄排序</p>
-<p>升序：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find().<span class="built_in">sort</span>(&#123;age: 1&#125;);</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
 
-<p>降序：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find().<span class="built_in">sort</span>(&#123;age: -1&#125;);</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/iOS7-%E4%B8%AD-%E9%80%9A%E8%BF%87UIImagePickerController%E9%80%89%E6%8B%A9%E5%9B%BE%E7%89%87%E5%90%8E-UIImagePickerControllerDelegate%E6%96%B9%E6%B3%95%E7%9A%84%E8%B0%83%E7%94%A8.html" class="post-title-link" itemprop="url">iOS7 中 通过UIImagePickerController选择图片后 UIImagePickerControllerDelegate方法的调用</a>
+        </h2>
 
-<p>14、查询name &#x3D; zhangsan, age &#x3D; 22的数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;name: <span class="string">&#x27;zhangsan&#x27;</span>, age: 22&#125;);</span><br></pre></td></tr></table></figure>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
 
-<p>相当于：select * from userInfo where name &#x3D; ‘zhangsan’ and age &#x3D; ‘22’;</p>
-<p>15、查询前5条数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find().<span class="built_in">limit</span>(5);</span><br></pre></td></tr></table></figure>
+      <time title="创建时间：2025-06-27 09:45:37 / 修改时间：09:56:38" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:37+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
 
-<p>相当于：selecttop 5 * from userInfo;</p>
-<p>16、查询10条以后的数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find().skip(10);</span><br></pre></td></tr></table></figure>
+  
+</div>
 
-<p>17、查询在5-10之间的数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find().<span class="built_in">limit</span>(10).skip(5);</span><br></pre></td></tr></table></figure>
+        </div>
+      </header>
 
-<p>可用于分页，limit是pageSize，skip是第几页<code>*pageSize</code></p>
-<p>18、or与 查询</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;<span class="variable">$or</span>: [&#123;age: 22&#125;, &#123;age: 25&#125;]&#125;);</span><br></pre></td></tr></table></figure>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>图片选择完后的两个重要的方法</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) imagePickerController:(<span class="built_in">UIImagePickerController</span> *)picker didFinishPickingMediaWithInfo:(<span class="built_in">NSDictionary</span> *)info&#123;</span><br><span class="line">    [picker dismissViewControllerAnimated:<span class="literal">YES</span> completion:^&#123;&#125;];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIImage</span> *image = [info objectForKey:<span class="built_in">UIImagePickerControllerEditedImage</span>];</span><br><span class="line">    <span class="comment">/* 此处info 有六个值</span></span><br><span class="line"><span class="comment">     * UIImagePickerControllerMediaType; // an NSString UTTypeImage)</span></span><br><span class="line"><span class="comment">     * UIImagePickerControllerOriginalImage;  // a UIImage 原始图片</span></span><br><span class="line"><span class="comment">     * UIImagePickerControllerEditedImage;    // a UIImage 裁剪后图片</span></span><br><span class="line"><span class="comment">     * UIImagePickerControllerCropRect;       // an NSValue (CGRect)</span></span><br><span class="line"><span class="comment">     * UIImagePickerControllerMediaURL;       // an NSURL</span></span><br><span class="line"><span class="comment">     * UIImagePickerControllerReferenceURL    // an NSURL that references an asset in the AssetsLibrary framework</span></span><br><span class="line"><span class="comment">     * UIImagePickerControllerMediaMetadata    // an NSDictionary containing metadata from a captured photo</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="comment">//获取图片后的操作</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) imagePickerControllerDidCancel:(<span class="built_in">UIImagePickerController</span> *)picker&#123;</span><br><span class="line">    [picker dismissViewControllerAnimated:<span class="literal">YES</span> completion:^&#123;&#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>相当于：select * from userInfo where age &#x3D; 22 or age &#x3D; 25;</p>
-<p>19、查询第一条数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.findOne();</span><br></pre></td></tr></table></figure>
+<p>记录下，这个方法很重要，要不然找不到选择的图片就完蛋了</p>
 
-<p>相当于：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find().<span class="built_in">limit</span>(1);</span><br></pre></td></tr></table></figure>
+      
+    </div>
 
-<p>20、查询某个结果集的记录条数</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;age: &#123;<span class="variable">$gte</span>: 25&#125;&#125;).count();</span><br></pre></td></tr></table></figure>
+    
+    
+    
 
-<p>相当于：<code>select count(*) from userInfo where age &gt;= 20;</code></p>
-<p>21、按照某列进行排序</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.find(&#123;sex: &#123;<span class="variable">$exists</span>: <span class="literal">true</span>&#125;&#125;).count();</span><br></pre></td></tr></table></figure>
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
 
-<p>相当于：select count(sex) from userInfo;</p>
-<h3 id="6"><a href="#6" class="headerlink" title="索引"></a><a href="#6">索引</a></h3><hr>
-<p>1、创建索引</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.ensureIndex(&#123;name: 1&#125;);</span><br><span class="line">db.userInfo.ensureIndex(&#123;name: 1, ts: -1&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>2、查询当前聚集集合所有索引</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.getIndexes();</span><br></pre></td></tr></table></figure>
 
-<p>3、查看总索引记录大小</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.userInfo.totalIndexSize();</span><br></pre></td></tr></table></figure>
 
-<p>4、读取当前集合的所有index信息</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.reIndex();</span><br></pre></td></tr></table></figure>
+    
 
-<p>5、删除指定索引</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.dropIndex(<span class="string">&quot;name_1&quot;</span>);</span><br></pre></td></tr></table></figure>
 
-<p>6、删除所有索引索引</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.dropIndexes();</span><br></pre></td></tr></table></figure>
+<div class="post-block">
+  
+  
 
-<h3 id="7"><a href="#7" class="headerlink" title="修改、添加、删除集合数据"></a><a href="#7">修改、添加、删除集合数据</a></h3><hr>
-<p>1、添加</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.save(&#123;name: ‘zhangsan’, age: 25, sex: <span class="literal">true</span>&#125;);</span><br></pre></td></tr></table></figure>
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS7-UIActionSheet%E4%B8%AD%E7%9A%84UIActionSheetDelegate%E4%B8%8EUIImagePickerController%E7%9A%84%E5%8D%8F%E4%BD%9C.html">
 
-<p>添加的数据的数据列，没有固定，根据添加的数据为准</p>
-<p>2、修改</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.update(&#123;age: 25&#125;, &#123;<span class="variable">$set</span>: &#123;name: <span class="string">&#x27;changeName&#x27;</span>&#125;&#125;, <span class="literal">false</span>, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
 
-<p>相当于：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update <span class="built_in">users</span> <span class="built_in">set</span> name = <span class="string">&#x27;changeName&#x27;</span> <span class="built_in">where</span> age = 25;</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.update(&#123;name: <span class="string">&#x27;Lisi&#x27;</span>&#125;, &#123;<span class="variable">$inc</span>: &#123;age: 50&#125;&#125;, <span class="literal">false</span>, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/iOS7-UIActionSheet%E4%B8%AD%E7%9A%84UIActionSheetDelegate%E4%B8%8EUIImagePickerController%E7%9A%84%E5%8D%8F%E4%BD%9C.html" class="post-title-link" itemprop="url">iOS7 UIActionSheet中的UIActionSheetDelegate与UIImagePickerController的协作</a>
+        </h2>
 
-<p>相当于：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update <span class="built_in">users</span> <span class="built_in">set</span> age = age + 50 <span class="built_in">where</span> name = <span class="string">&#x27;Lisi&#x27;</span>;</span><br></pre></td></tr></table></figure>
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.update(&#123;name: <span class="string">&#x27;Lisi&#x27;</span>&#125;, &#123;<span class="variable">$inc</span>: &#123;age: 50&#125;, <span class="variable">$set</span>: &#123;name: <span class="string">&#x27;hoho&#x27;</span>&#125;&#125;, <span class="literal">false</span>, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+      <time title="创建时间：2025-06-27 09:45:23 / 修改时间：09:57:17" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:23+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
 
-<p>相当于：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update <span class="built_in">users</span> <span class="built_in">set</span> age = age + 50, name = <span class="string">&#x27;hoho&#x27;</span> <span class="built_in">where</span> name = <span class="string">&#x27;Lisi&#x27;</span>;</span><br></pre></td></tr></table></figure>
+  
+</div>
 
-<p>3、删除</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.remove(&#123;age: 132&#125;);</span><br></pre></td></tr></table></figure>
+        </div>
+      </header>
 
-<p>4、查询修改删除</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.users.findAndModify(&#123;</span><br><span class="line">    query: &#123;age: &#123;<span class="variable">$gte</span>: 25&#125;&#125;, </span><br><span class="line">    <span class="built_in">sort</span>: &#123;age: -1&#125;, </span><br><span class="line">    update: &#123;<span class="variable">$set</span>: &#123;name: <span class="string">&#x27;a2&#x27;</span>&#125;, <span class="variable">$inc</span>: &#123;age: 2&#125;&#125;,</span><br><span class="line">    remove: <span class="literal">true</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>UIActionSheet中的UIActionSheetDelegate与UIImagePickerController的协作，实现图片来源的选择，代码如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) actionSheet:(<span class="built_in">UIActionSheet</span> *)actionSheet clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex&#123;</span><br><span class="line">    <span class="built_in">UIImagePickerController</span> *picker=[[<span class="built_in">UIImagePickerController</span> alloc]init];</span><br><span class="line">    picker.delegate=<span class="keyword">self</span>;</span><br><span class="line">    picker.allowsEditing=<span class="literal">YES</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">switch</span> (buttonIndex)&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//拍照</span></span><br><span class="line">            <span class="keyword">if</span> ([<span class="built_in">UIImagePickerController</span> isSourceTypeAvailable: <span class="built_in">UIImagePickerControllerSourceTypeCamera</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                picker.sourceType=<span class="built_in">UIImagePickerControllerSourceTypeCamera</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//相册</span></span><br><span class="line">            <span class="keyword">if</span> ([<span class="built_in">UIImagePickerController</span> isSourceTypeAvailable: <span class="built_in">UIImagePickerControllerSourceTypePhotoLibrary</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                picker.sourceType=<span class="built_in">UIImagePickerControllerSourceTypePhotoLibrary</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//图片库</span></span><br><span class="line">            <span class="keyword">if</span> ([<span class="built_in">UIImagePickerController</span> isSourceTypeAvailable: <span class="built_in">UIImagePickerControllerSourceTypeSavedPhotosAlbum</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                picker.sourceType=<span class="built_in">UIImagePickerControllerSourceTypeSavedPhotosAlbum</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>([[<span class="built_in">UIDevice</span> currentDevice] userInterfaceIdiom] == <span class="built_in">UIUserInterfaceIdiomPhone</span>)&#123;</span><br><span class="line">        [<span class="keyword">self</span> presentViewController:picker animated:<span class="literal">YES</span> completion:<span class="literal">nil</span>];</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">UIPopoverController</span> * popOver = [[<span class="built_in">UIPopoverController</span> alloc] initWithContentViewController: picker];</span><br><span class="line">        popOver.delegate = <span class="keyword">self</span>;</span><br><span class="line">        _popOverController = popOver;</span><br><span class="line">        [_popOverController presentPopoverFromRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>,<span class="number">100</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">                                            inView:<span class="keyword">self</span>.view</span><br><span class="line">                              permittedArrowDirections:<span class="built_in">UIPopoverArrowDirectionUp</span></span><br><span class="line">                                          animated:<span class="literal">YES</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">db.runCommand(&#123; </span><br><span class="line">    findandmodify : <span class="string">&quot;users&quot;</span>, </span><br><span class="line">    query: &#123;age: &#123;<span class="variable">$gte</span>: 25&#125;&#125;, </span><br><span class="line">    <span class="built_in">sort</span>: &#123;age: -1&#125;, </span><br><span class="line">    update: &#123;<span class="variable">$set</span>: &#123;name: <span class="string">&#x27;a2&#x27;</span>&#125;, <span class="variable">$inc</span>: &#123;age: 2&#125;&#125;,</span><br><span class="line">    remove: <span class="literal">true</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>update 或 remove 其中一个是必须的参数; 其他参数可选。</p>
-<h3 id="8"><a href="#8" class="headerlink" title="语句块操作"></a><a href="#8">语句块操作</a></h3><p>1、简单Hello World</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Hello World!&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>这种写法调用了print函数，和直接写入”Hello World!”的效果是一样的；</p>
-<p>2、将一个对象转换成json</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tojson(new Object());</span><br><span class="line">tojson(new Object(<span class="string">&#x27;a&#x27;</span>));</span><br></pre></td></tr></table></figure>
-
-<p>3、循环添加数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">for</span> (var i = 0; i &lt; 30; i++) &#123;</span><br><span class="line">... db.users.save(&#123;name: <span class="string">&quot;u_&quot;</span> + i, age: 22 + i, sex: i % 2&#125;);</span><br><span class="line">... &#125;;</span><br></pre></td></tr></table></figure>
-
-<p>这样就循环添加了30条数据，同样也可以省略括号的写法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="keyword">for</span> (var i = 0; i &lt; 30; i++) db.users.save(&#123;name: <span class="string">&quot;u_&quot;</span> + i, age: 22 + i, sex: i % 2&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>也是可以的，当你用db.users.find()查询的时候，显示多条数据而无法一页显示的情况下，可以用it查看下一页的信息；</p>
-<p>4、find 游标查询</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt; var cursor = db.users.find();</span><br><span class="line">&gt; <span class="keyword">while</span> (cursor.hasNext()) &#123; </span><br><span class="line">    printjson(cursor.next()); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这样就查询所有的users信息，同样可以这样写</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var cursor = db.users.find();</span><br><span class="line"><span class="keyword">while</span> (cursor.hasNext()) &#123; printjson(cursor.next); &#125;</span><br></pre></td></tr></table></figure>
-
-<p>同样可以省略{}号</p>
-<p>5、forEach迭代循环</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.find().forEach(printjson);</span><br></pre></td></tr></table></figure>
-
-<p>forEach中必须传递一个函数来处理每条迭代的数据信息</p>
-<p>6、将find游标当数组处理</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var cursor = db.users.find();</span><br><span class="line">cursor[4];</span><br></pre></td></tr></table></figure>
-
-<p>取得下标索引为4的那条数据</p>
-<p>既然可以当做数组处理，那么就可以获得它的长度：cursor.length();或者cursor.count();</p>
-<p>那样我们也可以用循环显示数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (var i = 0, len = c.length(); i &lt; len; i++) printjson(c[i]);</span><br></pre></td></tr></table></figure>
-
-<p>7、将find游标转换成数组</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; var arr = db.users.find().toArray();</span><br><span class="line">&gt; printjson(arr[2]);</span><br></pre></td></tr></table></figure>
-
-<p>用toArray方法将其转换为数组</p>
-<p>8、定制我们自己的查询结果</p>
-<p>只显示age &lt;&#x3D; 28的并且只显示age这列数据</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">db.users.find(&#123;age: &#123;<span class="variable">$lte</span>: 28&#125;&#125;, &#123;age: 1&#125;).forEach(printjson);</span><br><span class="line">db.users.find(&#123;age: &#123;<span class="variable">$lte</span>: 28&#125;&#125;, &#123;age: <span class="literal">true</span>&#125;).forEach(printjson);</span><br></pre></td></tr></table></figure>
-
-<p>排除age的列</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.find(&#123;age: &#123;<span class="variable">$lte</span>: 28&#125;&#125;, &#123;age: <span class="literal">false</span>&#125;).forEach(printjson);</span><br></pre></td></tr></table></figure>
-
-<p>9、forEach传递函数显示信息</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.things.find(&#123;x:4&#125;).forEach(<span class="keyword">function</span>(x) &#123;<span class="built_in">print</span>(tojson(x));&#125;);</span><br></pre></td></tr></table></figure>
-
+<p>这里加了一个UIPopoverController，但是UIPopoverController只能在ipad设备上面使用。</p>
 
       
     </div>
@@ -1447,7 +1149,7 @@ the above example will be 88 pixels wide (because 175/200 = .875;
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/24/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/26/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/24/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/79/">79</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/26/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

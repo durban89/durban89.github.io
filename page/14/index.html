@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">746</span>
+          <span class="site-state-item-count">787</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">134</span>
+        <span class="site-state-item-count">145</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B2%A1%E6%9C%89%E4%BB%BB%E4%BD%95%E7%94%A8%E6%88%B7%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B-mysql%E5%A6%82%E4%BD%95%E6%81%A2%E5%A4%8D.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Git%E6%8F%90%E4%BA%A4%E5%88%B0%E5%A4%9A%E4%B8%AA%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B2%A1%E6%9C%89%E4%BB%BB%E4%BD%95%E7%94%A8%E6%88%B7%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B-mysql%E5%A6%82%E4%BD%95%E6%81%A2%E5%A4%8D.html" class="post-title-link" itemprop="url">MySQL数据库没有任何用户的情况下，mysql如何恢复</a>
+          <a href="/2025/06/30/Git%E6%8F%90%E4%BA%A4%E5%88%B0%E5%A4%9A%E4%B8%AA%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93.html" class="post-title-link" itemprop="url">Git提交到多个远程仓库</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 12:00:40 / 修改时间：13:57:54" itemprop="dateCreated datePublished" datetime="2025-06-30T12:00:40+08:00">2025-06-30</time>
+      <time title="创建时间：2025-06-30 15:57:23 / 修改时间：16:05:38" itemprop="dateCreated datePublished" datetime="2025-06-30T15:57:23+08:00">2025-06-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,23 +294,17 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysql stop</span><br></pre></td></tr></table></figure>
+          <p>第一步:添加远程仓库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin 第一个仓库地址 //origin只是个别名哦</span><br><span class="line">git remote add osc 第二个仓库地址 //osc也是个别名哦</span><br></pre></td></tr></table></figure>
 
-<p>修改配置文件，添加一行代码</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">skip-grant-tables</span><br></pre></td></tr></table></figure>
+<p>第二步：</p>
+<p>创建分支</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b master</span><br><span class="line">git checkout -b osc</span><br></pre></td></tr></table></figure>
 
-<p>然后重启mysql</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysql start</span><br></pre></td></tr></table></figure>
-
-<p>接下来执行</p>
-<p>mysql -p后面直接回车，就会进入mysql的命令行，然后依次执行如下命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">insert into mysql.user <span class="built_in">set</span> user=<span class="string">&#x27;root&#x27;</span>,ssl_cipher=<span class="string">&#x27;&#x27;</span>,x509_issuer=<span class="string">&#x27;&#x27;</span>,x509_subject=<span class="string">&#x27;&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update mysql.user <span class="built_in">set</span> Host=<span class="string">&#x27;localhost&#x27;</span>,select_priv=<span class="string">&#x27;y&#x27;</span>, insert_priv=<span class="string">&#x27;y&#x27;</span>,update_priv=<span class="string">&#x27;y&#x27;</span>, Alter_priv=<span class="string">&#x27;y&#x27;</span>,delete_priv=<span class="string">&#x27;y&#x27;</span>,create_priv=<span class="string">&#x27;y&#x27;</span>,drop_priv=<span class="string">&#x27;y&#x27;</span>,reload_priv=<span class="string">&#x27;y&#x27;</span>,shutdown_priv=<span class="string">&#x27;y&#x27;</span>,Process_priv=<span class="string">&#x27;y&#x27;</span>,file_priv=<span class="string">&#x27;y&#x27;</span>,grant_priv=<span class="string">&#x27;y&#x27;</span>,References_priv=<span class="string">&#x27;y&#x27;</span>,index_priv=<span class="string">&#x27;y&#x27;</span>,create_user_priv=<span class="string">&#x27;y&#x27;</span>,show_db_priv=<span class="string">&#x27;y&#x27;</span>,super_priv=<span class="string">&#x27;y&#x27;</span>,create_tmp_table_priv=<span class="string">&#x27;y&#x27;</span>,Lock_tables_priv=<span class="string">&#x27;y&#x27;</span>,execute_priv=<span class="string">&#x27;y&#x27;</span>,repl_slave_priv=<span class="string">&#x27;y&#x27;</span>,repl_client_priv=<span class="string">&#x27;y&#x27;</span>,create_view_priv=<span class="string">&#x27;y&#x27;</span>,show_view_priv=<span class="string">&#x27;y&#x27;</span>,create_routine_priv=<span class="string">&#x27;y&#x27;</span>,alter_routine_priv=<span class="string">&#x27;y&#x27;</span>,create_user_priv=<span class="string">&#x27;y&#x27;</span> <span class="built_in">where</span> user=<span class="string">&#x27;root&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update mysql.user <span class="built_in">set</span> password=password(<span class="string">&#x27;123456&#x27;</span>) <span class="built_in">where</span> user=<span class="string">&#x27;root&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+<p>第三步：</p>
+<p>提交代码：</p>
+<p>分别切换分支提交</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git chekcout master</span><br><span class="line">git push origin master</span><br><span class="line">//=========================</span><br><span class="line">git checkout osc</span><br><span class="line">git push osc master</span><br></pre></td></tr></table></figure>
 
 
 
@@ -339,7 +333,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/VMWare-Fusion-7-%E5%BA%8F%E5%88%97%E5%8F%B7.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E5%9C%A8Linux-MacOS%E7%BB%88%E7%AB%AF%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%8B%E6%92%AD%E6%94%BE%E9%9F%B3%E4%B9%90%E7%9A%84%E5%91%BD%E4%BB%A4.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -357,7 +351,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/VMWare-Fusion-7-%E5%BA%8F%E5%88%97%E5%8F%B7.html" class="post-title-link" itemprop="url">VMWare Fusion 7 序列号</a>
+          <a href="/2025/06/30/%E5%9C%A8Linux-MacOS%E7%BB%88%E7%AB%AF%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%8B%E6%92%AD%E6%94%BE%E9%9F%B3%E4%B9%90%E7%9A%84%E5%91%BD%E4%BB%A4.html" class="post-title-link" itemprop="url">在Linux/MacOS终端命令行下播放音乐的命令</a>
         </h2>
 
         <div class="post-meta-container">
@@ -369,7 +363,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 12:00:37 / 修改时间：13:58:27" itemprop="dateCreated datePublished" datetime="2025-06-30T12:00:37+08:00">2025-06-30</time>
+      <time title="创建时间：2025-06-30 15:57:18 / 修改时间：16:18:28" itemprop="dateCreated datePublished" datetime="2025-06-30T15:57:18+08:00">2025-06-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -391,7 +385,29 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">VMWare Fusion 7 序列号：</span><br><span class="line">HYCTT-5L9RQ-44T8L-C1RG5-K2GPC</span><br><span class="line">ZZAX9-UR1QM-M4MQ0-5RYQ6-6C539</span><br><span class="line">LVGJ3-KHW30-M4MRU-T3N7E-RCX43</span><br><span class="line">NYZ5L-HDV3T-44HKM-WW952-227Y1</span><br><span class="line">4VJHT-2YWWP-04J4M-HV4ZE-X378E</span><br></pre></td></tr></table></figure>
+          <p>linux或者macosx 中可以按住那个sox这个库，可以使用play xxx.mp3来进行播放音乐</p>
+<p>自己去找这个对应的源来按照那个就好了。</p>
+<p>这里是用MacOS安装的。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install sox</span><br></pre></td></tr></table></figure>
+
+<p>Ubuntu的话 可以试试这个命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install sox</span><br></pre></td></tr></table></figure>
+
+<p>这样就ok了</p>
+<p>我自己下载了mp3音乐，直接执行下面的命令就可以播放音乐了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">play xxxx.mp3</span><br></pre></td></tr></table></figure>
+
+<p>突发奇想如何把他用nodejs实现呢，child_proccess.exec这个方法就可以实现了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> child_process = <span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> mp3 = <span class="string">&#x27;/xxx/xxx/Downloads/small_apple.mp3&#x27;</span>;</span><br><span class="line">child_process.<span class="title function_">exec</span>(<span class="string">&#x27;play &#x27;</span>+mp3,<span class="keyword">function</span>(<span class="params">err,stdout,stderr</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err.<span class="property">message</span>.<span class="property">yellow</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(stdout.<span class="property">blue</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(stdout.<span class="property">red</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>把此代码保存为playmusic.js就好了。</p>
+<p>然后执行node命令就好了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node playmusic.js</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>我又发现一个奇葩，我呆住了，nodejs有个库叫做player，可以直接进行播放的，其实原理是一样的，来吧，代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Player</span> = <span class="built_in">require</span>(<span class="string">&#x27;player&#x27;</span>);</span><br><span class="line"><span class="comment">// create player instance </span></span><br><span class="line"><span class="keyword">var</span> player = <span class="keyword">new</span> <span class="title class_">Player</span>(<span class="string">&#x27;/xxx/xxx/Downloads/small_apple.mp3&#x27;</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// play now and callback when playend </span></span><br><span class="line">player.<span class="title function_">play</span>(<span class="keyword">function</span>(<span class="params">err, player</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;playend!&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// event: on playend </span></span><br><span class="line">player.<span class="title function_">on</span>(<span class="string">&#x27;playend&#x27;</span>,<span class="keyword">function</span>(<span class="params">item</span>)&#123;</span><br><span class="line">  <span class="comment">// return a playend item </span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;src:&#x27;</span> + item + <span class="string">&#x27; play done, switching to next one ...&#x27;</span>);</span><br><span class="line">  player.<span class="title function_">play</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
 
 
       
@@ -419,7 +435,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/CSS%E6%88%AA%E5%88%87%E5%AD%97%E7%AC%A6%E4%B8%B2.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/JavaScript%E7%9A%84%E4%B8%AD%E7%9A%84test%E5%92%8Cmatch-%E7%BB%93%E6%9E%9C%E4%BD%A0%E4%B8%8D%E6%95%A2%E7%9B%B8%E4%BF%A1.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -437,7 +453,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/CSS%E6%88%AA%E5%88%87%E5%AD%97%E7%AC%A6%E4%B8%B2.html" class="post-title-link" itemprop="url">CSS截切字符串</a>
+          <a href="/2025/06/30/JavaScript%E7%9A%84%E4%B8%AD%E7%9A%84test%E5%92%8Cmatch-%E7%BB%93%E6%9E%9C%E4%BD%A0%E4%B8%8D%E6%95%A2%E7%9B%B8%E4%BF%A1.html" class="post-title-link" itemprop="url">JavaScript的中的test和match，结果你不敢相信</a>
         </h2>
 
         <div class="post-meta-container">
@@ -449,7 +465,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 11:49:23 / 修改时间：11:49:57" itemprop="dateCreated datePublished" datetime="2025-06-30T11:49:23+08:00">2025-06-30</time>
+      <time title="创建时间：2025-06-30 15:57:08 / 修改时间：16:20:06" itemprop="dateCreated datePublished" datetime="2025-06-30T15:57:08+08:00">2025-06-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -471,8 +487,111 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>css截切字符串</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">width</span>: <span class="number">180px</span>;</span><br><span class="line"><span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">-o-<span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line"><span class="attribute">overflow</span>: hidden;</span><br><span class="line"><span class="attribute">height</span>: <span class="number">25px</span>;</span><br><span class="line"><span class="attribute">white-space</span>: nowrap;</span><br></pre></td></tr></table></figure>
+          <p>大家看下代码，这个test和match还是晕了我很久的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> __parsers = [];</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*one.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*two.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*three.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*four.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*five.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*six.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*seven.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*eight.*/g</span>&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> matchParser = <span class="keyword">function</span>(<span class="params">subject</span>)&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; __parsers.<span class="property">length</span>; i++) &#123;</span><br><span class="line">	    <span class="comment">// console.log(&#x27;RegExp:&#x27;,__parsers[i].regExp);</span></span><br><span class="line">		<span class="keyword">if</span>(subject.<span class="title function_">match</span>(__parsers[i].<span class="property">regExp</span>))&#123;</span><br><span class="line">		  <span class="keyword">return</span> __parsers[i];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;No Match&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> testParser = <span class="keyword">function</span>(<span class="params">subject</span>)&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; __parsers.<span class="property">length</span>; i++) &#123;</span><br><span class="line">	    <span class="comment">// console.log(&#x27;RegExp:&#x27;,__parsers[i].regExp);</span></span><br><span class="line">		<span class="keyword">if</span> (__parsers[i].<span class="property">regExp</span>.<span class="title function_">test</span>(subject)) &#123;</span><br><span class="line">			<span class="keyword">return</span> __parsers[i];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;No Match&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单的测试代码就这些。我们用一个循环来执行。</p>
+<p><strong>&#x2F;&#x2F;第一种测试</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">	<span class="keyword">var</span> subject = <span class="string">&#x27;two&#x27;</span>;</span><br><span class="line">	<span class="keyword">try</span>&#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">testParser</span>(subject));</span><br><span class="line">	&#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(err.<span class="property">message</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;&#x2F;结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">No Match</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">No Match</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br></pre></td></tr></table></figure>
+
+<p>看吧，还是有没有匹配到的吧。罪过啊。</p>
+<p><strong>&#x2F;&#x2F;第二种测试</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">	<span class="keyword">var</span> subject = <span class="string">&#x27;two&#x27;</span>;</span><br><span class="line">	<span class="keyword">try</span>&#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">matchParser</span>(subject));</span><br><span class="line">	&#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(err.<span class="property">message</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;&#x2F;结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br></pre></td></tr></table></figure>
+
+<p>你们看，是不是瞬间很开心啊。</p>
+<p>可以使用nodejs执行整理执行一下。被坑了的感觉有木有啊！</p>
+<p>可以看出来，使用match的全部匹配出来了，为什么，给你一个可想的空间吧。match完胜啊。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAforEach%E4%B8%8D%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84break%E7%AD%96%E7%95%A5.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/30/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAforEach%E4%B8%8D%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84break%E7%AD%96%E7%95%A5.html" class="post-title-link" itemprop="url">简单实现一个forEach不能实现的break策略</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-30 15:15:59 / 修改时间：15:16:35" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:59+08:00">2025-06-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>简单实现一个forEach不能实现的break策略：<br>这个策略也是很多人都遇到过的。</p>
+<p>代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = [</span><br><span class="line">  &#123;<span class="string">&#x27;id&#x27;</span>:<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;title&#x27;</span>:<span class="string">&#x27;你好&#x27;</span>,<span class="string">&#x27;regExp&#x27;</span>:<span class="string">&#x27;/你好/i&#x27;</span>&#125;,</span><br><span class="line">  &#123;<span class="string">&#x27;id&#x27;</span>:<span class="string">&#x27;2&#x27;</span>,<span class="string">&#x27;title&#x27;</span>:<span class="string">&#x27;我好&#x27;</span>,<span class="string">&#x27;regExp&#x27;</span>:<span class="string">&#x27;/我好/i&#x27;</span>&#125;,</span><br><span class="line">  &#123;<span class="string">&#x27;id&#x27;</span>:<span class="string">&#x27;3&#x27;</span>,<span class="string">&#x27;title&#x27;</span>:<span class="string">&#x27;大家好&#x27;</span>,<span class="string">&#x27;regExp&#x27;</span>:<span class="string">&#x27;/大家好/i&#x27;</span>&#125;</span><br><span class="line">  ];</span><br><span class="line"><span class="keyword">var</span> match_id;</span><br><span class="line"><span class="keyword">var</span> match_string = <span class="string">&#x27;我好&#x27;</span>;</span><br><span class="line">list.<span class="title function_">some</span>(<span class="keyword">function</span>(<span class="params">i</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(i);</span><br><span class="line">  <span class="keyword">if</span>(match_string.<span class="title function_">match</span>(<span class="built_in">eval</span>(i.<span class="property">regExp</span>)))&#123;</span><br><span class="line">    match_id = i.<span class="property">id</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;match_id&#x27;</span>,match_id);</span><br></pre></td></tr></table></figure>
+
+<p>运行一下试试：结果如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123; id: &#x27;1&#x27;, title: &#x27;你好&#x27;, regExp: &#x27;/你好/i&#x27; &#125;</span><br><span class="line">&#123; id: &#x27;2&#x27;, title: &#x27;我好&#x27;, regExp: &#x27;/我好/i&#x27; &#125;</span><br><span class="line">match_id 2</span><br></pre></td></tr></table></figure>
+
 
 
       
@@ -500,7 +619,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Socket-IO-%E5%AE%9E%E7%8E%B0-%E8%81%8A%E5%A4%A9%E5%AE%A4.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E5%9C%A8Ubuntu-14-04-LTS%E4%B8%AD%E5%AE%89%E8%A3%85Java%E7%8E%AF%E5%A2%83.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -518,7 +637,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Socket-IO-%E5%AE%9E%E7%8E%B0-%E8%81%8A%E5%A4%A9%E5%AE%A4.html" class="post-title-link" itemprop="url">Socket IO 实现 聊天室</a>
+          <a href="/2025/06/30/%E5%9C%A8Ubuntu-14-04-LTS%E4%B8%AD%E5%AE%89%E8%A3%85Java%E7%8E%AF%E5%A2%83.html" class="post-title-link" itemprop="url">在Ubuntu 14.04 LTS中安装Java环境</a>
         </h2>
 
         <div class="post-meta-container">
@@ -530,7 +649,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 11:49:19 / 修改时间：15:31:02" itemprop="dateCreated datePublished" datetime="2025-06-30T11:49:19+08:00">2025-06-30</time>
+      <time title="创建时间：2025-06-30 15:15:56 / 修改时间：15:17:14" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:56+08:00">2025-06-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -552,23 +671,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>没想到，自己写过的第一个聊天室，居然是用nodejs实现的【因为简单的啊】，使用起来很简单，要剖析里面的原理才是最重要的</p>
-<p>先看代码：</p>
-<p>html代码</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>Socket.io<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span> <span class="attr">href</span>=<span class="string">&quot;css/main.css&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;//libs.useso.com/js/jquery/1.10.0/jquery.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;/socket.io/socket.io.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;js/chat.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Socket.io - Simple char Room<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;status&quot;</span>&gt;</span>Connecting...<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">id</span>=<span class="string">&quot;input&quot;</span> /&gt;</span></span><br><span class="line"> </span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;content&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+          <p>对于开发Android应用，jSP开发的同学，福利来了，这里有如何安装Oracle的JDK了。</p>
+<p>方法很简单，不需要自己去下载源码进行安装，这样就确保了各个方面的安全。</p>
+<p>安装过程如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> add-apt-repository ppa:webupd8team/java</span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install oracle-java8-installer</span><br><span class="line"><span class="built_in">sudo</span> apt-get install oracle-java8-set-default</span><br></pre></td></tr></table></figure>
 
-<p>js代码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by davidzhang on 14-10-22.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">$(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> content = $(<span class="string">&#x27;#content&#x27;</span>);</span><br><span class="line">    <span class="keyword">var</span> status = $(<span class="string">&#x27;#status&#x27;</span>);</span><br><span class="line">    <span class="keyword">var</span> input = $(<span class="string">&#x27;#input&#x27;</span>);</span><br><span class="line">    <span class="keyword">var</span> myName = <span class="literal">false</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//建立socket链接</span></span><br><span class="line">    socket = io.<span class="title function_">connect</span>(<span class="string">&#x27;http://localhost:3000&#x27;</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//收到server的连接确认</span></span><br><span class="line">    socket.<span class="title function_">on</span>(<span class="string">&#x27;open&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        status.<span class="title function_">text</span>(<span class="string">&#x27;Choose a name:&#x27;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//监听system事件，判断welcome或disconnect，打印系统消息</span></span><br><span class="line">    socket.<span class="title function_">on</span>(<span class="string">&#x27;system&#x27;</span>,<span class="keyword">function</span>(<span class="params">json</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> p = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">        <span class="keyword">if</span>(json.<span class="property">type</span> == <span class="string">&#x27;welcome&#x27;</span>)&#123;</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">if</span>(myName == json.<span class="property">text</span>) &#123;</span><br><span class="line">                status.<span class="title function_">text</span>(myName + <span class="string">&#x27;:&#x27;</span>).<span class="title function_">css</span>(<span class="string">&#x27;color&#x27;</span>, json.<span class="property">color</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            p = <span class="string">&#x27;&lt;p style=&quot;background:&quot;&#x27;</span>+json.<span class="property">color</span>+<span class="string">&#x27;&quot;&gt;system @ &#x27;</span>+json.<span class="property">time</span>+<span class="string">&#x27;:Welcome &#x27;</span> + json.<span class="property">text</span> + <span class="string">&#x27;&lt;/p&gt;&#x27;</span>;</span><br><span class="line"> </span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(json.<span class="property">type</span> == <span class="string">&#x27;disconnect&#x27;</span>)&#123;</span><br><span class="line">            p = <span class="string">&#x27;&lt;p style=&quot;background:&quot;&#x27;</span>+json.<span class="property">color</span>+<span class="string">&#x27;&quot;&gt;system @ &#x27;</span>+json.<span class="property">time</span>+<span class="string">&#x27; : Bye &#x27;</span> + json.<span class="property">text</span> + <span class="string">&#x27;&lt;/p&gt;&#x27;</span>;</span><br><span class="line"> </span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        content.<span class="title function_">prepend</span>(p);</span><br><span class="line"> </span><br><span class="line">    &#125;);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">    <span class="comment">//监听message事件，打印消息</span></span><br><span class="line">    socket.<span class="title function_">on</span>(message,<span class="keyword">function</span>(<span class="params">json</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> p = <span class="string">&#x27;&lt;p&lt;span style=&quot;color:&quot;&#x27;</span>+json.<span class="property">color</span>+<span class="string">&#x27;;&quot;&gt;&#x27;</span>+ json.<span class="property">author</span> + <span class="string">&#x27;&lt;/span&gt;@ &#x27;</span> + json.<span class="property">time</span> +<span class="string">&#x27;:&#x27;</span> + json.<span class="property">text</span> + <span class="string">&#x27;&lt;/p&gt;&#x27;</span>;</span><br><span class="line">        content.<span class="title function_">prepend</span>(p);</span><br><span class="line">    &#125;);</span><br><span class="line"> </span><br><span class="line">    input.<span class="title function_">keydown</span>(<span class="keyword">function</span>(<span class="params">e</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(e.<span class="property">keyCode</span> == <span class="number">13</span>)&#123;</span><br><span class="line">            <span class="keyword">var</span> msg = $(<span class="variable language_">this</span>).<span class="title function_">val</span>();</span><br><span class="line">            <span class="keyword">if</span>(!msg) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            socket.<span class="title function_">send</span>(msg);</span><br><span class="line">            $(<span class="variable language_">this</span>).<span class="title function_">val</span>(<span class="string">&#x27;&#x27;</span>);<span class="keyword">if</span>(myName==<span class="literal">false</span>)&#123;myName=msg&#125;&#125;&#125;)&#125;);</span><br></pre></td></tr></table></figure>
+<p>如果想安装7的话将java8改为java7。安装完之后，执行命令看下吧。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java --version</span><br></pre></td></tr></table></figure>
 
-<p>css代码</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">* &#123;<span class="attribute">padding</span>:<span class="number">0px</span>; <span class="attribute">margin</span>:<span class="number">0px</span>;&#125;</span><br><span class="line"><span class="selector-tag">body</span>&#123;<span class="attribute">font-family</span>:tahoma; <span class="attribute">font-size</span>:<span class="number">12px</span>;<span class="attribute">margin</span>:<span class="number">10px</span>;&#125;</span><br><span class="line"><span class="selector-tag">p</span> &#123;<span class="attribute">line-height</span>:<span class="number">18px</span>;<span class="attribute">padding</span>:<span class="number">2px</span>;&#125;</span><br><span class="line"><span class="selector-tag">div</span> &#123;<span class="attribute">width</span>:<span class="number">500px</span>;&#125;</span><br><span class="line"><span class="selector-id">#content</span> &#123;</span><br><span class="line">    <span class="attribute">padding</span>:<span class="number">5px</span>;</span><br><span class="line">    <span class="attribute">background</span>:<span class="number">#ddd</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>:<span class="number">5px</span>;</span><br><span class="line">    <span class="attribute">border</span>:<span class="number">1px</span> solid <span class="number">#CCC</span>;</span><br><span class="line">    <span class="attribute">margin-top</span>:<span class="number">10px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#input</span> &#123;</span><br><span class="line">    <span class="attribute">border-radius</span>:<span class="number">2px</span>;</span><br><span class="line">    <span class="attribute">border</span>:<span class="number">1px</span> solid <span class="number">#ccc</span>;</span><br><span class="line">    <span class="attribute">margin-top</span>:<span class="number">10px</span>;</span><br><span class="line">    <span class="attribute">padding</span>:<span class="number">5px</span>;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">380px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#status</span> &#123;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">display</span>:block;</span><br><span class="line">    <span class="attribute">float</span><span class="selector-pseudo">:left</span>;</span><br><span class="line">    <span class="attribute">margin-top</span>:<span class="number">15px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>服务器端的代码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">&quot;path&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> app = <span class="title function_">express</span>();</span><br><span class="line"><span class="keyword">var</span> server = <span class="built_in">require</span>(<span class="string">&quot;http&quot;</span>).<span class="title function_">createServer</span>(app);</span><br><span class="line"><span class="keyword">var</span> io = <span class="built_in">require</span>(<span class="string">&quot;socket.io&quot;</span>).<span class="title function_">listen</span>(server);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//设置日志级别</span></span><br><span class="line">io.<span class="title function_">set</span>(<span class="string">&quot;log level&quot;</span>, <span class="number">1</span>);</span><br><span class="line"> </span><br><span class="line">io.<span class="title function_">on</span>(<span class="string">&#x27;connection&#x27;</span>,<span class="keyword">function</span>(<span class="params">socket</span>)&#123;</span><br><span class="line">    socket.<span class="title function_">emit</span>(<span class="string">&quot;open&quot;</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">//构造客户端对象</span></span><br><span class="line">    <span class="keyword">var</span> client = &#123;</span><br><span class="line">        <span class="attr">socket</span>:socket,</span><br><span class="line">        <span class="attr">name</span>:<span class="literal">false</span>,</span><br><span class="line">        <span class="attr">color</span>:<span class="title function_">getColor</span>()</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    socket.<span class="title function_">on</span>(<span class="string">&#x27;message&#x27;</span>,<span class="keyword">function</span>(<span class="params">msg</span>)&#123;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">var</span> obj = &#123;<span class="attr">time</span>:<span class="title function_">getTime</span>(),<span class="attr">color</span>:client.<span class="property">color</span>&#125;;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">if</span>(!client.<span class="property">name</span>)&#123;</span><br><span class="line">            client.<span class="property">name</span> = msg;</span><br><span class="line">            obj[<span class="string">&#x27;text&#x27;</span>] = client.<span class="property">name</span>;</span><br><span class="line">            obj[<span class="string">&#x27;author&#x27;</span>] = <span class="string">&#x27;System&#x27;</span>;</span><br><span class="line">            obj[<span class="string">&#x27;type&#x27;</span>] = <span class="string">&#x27;welcome&#x27;</span>;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(client.<span class="property">name</span> + <span class="string">&#x27;login&#x27;</span>);</span><br><span class="line"> </span><br><span class="line">            <span class="comment">//返回欢迎语</span></span><br><span class="line">            socket.<span class="title function_">emit</span>(<span class="string">&#x27;system&#x27;</span>,obj);</span><br><span class="line">            <span class="comment">//广播新用户已登录</span></span><br><span class="line">            socket.<span class="property">broadcast</span>.<span class="title function_">emit</span>(<span class="string">&#x27;system&#x27;</span>,obj);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            obj[<span class="string">&#x27;text&#x27;</span>] = msg;</span><br><span class="line">            obj[<span class="string">&#x27;author&#x27;</span>] = client.<span class="property">name</span>;</span><br><span class="line">            obj[<span class="string">&#x27;type&#x27;</span>] = <span class="string">&#x27;message&#x27;</span>;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(client.<span class="property">name</span>+<span class="string">&#x27;say:&#x27;</span>+msg);</span><br><span class="line"> </span><br><span class="line">            <span class="comment">//返回消息</span></span><br><span class="line">            socket.<span class="title function_">emit</span>(<span class="string">&#x27;message&#x27;</span>,obj);</span><br><span class="line">            <span class="comment">//广播向其他用户消息</span></span><br><span class="line">            socket.<span class="property">broadcast</span>.<span class="title function_">emit</span>(<span class="string">&#x27;message&#x27;</span>,obj);</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">    &#125;);</span><br><span class="line"> </span><br><span class="line">    socket.<span class="title function_">on</span>(<span class="string">&#x27;disconnect&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> obj = &#123;</span><br><span class="line">            <span class="attr">time</span>:<span class="title function_">getTime</span>(),</span><br><span class="line">            <span class="attr">color</span>:client.<span class="property">color</span>,</span><br><span class="line">            <span class="attr">author</span>:<span class="string">&quot;System&quot;</span>,</span><br><span class="line">            <span class="attr">text</span>:client.<span class="property">name</span>,</span><br><span class="line">            <span class="attr">type</span>:<span class="string">&#x27;disconnect&#x27;</span></span><br><span class="line">        &#125;;</span><br><span class="line"> </span><br><span class="line">        <span class="comment">//广播用户已退出</span></span><br><span class="line">        socket.<span class="property">broadcast</span>.<span class="title function_">emit</span>(<span class="string">&#x27;system&#x27;</span>,obj);</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(client.<span class="property">name</span>+<span class="string">&#x27;Disconnect&#x27;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//express 基本设置</span></span><br><span class="line">app.<span class="title function_">configure</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    app.<span class="title function_">set</span>(<span class="string">&#x27;port&#x27;</span>,process.<span class="property">env</span>.<span class="property">PORT</span> || <span class="number">3000</span>);</span><br><span class="line">    app.<span class="title function_">set</span>(<span class="string">&#x27;views&#x27;</span>,__dirname + <span class="string">&#x27;/views&#x27;</span>);</span><br><span class="line">    app.<span class="title function_">use</span>(express.<span class="title function_">favicon</span>());</span><br><span class="line">    app.<span class="title function_">use</span>(express.<span class="title function_">logger</span>(<span class="string">&#x27;dev&#x27;</span>));</span><br><span class="line">    app.<span class="title function_">use</span>(express.<span class="title function_">bodyParser</span>());</span><br><span class="line">    app.<span class="title function_">use</span>(express.<span class="title function_">methodOverride</span>());</span><br><span class="line">    app.<span class="title function_">use</span>(app.<span class="property">router</span>);</span><br><span class="line">    app.<span class="title function_">use</span>(express.<span class="title function_">static</span>(path.<span class="title function_">join</span>(__dirname,<span class="string">&#x27;public&#x27;</span>)));</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line">app.<span class="title function_">configure</span>(<span class="string">&#x27;development&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    app.<span class="title function_">use</span>(express.<span class="title function_">errorHandler</span>());</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">//指定websocket的客户端的html文件</span></span><br><span class="line">app.<span class="title function_">get</span>(<span class="string">&#x27;/&#x27;</span>,<span class="keyword">function</span>(<span class="params">req,res</span>)&#123;</span><br><span class="line">    res.<span class="title function_">sendfile</span>(<span class="string">&#x27;views/chat.html&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line">server.<span class="title function_">listen</span>(app.<span class="title function_">get</span>(<span class="string">&#x27;port&#x27;</span>),<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Express server listening on port &#x27;</span>+app.<span class="title function_">get</span>(<span class="string">&#x27;port&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> getTime=<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="keyword">var</span> date = <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">  <span class="keyword">return</span> date.<span class="title function_">getHours</span>()+<span class="string">&quot;:&quot;</span>+date.<span class="title function_">getMinutes</span>()+<span class="string">&quot;:&quot;</span>+date.<span class="title function_">getSeconds</span>();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> getColor=<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="keyword">var</span> colors = [<span class="string">&#x27;aliceblue&#x27;</span>,<span class="string">&#x27;antiquewhite&#x27;</span>,<span class="string">&#x27;aqua&#x27;</span>,<span class="string">&#x27;aquamarine&#x27;</span>,<span class="string">&#x27;pink&#x27;</span>,<span class="string">&#x27;red&#x27;</span>,<span class="string">&#x27;green&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;orange&#x27;</span>,<span class="string">&#x27;blue&#x27;</span>,<span class="string">&#x27;blueviolet&#x27;</span>,<span class="string">&#x27;brown&#x27;</span>,<span class="string">&#x27;burlywood&#x27;</span>,<span class="string">&#x27;cadetblue&#x27;</span>];</span><br><span class="line">  <span class="keyword">return</span> colors[<span class="title class_">Math</span>.<span class="title function_">round</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">10000</span> % colors.<span class="property">length</span>)];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里的服务器是使用nodejs的express，当然里面使用的是nodejs的socket.io这个库，使用起来是很酷的，大家可以操作一下。</p>
-<p>如果想需要真个代码的话，可以去这里</p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3poYW5nZGE4OS9Tb2NrZXQtY2hhdC1Sb29t">https://github.com/zhangda89/Socket-chat-Room<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -595,7 +706,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E6%94%AF%E4%BB%98%E5%AE%9D%E6%8E%A5%E5%8F%A3%E8%B5%84%E6%96%99%E4%B8%8B%E8%BD%BD.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Nodejs%E7%AE%80%E6%98%93%E8%81%8A%E5%A4%A9%E5%AE%A4socket-io.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -613,7 +724,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/%E6%94%AF%E4%BB%98%E5%AE%9D%E6%8E%A5%E5%8F%A3%E8%B5%84%E6%96%99%E4%B8%8B%E8%BD%BD.html" class="post-title-link" itemprop="url">支付宝接口资料下载</a>
+          <a href="/2025/06/30/Nodejs%E7%AE%80%E6%98%93%E8%81%8A%E5%A4%A9%E5%AE%A4socket-io.html" class="post-title-link" itemprop="url">Nodejs简易聊天室socket.io</a>
         </h2>
 
         <div class="post-meta-container">
@@ -625,7 +736,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 11:49:16 / 修改时间：11:52:36" itemprop="dateCreated datePublished" datetime="2025-06-30T11:49:16+08:00">2025-06-30</time>
+      <time title="创建时间：2025-06-30 15:15:52 / 修改时间：15:31:08" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:52+08:00">2025-06-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -647,31 +758,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>下载代码前一定要先熟悉接口代码集成流程：</p>
-<p>1、先确定您签约的合同中是否包含该产品</p>
-<p>若不包含，请联系0571-88158090申请开通。</p>
-<p>2、获取签约账号的支付宝安全校验码（key）和合作者身份ID（partner ）</p>
-<p>如何查询合作者身份ID（partner）和交易安全校验码（key）</p>
-<p>3、如果您网站是网店论坛系统（如：SHOPEX、ECSHOP、HISHOP、360shop、PHPWIND、DISCUZ、最土等），那么您不需要集成支付宝接口，只需要在您的网店后台的支付管理界面中配置好支付宝的支付即可完成。</p>
-<p>4、如果您的网站是您的技术人员自行开发且不是网店论坛系统，那么请下载下面的接口资料按照文档及代码示例demo要求来把支付宝产品接入您的网站中。</p>
-<p><em><strong>资料包括以下几种：</strong></em></p>
-<p>支付宝即时到账收款接口：点击下载</p>
-<p>产品包含：即时到帐接口、即时到帐批量退款接口</p>
-<p>产品介绍： 即时到账收款</p>
-<p>支付宝担保交易收款接口：点击下载</p>
-<p>产品包含：担保交易接口、确认发货接口</p>
-<p>产品介绍：担保交易收款</p>
-<p>支付宝双功能收款接口：点击下载</p>
-<p>产品包含：双功能接口、确认发货接口</p>
-<p>产品介绍：双功能收款</p>
-<p>支付宝网银支付：点击下载</p>
-<p>产品包含：纯网关接口</p>
-<p>产品介绍：网银支付</p>
-<p>与即时到帐接口的区别：</p>
-<p>代码是一模一样的，唯一不同的是如果要使用此产品，那么请求参数defaultbank和payment为必传字段，且paymethod&#x3D;bankPay</p>
-<p>详情请到这里：</p>
-<p><span class="exturl" data-url="aHR0cDovL2NsdWIuYWxpcGF5LmNvbS9yZWFkLnBocD90aWQ9OTk3Njk3Mg==">http://club.alipay.com/read.php?tid=9976972<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9iLmFsaXBheS5jb20vb3JkZXIvcHJvZHVjdFNvbHV0aW9uLmh0bT90eXBlPTM=">https://b.alipay.com/order/productSolution.htm?type=3<i class="fa fa-external-link-alt"></i></span></p>
+          <p>初步的了解了一下Socket.io这个感觉还是很好用的，</p>
+<p>几步简单的connect，以前觉得聊天室是一个很复杂而又很复杂的东西今天，就一天的时间，不，是一个下午的时间，就出来一个聊天室。</p>
+<p>感觉这个可以批量生产了，so happy，借此分享给大家享受一下。</p>
+<p>代码放到git上了，给个简单的安装使用步骤：</p>
+<p>下载后在项目目录下执行：</p>
+<p><code>npm install</code></p>
+<p>执行完之后，执行如下的命令：</p>
+<p><code>npm start</code></p>
+<p>然后试着打开浏览器，访问<span class="exturl" data-url="aHR0cDovLzEyNy4wLjAuMTozMDAwLw==">http://127.0.0.1:3000<i class="fa fa-external-link-alt"></i></span> </p>
 
       
     </div>
@@ -698,7 +793,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/iOS-%E7%89%9B%E5%88%80%E5%B0%8F%E8%AF%95-swift-%E6%93%8D%E7%BB%83%E8%B5%B7%E6%9D%A5-CoreLocation.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/RequireJS%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -716,7 +811,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/iOS-%E7%89%9B%E5%88%80%E5%B0%8F%E8%AF%95-swift-%E6%93%8D%E7%BB%83%E8%B5%B7%E6%9D%A5-CoreLocation.html" class="post-title-link" itemprop="url">iOS 牛刀小试 swift- 操练起来【CoreLocation】</a>
+          <a href="/2025/06/30/RequireJS%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E.html" class="post-title-link" itemprop="url">RequireJS基础使用配置说明</a>
         </h2>
 
         <div class="post-meta-container">
@@ -728,7 +823,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 11:49:13 / 修改时间：11:53:22" itemprop="dateCreated datePublished" datetime="2025-06-30T11:49:13+08:00">2025-06-30</time>
+      <time title="创建时间：2025-06-30 15:15:49 / 修改时间：15:54:33" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:49+08:00">2025-06-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -750,16 +845,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>最近看了关于ios的另一门语言swift，找了个示例，操作了一下，遇到了点小问题，不过最终还是解决了。</p>
-<p>先看代码</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">import <span class="built_in">UIKit</span></span><br><span class="line">import CoreLocation</span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> ViewController: <span class="built_in">UIViewController</span>,<span class="built_in">CLLocationManagerDelegate</span> &#123;</span><br><span class="line"> </span><br><span class="line">    let locationManager:<span class="built_in">CLLocationManager</span> = <span class="built_in">CLLocationManager</span>()</span><br><span class="line">     </span><br><span class="line">    override func viewDidLoad() &#123;</span><br><span class="line">        <span class="variable language_">super</span>.viewDidLoad()</span><br><span class="line">        <span class="comment">// Do any additional setup after loading the view, typically from a nib.</span></span><br><span class="line">         </span><br><span class="line">        locationManager.delegate = <span class="keyword">self</span></span><br><span class="line">        locationManager.desiredAccuracy = kCLLocationAccuracyBest</span><br><span class="line">         </span><br><span class="line">        <span class="keyword">if</span>(ios8())&#123;</span><br><span class="line">            locationManager.requestAlwaysAuthorization()</span><br><span class="line">        &#125;</span><br><span class="line">         </span><br><span class="line">        locationManager.startUpdatingLocation()</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    func ios8() -&gt; Bool&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">UIDevice</span>.currentDevice().systemVersion == <span class="string">&quot;8.1&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    override func didReceiveMemoryWarning() &#123;</span><br><span class="line">        <span class="variable language_">super</span>.didReceiveMemoryWarning()</span><br><span class="line">        <span class="comment">// Dispose of any resources that can be recreated.</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    func locationManager(manager: <span class="built_in">CLLocationManager</span>!, didUpdateLocations locations: [AnyObject]!) &#123;</span><br><span class="line">         </span><br><span class="line">        var location:<span class="built_in">CLLocation</span> = locations[locations.count - <span class="number">1</span>] as <span class="built_in">CLLocation</span></span><br><span class="line">         </span><br><span class="line">        <span class="keyword">if</span>(location.horizontalAccuracy &gt; <span class="number">0</span>)&#123;</span><br><span class="line">            println(location.coordinate.latitude)</span><br><span class="line">            println(location.coordinate.longitude)</span><br><span class="line">             </span><br><span class="line">            locationManager.stopUpdatingLocation()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    func locationManager(manager: <span class="built_in">CLLocationManager</span>!, didFailWithError error: <span class="built_in">NSError</span>!)&#123;</span><br><span class="line">        println(error)</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>之前用过一次，后来想起来用，感觉好麻烦，还需要配置，但是感觉从大局考虑还是没必要偷懒的，那就记录一下吧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">requirejs.<span class="title function_">config</span>(&#123;</span><br><span class="line">  <span class="attr">baseUrl</span>: <span class="string">&#x27;../components&#x27;</span>,<span class="comment">//相对于此配置文件的库路径</span></span><br><span class="line">  <span class="attr">paths</span>:&#123;<span class="comment">//路径是相对于上面的baseUrl</span></span><br><span class="line">    <span class="string">&#x27;Bootstrap&#x27;</span>:<span class="string">&#x27;bootstrap/dist/js/bootstrap.min&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;jquery&#x27;</span>:<span class="string">&#x27;jquery/dist/jquery.min&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;chat&#x27;</span>:<span class="string">&#x27;../javascripts/chat&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">//exports值，表明这个模块外部调用时的名称</span></span><br><span class="line">  <span class="attr">shim</span>:&#123;<span class="comment">//包含了如何加载库和插件</span></span><br><span class="line">    <span class="title class_">Bootstrap</span>:&#123;</span><br><span class="line">      <span class="attr">deps</span>:[<span class="comment">//deps数组，表明该模块的依赖性，</span></span><br><span class="line">        <span class="string">&#x27;jquery&#x27;</span>,</span><br><span class="line">        <span class="string">&quot;css!bootstrap/dist/css/bootstrap.min&quot;</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">jquery</span>:&#123;</span><br><span class="line">      <span class="attr">deps</span>:[</span><br><span class="line">        <span class="string">&#x27;css!../stylesheets/style.css&#x27;</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">map</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;*&#x27;</span>: &#123;</span><br><span class="line">      <span class="string">&#x27;css&#x27;</span>: <span class="string">&#x27;require-css/css&#x27;</span> <span class="comment">// or whatever the path to require-css is</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">require</span>([<span class="string">&#x27;jquery&#x27;</span>,<span class="string">&#x27;Bootstrap&#x27;</span>,<span class="string">&#x27;chat&#x27;</span>],<span class="keyword">function</span>(<span class="params">$,bootstrap,Chat</span>)&#123;</span><br><span class="line">  <span class="keyword">var</span> chat = <span class="keyword">new</span> <span class="title class_">Chat</span>();</span><br><span class="line">  chat.<span class="title function_">init</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>如果你把这段代码copy过去的话，运行发现没有出现预期的输出内容。</p>
-<p>可以试试下面这个绝招：</p>
-<p>在plist文件中增加如下两个参数</p>
-<p>1、NSLocationWhenInUseUsageDescription</p>
-<p>2、NSLocationAlwaysUsageDescription</p>
-<p>然后再编译一次，保证成功，如果不成功，哈哈，反正我成功啦！</p>
+<p>几点提示paths的里面的名称不能在shim出现，不然就会变成了变量直接用paths里面的值替换了。</p>
+<p>这里的map是为了引入require-css插件，以便可以引入自己需要的css文件。</p>
+<p>可以说使用shim非常方便了控制了文件的加载顺序。嘿嘿，对了如果你想处理压缩的话可以参考我的另外一篇文件，搜索Requirejs就可以找到。</p>
 
       
     </div>
@@ -786,7 +877,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/CocoaPods%E5%AE%89%E8%A3%85.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Socket-io-1-3-5-and-express-js4-12-2-%E7%BB%93%E5%90%88%E6%90%AD%E5%BB%BA.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -804,7 +895,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/CocoaPods%E5%AE%89%E8%A3%85.html" class="post-title-link" itemprop="url">CocoaPods安装</a>
+          <a href="/2025/06/30/Socket-io-1-3-5-and-express-js4-12-2-%E7%BB%93%E5%90%88%E6%90%AD%E5%BB%BA.html" class="post-title-link" itemprop="url">Socket.io 1.3.5 and express.js 4.12.2 结合搭建</a>
         </h2>
 
         <div class="post-meta-container">
@@ -816,7 +907,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 11:49:10 / 修改时间：11:54:17" itemprop="dateCreated datePublished" datetime="2025-06-30T11:49:10+08:00">2025-06-30</time>
+      <time title="创建时间：2025-06-30 15:15:45 / 修改时间：15:31:35" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:45+08:00">2025-06-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -838,30 +929,17 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>CocoaPods安装</p>
-<p>在安装CocoaPods之前，首先要在本地安装好Ruby环境。至于如何在Mac中安装好Ruby环境，请google一下。</p>
-<p>假如你在本地已经安装好Ruby环境，那么下载和安装CocoaPods将十分简单，只需要一行命令。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> gem install cocoapods</span><br></pre></td></tr></table></figure>
+          <p>可以在app.js同目录下建立一个文件，如io.js</p>
+<p>里面的代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> io = <span class="built_in">require</span>(<span class="string">&#x27;socket.io&#x27;</span>)();</span><br><span class="line"><span class="comment">//这段代码可以随意自己修改，根据业务需求来定</span></span><br><span class="line">io.<span class="title function_">on</span>(<span class="string">&#x27;connection&#x27;</span>, <span class="keyword">function</span> (<span class="params">socket</span>) &#123;</span><br><span class="line">  socket.<span class="title function_">emit</span>(<span class="string">&#x27;news&#x27;</span>, &#123; <span class="attr">hello</span>: <span class="string">&#x27;world&#x27;</span> &#125;);</span><br><span class="line">  socket.<span class="title function_">on</span>(<span class="string">&#x27;my other event&#x27;</span>, <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = io;</span><br></pre></td></tr></table></figure>
 
-<p>在终端中敲入这个命令之后，会发现半天没有任何反应。可能原因是因为那堵墙阻挡了cocoapods.org</p>
-<p>我们可以用淘宝的Ruby镜像来访问cocoapods。按照下面的顺序在终端中敲入依次敲入命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ gem sources --remove https://rubygems.org/</span><br><span class="line">//等有反应之后再敲入以下命令</span><br><span class="line">$ gem sources -a http://ruby.taobao.org/</span><br></pre></td></tr></table></figure>
+<p>下一步就是修改bin&#x2F;www这个文件（省略号代表还有其他的代码）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> app = <span class="built_in">require</span>(<span class="string">&#x27;../app&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> io = <span class="built_in">require</span>(<span class="string">&#x27;../io&#x27;</span>);<span class="comment">//这里引入刚才加的文件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> server = <span class="built_in">require</span>(<span class="string">&#x27;http&#x27;</span>).<span class="title class_">Server</span>(app);</span><br><span class="line"></span><br><span class="line">io.<span class="title function_">attach</span>(server);<span class="comment">//加入这段代码</span></span><br><span class="line">server.<span class="title function_">listen</span>(<span class="number">8080</span>);</span><br></pre></td></tr></table></figure>
 
-<p>为了验证你的Ruby镜像是并且仅是taobao，可以用以下命令查看：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gem sources -l</span><br></pre></td></tr></table></figure>
+<p>前端的代码需要这样写：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;/socket.io/socket.io.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">$(<span class="variable language_">document</span>).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> socket = <span class="title function_">io</span>();<span class="comment">//这里是注意点</span></span></span><br><span class="line"><span class="language-javascript">socket.<span class="title function_">on</span>(<span class="string">&#x27;news&#x27;</span>, <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span></span><br><span class="line"><span class="language-javascript"><span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span></span><br><span class="line"><span class="language-javascript">&#125;);</span></span><br><span class="line"><span class="language-javascript">&#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>只有在终端中出现下面文字才表明你上面的命令是成功的：</p>
-<p>*** CURRENT SOURCES ***</p>
-<p><span class="exturl" data-url="aHR0cDovL3J1YnkudGFvYmFvLm9yZy8=">http://ruby.taobao.org/<i class="fa fa-external-link-alt"></i></span></p>
-<p>这时候，你再次在终端中运行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> gem install cocoapods</span><br></pre></td></tr></table></figure>
-
-<p>等上十几秒钟，CocoaPods就可以在你本地下载并且安装好了，不再需要其他设置。</p>
-<p>&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
-<p>如果你说我安装的时候遇到了类似ruby报错的信息，你可以尝试这个命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rvm requirements</span><br></pre></td></tr></table></figure>
-
-<p>执行完后，可以再试一下，如果还是有问题的话，留言我们一起探讨一下。</p>
+<p>好了大功告成！</p>
 
       
     </div>
@@ -888,7 +966,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/MySQL%E6%9F%A5%E7%9C%8B%E5%92%8C%E4%BF%AE%E6%94%B9%E8%A1%A8%E7%9A%84%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Ubuntu-14-04-Panel-%E4%B8%8A%E7%9C%8B%E4%B8%8D%E5%88%B0network-icon-%E7%BD%91%E7%BB%9C%E6%A0%87%E8%AF%86.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -906,7 +984,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/MySQL%E6%9F%A5%E7%9C%8B%E5%92%8C%E4%BF%AE%E6%94%B9%E8%A1%A8%E7%9A%84%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E.html" class="post-title-link" itemprop="url">MySQL查看和修改表的存储引擎</a>
+          <a href="/2025/06/30/Ubuntu-14-04-Panel-%E4%B8%8A%E7%9C%8B%E4%B8%8D%E5%88%B0network-icon-%E7%BD%91%E7%BB%9C%E6%A0%87%E8%AF%86.html" class="post-title-link" itemprop="url">Ubuntu 14.04  Panel 上看不到network icon[网络标识]</a>
         </h2>
 
         <div class="post-meta-container">
@@ -918,7 +996,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 11:49:07 / 修改时间：11:55:13" itemprop="dateCreated datePublished" datetime="2025-06-30T11:49:07+08:00">2025-06-30</time>
+      <time title="创建时间：2025-06-30 15:15:42 / 修改时间：15:32:09" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:42+08:00">2025-06-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -940,23 +1018,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>MySQL查看和修改表的存储引擎</p>
-<p>&#x2F;&#x2F;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
-<p>给表添加注释</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER TABLE</span> sk_subscribe COMMENT<span class="operator">=</span><span class="string">&#x27;预约记录表&#x27;</span>;</span><br></pre></td></tr></table></figure>
+          <p>之前有写过一篇类似的文章，但是如果你安装了google的话，会依然有这种问题出现，主要问题是,在安装google的时候他卸载了<strong>indicator-application</strong>，所以网络标识消失了，就连输入法或者其他的第三方的标识也没有了。解决的办法就是重新安装回来就好了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install indicator-application</span><br></pre></td></tr></table></figure>
 
-<p>给表的字段【列】添加注释</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER table</span> sk_products MODIFY `has_cash` <span class="type">BIGINT</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> COMMENT <span class="string">&#x27;已经募集的金额&#x27;</span></span><br></pre></td></tr></table></figure>
 
-<p>修改表的引擎</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> engines;<span class="operator">/</span><span class="operator">/</span>查看支持的引擎</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">table</span> status <span class="keyword">from</span> wycf <span class="keyword">where</span> name<span class="operator">=</span><span class="string">&#x27;sk_productscate&#x27;</span>;<span class="operator">/</span><span class="operator">/</span>查看表引擎</span><br><span class="line"><span class="keyword">alter table</span> sk_productscate engine<span class="operator">=</span>Myisam;<span class="operator">/</span><span class="operator">/</span>修改表引擎</span><br></pre></td></tr></table></figure>
-
-<p>&#x2F;&#x2F;修改数据库默认引擎</p>
-<p>关闭mysql服务： <code>net stop mysql</code></p>
-<p>找到mysql安装目录下的<code>my.ini</code>文件：</p>
-<p>找到<code>default-storage-engine=INNODB</code> 改为<code>default-storage-engine=MYISAM</code></p>
-<p>找到<code>#skip-innodb</code> 改为<code>skip-innodb</code></p>
-<p>启动mysql服务：<code>net start mysql</code></p>
 
       
     </div>
@@ -983,7 +1048,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Phpstorm8-license-key.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E4%BD%BF%E7%94%A8PM2-Deploy%E9%83%A8%E7%BD%B2%E5%9F%BA%E4%BA%8EGit%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E7%9A%84%E7%BD%91%E7%AB%99%E5%BA%94%E7%94%A8-%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1001,7 +1066,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Phpstorm8-license-key.html" class="post-title-link" itemprop="url">Phpstorm8 license key</a>
+          <a href="/2025/06/30/%E4%BD%BF%E7%94%A8PM2-Deploy%E9%83%A8%E7%BD%B2%E5%9F%BA%E4%BA%8EGit%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E7%9A%84%E7%BD%91%E7%AB%99%E5%BA%94%E7%94%A8-%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2.html" class="post-title-link" itemprop="url">使用PM2 Deploy部署基于Git版本管理的网站应用 自动部署</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1013,7 +1078,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 11:49:01 / 修改时间：11:56:52" itemprop="dateCreated datePublished" datetime="2025-06-30T11:49:01+08:00">2025-06-30</time>
+      <time title="创建时间：2025-06-30 15:15:39 / 修改时间：15:55:51" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:39+08:00">2025-06-30</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1035,96 +1100,61 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>phpstorm8破解及license key</p>
-<p>Learn Programming</p>
-<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; LICENSE BEGIN &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
-<p>63758-12042010</p>
-<p>00000Ryqh0NCC73lpRm!XVcxFChJ2g</p>
-<p>TUR2lZtlLXrPLbQ66Gs8MHs51RvF2y</p>
-<p>agoDlzne08Zm8VXbts1UMKE!EW4v8G</p>
-<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; LICENSE END &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+          <p>按照官方介绍，PM2是一款用于生产环境Node.js应用进程管理的工具。按照民间介绍，它主要有这样几个功能：保证Node.js应用永远在线（挂掉自动重启）、自动负载均衡、零中断重启应用等。</p>
+<p>鉴于它是如此优秀，这里还是简要介绍一下前两个功能。</p>
+<p><strong>安装</strong></p>
+<p>首先，它是一个Node.js写的工具，使用npm即可安装使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g pm2</span><br></pre></td></tr></table></figure>
 
-      
-    </div>
+<p>运行Node.js程序</p>
+<p>如果不使用pm2，运行Node.js程序是这样：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node xxx.js</span><br></pre></td></tr></table></figure>
 
-    
-    
-    
+<p>使用pm2，是这样：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start xxx.js</span><br></pre></td></tr></table></figure>
 
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+<p>监视模式</p>
+<p>如果你正在开发Node.js应用，需要在代码变更后自动重启应用，只需要在pm2的参数中加上–watch即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start xxx.js --watch</span><br></pre></td></tr></table></figure>
+
+<p>cluster模式</p>
+<p>默认情况下pm2是以fork模式启动应用的，如果以cluster模式启动的话，则可以使用pm2自带的负载均衡、零间断重启等功能。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start xxx.js -i 4</span><br></pre></td></tr></table></figure>
+
+<p>上面的命令会以cluster模式启动4个应用进程，并自动为它们提供负载均衡，并且可以使用gracefulReload达到更新应用时不中断服务的效果。</p>
+<p>关于cluster模式，可参见朴灵《深入浅出Node.js》一书。</p>
+<p>pm2低版本默认是以cluster模式启动的。</p>
+<p><strong>部署应用</strong></p>
+<p>官方文档:<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL1VuaXRlY2gvUE0yL2Jsb2IvbWFzdGVyL0FEVkFOQ0VEX1JFQURNRS5tZCNkZXBsb3ltZW50">https://github.com/Unitech/PM2/blob/master/ADVANCED_README.md#deployment<i class="fa fa-external-link-alt"></i></span></p>
+<p>这才是本文的重点。PM2的部署功能可以实现网站应用的半自动部署功能。注意本文标题没有加“Node.js”，意味着这个功能并不只适用于Node.js网站应用，事实上它部署功能是用shell写的，跟网站使用什么语言没什么关系。</p>
+<p>PM2的部署功能与版本管理工具（Git，不确定是否支持SVN，下文以Git为例）结合比较紧，因此需要保证网站项目使用版本管理工具管理代码，并且服务器可以访问到版本管理服务器。</p>
+<p>部署功能是在新版本（0.12）中才添加进来的。如果你使用的是旧版本的，需要先升级：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install -g pm2@latest</span><br><span class="line">pm2 updatePM2</span><br></pre></td></tr></table></figure>
+
+<p>接下来需要建立一个部署的配置文件，这个文件在本机（操作发布的机器）和服务器上都需要有，因此最好放入Git版本管理中，并且推送到远程代码库（Git服务器）。</p>
+<p>切换到项目目录下，然后执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 ecosystem</span><br></pre></td></tr></table></figure>
+
+<p>即可得到一个示例json文件（例如我得到的是ecosystem.json5），将它做对应的修改，大致如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;apps&quot;</span> <span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span>      <span class="punctuation">:</span> <span class="string">&quot;API&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;script&quot;</span>    <span class="punctuation">:</span> <span class="string">&quot;app.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;COMMON_VARIABLE&quot;</span><span class="punctuation">:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;env_production&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;NODE_ENV&quot;</span><span class="punctuation">:</span> <span class="string">&quot;production&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span>      <span class="punctuation">:</span> <span class="string">&quot;WEB&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;script&quot;</span>    <span class="punctuation">:</span> <span class="string">&quot;web.js&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;deploy&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;production&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;user&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;node&quot;</span><span class="punctuation">,</span><span class="comment">//登录账号</span></span><br><span class="line">      <span class="attr">&quot;host&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;212.83.163.1&quot;</span><span class="punctuation">,</span><span class="comment">//服务器地址</span></span><br><span class="line">      <span class="attr">&quot;ref&quot;</span>  <span class="punctuation">:</span> <span class="string">&quot;origin/master&quot;</span><span class="punctuation">,</span><span class="comment">//git 分支</span></span><br><span class="line">      <span class="attr">&quot;repo&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;[email protected]:repo.git&quot;</span><span class="punctuation">,</span><span class="comment">//git地址</span></span><br><span class="line">      <span class="attr">&quot;path&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;/var/www/production&quot;</span><span class="punctuation">,</span><span class="comment">//服务器项目目录</span></span><br><span class="line">      <span class="attr">&quot;post-deploy&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;pm2 startOrRestart ecosystem.json5 --env production&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dev&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;user&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;node&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;host&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;212.83.163.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;ref&quot;</span>  <span class="punctuation">:</span> <span class="string">&quot;origin/master&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;repo&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;[email protected]:repo.git&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;path&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;/var/www/development&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;post-deploy&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;pm2 startOrRestart ecosystem.json5 --env dev&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;env&quot;</span>  <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;NODE_ENV&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dev&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>需要注意：</p>
+<p>apps.name和apps.script应该与PM2识别应用有关，后续执行<code>pm2 restart</code>的时候可以对应到进程（未证实）</p>
+<p>deploy中可以含有多个环境，需要能够通过SSH（公钥认证）登录服务器</p>
+<p>web目录并不是真正的放版本库文件的目录，PM2会再建立一个source子目录，这个才是真正放代码的目录</p>
+<p>post-deploy是指代码部署完之后执行的命令，这里以Node.js为例子，执行依赖安装，然后重启PM2中的进程</p>
+<p>然后就可以使用</p>
+<p>首先需要安装一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 deploy ecosystem.json5 production setup</span><br></pre></td></tr></table></figure>
+
+<p>这个过程中可能会涉及到权限的问题，不过都是一些小的问题</p>
+<p>如果已经安装可以运行下面这个命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 deploy ecosystem.json5 production</span><br></pre></td></tr></table></figure>
+
+<p>自动发布网站项目了，非常方便。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">xx@xx:~/nodejs/node-react$ pm2 deploy ecosystem.json5 production</span><br><span class="line">--&gt; Deploying to production environment</span><br><span class="line">--&gt; on host 205.209.156.140</span><br><span class="line">  ○ deploying</span><br><span class="line">  ○ hook pre-deploy</span><br><span class="line">  ○ fetching updates</span><br><span class="line">[email protected]<span class="string">&#x27;s password: </span></span><br><span class="line"><span class="string">Fetching origin</span></span><br><span class="line"><span class="string">From https://git.oschina.net/zhangdapeng89/node-react</span></span><br><span class="line"><span class="string">   4456ce1..c45f87c  master     -&gt; origin/master</span></span><br><span class="line"><span class="string">  ○ resetting HEAD to origin/master</span></span><br><span class="line"><span class="string">[email protected]&#x27;</span>s password: </span><br><span class="line">HEAD is now at c45f87c 添加eco</span><br><span class="line">[email protected]<span class="string">&#x27;s password: </span></span><br><span class="line"><span class="string">[email protected]&#x27;</span>s password: </span><br><span class="line">  ○ executing post-deploy `pm2 startOrRestart ecosystem.json5 --<span class="built_in">env</span> production`</span><br><span class="line">[email protected]<span class="string">&#x27;s password: </span></span><br><span class="line"><span class="string">┌──────────┬────┬──────┬───────┬────────┬─────────┬────────┬──────────────┬──────────┐</span></span><br><span class="line"><span class="string">│ App name │ id │ mode │ pid   │ status │ restart │ uptime │ memory       │ watching │</span></span><br><span class="line"><span class="string">├──────────┼────┼──────┼───────┼────────┼─────────┼────────┼──────────────┼──────────┤</span></span><br><span class="line"><span class="string">│ app      │ 0  │ fork │ 5843  │ online │ 958     │ 11D    │ 133.094 MB   │ disabled │</span></span><br><span class="line"><span class="string">│ API      │ 1  │ fork │ 22700 │ online │ 0       │ 0s     │ 12.219 MB    │ disabled │</span></span><br><span class="line"><span class="string">│ WEB      │ 2  │ fork │ 22705 │ online │ 0       │ 0s     │ 11.746 MB    │ disabled │</span></span><br><span class="line"><span class="string">└──────────┴────┴──────┴───────┴────────┴─────────┴────────┴──────────────┴──────────┘</span></span><br><span class="line"><span class="string"> Use `pm2 show &lt;id|name&gt;` to get more details about an app</span></span><br><span class="line"><span class="string">  ○ hook test</span></span><br><span class="line"><span class="string">  ○ successfully deployed origin/master</span></span><br><span class="line"><span class="string">--&gt; Success</span></span><br></pre></td></tr></table></figure>
 
 
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E7%A6%81%E6%AD%A2%E5%9B%BE%E7%89%87%E5%8F%A6%E5%AD%98%E4%B8%BA.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/%E7%A6%81%E6%AD%A2%E5%9B%BE%E7%89%87%E5%8F%A6%E5%AD%98%E4%B8%BA.html" class="post-title-link" itemprop="url">禁止图片另存为</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-30 11:48:58 / 修改时间：11:57:31" itemprop="dateCreated datePublished" datetime="2025-06-30T11:48:58+08:00">2025-06-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>实现图片禁止另存为</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">&quot;text/javascript&quot;</span> &gt;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">stop</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">onkeydown</span> = stop;</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">onselectstart</span> = stop;</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">onmousedown</span> = stop;</span><br><span class="line"><span class="variable language_">document</span>.<span class="property">oncontextmenu</span>=stop;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p>将以上代码加入<head></head>之间</p>
 
       
     </div>
@@ -1144,7 +1174,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/15/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/79/">79</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/15/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
