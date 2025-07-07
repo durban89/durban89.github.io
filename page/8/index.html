@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">838</span>
+          <span class="site-state-item-count">840</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">152</span>
+        <span class="site-state-item-count">154</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,184 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/NGINX-+-Nodejs--110--Connection-timed--%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/NGINX-+-Nodejs--110--Connection-timed--%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86.html" class="post-title-link" itemprop="url">NGINX + Nodejs (110: Connection timed) 错误处理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 11:58:19 / 修改时间：12:17:19" itemprop="dateCreated datePublished" datetime="2025-07-03T11:58:19+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近服务器出现问题了，error.log日志里面多了很多的（110: Connection timed）这个错误。</p>
+<p>开始以为是Nodejs的脚本有问题，再请求的时候会有超时的问题，但是检查了一下，并没有发现问题，因为已经对出现问题的错误做了sysError的日志记录，但是在日志里面并没有找到对应的错误信息，很奇怪。也是google下找到了对应的解决方案。</p>
+<p>参考：<span class="exturl" data-url="aHR0cDovL3N0YWNrb3ZlcmZsb3cuY29tL3F1ZXN0aW9ucy8xMDM5NTgwNy9uZ2lueC1jbG9zZS11cHN0cmVhbS1jb25uZWN0aW9uLWFmdGVyLXJlcXVlc3Q=">http://stackoverflow.com/questions/10395807/nginx-close-upstream-connection-after-request<i class="fa fa-external-link-alt"></i></span></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    proxy_http_version 1.1;</span><br><span class="line">    proxy_set_header Connection <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>本来我的upstream中只加了server这段信息的，现在参考了这里的话，也加了下keepalive;</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream backend &#123;</span><br><span class="line">    server 127.0.0.1:2222;</span><br><span class="line">    keepalive 128;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后重启以下nginx；</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nginx -s reload</span><br></pre></td></tr></table></figure>
+
+<p>这个命令执行完，似乎没有立刻起作用，于是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nginx -s reopen</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以了。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/PHP-%E5%87%BD%E6%95%B0%E5%88%86%E4%BA%AB-%E4%B9%8B-%E8%A7%A3%E5%8E%8B%E7%BC%A9base64-%E5%8E%8B%E7%BC%A9%E6%96%87%E4%BB%B6.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/PHP-%E5%87%BD%E6%95%B0%E5%88%86%E4%BA%AB-%E4%B9%8B-%E8%A7%A3%E5%8E%8B%E7%BC%A9base64-%E5%8E%8B%E7%BC%A9%E6%96%87%E4%BB%B6.html" class="post-title-link" itemprop="url">PHP 函数分享 之 解压缩base64 压缩文件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 11:58:16 / 修改时间：12:20:11" itemprop="dateCreated datePublished" datetime="2025-07-03T11:58:16+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>解压缩base64 压缩文件，稍微解释一下，比如你有一个pdf文件，使用软件压缩成了.gz格式的文件，然后再把这个文件做成了basa64 String 传输给某个人，比如这个人就是我，好吧，问题来了，我们要实现一个过程，就是反解这个文件，将base64 string 转成 .gz文件，然后再把.gz文件解压。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">actionPdf</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$pdf_base64</span> = BASE64_DATA_PATH;</span><br><span class="line">    <span class="comment">//Get File content from txt file</span></span><br><span class="line">    <span class="variable">$pdf_base64_handler</span> = <span class="title function_ invoke__">fopen</span>(<span class="variable">$pdf_base64</span>,<span class="string">&#x27;r&#x27;</span>);</span><br><span class="line">    <span class="variable">$pdf_content</span> = <span class="title function_ invoke__">fread</span> (<span class="variable">$pdf_base64_handler</span>,<span class="title function_ invoke__">filesize</span>(<span class="variable">$pdf_base64</span>));</span><br><span class="line">    <span class="title function_ invoke__">fclose</span> (<span class="variable">$pdf_base64_handler</span>);</span><br><span class="line">    <span class="comment">//Decode pdf content</span></span><br><span class="line">    <span class="variable">$pdf_decoded</span> = <span class="title function_ invoke__">base64_decode</span> (<span class="variable">$pdf_content</span>);</span><br><span class="line">    <span class="comment">//Write data back to pdf file</span></span><br><span class="line">    <span class="variable">$pdf</span> = <span class="title function_ invoke__">fopen</span> (PDF_FILE_PATH,<span class="string">&#x27;w&#x27;</span>);</span><br><span class="line">    <span class="title function_ invoke__">fwrite</span> (<span class="variable">$pdf</span>,<span class="variable">$pdf_decoded</span>);</span><br><span class="line">    <span class="comment">//close output file</span></span><br><span class="line">    <span class="title function_ invoke__">fclose</span> (<span class="variable">$pdf</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// This input should be from somewhere else, hard-coded in this example</span></span><br><span class="line">    <span class="variable">$file_name</span> = PDF_FILE_PATH;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Raising this value may increase performance</span></span><br><span class="line">    <span class="variable">$buffer_size</span> = <span class="number">4096</span>; <span class="comment">// read 4kb at a time</span></span><br><span class="line">    <span class="variable">$out_file_name</span> = <span class="title function_ invoke__">str_replace</span>(<span class="string">&#x27;.gz&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="variable">$file_name</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Open our files (in binary mode)</span></span><br><span class="line">    <span class="variable">$file</span> = <span class="title function_ invoke__">gzopen</span>(<span class="variable">$file_name</span>, <span class="string">&#x27;rb&#x27;</span>);</span><br><span class="line">    <span class="variable">$out_file</span> = <span class="title function_ invoke__">fopen</span>(<span class="variable">$out_file_name</span>, <span class="string">&#x27;wb&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Keep repeating until the end of the input file</span></span><br><span class="line">    <span class="keyword">while</span>(!<span class="title function_ invoke__">gzeof</span>(<span class="variable">$file</span>)) &#123;</span><br><span class="line">        <span class="comment">// Read buffer-size bytes</span></span><br><span class="line">        <span class="comment">// Both fwrite and gzread and binary-safe</span></span><br><span class="line">        <span class="title function_ invoke__">fwrite</span>(<span class="variable">$out_file</span>, <span class="title function_ invoke__">gzread</span>(<span class="variable">$file</span>, <span class="variable">$buffer_size</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Files are done, close files</span></span><br><span class="line">    <span class="title function_ invoke__">fclose</span>(<span class="variable">$out_file</span>);</span><br><span class="line">    <span class="title function_ invoke__">gzclose</span>(<span class="variable">$file</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">// $base64Data = file_get_contents(BASE64_DATA_PATH);</span></span><br><span class="line">    <span class="comment">// $data = base64_decode($base64Data);</span></span><br><span class="line">    <span class="comment">// file_put_contents(PDF_FILE_PATH,$data);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>哈哈，参考java版本重写，还有node版本的。</p>
+<p>PS：</p>
+<p>每个人都是从生到死，但是活法不一样，就比如这个方法，从开始到最后做完了自己改做的事情。选择一个语言走下去吧【选择一个活法，直到死去】。</p>
+<p>我们都想在自己的一生过好多种不同的活法，但是事实上，不可能呀。来来学点编程，体会一下，不同的人生【语言】带给你的不同体验。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1032,244 +1210,6 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">REM <span class="built_in">export</span> the ssl cert (normal cases)</span><br><span class="line">openssl pkcs12 -<span class="keyword">in</span> aa.pfx -out aa.pem -nokeys -clcerts</span><br><span class="line"></span><br><span class="line">REM <span class="built_in">export</span> the ssl cert (Crescendo load balancers)</span><br><span class="line"></span><br><span class="line">openssl pkcs12 -<span class="keyword">in</span> aa.pfx -out aa_tmp_cn.pem -nodes</span><br><span class="line">openssl x509 -<span class="keyword">in</span> aa_tmp_cn.pem -out aa_cn.pem -text</span><br></pre></td></tr></table></figure>
 
 
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E8%AE%A9Bootstrap%E7%9A%84Refresh-Icon%E4%B9%9Fspin%E8%B5%B7%E6%9D%A5.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/%E8%AE%A9Bootstrap%E7%9A%84Refresh-Icon%E4%B9%9Fspin%E8%B5%B7%E6%9D%A5.html" class="post-title-link" itemprop="url">让Bootstrap的Refresh Icon也spin起来</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:08:13 / 修改时间：11:17:59" itemprop="dateCreated datePublished" datetime="2025-07-03T11:08:13+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>bootstrap下面有个glyphicon-refresh，但是不会自定动态spin[旋转]，下面提供下我的实例</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.spin</span>&#123;</span><br><span class="line">    -webkit-<span class="attribute">transform-origin</span>: <span class="number">50%</span> <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">transform-origin</span>:<span class="number">50%</span> <span class="number">50%</span>;</span><br><span class="line">    -ms-<span class="attribute">transform-origin</span>:<span class="number">50%</span> <span class="number">50%</span>; <span class="comment">/* IE 9 */</span></span><br><span class="line">    -webkit-<span class="attribute">animation</span>: spin .<span class="number">8s</span> infinite linear;</span><br><span class="line">    -moz-<span class="attribute">animation</span>: spin .<span class="number">8s</span> infinite linear;</span><br><span class="line">    -o-<span class="attribute">animation</span>: spin .<span class="number">8s</span> infinite linear;</span><br><span class="line">    <span class="attribute">animation</span>: spin .<span class="number">8s</span> infinite linear;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@-webkit-keyframes</span> spin &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">      -webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">0deg</span>);</span><br><span class="line">      <span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">0deg</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">      -webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">359deg</span>);</span><br><span class="line">      <span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">359deg</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">@keyframes</span> spin &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">      -webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">0deg</span>);</span><br><span class="line">      <span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">0deg</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">      -webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">359deg</span>);</span><br><span class="line">      <span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">359deg</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>调用方式如下</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;glyphicon glyphicon-refresh loading spin&quot;</span>&gt;</span> <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Linux%E5%91%BD%E4%BB%A4sed-%E4%B9%8B-%E6%9B%BF%E6%8D%A2.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/Linux%E5%91%BD%E4%BB%A4sed-%E4%B9%8B-%E6%9B%BF%E6%8D%A2.html" class="post-title-link" itemprop="url">Linux命令sed 之 替换</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:08:10 / 修改时间：11:21:06" itemprop="dateCreated datePublished" datetime="2025-07-03T11:08:10+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近做redis的集群配置，想到一个问题，就是配置文件要是我能用命令替换就好了，就不需要每次打开文件去编辑一遍。</p>
-<p>于是让我发现了sed这个命令，那么今天就记录下如何来替换文件里面的内容。起始就是学习了，记得下次使用就好了。</p>
-<p>首先新建目录</p>
-<p>test</p>
-<p>新建两个文件</p>
-<p>test&#x2F;a.txt</p>
-<p>test&#x2F;b.txt</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ll <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-
-<p>结果如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 00:42 a.txt</span><br><span class="line">-rw-r--r--  1 durban126  staff    15B  7  9 00:25 b.txt</span><br></pre></td></tr></table></figure>
-
-<p>a.text的内容是</p>
-<blockquote>
-<p>wo wo gowhich gowhich</p>
-</blockquote>
-<p>b.text的内容是</p>
-<blockquote>
-<p>eo eo gowhich gowhich</p>
-</blockquote>
-<p>然后我们通过sed命令来做文件内容替换,将wo替换位eo</p>
-<p>Mac OS 环境</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sed -ig <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br><span class="line">sed -i <span class="string">&quot;&quot;</span> <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;.bak&quot;</span> <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
-
-<p>Linux 环境</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
-
-<p>之所以不同，是因为Mac OS下要求强制备份。</p>
-<p>我们先执行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -ig <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
-
-<p>结果是：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 00:55 a.txt</span><br><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 00:42 a.txtg</span><br><span class="line">-rw-r--r--  1 durban126  staff    15B  7  9 00:25 b.txt</span><br></pre></td></tr></table></figure>
-
-<p>a.txt的内容是</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  <span class="built_in">cat</span> <span class="built_in">test</span>/a.txt</span><br><span class="line">eo eo gowhich gowhich</span><br><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤</span><br></pre></td></tr></table></figure>
-
-<p>但是a.txtg就不是了，已做了备份处理</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  <span class="built_in">cat</span> <span class="built_in">test</span>/a.txtg</span><br><span class="line">wo wo gowhich gowhich</span><br><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤</span><br></pre></td></tr></table></figure>
-
-<p>再来看看执行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;&quot;</span> <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
-
-<p>结果是</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  ll <span class="built_in">test</span> </span><br><span class="line">total 16</span><br><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 01:06 a.txt</span><br><span class="line">-rw-r--r--  1 durban126  staff    21B  7  9 00:58 b.txt</span><br></pre></td></tr></table></figure>
-
-<p>a.txt的内容也变化了。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  <span class="built_in">cat</span> <span class="built_in">test</span>/a.txt </span><br><span class="line">eo eo gowhich gowhich</span><br></pre></td></tr></table></figure>
-
-<p>但是没有了备份文件了。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;.bak&quot;</span> <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
-
-<p>这个命令就会跟</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -ig <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
-
-<p>类似了，做了文件备份喽</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  ll <span class="built_in">test</span> </span><br><span class="line">total 24</span><br><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 01:09 a.txt</span><br><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 01:09 a.txt.bak</span><br><span class="line">-rw-r--r--  1 durban126  staff    21B  7  9 00:58 b.txt</span><br></pre></td></tr></table></figure>
-
-<p>a.txt.bak的内容就是备份a.txt的内容了。</p>
-<p>还有另外一个命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
-
-<p>结果是会报错了，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  sed -i <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test` </span><br><span class="line">sed: 1: <span class="string">&quot;./test/a.txt.bak&quot;</span>: invalid <span class="built_in">command</span> code .</span><br></pre></td></tr></table></figure>
-
-<p>所以还是区分下环境比较好。</p>
-<p>但是命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -ig <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
-
-<p>是在另种情况下通用的。</p>
-<p>PS:</p>
-<p>-i 表示inplace edit，就地修改文件<br>-r 表示搜索子目录<br>-l 表示输出匹配的文件名</p>
 
       
     </div>

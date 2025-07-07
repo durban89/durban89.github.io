@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">838</span>
+          <span class="site-state-item-count">840</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">152</span>
+        <span class="site-state-item-count">154</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,192 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E6%8E%A2%E8%AE%A8-NSLocalizedString-%E7%9A%84%E4%BD%BF%E7%94%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/19/%E6%8E%A2%E8%AE%A8-NSLocalizedString-%E7%9A%84%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">探讨 NSLocalizedString 的使用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-19 10:48:38 / 修改时间：10:51:14" itemprop="dateCreated datePublished" datetime="2025-06-19T10:48:38+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>程序本地化是扩展应用市场的重要砝码.iOS提供了简便的方法来实现本地化,其中用的最多的就是NSLocalizedString.</p>
+<p>首先查看下NSLocalizedString是什么:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> NSLocalizedString(key, comment) \</span></span><br><span class="line"><span class="meta">        [[NSBundle mainBundle] localizedStringForKey:(key) value:@<span class="string">&quot;&quot;</span> table:nil]</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NSLocalizedStringFromTable(key, tbl, comment) \</span></span><br><span class="line"><span class="meta">        [[NSBundle mainBundle] localizedStringForKey:(key) value:@<span class="string">&quot;&quot;</span> table:(tbl)]</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NSLocalizedStringFromTableInBundle(key, tbl, bundle, comment) \</span></span><br><span class="line"><span class="meta">        [bundle localizedStringForKey:(key) value:@<span class="string">&quot;&quot;</span> table:(tbl)]</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NSLocalizedStringWithDefaultValue(key, tbl, bundle, val, comment) \</span></span><br><span class="line"><span class="meta">        [bundle localizedStringForKey:(key) value:(val) table:(tbl)]</span></span><br></pre></td></tr></table></figure>
+
+<p>这里我们只看第一个</p>
+<p>这是一个宏,本质上是调用了函数 locakizedStrigForKey:.这样,这个宏做的其实就是在当前bundle中查找资源文件名Localizable.strings</p>
+<p>中键值key所指向的字符串.这样就不难理解还有诸如:NSLocalizedStringFromTable的宏了.</p>
+<p>下面我们就来具体实现一下.</p>
+<p>新建任一工程,然后添加新文件Localizable.strings</p>
+<p>然后选择文件属性中的”Make File Localizable”,页面自然跳转,再选择”General”选项卡时就会发现”Add Localization”了.</p>
+<p>默认有English,我们可以添加zh-hans ,然后在相应的文件中输入: “NAME” &#x3D; “你好”,这样在代码中只需要简单的调用:</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nameLabel.text = <span class="built_in">NSLocalizedString</span>(<span class="string">@&quot;NAME&quot;</span>,<span class="literal">nil</span>);</span><br></pre></td></tr></table></figure>
+
+<p>此时在工程文件下出现了 *.lpjo的文件夹,下面安置了相应的本地化文件.由此可以判断,对于其他资源文件如图片,xib文件都可以进行本地化.</p>
+<p>最后,我们再实现对程序名称的本地化.</p>
+<p>在工程的info.plist文件的属性中选择”Make File Localizable”,然后会发现工程下出现InfoPlist.strings的文件,如法炮制,添加zh-hans,并在</p>
+<p>相应的文件中添加”CFBundleDisplayName” &#x3D; “中文名称” 即可.这样,你会发现你的机器上程序名称变成了中文.</p>
+<p>PS:我还遇到一个问题,就是在本地化的时候语言代码是需要手工添加的,apple的文档上说所有的语言代码可以从ISO639( <span class="exturl" data-url="aHR0cDovL3d3dy5sb2MuZ292L3N0YW5kYXJkcy9pc282MzktMi9waHAvRW5nbGlzaC9fbGlzdC5waHApJUU2JTlGJUE1JUU4JUFGJUEyLCVFNSU4RiVBRiVFOCVCRiU5OSVFNCVCOCVBQSVFNSU4OCU5NyVFOCVBMSVBOCVFNCVCOCU4QSVFNCVCOCVBRCVFNiU5NiU4NyVFNSVBRiVCOSVFNSVCQSU5NCVFNyU5QSU4NCVFNiU5OCVBRmNoaS96aG8uJUU4JTgwJThDJUU4JUJGJTk5JUU2JTk4JUJFJUU3JTg0JUI2JUU2JUIyJUExJUU2JTlDJTg5JUU1JThDJUJBJUU1JTg4JTg2JUU3JUFFJTgwJUU0JUJEJTkzJUU1JTkyJThDJUU3JUI5JTgxJUU0JUJEJTkzJUU0JUI4JUFEJUU2JTk2JTg3">http://www.loc.gov/standards/iso639-2/php/English\_list.php)查询,可这个列表上中文对应的是chi/zho.而这显然没有区分简体和繁体中文<i class="fa fa-external-link-alt"></i></span>.</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E5%85%B3%E4%BA%8E-dispatch_once-%E6%8E%A2%E8%AE%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/19/%E5%85%B3%E4%BA%8E-dispatch_once-%E6%8E%A2%E8%AE%A8.html" class="post-title-link" itemprop="url">关于 dispatch_once 探讨</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-19 10:48:34 / 修改时间：10:52:16" itemprop="dateCreated datePublished" datetime="2025-06-19T10:48:34+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><code>dispatch_once</code> 在ios中是用来创建单例的，具体为什么要创建单例，咱先不讨论，咱先看看，这个要怎么使用。</p>
+<p>利用dispatch_once创建单例</p>
+<p>在开发中我们会用到NSNotificationCenter、NSFileManager等，获取他们的实例通过<code>[NSNotificationCenter defaultCenter]</code>和<code>[NSFileManager defaultManager]</code>来获取，其实这就是单例。</p>
+<p>我们先看下函数<code>void dispatch_once( dispatch_once_t *predicate, dispatch_block_t block);</code>其中第一个参数predicate，该参数是检查后面第二个参数所代表的代码块是否被调用的谓词，第二个参数则是在整个应用程序中只会被调用一次的代码块。dispach_once函数中的代码块只会被执行一次，而且还是线程安全的。</p>
+<p>接下来我们来实现自己的单例，这里有一个TestManager类，为这个类实现单例</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+(TestManager *)sharedInstance</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> TestManager *sharedManager;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> once;</span><br><span class="line">    <span class="built_in">dispatch_once</span>(&amp;once, ^&#123;</span><br><span class="line">        sharedManager = [[TestManager alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> sharedManager;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到目前为止，我们就实现了一个单例，一切就搞定了，是不是很简单！</p>
+<p>使用就按照如下方式获取唯一实例即可：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TestManager *testManager = [TestManager sharedInstance];</span><br></pre></td></tr></table></figure>
+
+<p>讨论dispatch_once函数实现单例的方法就这样结束啦，呵呵</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -972,174 +1158,6 @@
 
 <p>ok，搞定了</p>
 <p>想要我uwsgi配置的，请期待下篇文章</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Django-%E9%94%99%E8%AF%AF-Non-ASCII-character.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Django-%E9%94%99%E8%AF%AF-Non-ASCII-character.html" class="post-title-link" itemprop="url">Django 错误 Non-ASCII character '\xe6'</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-19 10:29:28 / 修改时间：10:45:14" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:28+08:00">2025-06-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在使用django的时候，会遇到一个问题，就是“Non-ASCII character ‘\xe6’”这个错误</p>
-<p>原因是如下，是我的配置文件中的一部分代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DEBUG = <span class="literal">True</span></span><br><span class="line">TEMPLATE_DEBUG = DEBUG</span><br><span class="line"></span><br><span class="line">ADMINS = (</span><br><span class="line">    (<span class="string">&#x27;漫步者Feeling&#x27;</span>, <span class="string">&#x27;[email protected]&#x27;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>提示一下，这里有中文，就是这个原因</p>
-<p>修改一下，如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># Django settings for walkerfree project.</span></span><br><span class="line"></span><br><span class="line">DEBUG = <span class="literal">True</span></span><br><span class="line">TEMPLATE_DEBUG = DEBUG</span><br><span class="line"></span><br><span class="line">ADMINS = (</span><br><span class="line">    (<span class="string">&#x27;漫步者Feeling&#x27;</span>, <span class="string">&#x27;[email protected]&#x27;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>就是这句代码：<code># -*- coding: utf-8 -*-  </code></p>
-<p>解决了。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E4%BD%BF%E7%94%A8NSString-%E5%8E%BB%E6%8E%89%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC%E6%88%96%E5%9B%9E%E8%BD%A6%E7%AC%A6.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/%E4%BD%BF%E7%94%A8NSString-%E5%8E%BB%E6%8E%89%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC%E6%88%96%E5%9B%9E%E8%BD%A6%E7%AC%A6.html" class="post-title-link" itemprop="url">使用NSString 去掉前后空格或回车符</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-19 10:29:24 / 修改时间：10:36:59" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:24+08:00">2025-06-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>想要去掉字符串的前后空格和回车符，很简单，如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string = <span class="string">@&quot; spaces in front and at the end &quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *trimmedString = [string stringByTrimmingCharactersInSet:</span><br><span class="line">[<span class="built_in">NSCharacterSet</span> whitespaceAndNewlineCharacterSet]]; </span><br><span class="line"><span class="built_in">NSLog</span>(trimmedString);</span><br></pre></td></tr></table></figure>
 
       
     </div>

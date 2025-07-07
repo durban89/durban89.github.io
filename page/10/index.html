@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">838</span>
+          <span class="site-state-item-count">840</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">152</span>
+        <span class="site-state-item-count">154</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,195 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Android-webview%E4%B8%AD%E7%9A%84%E9%A1%B5%E9%9D%A2%E5%87%BA%E7%8E%B0%E7%9A%84%E9%83%A8%E5%88%86Bug%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Android-webview%E4%B8%AD%E7%9A%84%E9%A1%B5%E9%9D%A2%E5%87%BA%E7%8E%B0%E7%9A%84%E9%83%A8%E5%88%86Bug%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html" class="post-title-link" itemprop="url">Android webview中的页面出现的部分Bug及解决方案</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 11:07:40 / 修改时间：11:37:06" itemprop="dateCreated datePublished" datetime="2025-07-03T11:07:40+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>写移动页面时给一个图片添加样式如下</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">img</span>&#123;</span><br><span class="line">  <span class="attribute">border</span>: .<span class="number">05rem</span> solid <span class="number">#5c0008</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">1rem</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在IOS上正常，部分安卓的手机却不能正常显示（例如vivo手机），查阅了资料后发现在安卓低版本的手机上border-radius这个css 属性确实存在该问题以及发现一些其他的问题，特此记下！</p>
+<p>一、Android2.3 自带浏览器不支持%</p>
+<p>通常我们实现一个圆只需要<code>border-radius：50%</code>就可以了，但是在Android2.3中是不支持百分比的，要兼容的话我们只能使用一个较大值例如<code>border-radius：999px;</code></p>
+<p>二、Android及Safari低版本img的圆角问题（就是本文开头提到的问题）</p>
+<p>当img元素有border时设置border-radius会导致圆角变形（如图）</p>
+<p>border-radius在Android低版本的bug</p>
+<p>解决办法就是在外面嵌套一个父元素然后设置其border和border-radius即可解决。</p>
+<p>三、android 4.2.x背景色溢出和不支持border-radius 缩写</p>
+<p>在Android4.2.x系统自带浏览器中，同时设置了border-radius和背景色的时候，背景色会溢出到圆角外，需要使用<code>background-clip:padding-box;</code>来修复。</p>
+<p>android 4.2.x不支持border-radius 缩写解决办法就是使用border-radius的四个扩写属性，缩写属性放在后面。如下(自己借了几个手机并没发现这个问题)</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.s</span>&#123;</span><br><span class="line">  <span class="attribute">border-top-left-radius</span>: <span class="number">999px</span>;  </span><br><span class="line">  <span class="attribute">border-top-right-radius</span>: <span class="number">999px</span>;  </span><br><span class="line">  <span class="attribute">border</span>- <span class="attribute">bottom</span>-<span class="attribute">right</span>-radius: <span class="number">999px</span>;  </span><br><span class="line">  <span class="attribute">border-bottom-left-radius</span>: <span class="number">999px</span>;  </span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">999px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E6%8E%A5%E5%8F%A3%E4%B9%8B-%E8%A7%A3%E6%9E%90%E6%B7%98%E5%AE%9D%E5%AE%A2%E7%9F%AD%E9%93%BE.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Nodejs-%E6%8E%A5%E5%8F%A3%E4%B9%8B-%E8%A7%A3%E6%9E%90%E6%B7%98%E5%AE%9D%E5%AE%A2%E7%9F%AD%E9%93%BE.html" class="post-title-link" itemprop="url">Nodejs 接口之 解析淘宝客短链</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 11:07:37 / 修改时间：11:37:43" itemprop="dateCreated datePublished" datetime="2025-07-03T11:07:37+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>给你一个淘宝客的短链，如果获取他跳转后的地址，这是我最近在做个一个程序，使用node开发总体来说还是挺简答的。</p>
+<p>大概说下流程</p>
+<p>第一步：解析出这个短链最终的真实地址</p>
+<p>我的第一个想法是，是不是需要啥啥接口才可以哇。但是我又想，这也太麻烦了，如果我访问了这个链接是不是就可以得到真实的链接了。好，到网上找到了一个request库，还是有实例哦，简单的不要不要的，赶紧弄了下，果然是有结果的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> r = <span class="title function_">request</span>(url, <span class="keyword">function</span>(<span class="params">err, res, body</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> uri = res.<span class="property">request</span>.<span class="property">uri</span>.<span class="property">href</span>;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(uri);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以了。地址拿到了，用浏览器打开试试，结果还是有问题，这个地址不是产品的真实地址，还是要做一个跳转的，好吧。</p>
+<p>我又想，这个页面究竟是个啥，打开一看，其实里面就是个js函数，执行了就简单了，这个对于node来说真实小菜一碟哇。</p>
+<p>突然让我想起来urllib这个库，嗯，不错很好用的。</p>
+<p>开始用的时候，直接请求就以为能得到结果了，结果不是的，还需要在请求中加上referer，哈哈，也许是个漏洞吧，这样我就能解析出真实的地址了。</p>
+<p>那先解决第一个问题就是node如何营造一个dom的环境，玩过dom的人肯定知道jsdom啦，然后在进行urllib请求根据302跳转获取到。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jsdom.<span class="title function_">env</span>(uri, <span class="keyword">function</span>(<span class="params">err, <span class="variable language_">window</span></span>) &#123;</span><br><span class="line">  <span class="comment">//都有window了，想干嘛就干嘛吧</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后就是获取最终headers里面的location</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> urlRes = urllib.<span class="title function_">request</span>(real_jump_address, &#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;GET&#x27;</span>,</span><br><span class="line">  <span class="attr">headers</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Upgrade-Insecure-Requests&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">&#x27;Host&#x27;</span>: <span class="string">&#x27;s.click.taobao.com&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Referer&#x27;</span>: uri</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="keyword">function</span>(<span class="params">err, data, res</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> err; <span class="comment">// you need to handle error</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// console.log(res.statusCode);</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">headers</span>.<span class="property">location</span>);</span><br><span class="line">  <span class="comment">// data is Buffer instance</span></span><br><span class="line">  <span class="comment">// console.log(&#x27;body &#x27;, data.toString());</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -973,204 +1162,6 @@
 <p>插件八：</p>
 <p>View Cookies</p>
 <p>后续继续更新</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/ReactJS-0-14-mocha%E7%BB%84%E4%BB%B6%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%BA%8C.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/ReactJS-0-14-mocha%E7%BB%84%E4%BB%B6%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%BA%8C.html" class="post-title-link" itemprop="url">ReactJS 0.14 mocha组件单元测试（二）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-02 16:01:18 / 修改时间：16:06:22" itemprop="dateCreated datePublished" datetime="2025-07-02T16:01:18+08:00">2025-07-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>使用react的情况下，一般也会用到redux，那么对于这种在react中使用redux的情况，写测试的时候就不能只用之前的文章里面介绍的方式写了。</p>
-<p>来看下组件例子</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span>, findDOMNode &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">&#x27;react-redux&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; increase, decrease, fetchItems &#125; <span class="keyword">from</span> <span class="string">&#x27;../../actions/counter&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Home</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123;</span><br><span class="line">      item,</span><br><span class="line">      number,</span><br><span class="line">      isFetching,</span><br><span class="line">      increase,</span><br><span class="line">      decrease,</span><br><span class="line">      fetchItems</span><br><span class="line">    &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#x27;container&#x27;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#x27;row&#x27;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          Some state changes:</span></span><br><span class="line"><span class="language-xml">          &#123;number&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>Item Length : &#123;item.length&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>Request Item State:&#123;!isFetching ? &#x27;已完成&#x27; : &#x27;获取中&#x27;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#x27;btn-group&#x27;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&#x27;btn btn-primary btn-xs&#x27;</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> increase(1)&#125;&gt;Increase<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&#x27;btn btn-primary btn-xs&#x27;</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> decrease(1)&#125;&gt;Decrease<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&#x27;btn btn-primary btn-xs&#x27;</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> fetchItems(item)&#125;&gt;FetchItems<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// const &#123; item, fetchItems &#125; = this.props;</span></span><br><span class="line">    <span class="comment">// fetchItems(item)</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentDidUpdate</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;did update&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">connect</span>(</span><br><span class="line">  <span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; counter &#125; = state;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">number</span>: counter.<span class="property">number</span>,</span><br><span class="line">      <span class="attr">item</span>: counter.<span class="property">item</span> || [],</span><br><span class="line">      <span class="attr">isFetching</span>: counter.<span class="property">isFetching</span> || <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    increase,</span><br><span class="line">    decrease,</span><br><span class="line">    fetchItems</span><br><span class="line">  &#125;</span><br><span class="line">)(<span class="title class_">Home</span>)</span><br></pre></td></tr></table></figure>
-
-<p>这里涉及到了actions，那么代码如下：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="variable constant_">INCREASE</span>,</span><br><span class="line">  <span class="variable constant_">DECREASE</span>,</span><br><span class="line">  <span class="variable constant_">REQUEST_DATA</span>,</span><br><span class="line">  <span class="variable constant_">FETCH_DATA</span>,</span><br><span class="line">  <span class="variable constant_">RECEIVE_DATA</span>,</span><br><span class="line">  <span class="variable constant_">ERROR_DATA</span></span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;../constants&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Utils</span> <span class="keyword">from</span> <span class="string">&#x27;utils&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> $ <span class="keyword">from</span> <span class="string">&#x27;jquery&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> token = <span class="title class_">Utils</span>.<span class="title function_">get_token</span>();</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;babel-polyfill&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">increase</span>(<span class="params">n</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="variable constant_">INCREASE</span>,</span><br><span class="line">    <span class="attr">amount</span>: n</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">decrease</span>(<span class="params">n</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="variable constant_">DECREASE</span>,</span><br><span class="line">    <span class="attr">amount</span>: n</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">fetchData</span>(<span class="params">item</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">dispatch</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> sql = <span class="string">`SELECT * FROM qeeniao.user limit 0,10`</span>;</span><br><span class="line">      $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">        <span class="attr">url</span>: <span class="string">&#x27;/proxy/admin/query&#x27;</span>,</span><br><span class="line">        <span class="attr">dataType</span>: <span class="string">&#x27;json&#x27;</span>,</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>: &#123;</span><br><span class="line">          <span class="attr">access_token</span>: token,</span><br><span class="line">          <span class="attr">sql</span>: sql</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">beforeSend</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="title function_">resolve</span>(<span class="title function_">dispatch</span>(<span class="title function_">requestData</span>(item)));</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">success</span>: <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="title function_">resolve</span>(<span class="title function_">dispatch</span>(<span class="title function_">receiveData</span>(item, data)));</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">error</span>: <span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">log</span>(error.<span class="property">message</span>);</span><br><span class="line">          <span class="title function_">reject</span>(<span class="title function_">dispatch</span>(<span class="title function_">errorData</span>(item, error)));</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">errorData</span>(<span class="params">item, error</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="variable constant_">ERROR_DATA</span>,</span><br><span class="line">    <span class="attr">item</span>: item || [],</span><br><span class="line">    <span class="attr">error</span>: error</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">requestData</span>(<span class="params">item</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="variable constant_">REQUEST_DATA</span>,</span><br><span class="line">    <span class="attr">item</span>: item || []</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">receiveData</span>(<span class="params">item, data</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="variable constant_">RECEIVE_DATA</span>,</span><br><span class="line">    <span class="attr">item</span>: (item || []).<span class="title function_">concat</span>(data),</span><br><span class="line">    <span class="attr">data</span>: data</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">fetchItems</span>(<span class="params">item = []</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">dispatch, getState</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">dispatch</span>(<span class="title function_">fetchData</span>(item))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里又涉及到了contants，代码如下</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">INCREASE</span> = <span class="string">&#x27;INCREASE&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">DECREASE</span> = <span class="string">&#x27;DECREASE&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">FETCH_DATA</span> = <span class="string">&#x27;FETCH_DATA&#x27;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">RECEIVE_DATA</span> = <span class="string">&#x27;RECEIVE_DATA&#x27;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">REQUEST_DATA</span> = <span class="string">&#x27;REQUEST_DATA&#x27;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">ERROR_DATA</span> = <span class="string">&#x27;ERROR_DATA&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>到这里基本上一个简单的例子就出来了。让我们写个测试吧。</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> expect <span class="keyword">from</span> <span class="string">&#x27;expect&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; counter &#125; <span class="keyword">from</span> <span class="string">&#x27;../../app/js/reducers&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">TestUtils</span> <span class="keyword">from</span> <span class="string">&#x27;react-addons-test-utils&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Home</span> <span class="keyword">from</span> <span class="string">&#x27;../../app/js/components/test/Home&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Provider</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-redux&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; createStore, combineReducers &#125; <span class="keyword">from</span> <span class="string">&#x27;redux&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> reducer = <span class="title function_">combineReducers</span>(&#123;</span><br><span class="line">  counter</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">configureStore</span> = (<span class="params">initialState</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> store = <span class="title function_">createStore</span>(reducer, initialState);</span><br><span class="line">  <span class="keyword">return</span> store;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;Home components&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">before</span>(<span class="string">&#x27;render and locate element &#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">const</span> store = <span class="title function_">configureStore</span>(&#123;&#125;);</span><br><span class="line">    <span class="keyword">const</span> renderedComponent = <span class="title class_">TestUtils</span>.<span class="title function_">renderIntoDocument</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">Provider</span> <span class="attr">store</span>=<span class="string">&#123;store&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Home</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Provider</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> container = <span class="title class_">TestUtils</span>.<span class="title function_">findRenderedDOMComponentWithClass</span>(</span><br><span class="line">      renderedComponent,</span><br><span class="line">      <span class="string">&#x27;container&#x27;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> row = <span class="title class_">TestUtils</span>.<span class="title function_">findRenderedDOMComponentWithClass</span>(</span><br><span class="line">      renderedComponent,</span><br><span class="line">      <span class="string">&#x27;row&#x27;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> btnGroup = <span class="title class_">TestUtils</span>.<span class="title function_">findRenderedDOMComponentWithClass</span>(</span><br><span class="line">      renderedComponent,</span><br><span class="line">      <span class="string">&#x27;btn-group&#x27;</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">container</span> = container;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">row</span> = row;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">btnGroup</span> = btnGroup;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;container should exist&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">container</span>).<span class="title function_">toExist</span>();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;container class name should be container&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">container</span>.<span class="title function_">getAttribute</span>(<span class="string">&#x27;class&#x27;</span>)).<span class="title function_">toBe</span>(<span class="string">&#x27;container&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;row should exist&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">row</span>).<span class="title function_">toExist</span>();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;row class name should be row&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">row</span>.<span class="title function_">getAttribute</span>(<span class="string">&#x27;class&#x27;</span>)).<span class="title function_">toBe</span>(<span class="string">&#x27;row&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;btnGroup should exist&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">btnGroup</span>).<span class="title function_">toExist</span>();</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;btnGroup class name should be btn-group&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">btnGroup</span>.<span class="title function_">getAttribute</span>(<span class="string">&#x27;class&#x27;</span>)).<span class="title function_">toBe</span>(<span class="string">&#x27;btn-group&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>我去，又牵扯到了reducers了，代码如下：</p>
-<p>这里说下，我是把reducer做了一个目录的方式来调用。</p>
-<p>reducers</p>
-<p>–couner.js</p>
-<p>–index.js</p>
-<p>index.js的代码如下：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> counter <span class="keyword">from</span> <span class="string">&#x27;./counter&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;</span><br><span class="line">  counter</span><br><span class="line">&#125; ;</span><br></pre></td></tr></table></figure>
-
-<p>counter.js的代码如下：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="variable constant_">INCREASE</span>,</span><br><span class="line">  <span class="variable constant_">DECREASE</span>,</span><br><span class="line">  <span class="variable constant_">REQUEST_DATA</span>,</span><br><span class="line">  <span class="variable constant_">FETCH_DATA</span>,</span><br><span class="line">  <span class="variable constant_">RECEIVE_DATA</span>,</span><br><span class="line">  <span class="variable constant_">ERROR_DATA</span></span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;../constants&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> initialState = &#123;</span><br><span class="line">  <span class="attr">number</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">counter</span>(<span class="params">state = initialState, action</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.<span class="property">type</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">INCREASE</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span> + action.<span class="property">amount</span>,</span><br><span class="line">        <span class="attr">item</span>: state.<span class="property">item</span> || []</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">DECREASE</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span> - action.<span class="property">amount</span>,</span><br><span class="line">        <span class="attr">item</span>: state.<span class="property">item</span> || []</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">REQUEST_DATA</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span>,</span><br><span class="line">        <span class="attr">isFetching</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">item</span>: action.<span class="property">item</span> || []</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">FETCH_DATA</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span>,</span><br><span class="line">        <span class="attr">isFetching</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">item</span>: action.<span class="property">item</span> || []</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">ERROR_DATA</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span>,</span><br><span class="line">        <span class="attr">isFetching</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">item</span>: action.<span class="property">item</span> || [],</span><br><span class="line">        <span class="attr">error</span>: action.<span class="property">error</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">RECEIVE_DATA</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span>,</span><br><span class="line">        <span class="attr">isFetching</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">item</span>: action.<span class="property">item</span> || [],</span><br><span class="line">        <span class="attr">data</span>: action.<span class="property">data</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>好了，到这里，相关的一些配置可以在浏览下这篇文章：<span class="exturl" data-url="aHR0cDovL2dvd2hpY2guY29tL2Jsb2cvNzM0">React 0.14 mocha组件单元测试（一）<i class="fa fa-external-link-alt"></i></span>。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/ReactJS-0-14-mocha%E7%BB%84%E4%BB%B6%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B8%80.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/ReactJS-0-14-mocha%E7%BB%84%E4%BB%B6%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B8%80.html" class="post-title-link" itemprop="url">ReactJS 0.14 mocha组件单元测试（一）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-02 16:01:14 / 修改时间：16:07:51" itemprop="dateCreated datePublished" datetime="2025-07-02T16:01:14+08:00">2025-07-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>先来一个简单的小组件：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Bar</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#x27;bar&#x27;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h5</span>&gt;</span>And I am Bar!<span class="tag">&lt;/<span class="name">h5</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Bar</span>;</span><br></pre></td></tr></table></figure>
-
-<p>好了，到这里就足够了，来看看测试如何写：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> expect <span class="keyword">from</span> <span class="string">&#x27;expect&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">TestUtils</span> <span class="keyword">from</span> <span class="string">&#x27;react-addons-test-utils&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Bar</span> <span class="keyword">from</span> <span class="string">&#x27;../../app/js/components/test/Bar&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;Bar components&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">before</span>(<span class="string">&#x27;render and locate element &#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> renderedComponent = <span class="title class_">TestUtils</span>.<span class="title function_">renderIntoDocument</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">Bar</span>/&gt;</span></span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> bar = <span class="title class_">TestUtils</span>.<span class="title function_">findRenderedDOMComponentWithClass</span>(</span><br><span class="line">      renderedComponent,</span><br><span class="line">      <span class="string">&#x27;bar&#x27;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">bar</span> = bar;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;bar should exist&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">bar</span>).<span class="title function_">toExist</span>();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;bar should be closed&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">bar</span>.<span class="title function_">getAttribute</span>(<span class="string">&#x27;class&#x27;</span>)).<span class="title function_">toBe</span>(<span class="string">&#x27;bar&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>在运行前，做个简单的配置：</p>
-<p>package.json</p>
-<p>在scripts中添加</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;test&quot;</span><span class="punctuation">:</span> <span class="string">&quot;NODE_PATH=./app/js/lib ./node_modules/mocha/bin/mocha --compilers js:babel-register --recursive --require ./test/setup.js&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;test:watch&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npm test -- --watch&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>添加<code>NODE_PATH</code>的原因是我要加载自己的lib库，不然在执行mocha的时候，会因为某些组建中调用了自己的库，而导致找不到对一个恩lib而报错。</p>
-<p>这里还添加了一个setup.js,这个主要是为了解决类似window这类的问题，毕竟react渲染是需要dom的嘛。</p>
-<p>setup.js代码如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; jsdom &#125; <span class="keyword">from</span> <span class="string">&#x27;jsdom&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">global</span>.<span class="property">document</span> = <span class="title function_">jsdom</span>(<span class="string">&#x27;&lt;!doctype html&gt;&lt;html&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;&#x27;</span>)</span><br><span class="line"><span class="variable language_">global</span>.<span class="property">window</span> = <span class="variable language_">document</span>.<span class="property">defaultView</span></span><br><span class="line"><span class="variable language_">global</span>.<span class="property">navigator</span> = <span class="variable language_">global</span>.<span class="property">window</span>.<span class="property">navigator</span></span><br></pre></td></tr></table></figure>
-
-
 
       
     </div>

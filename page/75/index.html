@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">838</span>
+          <span class="site-state-item-count">840</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">152</span>
+        <span class="site-state-item-count">154</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,182 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/Mac-OS-X-%E7%9A%84%E5%AE%89%E5%85%A8%E7%9D%A1%E7%9C%A0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/11/Mac-OS-X-%E7%9A%84%E5%AE%89%E5%85%A8%E7%9D%A1%E7%9C%A0.html" class="post-title-link" itemprop="url">Mac OS X 的安全睡眠</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-11 13:53:52 / 修改时间：13:55:46" itemprop="dateCreated datePublished" datetime="2025-06-11T13:53:52+08:00">2025-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Mac OS X 默认是使用普通睡眠+安全睡眠（在 Windows 中称为休眠）。</p>
+<p>安全睡眠会在计算机进入睡眠状态时把内存（RAM）中的数据保存到硬盘上的「&#x2F;private&#x2F;var&#x2F;vm&#x2F;sleepimage」文件，然后计算机才进入普通睡眠。这样做的好处是如果计算机完全没电了，那原来内存中的内容还可以从硬盘上恢复。</p>
+<p>但这样也带来了不利之处，每当进入睡眠的时候都要写入内存容量大小的数据到硬盘上，这无疑延长了进入睡眠所需的时间（通常需要20秒-1分钟）；硬盘上还要使用内存容量大小的空间来存储睡眠文件，像笔者的 MacBook 有 4GB 的内存，那就要使用 4GB 的磁盘空间来存储睡眠文件，这对于磁盘空间比较紧张的笔记本用户来说就不太值得了。</p>
+<p>可使用如下的命令进行查看：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -lh /private/var/vm/</span><br></pre></td></tr></table></figure>
+
+<p>可以在「应用程序-实用程序-终端」中使用以下命令禁止安全睡眠：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> pmset -a hibernatemode 0</span><br><span class="line">$ <span class="built_in">sudo</span> nvram “use-nvramrc?”=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>以上设置需要在计算机重启后才能生效。生效后就可以使用下面的命令删除睡眠文件了：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> <span class="built_in">rm</span> -f /private/var/vm/sleepimage</span><br></pre></td></tr></table></figure>
+
+<p>如果需要恢复安全睡眠，可以使用下面的命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> pmset -a hibernatemode 3</span><br><span class="line">$ <span class="built_in">sudo</span> nvram “use-nvramrc?”=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>然后重启计算机即可。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%9A%84%E9%93%BE%E8%A1%A8%E6%93%8D%E4%BD%9C.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/11/%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%9A%84%E9%93%BE%E8%A1%A8%E6%93%8D%E4%BD%9C.html" class="post-title-link" itemprop="url">数据存储的链表操作</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-11 13:53:46 / 修改时间：13:54:29" itemprop="dateCreated datePublished" datetime="2025-06-11T13:53:46+08:00">2025-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>链表实现数据的存储，解决数组存储数据的不便利性</p>
+<p>实例代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* films2.c -- 使用结构链接表 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span>			<span class="comment">/* 提供malloc()原型 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span>			<span class="comment">/* 提供strcpy()原型 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TSIZE 45			<span class="comment">/* 存放片名的数组大小 */</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">film</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="type">char</span> title[TSIZE];</span><br><span class="line">	<span class="type">int</span> rating;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">film</span> *<span class="title">next</span>;</span>		<span class="comment">/* 指向链表的下一个结构 */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">film</span> *<span class="title">head</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">film</span> *<span class="title">prev</span>, *<span class="title">current</span>;</span></span><br><span class="line">	<span class="type">char</span> input[TSIZE];</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* 手机并存数信息 */</span></span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">&quot;Enter first movie title: &quot;</span>);</span><br><span class="line">	<span class="keyword">while</span>(gets(input) != <span class="literal">NULL</span> &amp;&amp; input[<span class="number">0</span>] != <span class="string">&#x27;\0&#x27;</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		current  = (<span class="keyword">struct</span> film *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> film));</span><br><span class="line">		<span class="keyword">if</span>(head == <span class="literal">NULL</span>)	<span class="comment">/* 第一个结构 */</span></span><br><span class="line">		&#123;</span><br><span class="line">			head = current;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span>				<span class="comment">/* 后续结构 */</span></span><br><span class="line">		&#123;</span><br><span class="line">			prev-&gt;next = current;</span><br><span class="line">		&#125;</span><br><span class="line">		current-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">		<span class="built_in">strcpy</span>(current-&gt;title, input);</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">&quot;Enter your rating &lt;0-10&gt;: &quot;</span>);</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;current-&gt;rating);</span><br><span class="line">		<span class="keyword">while</span>(getchar() != <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">&quot;Enter next movie title (empty line to stop)&quot;</span>);</span><br><span class="line">		prev = current;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* 给出电影的列表 */</span></span><br><span class="line">	<span class="keyword">if</span>(head == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;No data entered. &quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Here is the movie list :\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	current = head;</span><br><span class="line">	<span class="keyword">while</span>(current != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Movie: %s Rating: %d\n&quot;</span>,current-&gt;title,current-&gt;rating);</span><br><span class="line">		current = current-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/* 任务完成，因此释放所分配的内存 */</span></span><br><span class="line">	current = head;</span><br><span class="line">	<span class="keyword">while</span>(current != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">free</span>(current);</span><br><span class="line">		current = current-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Bye!\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1970,178 +2146,6 @@
 </tbody></table>
 <h3 id="2"><a href="#2" class="headerlink" title="取消图标上的高光"></a><a href="#2">取消图标上的高光</a></h3><p>系统会默认会在图标上自动加上半透明的高光半圆，如果我们不想要这个效果或者图标本身已经包含了这个高光效果，我们可以在项目配置里把系统的高光功能取消掉：<br><strong>xcode3.2x建的项目：</strong><br>在info plist里加一个配置项，key为“Icon already includes gloss and bevel effects”， 类型为bool，然后打上钩就，这样系统就不会自动加高光；<br><strong>xcode4建的项目：</strong><br>在项目target的summary标签页下找到App Icons项，在“Prerendered”打上钩<br>再找到“Icon files (iOS 5)”项目（如果有的话），展开，把里面的“Icon already includes gloss effects”也设置成“YES”：这样程序中的高光效果就取消了。</p>
 <h3 id="3"><a href="#3" class="headerlink" title="itunes connect上的图标"></a><a href="#3">itunes connect上的图标</a></h3><p>我们在itunes connect网站上创建应用时也要求上传图标，上传后 itunes connect也会给图标加上高光效果。这不用担心，如果我们的程序已经取消了高光效果，在程序上传后，网站上图标的高光效果也会自动取消掉的。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/iOS%E8%AE%BE%E7%BD%AE%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E5%90%8D%E7%A7%B0.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/11/iOS%E8%AE%BE%E7%BD%AE%E7%9C%9F%E6%9C%BA%E4%B8%8A%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E5%90%8D%E7%A7%B0.html" class="post-title-link" itemprop="url">iOS设置真机上的应用程序名称</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-11 11:09:37 / 修改时间：11:10:16" itemprop="dateCreated datePublished" datetime="2025-06-11T11:09:37+08:00">2025-06-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>iOS设置真机上的应用程序名称：</p>
-<p>步骤如下:</p>
-<p>在工程文件下面的XXXX-Info.plist，修改 Bundle display name即可</p>
-<p>哈哈，好简单</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/iOS-iPad-iPhone%E7%A8%8B%E5%BA%8F%E5%A2%9E%E5%8A%A0%E5%90%AF%E5%8A%A8%E7%94%BB%E9%9D%A2.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/11/iOS-iPad-iPhone%E7%A8%8B%E5%BA%8F%E5%A2%9E%E5%8A%A0%E5%90%AF%E5%8A%A8%E7%94%BB%E9%9D%A2.html" class="post-title-link" itemprop="url">iOS iPad iPhone程序增加启动画面</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-06-11 11:07:03" itemprop="dateCreated datePublished" datetime="2025-06-11T11:07:03+08:00">2025-06-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-16 14:01:31" itemprop="dateModified" datetime="2025-06-16T14:01:31+08:00">2025-06-16</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>为iPad和iPhone程序增加启动画面非常简单，基本思路就是增加启动图片资源Default.png即可，只是要根据不同的分辨率和旋转方向需要有不同的图片尺寸。</p>
-<p>目前的iOS设备有三种不同的分辨率：</p>
-<p><strong>iPad 768x1024</strong><br><strong>iPhone4 640x960</strong><br><strong>iPhone 320x480</strong><br>如果一个程序，既要支持iPad又要支持iPhone，那么它需要包含下面几个图片：</p>
-<p><strong>Default-Portrait.png iPad专用竖向启动画面 768x1024或者768x1004</strong><br><strong>Default-Landscape.png iPad专用横向启动画面 1024x768或者1024x748</strong><br><strong>Default-PortraitUpsideDown.png iPad专用竖向启动画面(Home按钮在屏幕上面)，可省略 768x1024或者768x1004</strong><br><strong>Default-LandscapeLeft.png iPad专用横向启动画面(可省略), 1024x768或者1024x748</strong><br><strong>Default-LandscapeRight.png iPad专用横向启动画面(可省略), 1024x768或者1024x748</strong><br><strong>Default.png iPhone默认启动图片，如果没有提供上面几个iPad专用启动图片，则在iPad上运行时也使用Default.png（不推荐） 320x480或者320x460</strong><br><strong>Default@2x.png iPhone4启动图片640x960或者640x920</strong><br>为了在iPad上使用上述的启动画面，你还需要在<code>xxxx_info.plist</code>中加入key(根据下拉菜单中的可选项选择):</p>
-<p><strong>UISupportedInterfaceOrientations</strong> 或 <strong>Supported interface orientations</strong><br>同时，为其加入值(根据下拉菜单中的可选项选择):</p>
-<p><strong>UIInterfaceOrientationPortrait 或 Portrait (bottom home button)</strong><br><strong>UIInterfacOrientationPortraitUpsideDown 或 Portrait (top home button)</strong><br><strong>UIInterfaceOrientationLandscapeLeft 或 Landscape (left home button)</strong><br><strong>UIInterfaceOrientationLandscapeRight 或 Landscape (right home button)</strong></p>
 
       
     </div>

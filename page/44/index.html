@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">838</span>
+          <span class="site-state-item-count">840</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">152</span>
+        <span class="site-state-item-count">154</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,258 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/24/MySQL-Insert%E7%9A%84%E5%87%A0%E7%82%B9%E6%93%8D%E4%BD%9C-DELAYED--IGNORE-ON-DUPLICATE-KEY-UPDATE.html" class="post-title-link" itemprop="url">MySQL Insert的几点操作(DELAYED 、IGNORE、ON DUPLICATE KEY UPDATE )</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-24 11:24:31 / 修改时间：11:50:17" itemprop="dateCreated datePublished" datetime="2025-06-24T11:24:31+08:00">2025-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>INSERT语法</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> [LOW_PRIORITY <span class="operator">|</span> DELAYED <span class="operator">|</span> HIGH_PRIORITY] [IGNORE]</span><br><span class="line">       [<span class="keyword">INTO</span>] tbl_name [(col_name,...)]</span><br><span class="line">       <span class="keyword">VALUES</span> (&#123;expr <span class="operator">|</span> <span class="keyword">DEFAULT</span>&#125;,...),(...),...</span><br><span class="line">       [ <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> col_name<span class="operator">=</span>expr, ... ]</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> [LOW_PRIORITY <span class="operator">|</span> DELAYED <span class="operator">|</span> HIGH_PRIORITY] [IGNORE]</span><br><span class="line">       [<span class="keyword">INTO</span>] tbl_name</span><br><span class="line">       <span class="keyword">SET</span> col_name<span class="operator">=</span>&#123;expr <span class="operator">|</span> <span class="keyword">DEFAULT</span>&#125;, ...</span><br><span class="line">       [ <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> col_name<span class="operator">=</span>expr, ... ]</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> [LOW_PRIORITY <span class="operator">|</span> HIGH_PRIORITY] [IGNORE]</span><br><span class="line">       [<span class="keyword">INTO</span>] tbl_name [(col_name,...)]</span><br><span class="line">       <span class="keyword">SELECT</span> ...</span><br><span class="line">       [ <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> col_name<span class="operator">=</span>expr, ... ]</span><br></pre></td></tr></table></figure>
+
+<h2 id="1"><a href="#1" class="headerlink" title="一、DELAYED 的使用"></a><a href="#1">一、DELAYED 的使用</a></h2><p>使用延迟插入操作</p>
+<p>DELAYED调节符应用于INSERT和REPLACE语句。当DELAYED插入操作到达的时候，</p>
+<p>服务器把数据行放入一个队列中，并立即给客户端返回一个状态信息，这样客户</p>
+<p>端就可以在数据表被真正地插入记录之前继续进行操作了。如果读取者从该数据</p>
+<p>表中读取数据，队列中的数据就会被保持着，直到没有读取者为止。接着服务器</p>
+<p>开始插入延迟数据行（delayed-row）队列中的数据行。在插入操作的同时，服务器</p>
+<p>还要检查是否有新的读取请求到达和等待。如果有，延迟数据行队列就被挂起，</p>
+<p>允许读取者继续操作。当没有读取者的时候，服务器再次开始插入延迟的数据行。</p>
+<p>这个过程一直进行，直到队列空了为止。</p>
+<p>几点要注意事项：</p>
+<p>INSERT DELAYED应该仅用于指定值清单的INSERT语句。服务器忽略用于INSERT DELAYED…SELECT语句的DELAYED。</p>
+<p>服务器忽略用于INSERT DELAYED…ON DUPLICATE UPDATE语句的DELAYED。</p>
+<p>因为在行被插入前，语句立刻返回，所以您不能使用LAST_INSERT_ID()来获取AUTO_INCREMENT值。AUTO_INCREMENT值可能由语句生成。</p>
+<p>对于SELECT语句，DELAYED行不可见，直到这些行确实被插入了为止。</p>
+<p>DELAYED在从属复制服务器中被忽略了，因为DELAYED不会在从属服务器中产生与主服务器不一样的数据。</p>
+<p>注意，目前在队列中的各行只保存在存储器中，直到它们被插入到表中为止。这意味着，如果您强行中止了mysqld（例如，使用kill -9）</p>
+<p>或者如果mysqld意外停止，则所有没有被写入磁盘的行都会丢失。</p>
+<h2 id="2"><a href="#2" class="headerlink" title="二、IGNORE的使用"></a><a href="#2">二、IGNORE的使用</a></h2><p>IGNORE是MySQL相对于标准SQL的扩展。如果在新表中有重复关键字，</p>
+<p>或者当STRICT模式启动后出现警告，则使用IGNORE控制ALTER TABLE的运行。</p>
+<p>如果没有指定IGNORE，当重复关键字错误发生时，复制操作被放弃，返回前一步骤。</p>
+<p>如果指定了IGNORE，则对于有重复关键字的行，只使用第一行，其它有冲突的行被删除。</p>
+<p>并且，对错误值进行修正，使之尽量接近正确值。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> ignore <span class="keyword">into</span> tb(...) <span class="keyword">value</span>(...)</span><br></pre></td></tr></table></figure>
+
+<p>这样不用校验是否存在了，有则忽略，无则添加</p>
+<h2 id="3"><a href="#3" class="headerlink" title="三、ON DUPLICATE KEY UPDATE的使用"></a><a href="#3">三、ON DUPLICATE KEY UPDATE的使用</a></h2><p>如果您指定了ON DUPLICATE KEY UPDATE，并且插入行后会导致在一个UNIQUE索引或PRIMARY KEY中出现重复值，则执行旧行UPDATE。例如，如果列a被定义为UNIQUE，并且包含值1，则以下两个语句具有相同的效果：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT INTO</span> <span class="keyword">table</span> (a,b,c) <span class="keyword">VALUES</span> (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> c<span class="operator">=</span>c<span class="operator">+</span><span class="number">1</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">UPDATE</span> <span class="keyword">table</span> <span class="keyword">SET</span> c<span class="operator">=</span>c<span class="operator">+</span><span class="number">1</span> <span class="keyword">WHERE</span> a<span class="operator">=</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果行作为新记录被插入，则受影响行的值为1；</p>
+<p>如果原有的记录被更新，则受影响行的值为2。</p>
+<p>注释：如果列b也是唯一列，则INSERT与此UPDATE语句相当：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">UPDATE</span> <span class="keyword">table</span> <span class="keyword">SET</span> c<span class="operator">=</span>c<span class="operator">+</span><span class="number">1</span> <span class="keyword">WHERE</span> a<span class="operator">=</span><span class="number">1</span> <span class="keyword">OR</span> b<span class="operator">=</span><span class="number">2</span> LIMIT <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果a&#x3D;1 OR b&#x3D;2与多个行向匹配，则只有一个行被更新。通常，您应该尽量避免对带有多个唯一关键字的表使用ON DUPLICATE KEY子句。</p>
+<p>您可以在UPDATE子句中使用VALUES(col_name)函数从INSERT…UPDATE语句的INSERT部分引用列值。换句话说，如果没有发生重复关键字冲突，则UPDATE子句中的VALUES(col_name)可以引用被插入的col_name的值。本函数特别适用于多行插入。VALUES()函数只在INSERT…UPDATE语句中有意义，其它时候会返回NULL。</p>
+<p>示例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT INTO</span> <span class="keyword">table</span> (a,b,c) <span class="keyword">VALUES</span> (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>),(<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>)</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> c<span class="operator">=</span><span class="keyword">VALUES</span>(a)<span class="operator">+</span><span class="keyword">VALUES</span>(b);</span><br></pre></td></tr></table></figure>
+
+<p>本语句与以下两个语句作用相同：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT INTO</span> <span class="keyword">table</span> (a,b,c) <span class="keyword">VALUES</span> (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> c<span class="operator">=</span><span class="number">3</span>;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">INSERT INTO</span> <span class="keyword">table</span> (a,b,c) <span class="keyword">VALUES</span> (<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>)</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> <span class="keyword">ON</span> DUPLICATE KEY <span class="keyword">UPDATE</span> c<span class="operator">=</span><span class="number">9</span>;</span><br></pre></td></tr></table></figure>
+
+<p>当您使用ON DUPLICATE KEY UPDATE时，DELAYED选项被忽略。</p>
+<p>总结：</p>
+<p><em><strong>DELAYED</strong></em>做为快速插入，并不是很关心失效性，提高插入性能。</p>
+<p><em><strong>IGNORE</strong></em>只关注主键对应记录是不存在，无则添加，有则忽略。</p>
+<p><em><strong>ON DUPLICATE KEY UPDATE</strong></em> 在添加时操作，关注非主键列，注意与ignore的区别。有则更新指定列，无则添加。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/24/%E5%88%9D%E8%AF%95-asp-net-Mac%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%BC%80%E5%8F%91-web%E5%BA%94%E7%94%A8%E7%A4%BA%E4%BE%8B.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/24/%E5%88%9D%E8%AF%95-asp-net-Mac%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%BC%80%E5%8F%91-web%E5%BA%94%E7%94%A8%E7%A4%BA%E4%BE%8B.html" class="post-title-link" itemprop="url">初试 ASP.NET Mac环境下开发 web应用示例</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-24 11:24:27 / 修改时间：11:30:52" itemprop="dateCreated datePublished" datetime="2025-06-24T11:24:27+08:00">2025-06-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>一、环境的搭建</p>
+<p>开发工具的下载：<span class="exturl" data-url="aHR0cDovL3d3dy5nby1tb25vLmNvbS9tb25vLWRvd25sb2Fkcy9kb3dubG9hZC5odG1s">Mono<i class="fa fa-external-link-alt"></i></span></p>
+<p>我下载的时候名称好像不对，但是网络上说的是这个我列一下自己下载的文件吧</p>
+<p><span class="exturl" data-url="aHR0cDovL2Rvd25sb2FkLnhhbWFyaW4uY29tL3N0dWRpby9NYWMvWGFtYXJpblN0dWRpby00LjAuMTItMy5kbWc=">XamarinStudio-4.0.12-3.dmg<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL2Rvd25sb2FkLm1vbm8tcHJvamVjdC5jb20vYXJjaGl2ZS8zLjIuMy9tYWNvcy0xMC14ODYvTW9ub0ZyYW1ld29yay1NUkUtMy4yLjMubWFjb3MxMC54YW1hcmluLng4Ni5wa2c=">Mono MRE installer<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL2Rvd25sb2FkLm1vbm8tcHJvamVjdC5jb20vYXJjaGl2ZS8zLjIuMy9tYWNvcy0xMC14ODYvTW9ub0ZyYW1ld29yay1NREstMy4yLjMubWFjb3MxMC54YW1hcmluLng4Ni5wa2c=">Mono MDK installer<i class="fa fa-external-link-alt"></i></span></p>
+<p>这是文件下载完后，直接安装就好了。</p>
+<p>二、项目的创建</p>
+<p>启动XamarinStudio,开始创建项目，如下图</p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1555323992/gowhich/406_1.png"></p>
+<p>写上项目的名称，然后确定</p>
+<p>接下来是创建Controller和View</p>
+<p>创建Controller是这样的，请看下图</p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1555324086/gowhich/406_2.png"></p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1555324086/gowhich/406_3.png"></p>
+<p>创建View是这样的，如下图，右击键Views目录，创建一个Home目录，然后在Home目录创建一个Index.aspx文件</p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1555324181/gowhich/406_4.png"></p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1555324181/gowhich/406_5.png"></p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1555324252/gowhich/406_6.png"></p>
+<p>最后的结构目录如下图：</p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1555324252/gowhich/406_7.png"></p>
+<p>HomeController文件的内容如下：</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> System.Web;</span><br><span class="line"><span class="keyword">using</span> System.Web.Mvc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">HelloWorld.Controllers</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">HomeController</span> : <span class="title">Controller</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> ActionResult <span class="title">Index</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> View (<span class="string">&quot;Index&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Index.aspx文件的内容如下:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ Page Language=&quot;C#&quot; Inherits=&quot;System.Web.Mvc.ViewPage&quot; %&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://www.w3.org/1999/xhtml&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span> <span class="attr">runat</span>=<span class="string">&quot;server&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">        hello world</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>三、直接运行</p>
+<p>点击运行按钮</p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1555324413/gowhich/406_8.png"></p>
+<p>查看服务启动运行的端口（如下图）：</p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1555324413/gowhich/406_9.png"></p>
+<p>浏览器访问就可以了。</p>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9sZW9vMnNrL2FyY2hpdmUvMjAwOC8xMS8wMS8xMzI0MTY4Lmh0bWw=">ASP.NET MVC案例教程（基于ASP.NET MVC beta）——第三篇：ASP.NET MVC全局观<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9jbmJsb2dzZmFucy9hcmNoaXZlLzIwMTEvMDkvMDEvMjE2MjIyNy5odG1s">ASP.NET MVC3实战系列（一）：简单示例<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL2RldmVsb3Blci41MWN0by5jb20vZGV2ZWxvcGVyL2FzcGRvdG5ldC8=">ASP.NET视频教程<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL2Nhcm9saHN1LmdpdGh1Yi5pby9ibG9nLzIwMTIvMDgvMTgvYXNwLWRvdC1uZXQtZGV2ZWxvcG1lbnQtb24tbWFjLWRlLWthaS1mYS1odWFuLWppbmcteHVhbi16ZS8=">ASP.net Development on Mac 的開發環境選擇<i class="fa fa-external-link-alt"></i></span></p>
+<p>以上文章内容更新于 2019年4月15日 ， 其实版本已过期，当日重新试了一下发现会提示mcs的问题</p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1555324413/gowhich/406_8.png"></p>
+<p>建议使用新的版本及新的mono</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1140,211 +1392,6 @@
 <p>输出：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(＜<span class="built_in">type</span> <span class="string">&#x27;exceptions.UnboundLocalError&#x27;</span>＞, UnboundLocalError(<span class="string">&quot;local </span></span><br><span class="line"><span class="string">variable &#x27;b&#x27; referenced before assignment&quot;</span>,),</span><br><span class="line">＜traceback object at 0x00D243F0＞)</span><br><span class="line">＜<span class="built_in">type</span> <span class="string">&#x27;exceptions.UnboundLocalError&#x27;</span>＞</span><br><span class="line"><span class="built_in">local</span> variable <span class="string">&#x27;b&#x27;</span> referenced before assignment</span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/%E6%9F%A5%E7%9C%8BPython%E5%BA%93%E7%9A%84%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/%E6%9F%A5%E7%9C%8BPython%E5%BA%93%E7%9A%84%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95.html" class="post-title-link" itemprop="url">查看Python库的安装目录</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-23 16:27:01 / 修改时间：16:31:57" itemprop="dateCreated datePublished" datetime="2025-06-23T16:27:01+08:00">2025-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>查看python中库的位置，其实就是几个命里行的方法</p>
-<p>我这里的方法是：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">davidzhang@192:/Library$ python</span><br><span class="line">Python 2.7.2 (default, Oct 11 2012, 20:14:37) </span><br><span class="line">[GCC 4.2.1 Compatible Apple Clang 4.0 (tags/Apple/clang-418.0.60)] on darwin</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line">&gt;&gt;&gt; import ftplib</span><br><span class="line">&gt;&gt;&gt; reload(ftplib)</span><br><span class="line">&lt;module <span class="string">&#x27;ftplib&#x27;</span> from <span class="string">&#x27;/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/ftplib.py&#x27;</span>&gt;</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/paramiko%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/paramiko%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">paramiko的安装与使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-23 16:26:58 / 修改时间：17:15:59" itemprop="dateCreated datePublished" datetime="2025-06-23T16:26:58+08:00">2025-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="简介"></a><a href="#1">简介</a></h3><p>paramiko是用python语言写的一个模块，遵循SSH2协议，支持以加密和认证的方式，进行远程服务器的连接。</p>
-<p>由于使用的是python这样的能够跨平台运行的语言，所以所有python支持的平台，如Linux, Solaris, BSD, MacOS X, Windows等，paramiko都可以支持，因此，如果需要使用SSH从一个平台连接到另外一个平台，进行一系列的操作时，paramiko是最佳工具之一。</p>
-<p>举个常见的例子，现有这样的需求：需要使用windows客户端，远程连接到Linux服务器，查看上面的日志状态，大家通常使用的方法会是：</p>
-<p>1：用telnet</p>
-<p>2：用PUTTY</p>
-<p>3：用WinSCP</p>
-<p>4：用XManager等…</p>
-<p>那现在如果需求又增加一条，要从服务器上下载文件，该怎么办？那常用的办法可能会是：</p>
-<p>1：Linux上安装FTP并配置</p>
-<p>2：Linux上安装Sambe并配置…</p>
-<p>大家会发现，常见的解决方法都会需要对远程服务器必要的配置，如果远程服务器只有一两台还好说，如果有N台，还需要逐台进行配置，或者需要使用代码进行以上操作时，上面的办法就不太方便了。</p>
-<p>使用paramiko可以很好的解决以上问题，比起前面的方法，它仅需要在本地上安装相应的软件（python以及PyCrypto），对远程服务器没有配置要求，对于连接多台服务器，进行复杂的连接操作特别有帮助。</p>
-<h3 id="2"><a href="#2" class="headerlink" title="安装和使用"></a><a href="#2">安装和使用</a></h3><p>1、PyCrypto模块的安装（安装paramiko需要有PyCrypto的支持）</p>
-<p>a、下载地址：<span class="exturl" data-url="aHR0cHM6Ly93d3cuZGxpdHoubmV0L3NvZnR3YXJlL3B5Y3J5cHRvLw==">https://www.dlitz.net/software/pycrypto/<i class="fa fa-external-link-alt"></i></span></p>
-<p>b、解压：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf ./pycrypto-2.6.tar.gz</span><br></pre></td></tr></table></figure>
-
-<p>c、安装：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> pycrypto-2.6/</span><br><span class="line"><span class="built_in">sudo</span> python ./setup.py install</span><br></pre></td></tr></table></figure>
-
-<p>2、paramiko模块的安装</p>
-<p>a、下载地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3poYW5nZGE4OS9wYXJhbWlrby9ibG9iL21hc3Rlci9wYXJhbWlrby9jbGllbnQucHk=">https://github.com/zhangda89/paramiko/blob/master/paramiko/client.py<i class="fa fa-external-link-alt"></i></span></p>
-<p>b、解压：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip ./python-paramiko.zip</span><br></pre></td></tr></table></figure>
-
-<p>c、安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> paramiko-master/</span><br><span class="line"><span class="built_in">sudo</span> python setup.py install</span><br></pre></td></tr></table></figure>
-
-<p>3、运行任意命令，然后进行结果输出</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python </span></span><br><span class="line"><span class="keyword">import</span> paramiko</span><br><span class="line"> </span><br><span class="line">ssh = paramiko.SSHClient()</span><br><span class="line">ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())</span><br><span class="line">ssh.connect(<span class="string">&quot;某IP地址&quot;</span>,<span class="number">22</span>,<span class="string">&quot;用户名&quot;</span>, <span class="string">&quot;口令&quot;</span>)</span><br><span class="line">stdin, stdout, stderr = ssh.exec_command(<span class="string">&quot;你的命令&quot;</span>)</span><br><span class="line"><span class="built_in">print</span> stdout.readlines()</span><br><span class="line">ssh.close()</span><br></pre></td></tr></table></figure>
-
-<p>其中的”你的命令”可以任意linux支持的命令，如一些常用的命令：</p>
-<p>df：查看磁盘使用情况<br>uptime：显示系统运行时间信息<br>cat：显示某文件内容<br>mv&#x2F;cp&#x2F;mkdir&#x2F;rmdir:对文件或目录进行操作<br>&#x2F;sbin&#x2F;service&#x2F; xxxservice start&#x2F;stop&#x2F;restart：启动、停止、重启某服务<br>netstat -ntl |grep 8080：查看8080端口的使用情况<br> 或者 nc -zv localhost ：查看所有端口的使用情况<br>find &#x2F; -name XXX：查找某文件</p>
-<p>4、下载文件</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python </span></span><br><span class="line"><span class="keyword">import</span> paramiko</span><br><span class="line"></span><br><span class="line">t = paramiko.Transport((<span class="string">&quot;主机&quot;</span>,<span class="string">&quot;端口&quot;</span>))</span><br><span class="line">t.connect(username = <span class="string">&quot;用户名&quot;</span>, password = <span class="string">&quot;口令&quot;</span>)</span><br><span class="line">sftp = paramiko.SFTPClient.from_transport(t)</span><br><span class="line">remotepath=<span class="string">&#x27;/var/log/system.log&#x27;</span></span><br><span class="line">localpath=<span class="string">&#x27;/tmp/system.log&#x27;</span></span><br><span class="line">sftp.get(remotepath, localpath)</span><br><span class="line">t.close()</span><br></pre></td></tr></table></figure>
-
-<p>5、上传文件</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python </span></span><br><span class="line"><span class="keyword">import</span> paramiko</span><br><span class="line"></span><br><span class="line">t = paramiko.Transport((<span class="string">&quot;主机&quot;</span>,<span class="string">&quot;端口&quot;</span>))</span><br><span class="line">t.connect(username = <span class="string">&quot;用户名&quot;</span>, password = <span class="string">&quot;口令&quot;</span>)</span><br><span class="line">sftp = paramiko.SFTPClient.from_transport(t)</span><br><span class="line">remotepath=<span class="string">&#x27;/var/log/system.log&#x27;</span></span><br><span class="line">localpath=<span class="string">&#x27;/tmp/system.log&#x27;</span></span><br><span class="line">sftp.put(localpath,remotepath)</span><br><span class="line">t.close()</span><br></pre></td></tr></table></figure>
-
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9nYW5uYW4vYXJjaGl2ZS8yMDEyLzAyLzA2LzIzMzk4ODMuaHRtbA==">paramiko的安装与使用<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3dhbmd3ZWkwMDcuYmxvZy41MWN0by5jb20vNjgwMTkvMTI4NTQxMg==">python用paramiko模块上传本地目录到远程目录<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovLzV5ZHljbS5ibG9nLjUxY3RvLmNvbS8xMTU5MzQvMzQwODU0Lw==">paramiko ssh sftp<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL2VuZ2luZWVyaW5nLm1vbmV0YXRlLmNvbS8yMDEyLzAzLzIzL3B5dGhvbi1zY3JpcHRzLWZvci1kb3dubG9hZGluZy1maWxlcy12aWEtc2Z0cC8=">Python Scripts for Downloading Files via SFTP<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jb2RlcjQuY29tL2FyY2hpdmVzLzMyODA=">Python中操控ssh和sftp<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>

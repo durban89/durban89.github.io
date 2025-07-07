@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">838</span>
+          <span class="site-state-item-count">840</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">152</span>
+        <span class="site-state-item-count">154</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,217 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-UITextView-%E9%80%80%E5%87%BA%E9%94%AE%E7%9B%98%E7%9A%84%E6%96%B9%E5%BC%8F.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS7-UITextView-%E9%80%80%E5%87%BA%E9%94%AE%E7%9B%98%E7%9A%84%E6%96%B9%E5%BC%8F.html" class="post-title-link" itemprop="url">iOS7 UITextView 退出键盘的方式</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 11:45:03 / 修改时间：11:51:29" itemprop="dateCreated datePublished" datetime="2025-06-26T11:45:03+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>关于UITextView 退出键盘的方式，google后找到了几个比较好的方法。</p>
+<p>第一种方法：程序是有导航条的，可以在导航条上面加多一个Done的按钮，用来退出键盘，当然要先实UITextViewDelegate。代码如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)textViewDidBeginEditing:(<span class="built_in">UITextView</span> *)textView &#123;</span><br><span class="line">   <span class="built_in">UIBarButtonItem</span> *done =    [[[<span class="built_in">UIBarButtonItem</span> alloc] initWithBarButtonSystemItem:<span class="built_in">UIBarButtonSystemItemDone</span> target:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(leaveEditMode)] autorelease];</span><br><span class="line">   <span class="keyword">self</span>.navigationItem.rightBarButtonItem = done;    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)textViewDidEndEditing:(<span class="built_in">UITextView</span> *)textView &#123;</span><br><span class="line">    <span class="keyword">self</span>.navigationItem.rightBarButtonItem = <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)leaveEditMode &#123;</span><br><span class="line">    [<span class="keyword">self</span>.textView resignFirstResponder];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二种方法：如果UITextview里不用回车键，可以把回车键当做退出键盘的响应键。代码如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - UITextView Delegate Methods</span></span><br><span class="line">-(<span class="type">BOOL</span>)textView:(<span class="built_in">UITextView</span> *)textView shouldChangeTextInRange:(<span class="built_in">NSRange</span>)range replacementText:(<span class="built_in">NSString</span> *)text</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([text isEqualToString:<span class="string">@&quot;\n&quot;</span>]) &#123;</span><br><span class="line">        [textView resignFirstResponder];</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第三种方法：在弹出的键盘上面加一个view来放置退出键盘的Done按钮。代码如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> profileX = x + hInterval;</span><br><span class="line"><span class="built_in">CGFloat</span> profileY = y + areaLabel.frame.size.height + areaLabel.frame.origin.y + <span class="number">10.0</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> profileWidth = width - <span class="number">2</span> * hInterval;</span><br><span class="line"><span class="built_in">CGFloat</span> profileHeight = <span class="number">200.0</span>;</span><br><span class="line"><span class="built_in">UITextView</span> *profile = [[<span class="built_in">UITextView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(profileX,</span><br><span class="line">                                                                   profileY,</span><br><span class="line">                                                                   profileWidth,</span><br><span class="line">                                                                   profileHeight)];</span><br><span class="line"></span><br><span class="line">profile.text = <span class="string">@&quot;请输入简介信息&quot;</span>;</span><br><span class="line">[profile.layer setBorderColor:[[<span class="built_in">UIColor</span> lightGrayColor] <span class="built_in">CGColor</span>]];</span><br><span class="line">[profile.layer setBorderWidth:<span class="number">1.0</span>];</span><br><span class="line">[profile.layer setCornerRadius:<span class="number">1.0</span>];</span><br><span class="line">profile.editable = <span class="literal">YES</span>;</span><br><span class="line">profile.delegate = <span class="keyword">self</span>;</span><br><span class="line">[_scrollView addSubview:profile];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">UIToolbar</span> * topView = [[<span class="built_in">UIToolbar</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">320.0</span>, <span class="number">30.0</span>)];</span><br><span class="line">[topView setBarStyle:<span class="built_in">UIBarStyleDefault</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIBarButtonItem</span> * btnSpace = [[<span class="built_in">UIBarButtonItem</span> alloc] initWithBarButtonSystemItem:<span class="built_in">UIBarButtonSystemItemFlexibleSpace</span></span><br><span class="line">                                                                           target:<span class="keyword">self</span></span><br><span class="line">                                                                           action:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIBarButtonItem</span> * completeButton = [[<span class="built_in">UIBarButtonItem</span> alloc] initWithTitle:<span class="string">@&quot;完成&quot;</span></span><br><span class="line">                                                                    style:<span class="built_in">UIBarButtonItemStyleDone</span></span><br><span class="line">                                                                   target:<span class="keyword">self</span></span><br><span class="line">                                                                   action:<span class="keyword">@selector</span>(dismissKeyBoard)];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSArray</span> * buttonsArray = [<span class="built_in">NSArray</span> arrayWithObjects:btnSpace,completeButton,<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">[topView setItems:buttonsArray];</span><br><span class="line">[profile setInputAccessoryView:topView];</span><br></pre></td></tr></table></figure>
+
+<p>隐藏键盘的方法：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)dismissKeyBoard</span><br><span class="line">&#123;</span><br><span class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] sendAction:<span class="keyword">@selector</span>(resignFirstResponder)</span><br><span class="line">                                               to:<span class="literal">nil</span></span><br><span class="line">                                             from:<span class="literal">nil</span></span><br><span class="line">                                         forEvent:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以试试吧。</p>
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQva3lsaW5ibC9hcnRpY2xlL2RldGFpbHMvNjY5NDg5Nw==">http://blog.csdn.net/kylinbl/article/details/6694897<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Objective-C-KVO%E7%9A%84%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0%E5%92%8C%E7%A4%BA%E4%BE%8B.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/Objective-C-KVO%E7%9A%84%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0%E5%92%8C%E7%A4%BA%E4%BE%8B.html" class="post-title-link" itemprop="url">Objective-C KVO的简单概述和示例</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 11:45:00 / 修改时间：11:52:49" itemprop="dateCreated datePublished" datetime="2025-06-26T11:45:00+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>KVO（Key Value Observing）是Cocoa的一个重要机制，他提供了观察某一属性变化的方法，极大的简化了代码。这种观察－被观察模型适用于这样的情况，比方说根据A（数 据类）的某个属性值变化，B（view类）中的某个属性做出相应变化。对于推崇MVC的cocoa而言，kvo应用的地方非常广泛。（这样的机制听起来类 似Notification，但是notification是需要一个发送notification的对象，一般是 notificationCenter，来通知观察者。而kvo是直接通知到观察对象。）</p>
+<p>when use KVO，it usually follows below：</p>
+<p>1 注册：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)addObserver:(NSObject *)anObserver forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void*)context</span><br></pre></td></tr></table></figure>
+
+<p>keyPath就是要观察的属性值，options给你观察键值变化的选择，而context方便传输你需要的数据（注意这是一个void型）</p>
+<p>2 实现变化方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object</span><br><span class="line">change:(NSDictionary *)change context:(void*)context</span><br></pre></td></tr></table></figure>
+
+<p>change里存储了一些变化的数据，比如变化前的数据，变化后的数据；如果注册时context不为空，这里context就能接收到。</p>
+<p>是不是很简单？kvo的逻辑非常清晰，实现步骤简单。</p>
+<p>说了这么多，大家都要跃跃欲试了吧。可是，在此之前，我们还需要了解KVC机制。看看这篇文章的使用-<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy81MDk=">Object-C KVC的简单概述和示例<i class="fa fa-external-link-alt"></i></span></p>
+<hr>
+<p>演示一个实例看看：</p>
+<p>创建两个类Child和Nurse</p>
+<p>Child.h</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  Child.h</span><br><span class="line">//  KVODemo</span><br><span class="line">//</span><br><span class="line">//  Created by Durban on 13-12-19.</span><br><span class="line">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">@interface Child : NSObject</span><br><span class="line"></span><br><span class="line">@property (nonatomic,assign) NSInteger happyVal;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>Child.m</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  Child.m</span><br><span class="line">//  KVODemo</span><br><span class="line">//</span><br><span class="line">//  Created by Durban on 13-12-19.</span><br><span class="line">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &quot;Child.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation Child</span><br><span class="line"></span><br><span class="line">-(id) init</span><br><span class="line">&#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if(self != nil)</span><br><span class="line">    &#123;</span><br><span class="line">        _happyVal = 100;</span><br><span class="line">        [NSTimer scheduledTimerWithTimeInterval:1</span><br><span class="line">                                         target:self</span><br><span class="line">                                       selector:@selector(timerAction:)</span><br><span class="line">                                       userInfo:nil</span><br><span class="line">                                        repeats:YES];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void) timerAction:(NSTimer *)timer</span><br><span class="line">&#123;</span><br><span class="line">    self.happyVal--;//必须使用点语法</span><br><span class="line">    //第二种语法</span><br><span class="line">//    _happyVal--;</span><br><span class="line">//    [self setValue:[NSNumber numberWithInteger:_happyVal] forKey:@&quot;happyVal&quot;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>Nurse.h</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  Nurse.h</span><br><span class="line">//  KVODemo</span><br><span class="line">//</span><br><span class="line">//  Created by Durban on 13-12-19.</span><br><span class="line">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">@class Child;</span><br><span class="line">@interface Nurse : NSObject</span><br><span class="line"></span><br><span class="line">@property (nonatomic, retain) Child *child;</span><br><span class="line">-(id) initWithChild:(Child *)child;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<p>Nurse.m</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  Nurse.m</span><br><span class="line">//  KVODemo</span><br><span class="line">//</span><br><span class="line">//  Created by Durban on 13-12-19.</span><br><span class="line">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &quot;Nurse.h&quot;</span><br><span class="line">#import &quot;Child.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation Nurse</span><br><span class="line">@synthesize child = _child;</span><br><span class="line"></span><br><span class="line">-(id) initWithChild:(Child *)child</span><br><span class="line">&#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if(self != nil)</span><br><span class="line">    &#123;</span><br><span class="line">        _child = child;</span><br><span class="line">        [_child addObserver:self</span><br><span class="line">                 forKeyPath:@&quot;happyVal&quot;</span><br><span class="line">                    options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld</span><br><span class="line">                    context:@&quot;xx&quot;];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context</span><br><span class="line">&#123;</span><br><span class="line">    NSLog(@&quot;change = %@&quot;,change);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>测试实现过程如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  main.m</span><br><span class="line">//  KVODemo</span><br><span class="line">//</span><br><span class="line">//  Created by Durban on 13-12-19.</span><br><span class="line">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &quot;Child.h&quot;</span><br><span class="line">#import &quot;Nurse.h&quot;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[])</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        Child *child = [[Child alloc] init];</span><br><span class="line">        Nurse *nurse = [[Nurse alloc] initWithChild:child];</span><br><span class="line">        [[NSRunLoop currentRunLoop] run];</span><br><span class="line">        // insert code here...</span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">2013-12-19 10:58:58.364 KVODemo[36662:303] change = &#123;</span><br><span class="line">    kind = 1;</span><br><span class="line">    new = 99;</span><br><span class="line">    old = 100;</span><br><span class="line">&#125;</span><br><span class="line">2013-12-19 10:58:59.359 KVODemo[36662:303] change = &#123;</span><br><span class="line">    kind = 1;</span><br><span class="line">    new = 98;</span><br><span class="line">    old = 99;</span><br><span class="line">&#125;</span><br><span class="line">2013-12-19 10:59:00.359 KVODemo[36662:303] change = &#123;</span><br><span class="line">    kind = 1;</span><br><span class="line">    new = 97;</span><br><span class="line">    old = 98;</span><br><span class="line">&#125;</span><br><span class="line">2013-12-19 10:59:01.358 KVODemo[36662:303] change = &#123;</span><br><span class="line">    kind = 1;</span><br><span class="line">    new = 96;</span><br><span class="line">    old = 97;</span><br><span class="line">&#125;</span><br><span class="line">Program ended with <span class="built_in">exit</span> code: 9</span><br></pre></td></tr></table></figure>
+
+<p>如果得到如上的结果，说明使用是正确的</p>
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2Vpd2FuZ2NoYW9fL2FydGljbGUvZGV0YWlscy83NDU0OTY4">http://blog.csdn.net/weiwangchao_/article/details/7454968<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1023,205 +1234,6 @@
 <hr>
 <p>参考文章:</p>
 <p><span class="exturl" data-url="aHR0cDovL2Jicy5waHBjaGluYS5jb20vaG9tZS5waHA/bW9kPXNwYWNlJnVpZD0zOTUwJmRvPWJsb2cmaWQ9NDg5MzQ=">http://bbs.phpchina.com/home.php?mod=space&amp;uid=3950&amp;do=blog&amp;id=48934<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E6%80%8E%E6%A0%B7%E5%88%A4%E6%96%ADios-app-%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%90%AF%E5%8A%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E6%80%8E%E6%A0%B7%E5%88%A4%E6%96%ADios-app-%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%90%AF%E5%8A%A8.html" class="post-title-link" itemprop="url">iOS7 怎样判断ios app 第一次启动</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:15:56 / 修改时间：11:25:06" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:56+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于第一次启动iOS APP的宣传画面的制作中的判断，判断第一次启动，判断是否是第一次启动。关于这个我查找了相关资料，进行了google资料搜索。</p>
-<hr>
-<p>一个有用的例子是发送一个分析实例。这可能是一个很好的方法来确定有多少人下载实用应用程序。有人会说：“但是，嘿，苹果AppStore已经告诉我，应用程序的下载量了”。</p>
-<p>流行的解决方案是在大多数地方是用[NSUserDefaults standardUserDefaults的一个关键，如果它不存在，这意味着这是应用程序启动，否则，它不是第一次。</p>
-<p>你可以搜索的关键，如果它未设置运行 first-time-code，并设置它，但在app的其余部分你将无法知道它是不是第一次运行（除非你使用一个全局变量）</p>
-<p>因此，我建议我的解决方案：</p>
-<p>在appdelegate.m中找到 “<code>application:didFinishLaunchingWithOptions:</code>”方法, 添加以下代码:</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (![[<span class="built_in">NSUserDefaults</span> standardUserDefaults] boolForKey:<span class="string">@&quot;everLaunched&quot;</span>]) </span><br><span class="line">&#123;  </span><br><span class="line">    [[<span class="built_in">NSUserDefaults</span> standardUserDefaults] setBool:<span class="literal">YES</span> forKey:<span class="string">@&quot;everLaunched&quot;</span>];  </span><br><span class="line">    [[<span class="built_in">NSUserDefaults</span> standardUserDefaults] setBool:<span class="literal">YES</span> forKey:<span class="string">@&quot;firstLaunch&quot;</span>];  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;  </span><br><span class="line">    [[<span class="built_in">NSUserDefaults</span> standardUserDefaults] setBool:<span class="literal">NO</span> forKey:<span class="string">@&quot;firstLaunch&quot;</span>];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>总的解决办法是 2 个key: @”everLaunched”判断用户以前是否登录,</p>
-<p>@”firstLaunch” 用来开发者在程序的其他部分判断.</p>
-<p>在第一次启动的时候 key @”everLaunched” 不会被赋址的, 并且设置为YES. @”firstLaunch”被设置为 YES.</p>
-<p>在程序的其他部分用以下代码判断:</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([[<span class="built_in">NSUserDefaults</span> standardUserDefaults] boolForKey:<span class="string">@&quot;firstLaunch&quot;</span>]) </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="comment">// 这里判断是否第一次  </span></span><br><span class="line">    <span class="built_in">UIAlertView</span> *alert=[[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@&quot;第一次&quot;</span>   </span><br><span class="line">                                                  message:<span class="string">@&quot;进入App&quot;</span>  </span><br><span class="line">                                                 delegate:<span class="keyword">self</span>   </span><br><span class="line">                                        cancelButtonTitle:<span class="string">@&quot;我知道了&quot;</span>   </span><br><span class="line">                                        otherButtonTitles:<span class="literal">nil</span>];  </span><br><span class="line">    [alert show];  </span><br><span class="line">    [alert release];  </span><br><span class="line">      </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQva3lsaW5ibC9hcnRpY2xlL2RldGFpbHMvODYzODk4OA==">http://blog.csdn.net/kylinbl/article/details/8638988<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-NSNotificationCenter%E7%9A%84%E4%BD%9C%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-NSNotificationCenter%E7%9A%84%E4%BD%9C%E7%94%A8.html" class="post-title-link" itemprop="url">iOS7 NSNotificationCenter的作用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:15:52 / 修改时间：11:26:04" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:52+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于NSNotificationCenter的使用，之前一直想使用一下，结果今天就真的使用上了。</p>
-<blockquote>
-<p>NSNotificationCenter有什么作用，简单说之，就是两个不相干的对象之间可以通过他来传递消息，只要你把相关发送的消息和处理的事件在他那里注册就行了。</p>
-<p>我们可以这样理解：NSNotificationCenter就是一个信息中心，有很多用户已经声明他们需要这些信息。当有信息更新的时候，通过这个NSNotificationCenter就可以以广播的形式，将信息更新的消息在整个应用程序中间广播，对于那些注册消息侦听的用户就可以受到该消息，没有注册的用户就无法接收该消息。</p>
-</blockquote>
-<p>使用方法如下：</p>
-<p>第一步：定义一个方法，当注册信息侦听的对象，接受到消息后就调用该函数作为消息相应的函数</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)update:(<span class="built_in">NSNotificationCenter</span>*)notification</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> addHeadImage];</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span></span><br><span class="line">                                                    name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                  object:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二步：对象注册，并关连消息。实质上也就是注册事件的侦听，可以单独调用，也可以放在自己的函数内部进行调用。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                             selector:<span class="keyword">@selector</span>(update:)</span><br><span class="line">                                                 name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                               object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
-
-<p>在函数中进行调用</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) sinaLogin:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                             selector:<span class="keyword">@selector</span>(update:)</span><br><span class="line">                                                 name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                               object:<span class="literal">nil</span>];</span><br><span class="line">    </span><br><span class="line">    WBAuthorizeRequest *request = [WBAuthorizeRequest request];</span><br><span class="line">    request.redirectURI = kRedirectURI;</span><br><span class="line">    request.scope = <span class="string">@&quot;all&quot;</span>;</span><br><span class="line">    [WeiboSDK sendRequest:request];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第三步：在要发出通知消息的地方调用。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] postNotificationName:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                            object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
-
-<p>第四步：使用完后，别忘了注销掉该消息的侦听函数</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span></span><br><span class="line">                                                    name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                  object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
-
-<p>其实这里我是放在了我的调用函数里面，如果你觉的你的函数在调用完之后不去注销，也可以去掉的，然后在其他的地方进行注销。</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2p6c3AvYXJ0aWNsZS9kZXRhaWxzLzY3Nzc3MDA=">http://blog.csdn.net/sjzsp/article/details/6777700<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>

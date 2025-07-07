@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">838</span>
+          <span class="site-state-item-count">840</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">152</span>
+        <span class="site-state-item-count">154</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -233,6 +233,207 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E9%80%9A%E8%BF%87-fs.createWriteStream-%E4%BF%9D%E5%AD%98%E6%96%87%E4%BB%B6.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Nodejs-%E9%80%9A%E8%BF%87-fs.createWriteStream-%E4%BF%9D%E5%AD%98%E6%96%87%E4%BB%B6.html" class="post-title-link" itemprop="url">Nodejs 通过 fs.createWriteStream 保存文件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 17:37:21 / 修改时间：17:43:23" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:21+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>工作中难免会遇到处理大文件的时候，有这种stream的处理方式，就不需要一次处理太大的文件，从而导致内存不够用，或者内存占用太多。</p>
+<p>fs.createWriteStream 似乎不会自己创建不存在的文件夹，所以在使用之前需要注意，保存文件的文件夹一定要提前创建。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="string">&#x27;/xxxxxx/ddd/&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!fs.<span class="title function_">existsSync</span>(path)) &#123;</span><br><span class="line">  fs.<span class="title function_">mkdirSync</span>(path);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建完文件夹，我们就可以进行文件添加操作了。我们希望在使用文件添加操作的时候是通过saveFile(filePath, fileData);这样的方式来调用。</p>
+<p>这里我采用了Promise的方式，个人比较喜欢这样的方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * [saveFileWithStream description]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  &#123;<span class="type">String</span>&#125; filePath [文件路径]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  &#123;<span class="type">Buffer</span>&#125; readData [Buffer 数据]</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="title function_">saveFile</span>(<span class="params">filePath, fileData</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 块方式写入文件</span></span><br><span class="line">    <span class="keyword">const</span> wstream = fs.<span class="title function_">createWriteStream</span>(filePath);</span><br><span class="line"></span><br><span class="line">    wstream.<span class="title function_">on</span>(<span class="string">&#x27;open&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> blockSize = <span class="number">128</span>;</span><br><span class="line">      <span class="keyword">const</span> nbBlocks = <span class="title class_">Math</span>.<span class="title function_">ceil</span>(fileData.<span class="property">length</span> / (blockSize));</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; nbBlocks; i += <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> currentBlock = fileData.<span class="title function_">slice</span>(</span><br><span class="line">          blockSize * i,</span><br><span class="line">          <span class="title class_">Math</span>.<span class="title function_">min</span>(blockSize * (i + <span class="number">1</span>), fileData.<span class="property">length</span>),</span><br><span class="line">        );</span><br><span class="line">        wstream.<span class="title function_">write</span>(currentBlock);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      wstream.<span class="title function_">end</span>();</span><br><span class="line">    &#125;);</span><br><span class="line">    wstream.<span class="title function_">on</span>(<span class="string">&#x27;error&#x27;</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="title function_">reject</span>(err); &#125;);</span><br><span class="line">    wstream.<span class="title function_">on</span>(<span class="string">&#x27;finish&#x27;</span>, <span class="function">() =&gt;</span> &#123; <span class="title function_">resolve</span>(<span class="literal">true</span>); &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际调用的时候，如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">saveFileWithStream</span>(filePath, fileData); <span class="comment">// 这里的fileData是Buffer类型</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err.<span class="property">stack</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/NodeJs-%E7%89%88%E6%9C%AC8.5-%E4%BD%93%E9%AA%8Cexperimental-modules.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/NodeJs-%E7%89%88%E6%9C%AC8.5-%E4%BD%93%E9%AA%8Cexperimental-modules.html" class="post-title-link" itemprop="url">NodeJs 版本8.5 体验experimental-modules</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 17:37:10 / 修改时间：17:56:52" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:10+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近NodeJs 版本 8.5 已经支持了 ESM module，感觉之前的babel编译可以放弃不用了，不过这个只是一个实验性的，具体稳定与否，是否可以上生产环境，还是需要测试一段时间的。</p>
+<p>体验环境搭建：</p>
+<p>NodeJs: v8.5.0</p>
+<p>依赖包：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;dependencies&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;axios&quot;</span>: <span class="string">&quot;^0.16.2&quot;</span>,</span><br><span class="line">  <span class="string">&quot;koa&quot;</span>: <span class="string">&quot;^2.3.0&quot;</span>,</span><br><span class="line">  <span class="string">&quot;koa-router&quot;</span>: <span class="string">&quot;^7.2.1&quot;</span>,</span><br><span class="line">  <span class="string">&quot;koa-views&quot;</span>: <span class="string">&quot;^6.1.0&quot;</span>,</span><br><span class="line">  <span class="string">&quot;twig&quot;</span>: <span class="string">&quot;^1.10.5&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里使用的是koajs，大家可以使用下express</p>
+<p>模块引入不在需要require了，哈哈，感觉不一样的体验</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> koa <span class="keyword">from</span> <span class="string">&#x27;koa&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> koaRouter <span class="keyword">from</span> <span class="string">&#x27;koa-router&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">&#x27;axios&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> views <span class="keyword">from</span> <span class="string">&#x27;koa-views&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> path <span class="keyword">from</span> <span class="string">&#x27;path&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>像这样是不是感觉，瓦萨，还不错</p>
+<p>继续看下面的配置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.<span class="title function_">use</span>(<span class="title function_">views</span>(path.<span class="title function_">resolve</span>() + <span class="string">&#x27;/views&#x27;</span>, &#123;</span><br><span class="line">  <span class="attr">map</span>: &#123;</span><br><span class="line">    <span class="attr">html</span>: <span class="string">&#x27;twig&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">extension</span>: <span class="string">&#x27;twig&#x27;</span>,</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+
+<p>对于web开发，推荐koa-views,可以支持很多模板，想用哪个就用哪个</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">viewsTest</span> = <span class="keyword">async</span> (<span class="params">ctx, next</span>) =&gt; &#123;</span><br><span class="line">  ctx.<span class="property">state</span> = &#123;</span><br><span class="line">    <span class="attr">title</span>: <span class="string">&#x27;viewsTest&#x27;</span>,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">await</span> ctx.<span class="title function_">render</span>(<span class="string">&#x27;views_test&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">title</span>: <span class="string">&#x27;viewsTest&#x27;</span>,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/views&#x27;</span>, viewsTest);</span><br><span class="line"></span><br><span class="line">app</span><br><span class="line">  .<span class="title function_">use</span>(router.<span class="title function_">routes</span>())</span><br><span class="line">  .<span class="title function_">use</span>(router.<span class="title function_">allowedMethods</span>());</span><br><span class="line"></span><br><span class="line">app.<span class="title function_">listen</span>(<span class="number">8888</span>);</span><br></pre></td></tr></table></figure>
+
+<p>好了，我的index.mjs创建完成，注意这里的index文件是以mjs结尾的 ，不然稍后运行的话是不会执行的。</p>
+<p>view_test.twig模板其实很简单，为了测试简单加下就好了。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>&#123;&#123; title &#125;&#125;<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">&#123;&#123; title &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>目录结果也给大家演示下</p>
+<p>|-index.mjs</p>
+<p>|-node_modules</p>
+<p>|-package.json</p>
+<p>|-package-lock.json</p>
+<p>|-views</p>
+<p>  |-views_test.twig</p>
+<p>运行我们的程序</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node --experimental-modules index.mjs</span><br></pre></td></tr></table></figure>
+
+<p>出现下面的提示就是运行起来了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ node --experimental-modules index.mjs</span><br><span class="line">(node:6999) ExperimentalWarning: The ESM module loader is experimental.</span><br></pre></td></tr></table></figure>
+
+<p>感觉开发代码又便捷了很多呀。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -957,166 +1158,6 @@
 
 <p><strong>9，Easy User-land CSPRNG：  random_int and random_bytes.</strong></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$int</span> = <span class="title function_ invoke__">random_int</span>(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="variable">$int</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$bytes</span> = <span class="title function_ invoke__">random_bytes</span>(<span class="number">5</span>);</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">bin2hex</span>(<span class="variable">$bytes</span>));</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Laravel-%E4%B9%8B-Left-Join-%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/Laravel-%E4%B9%8B-Left-Join-%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">Laravel 之 Left Join 方法使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 17:10:21 / 修改时间：17:21:05" itemprop="dateCreated datePublished" datetime="2025-07-03T17:10:21+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>举例子如下：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$models</span> = <span class="built_in">static</span>::<span class="title function_ invoke__">where</span>(<span class="string">&#x27;user_id&#x27;</span>, <span class="variable">$userId</span>)-&gt;<span class="title function_ invoke__">leftJoin</span>(<span class="string">&#x27;product_gift&#x27;</span>, function (<span class="variable">$join</span>) &#123;</span><br><span class="line">    <span class="variable">$join</span>-&gt;<span class="title function_ invoke__">on</span>(<span class="string">&#x27;product_gift_exchange_order.prd_id&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;product_gift.prd_id&#x27;</span>);</span><br><span class="line">    <span class="variable">$join</span>-&gt;<span class="title function_ invoke__">on</span>(<span class="string">&#x27;product_gift_exchange_order.gift_code&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;product_gift.gift_code&#x27;</span>);</span><br><span class="line">&#125;)-&gt;<span class="title function_ invoke__">orderBy</span>(<span class="string">&#x27;product_gift_exchange_order.autokid&#x27;</span>, <span class="string">&#x27;DESC&#x27;</span>)-&gt;<span class="title function_ invoke__">get</span>([</span><br><span class="line">    <span class="string">&#x27;product_gift_exchange_order.autokid&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;product_gift_exchange_order.ctime&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;product_gift_exchange_order.exchange_amount&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;product_gift.gift_name&#x27;</span>,</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Sublime-text-3-%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB-%E6%94%AF%E6%8C%81retine%E5%B1%8F%E5%B9%95%E7%9A%84%E5%A4%96%E8%AE%BE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/Sublime-text-3-%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB-%E6%94%AF%E6%8C%81retine%E5%B1%8F%E5%B9%95%E7%9A%84%E5%A4%96%E8%AE%BE.html" class="post-title-link" itemprop="url">Sublime text 3 配置分享 - 支持retine屏幕的外设</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 16:50:24 / 修改时间：16:56:16" itemprop="dateCreated datePublished" datetime="2025-07-03T16:50:24+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>记录分享</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;always_show_minimap_viewport&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;bold_folder_labels&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;color_scheme&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Packages/Material Theme/schemes/Material-Theme.tmTheme&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;folder_exclude_patterns&quot;</span><span class="punctuation">:</span></span><br><span class="line">    <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;node_modules&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;font_face&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Source Code Pro For Powerline&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;font_options&quot;</span><span class="punctuation">:</span></span><br><span class="line">    <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;subpixel_antialias&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;font_size&quot;</span><span class="punctuation">:</span> <span class="number">16</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;ignored_packages&quot;</span><span class="punctuation">:</span></span><br><span class="line">    <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;Vintage&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;indent_guide_options&quot;</span><span class="punctuation">:</span></span><br><span class="line">    <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;draw_normal&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;draw_active&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;line_padding_bottom&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;line_padding_top&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_scrollbars&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_arrow_folders&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_big_fileicons&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_bold_tab&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_bright_scrollbars&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_bullet_tree_indicator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_compact_panel&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_compact_sidebar&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_contrast_mode&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_disable_fileicons&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_disable_folder_animation&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_disable_tree_indicator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_panel_separator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_small_statusbar&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_small_tab&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_tabs_autowidth&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_tabs_separator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_tree_headings&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;overlay_scroll_bars&quot;</span><span class="punctuation">:</span> <span class="string">&quot;enabled&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;theme&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Material-Theme.sublime-theme&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
