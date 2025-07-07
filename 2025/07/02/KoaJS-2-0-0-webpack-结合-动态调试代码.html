@@ -193,7 +193,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">818</span>
+          <span class="site-state-item-count">838</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">148</span>
+        <span class="site-state-item-count">152</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -308,12 +308,14 @@
 <p>从webpack-dev-server说起，我们使用webpack-dev-server是为了能够时时监控我们的代码改变，然后用它自己的socket-io去刷新我们的页面，实现了代码修改即页面重载，当然只是在开发环境。</p>
 <p>webpack-dev-server并没有多大的改变，只是将原来的一个proxy的操作去掉了，然后整合到koa的启动文件里面了。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">WebpackDevServer</span> = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-server&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.development&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> debug = <span class="built_in">require</span>(<span class="string">&#x27;debug&#x27;</span>);</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">WebpackDevServer</span>(<span class="title function_">webpack</span>(config), &#123;</span><br><span class="line">  <span class="attr">publicPath</span>: config.<span class="property">output</span>.<span class="property">publicPath</span>,</span><br><span class="line">  <span class="attr">hot</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">noInfo</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">historyApiFallback</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">stats</span>: &#123; <span class="attr">colors</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">  <span class="attr">headers</span>: &#123; <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>: <span class="string">&#x27;*&#x27;</span> &#125;</span><br><span class="line">&#125;).<span class="title function_">listen</span>(<span class="number">8080</span>, <span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="keyword">function</span>(<span class="params">err,result</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Webpack Listening at 127.0.0.1:8080&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
 <p>关于webpack的config文件的代码是不需要改变的，继续使用。</p>
 <p>下面就是在koa的启动文件里面加入启动需要的proxy处理。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//解析 开发环境 development</span></span><br><span class="line">app.<span class="title function_">use</span>(<span class="title function_">convert</span>(<span class="title function_">proxy</span>(&#123;</span><br><span class="line">  <span class="attr">host</span>:<span class="string">&#x27;http://127.0.0.1:8080/js&#x27;</span>,</span><br><span class="line">  <span class="attr">match</span>: <span class="regexp">/^\/js\//</span></span><br><span class="line">&#125;)));</span><br></pre></td></tr></table></figure>
+
 <p>就这么简单，这里使用了两个中间件：</p>
 <p>koa-proxy，koa-convert。</p>
-<p>解释一下好了，就是将访问的path中有带/js/部分的路径，进行重新proxy一下就好，这样就将文件转向到了webpack-dev-server这边的对应的文件了。相关的其他的问题可以参考我之前的几篇文章.</p>
+<p>解释一下好了，就是将访问的path中有带&#x2F;js&#x2F;部分的路径，进行重新proxy一下就好，这样就将文件转向到了webpack-dev-server这边的对应的文件了。相关的其他的问题可以参考我之前的几篇文章.</p>
 
     </div>
 

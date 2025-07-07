@@ -26,12 +26,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="目标：把NSDictionary对象转换成NSMutableDictionary对象，对象内容是字符串数组，需要实现完全复制（深复制）。 如果调用NSDictionary的mutableCopy方法，可以得到一个NSMutableDictionary对象，但这只是浅复制，如果我们修改NSDictionary中数组内的值(当然，数组必须是NSMutableArray），会发现，NSMutableDi">
+    <meta name="description" content="目标：把NSDictionary对象转换成NSMutableDictionary对象，对象内容是字符串数组，需要实现完全复制（深复制）。如果调用NSDictionary的mutableCopy方法，可以得到一个NSMutableDictionary对象，但这只是浅复制，如果我们修改NSDictionary中数组内的值(当然，数组必须是NSMutableArray），会发现，NSMutableDic">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="NSDictionary的深复制（使用category）">
 <meta property="og:url" content="https://blog.gowhich.com/2025/06/16/NSDictionary%E7%9A%84%E6%B7%B1%E5%A4%8D%E5%88%B6-%E4%BD%BF%E7%94%A8category.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="目标：把NSDictionary对象转换成NSMutableDictionary对象，对象内容是字符串数组，需要实现完全复制（深复制）。 如果调用NSDictionary的mutableCopy方法，可以得到一个NSMutableDictionary对象，但这只是浅复制，如果我们修改NSDictionary中数组内的值(当然，数组必须是NSMutableArray），会发现，NSMutableDi">
+<meta property="og:description" content="目标：把NSDictionary对象转换成NSMutableDictionary对象，对象内容是字符串数组，需要实现完全复制（深复制）。如果调用NSDictionary的mutableCopy方法，可以得到一个NSMutableDictionary对象，但这只是浅复制，如果我们修改NSDictionary中数组内的值(当然，数组必须是NSMutableArray），会发现，NSMutableDic">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-16T06:38:10.000Z">
 <meta property="article:modified_time" content="2025-06-16T07:12:59.842Z">
@@ -193,7 +193,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">818</span>
+          <span class="site-state-item-count">838</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">148</span>
+        <span class="site-state-item-count">152</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -303,15 +303,15 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>目标：把NSDictionary对象转换成NSMutableDictionary对象，对象内容是字符串数组，需要实现完全复制（深复制）。<br>
-如果调用NSDictionary的mutableCopy方法，可以得到一个NSMutableDictionary对象，但这只是浅复制，如果我们修改NSDictionary中数组内的值(当然，数组必须是NSMutableArray），会发现，NSMutableDictionary对象内数组的值也跟着更改了。我们需要增加一个mutableDeepCopy方法来实现深复制，在该方法中，循环复制每一个元素。<br>
-要实现这一功能，有两种方法，一是继承，二是使用category。category与继承的区别在于，使用category并不是新建一个类，而是在原类的基础上增加一些方法（使用的时候还是用原类名），这样，我们就不需要修改已经在其他源文件中写好的类名，只需要导入h头文件，再把复制方法修改成我们新增的方法即可。</p>
+    <div class="post-body" itemprop="articleBody"><p>目标：把NSDictionary对象转换成NSMutableDictionary对象，对象内容是字符串数组，需要实现完全复制（深复制）。<br>如果调用NSDictionary的mutableCopy方法，可以得到一个NSMutableDictionary对象，但这只是浅复制，如果我们修改NSDictionary中数组内的值(当然，数组必须是NSMutableArray），会发现，NSMutableDictionary对象内数组的值也跟着更改了。我们需要增加一个mutableDeepCopy方法来实现深复制，在该方法中，循环复制每一个元素。<br>要实现这一功能，有两种方法，一是继承，二是使用category。category与继承的区别在于，使用category并不是新建一个类，而是在原类的基础上增加一些方法（使用的时候还是用原类名），这样，我们就不需要修改已经在其他源文件中写好的类名，只需要导入h头文件，再把复制方法修改成我们新增的方法即可。</p>
 <p>一、新建Objective-C category文件，我这Category填MutableDeepCopy,Category on填NSDictionary,所以生成的文件是NSDictionary+MutableDeepCopy.h和NSDictionary+MutableDeepCopy.m,生成的文件名很容易理解。</p>
 <p>二、两文件源代码：</p>
 <p>NSDictionary+MutableDeepCopy.h</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;  </span></span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">NSDictionary</span> (<span class="title">MutableDeepCopy</span>)  </span></span><br><span class="line">-(<span class="built_in">NSMutableDictionary</span> *)mutableDeepCopy;  </span><br><span class="line"><span class="comment">//增加mutableDeepCopy方法  </span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
 <p>NSDictionary+MutableDeepCopy.m</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&quot;NSDictionary+MutableDeepCopy.h&quot;</span>  </span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">NSDictionary</span> (<span class="title">MutableDeepCopy</span>)  </span></span><br><span class="line">-(<span class="built_in">NSMutableDictionary</span> *)mutableDeepCopy  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="built_in">NSMutableDictionary</span> *dict=[[<span class="built_in">NSMutableDictionary</span> alloc] initWithCapacity:[<span class="keyword">self</span> count]];  </span><br><span class="line">    <span class="comment">//新建一个NSMutableDictionary对象，大小为原NSDictionary对象的大小  </span></span><br><span class="line">    <span class="built_in">NSArray</span> *keys=[<span class="keyword">self</span> allKeys];  </span><br><span class="line">    <span class="keyword">for</span>(<span class="type">id</span> key <span class="keyword">in</span> keys)  </span><br><span class="line">    &#123;<span class="comment">//循环读取复制每一个元素  </span></span><br><span class="line">        <span class="type">id</span> value=[<span class="keyword">self</span> objectForKey:key];  </span><br><span class="line">        <span class="type">id</span> copyValue;  </span><br><span class="line">        <span class="keyword">if</span> ([value respondsToSelector:<span class="keyword">@selector</span>(mutableDeepCopy)]) &#123;  </span><br><span class="line">            <span class="comment">//如果key对应的元素可以响应mutableDeepCopy方法(还是NSDictionary)，调用mutableDeepCopy方法复制  </span></span><br><span class="line">            copyValue=[value mutableDeepCopy];  </span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>([value respondsToSelector:<span class="keyword">@selector</span>(mutableCopy)])  </span><br><span class="line">        &#123;  </span><br><span class="line">            copyValue=[value mutableCopy];  </span><br><span class="line">        &#125;  </span><br><span class="line">        <span class="keyword">if</span>(copyValue==<span class="literal">nil</span>)  </span><br><span class="line">            copyValue=[value <span class="keyword">copy</span>];  </span><br><span class="line">        [dict setObject:copyValue forKey:key];  </span><br><span class="line">   </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> dict;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
 <p>这是一篇转自别人的文章，方法当然学习一下，关键的一点是，我们如何去添加方法到已经存在的类中，比如上面的例子，我们如何添加深度复制的方法到NSDictionary中。</p>
 <p>通过上面的例子我学习了。大家也学习了</p>
 <p>测试代码：</p>

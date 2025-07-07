@@ -26,12 +26,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="yii的relations里self::BELONGS_TO默认是用当前指定的键跟关联表的主键进行join，例如： Post 123return array(	&#x27;reply&#x27; &#x3D;&gt; array(self::BELONGS_TO, &#x27;BlogPostReply&#x27;, &#x27;postid&#x27;),); 默认生成的sql类似 on id &#x3D; pos">
+    <meta name="description" content="yii的relations里self::BELONGS_TO默认是用当前指定的键跟关联表的主键进行join，例如： Post 123return array(	&#x27;reply&#x27; &#x3D;&gt; array(self::BELONGS_TO, &#x27;BlogPostReply&#x27;, &#x27;postid&#x27;),);  默认生成的sql类似 on id &amp;#x3">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Yii relations 写法">
 <meta property="og:url" content="https://blog.gowhich.com/2025/06/20/Yii-relations-%E5%86%99%E6%B3%95.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="yii的relations里self::BELONGS_TO默认是用当前指定的键跟关联表的主键进行join，例如： Post 123return array(	&#x27;reply&#x27; &#x3D;&gt; array(self::BELONGS_TO, &#x27;BlogPostReply&#x27;, &#x27;postid&#x27;),); 默认生成的sql类似 on id &#x3D; pos">
+<meta property="og:description" content="yii的relations里self::BELONGS_TO默认是用当前指定的键跟关联表的主键进行join，例如： Post 123return array(	&#x27;reply&#x27; &#x3D;&gt; array(self::BELONGS_TO, &#x27;BlogPostReply&#x27;, &#x27;postid&#x27;),);  默认生成的sql类似 on id &amp;#x3">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-20T06:34:14.000Z">
 <meta property="article:modified_time" content="2025-06-20T06:39:39.180Z">
@@ -180,7 +180,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%85%B3%E7%B3%BB%E6%9F%A5%E8%AF%A2"><span class="nav-number">1.</span> <span class="nav-text">执行关系查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A5%E5%88%87%E5%AF%BC%E5%85%A5%E6%9F%A5%E8%AF%A2%E6%96%B9%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">急切导入查询方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E7%B3%BB%E6%9F%A5%E8%AF%A2%E9%80%89%E9%A1%B9"><span class="nav-number">3.</span> <span class="nav-text">关系查询选项</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1"><span class="nav-number">1.</span> <span class="nav-text">执行关系查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2"><span class="nav-number">2.</span> <span class="nav-text">急切导入查询方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3"><span class="nav-number">3.</span> <span class="nav-text">关系查询选项</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -195,7 +195,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">818</span>
+          <span class="site-state-item-count">838</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -206,7 +206,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">148</span>
+        <span class="site-state-item-count">152</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -308,37 +308,41 @@
     <div class="post-body" itemprop="articleBody"><p>yii的relations里<code>self::BELONGS_TO</code>默认是用当前指定的键跟关联表的主键进行join，例如：</p>
 <p>Post</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">array</span>(</span><br><span class="line">	<span class="string">&#x27;reply&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="built_in">self</span>::<span class="variable constant_">BELONGS_TO</span>, <span class="string">&#x27;BlogPostReply&#x27;</span>, <span class="string">&#x27;postid&#x27;</span>),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-<p>默认生成的sql类似 on id = postid，id是本表的主键，postid是表BookPostReply的一个字段(主键)</p>
-<p>但是需要生成 on BookPostReply.postid = t.postid</p>
+
+<p>默认生成的sql类似 on id &#x3D; postid，id是本表的主键，postid是表BookPostReply的一个字段(主键)</p>
+<p>但是需要生成 on BookPostReply.postid &#x3D; t.postid</p>
 <p>关联非主键字段</p>
 <p>方法一,改成如下：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">array</span>(</span><br><span class="line">	<span class="string">&#x27;reply&#x27;</span> =&gt; <span class="keyword">array</span>(<span class="built_in">self</span>::<span class="variable constant_">BELONGS_TO</span>, <span class="string">&#x27;BookPostReply&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;on&#x27;</span> =&gt; <span class="string">&#x27;t.postid=reply.postid&#x27;</span>),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
 <p>方法二：</p>
-<p>array(self::BELONGS_TO,‘对应的模型’,array(‘本模型的外键’=&gt;‘对应模型的主键’))</p>
+<p>array(self::BELONGS_TO,’对应的模型’,array(‘本模型的外键’&#x3D;&gt;’对应模型的主键’))</p>
 <p>这样也可以定义的，只要明确指定主键和对应表的外键就可以了。</p>
 <p>官方开发指南里是这样写的：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">array</span>(<span class="string">&#x27;fkc1&#x27;</span>=&gt;<span class="string">&#x27;pkc1&#x27;</span>,<span class="string">&#x27;fkc2&#x27;</span>=&gt;<span class="string">&#x27;pkc2&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
 <p>++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</p>
-<h3 id="执行关系查询"><a href="#1">执行关系查询</a></h3>
-<p>懒惰导入查询方法</p>
+<h3 id="1"><a href="#1" class="headerlink" title="执行关系查询"></a><a href="#1">执行关系查询</a></h3><p>懒惰导入查询方法</p>
 <p>最简单的方法就是为AR对象添加一个关联属性，</p>
 <p>例:</p>
-<p>// 获取PK为10的POST对象 $post=Post::model()-&gt;findByPk(10);</p>
-<p>// 获取这个POST的作者 $author=$post-&gt;author;</p>
+<p>&#x2F;&#x2F; 获取PK为10的POST对象 $post&#x3D;Post::model()-&gt;findByPk(10);</p>
+<p>&#x2F;&#x2F; 获取这个POST的作者 $author&#x3D;$post-&gt;author;</p>
 <p>如果没有关联的对象，那么将返回NULL或者一个空数组；BELONGS_TO和HAS_ONE结果为NULL，而HAS_MANY和MANY_MANY返回一个空数组。</p>
 <p>上面的这种“懒惰导入”方法使用起来非常方便，但是在一些场景下不是非常的效率，比如，如果我们想访问N个POST的作者的信息，使用这种懒惰导入的方法将会执行N个join查询；</p>
-<h3 id="急切导入查询方法"><a href="#2">急切导入查询方法</a></h3>
-<p>下面介绍是一种“急切导入”方法：在使用find和findAll时，使用with()方法，例：</p>
+<h3 id="2"><a href="#2" class="headerlink" title="急切导入查询方法"></a><a href="#2">急切导入查询方法</a></h3><p>下面介绍是一种“急切导入”方法：在使用find和findAll时，使用with()方法，例：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$posts</span>=<span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">with</span>(<span class="string">&#x27;author&#x27;</span>)-&gt;<span class="title function_ invoke__">findAll</span>()</span><br></pre></td></tr></table></figure>
+
 <p>这样就可以在一次查询时连同查询其他信息了；with方法可以接受多个关系：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$posts</span>=<span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">with</span>(<span class="string">&#x27;author&#x27;</span>,<span class="string">&#x27;categories&#x27;</span>)-&gt;<span class="title function_ invoke__">findAll</span>();</span><br></pre></td></tr></table></figure>
+
 <p>这样就可以将作者和类别的信息一并进行查询；同样，with还支持多重急切导入</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$posts</span>=<span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">with</span>( <span class="string">&#x27;author.profile&#x27;</span>, <span class="string">&#x27;author.posts&#x27;</span>, <span class="string">&#x27;categories&#x27;</span>)-&gt;<span class="title function_ invoke__">findAll</span>();</span><br></pre></td></tr></table></figure>
+
 <p>上面的代码不仅会返回autho和categories信息，还会返回作者的profile和posts信息</p>
 <p>这种“急切导入”方法也支持CDbCriteria::with，下面这两种实现方式效果一样：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$criteria</span>=<span class="keyword">new</span> <span class="title class_">CDbCriteria</span>; </span><br><span class="line"><span class="variable">$criteria</span>-&gt;with=<span class="keyword">array</span>( <span class="string">&#x27;author.profile&#x27;</span>, <span class="string">&#x27;author.posts&#x27;</span>, <span class="string">&#x27;categories&#x27;</span>, ); </span><br><span class="line"><span class="variable">$posts</span>=<span class="title class_">Post</span>::<span class="title function_ invoke__">model</span>()-&gt;<span class="title function_ invoke__">findAll</span>(<span class="variable">$criteria</span>); </span><br><span class="line"><span class="comment">//or $posts=Post::model()-&gt;findAll(array( &#x27;with&#x27;=&gt;array( &#x27;author.profile&#x27;, &#x27;author.posts&#x27;, &#x27;categories&#x27;,);</span></span><br></pre></td></tr></table></figure>
-<h3 id="关系查询选项"><a href="#3">关系查询选项</a></h3>
-<p>前面提过，在申明关系时可以添加额外的选项，这些选项都是一些key-value对，是用来定制关系查询的，总结如下：</p>
+
+<h3 id="3"><a href="#3" class="headerlink" title="关系查询选项"></a><a href="#3">关系查询选项</a></h3><p>前面提过，在申明关系时可以添加额外的选项，这些选项都是一些key-value对，是用来定制关系查询的，总结如下：</p>
 <p>select</p>
 <p>定义从AR类中被select的列集合，如果定义为*，则表示查询所有列</p>
 <p>condition</p>
@@ -370,6 +374,7 @@
 <p>offset结果数量的值，不适用于BELONG_TO关系</p>
 <p>下面代码，显示上面选项的一些使用：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">CActiveRecord</span> </span>&#123; </span><br><span class="line">	<span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">relations</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">array</span>( </span><br><span class="line">			<span class="string">&#x27;posts&#x27;</span>=&gt;<span class="keyword">array</span>(<span class="built_in">self</span>::<span class="variable constant_">HAS_MANY</span>, <span class="string">&#x27;Post&#x27;</span>, <span class="string">&#x27;author_id&#x27;</span>, <span class="string">&#x27;order&#x27;</span>=&gt;<span class="string">&#x27;posts.create_time DESC&#x27;</span>, <span class="string">&#x27;with&#x27;</span>=&gt;<span class="string">&#x27;categories&#x27;</span>), </span><br><span class="line">			<span class="string">&#x27;profile&#x27;</span>=&gt;<span class="keyword">array</span>(<span class="built_in">self</span>::<span class="variable constant_">HAS_ONE</span>, <span class="string">&#x27;Profile&#x27;</span>, <span class="string">&#x27;owner_id&#x27;</span>), </span><br><span class="line">		); </span><br><span class="line">	&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>此时，我们使用<code>$author-&gt;posts</code>时，会返回固定ORDER的POST信息</p>
 
     </div>

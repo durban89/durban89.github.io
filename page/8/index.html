@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">818</span>
+          <span class="site-state-item-count">838</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">148</span>
+        <span class="site-state-item-count">152</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/PHP-%E4%B9%8B-Composer-%E7%9A%84-NpmRepository%E9%94%99%E8%AF%AF.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/KoaJS-%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%BE%88%E7%AE%80%E5%8D%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/PHP-%E4%B9%8B-Composer-%E7%9A%84-NpmRepository%E9%94%99%E8%AF%AF.html" class="post-title-link" itemprop="url">PHP 之 Composer 的 NpmRepository错误</a>
+          <a href="/2025/07/03/KoaJS-%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%BE%88%E7%AE%80%E5%8D%95.html" class="post-title-link" itemprop="url">KoaJS 实现文件下载很简单</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 11:07:33 / 修改时间：11:38:18" itemprop="dateCreated datePublished" datetime="2025-07-03T11:07:33+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 11:58:13 / 修改时间：12:21:15" itemprop="dateCreated datePublished" datetime="2025-07-03T11:58:13+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,21 +294,520 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>最近进行了一次composer的update操作。<br>
-然后在我自己的项目里面运行了。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer install</span><br></pre></td></tr></table></figure>
-<p>的操作，结果出现了很多的错误以前从未见过。</p>
+          <p>Express框架下载文件的方法，我想已经有人已经知道了。</p>
+<p>这里说下Koajs的方法。</p>
+<p>首先设置Content-disposition</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> filename = <span class="string">&#x27;xxxx&#x27;</span>;</span><br><span class="line">ctx.<span class="title function_">set</span>(<span class="string">&#x27;Content-disposition&#x27;</span>, <span class="string">&#x27;attachment; filename=&#x27;</span> + filename + <span class="string">&#x27;.pdf&#x27;</span>);<span class="comment">//attachment</span></span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctx.<span class="title function_">set</span>(<span class="string">&#x27;Content-disposition&#x27;</span>, <span class="string">&#x27;inline; filename=&#x27;</span> + filename + <span class="string">&#x27;.pdf&#x27;</span>);<span class="comment">//inline</span></span><br></pre></td></tr></table></figure>
+
+<p>以上两种的区别是一个是attachment，意思就是附件，还有一种是inline，意思就是内附。区别就是attachment打开的时候可以下载文件，inline有时候可以下载，有时候可以直接浏览，好像跟浏览器有关。</p>
+<p>然后设置下文件类型</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctx.<span class="title function_">set</span>(<span class="string">&#x27;Content-type&#x27;</span>, <span class="string">&#x27;application/pdf&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>给body赋值，这里是一个Buffer。</p>
+<p>然后把文件内容读出来</p>
+<p><code>let gReadData = new Buffer();</code>&#x2F;&#x2F;这里自己根据自己的具体情况去实现就好了。</p>
+<p>在函数最后</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> ctx.<span class="property">body</span> = gReadData;</span><br></pre></td></tr></table></figure>
+
+<p>整体代码大概如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">downloadPdf</span> = <span class="title function_">async</span> (ctx,next) =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> filename = <span class="string">&#x27;xxxx&#x27;</span>;</span><br><span class="line">  ctx.<span class="title function_">set</span>(<span class="string">&#x27;Content-disposition&#x27;</span>, <span class="string">&#x27;attachment; filename=&#x27;</span> + filename + <span class="string">&#x27;.pdf&#x27;</span>);</span><br><span class="line">  ctx.<span class="title function_">set</span>(<span class="string">&#x27;Content-type&#x27;</span>, <span class="string">&#x27;application/pdf&#x27;</span>);</span><br><span class="line">  <span class="keyword">return</span> ctx.<span class="property">body</span> = gReadData;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Intellij-IDEA-java--constant-string-too-long.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Intellij-IDEA-java--constant-string-too-long.html" class="post-title-link" itemprop="url">Intellij IDEA java: constant string too long</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 11:58:09 / 修改时间：14:33:03" itemprop="dateCreated datePublished" datetime="2025-07-03T11:58:09+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Intellij IDEA,这个编辑器今天在做Base64转pdf的过程中遇到了奇怪的问题：“常量字符串太长”</p>
+<p>搜索问答思路：</p>
+<ol>
+<li><p>我搜索了soft wrap的配置，把他们都设为取消:没用;</p>
+</li>
+<li><p>Google问题，得到jetbrains答案：vim插件，卸载之，没用;</p>
+</li>
+<li><p>无奈之下，求助与熟练操作intellij idea的朋友，答曰“大概是jdk的问题“。摸索之，改之，无用;</p>
+</li>
+</ol>
+<p>最终的答案：</p>
+<p>最后修改了Java compiler下的Use compiler为Eclipse，成功。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Spark-Framework-JSON%E8%A7%A3%E6%9E%90.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Spark-Framework-JSON%E8%A7%A3%E6%9E%90.html" class="post-title-link" itemprop="url">Spark Framework JSON解析</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 11:08:35 / 修改时间：11:09:30" itemprop="dateCreated datePublished" datetime="2025-07-03T11:08:35+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>这里使用了com.alibaba.fastjson这个包</p>
+<p>maven【很不错的包管理器】安装方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;fastjson&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.2.12&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>使用方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;&#x2F;字符串转换为可使用的对象【Map】</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;<span class="comment">//这里就是一个json 字符串</span></span><br><span class="line">JSON.parseObject(str);</span><br><span class="line">HashMap&lt;String, String&gt; jsonMap = JSON.parseObject(str, <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, String&gt;().getClass());</span><br><span class="line"><span class="comment">//去除里面的值</span></span><br><span class="line"><span class="keyword">for</span>(String key : jsonMap.keySet()) &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> jsonMap.get(key);</span><br><span class="line">    System.out.println(key + <span class="string">&quot;:&quot;</span> + str);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//将 对象 【HashMap】转化为json 字符串</span></span><br><span class="line">HashMap&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">map.put(<span class="string">&quot;data&quot;</span>,<span class="string">&quot;data&quot;</span>);</span><br><span class="line">map.put(<span class="string">&quot;sign&quot;</span>,<span class="string">&quot;sign&quot;</span>);</span><br><span class="line"><span class="type">String</span> <span class="variable">jsonString</span> <span class="operator">=</span> JSON.toJSONString(map);</span><br></pre></td></tr></table></figure>
+
+<p>这里设置路由跟请求回调方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">get(<span class="string">&quot;/jsontest&quot;</span>, <span class="string">&quot;application/json&quot;</span>, (req, res) -&gt; &#123;</span><br><span class="line"><span class="comment">//实现结果的代码，比如上面生成的结果 jsonString</span></span><br><span class="line"><span class="comment">//return jsonString</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<p>&#x3D;&#x3D;Spark Framework - A tiny Java web framework&#x3D;&#x3D;</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Spark-Web-%E8%AF%B7%E6%B1%82api%E6%8E%A5%E5%8F%A3%E7%9A%84%E6%96%B9%E6%B3%95.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Spark-Web-%E8%AF%B7%E6%B1%82api%E6%8E%A5%E5%8F%A3%E7%9A%84%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">Spark Web 请求api接口的方法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 11:08:32 / 修改时间：11:10:09" itemprop="dateCreated datePublished" datetime="2025-07-03T11:08:32+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>这里使用了com.github.kevinsawicki.http这个包</p>
+<p>maven【很不错的包管理器】安装方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.github.kevinsawicki&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;http-request&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;6.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>使用方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.github.kevinsawicki.http.HttpRequest;</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;&#x2F;这里只演示post提交的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HttpRequest</span> <span class="variable">request</span> <span class="operator">=</span> HttpRequest.post(<span class="string">&quot;http://xxxx.xxxx.xxxx.xxxx:8895/xxxxxx/general2/xxxx/xxxxxx.html&quot;</span>);</span><br><span class="line">request.part(<span class="string">&quot;data&quot;</span>, <span class="string">&quot;data&quot;</span>);</span><br><span class="line">request.part(<span class="string">&quot;sign&quot;</span>, <span class="string">&quot;sign&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (request.ok()) &#123;</span><br><span class="line">    <span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> request.bufferedReader();</span><br><span class="line">    <span class="type">StringBuffer</span> <span class="variable">strBuffer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line">    String inputLine;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> ((inputLine = reader.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">            strBuffer.append(inputLine);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        System.out.println(e);</span><br><span class="line">    &#125;</span><br><span class="line">    reader.close();</span><br><span class="line">    <span class="comment">//到这里就把数据解出来了，针对于java，还是有点小麻烦，</span></span><br><span class="line">    HashMap&lt;String, String&gt; jsonMap = JSON.parseObject(strBuffer.toString(), <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;String, String&gt;().getClass());</span><br><span class="line">    System.out.println(jsonMap);</span><br><span class="line">    <span class="keyword">for</span> (String key : jsonMap.keySet()) &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> jsonMap.get(key);</span><br><span class="line">        System.out.println(key + <span class="string">&quot;:&quot;</span> + str);</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;Status was updated&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;&#x2F;好了到这里就可以了，说实话java是底层语言吧，是的，我们用的php是的估计都是人家用c封装好的了，直接一个curl就能得到结果了，你也可以用java写个curl，也不是啥问题</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<p>&#x3D;Spark Framework - A tiny Java web framework&#x3D;&#x3D;</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E5%A6%82%E4%BD%95%E6%A3%80%E6%B5%8Bjavascript%E7%9A%84%E5%8F%98%E9%87%8F%E6%98%AF-undefined-%E9%98%B2%E6%AD%A2%E7%BB%88%E6%AD%A2js%E8%BF%90%E8%A1%8C.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/%E5%A6%82%E4%BD%95%E6%A3%80%E6%B5%8Bjavascript%E7%9A%84%E5%8F%98%E9%87%8F%E6%98%AF-undefined-%E9%98%B2%E6%AD%A2%E7%BB%88%E6%AD%A2js%E8%BF%90%E8%A1%8C.html" class="post-title-link" itemprop="url">如何检测javascript的变量是 undefined，防止终止js运行</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 11:08:29 / 修改时间：11:10:38" itemprop="dateCreated datePublished" datetime="2025-07-03T11:08:29+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>为了防止未定义的变量，导致程序运行失败，需要我们判断下变量是否未undefined</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">typeof</span>(decryptData) != <span class="string">&quot;undefined&quot;</span> ? decryptData.<span class="property">payResult</span> : <span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里还是个对象的值，想想如果不是undefined，但是没有payResult的情况吧。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E5%A4%8F%E5%A4%A9%E9%A5%AE%E5%93%81%E5%BF%85%E5%A4%87.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/%E5%A4%8F%E5%A4%A9%E9%A5%AE%E5%93%81%E5%BF%85%E5%A4%87.html" class="post-title-link" itemprop="url">夏天饮品必备</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 11:08:26 / 修改时间：11:12:21" itemprop="dateCreated datePublished" datetime="2025-07-03T11:08:26+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9D%82%E8%B0%88/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>本人喜欢啤酒，特别喜欢北方啤酒，而且是我家乡的啤酒，嘿嘿。</p>
+<p>在南方几年了，还是一直不太喜欢苦涩的啤酒味道。</p>
+<p>最近了解了下黄啤酒黑啤酒的喝法，哈哈，嘴馋，嘴真馋。不说了下面见分享吧。</p>
+<h1 id="1"><a href="#1" class="headerlink" title="搭配术一：珊帝"></a><a href="#1">搭配术一：珊帝</a></h1><p>材料准备：</p>
 <blockquote>
-<p>Class Fxp\Composer\AssetPlugin\Repository\NpmRepository does not exist</p>
-<p>The “yiisoft/yii2-composer” plugin requires composer-plugin-api 1.0.0, this <em>WIL L</em> break in the future and it should be fixed ASAP (require ^1.0 for example).</p>
-<p>[ReflectionException] Class Fxp\Composer\AssetPlugin\Repository\NpmRepository does not exist</p>
-<p>[ErrorException]</p>
-<p>Declaration of Fxp\Composer\AssetPlugin\Repository\AbstractAssetsRepository::w hatProvides() should be compatible with Composer\Repository\ComposerRepository:: whatProvides(Composer\DependencyResolver\Pool $pool, $name, $bypassFilters = fal se)</p>
+<p>七喜饮料一罐</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNuL2dwL3Byb2R1Y3QvQjAxSE1PTko3Mj9pZT1VVEY4JmNhbXA9NTM2JmNyZWF0aXZlQVNJTj1CMDFITU9OSjcyJmxpbmtDb2RlPXhtMiZ0YWc9Z293aGljaC0yMw==" title="黄啤酒">黄啤酒<i class="fa fa-external-link-alt"></i></span>一瓶</p>
+<p>冰块一杯</p>
 </blockquote>
-<p>解决方案就是：更新你的 <code>fxp/composer-asset-plugin</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php composer.phar global update fxp/composer-asset-plugin --no-plugins</span><br></pre></td></tr></table></figure>
-<p>如果还是不行的话，可以试试下面这个</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer global require fxp/composer-asset-plugin --no-plugins</span><br></pre></td></tr></table></figure>
+<p>开始搭配：</p>
+<blockquote>
+<p>找一个很大的杯子，具体多大看你自己了，倒入一个半罐七喜，倒入等量的<span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNuL2dwL3Byb2R1Y3QvQjAxSE1PTko3Mj9pZT1VVEY4JmNhbXA9NTM2JmNyZWF0aXZlQVNJTj1CMDFITU9OSjcyJmxpbmtDb2RlPXhtMiZ0YWc9Z293aGljaC0yMw==" title="黄啤酒">黄啤酒<i class="fa fa-external-link-alt"></i></span>，好了，加入适量的冰块。稍等片刻就可以享受了。</p>
+</blockquote>
+<h1 id="2"><a href="#2" class="headerlink" title="搭配术二：黑色丝绒"></a><a href="#2">搭配术二：黑色丝绒</a></h1><p>材料准备：</p>
+<blockquote>
+<p>方糖【这个超市有卖，如果对咖啡有研究，应该也不会缺少这个的】</p>
+<p>一罐苏打水【应该也有瓶装的】</p>
+<p>一瓶<span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNuL2dwL3Byb2R1Y3QvQjAxSERLQTZEQT9pZT1VVEY4JmNhbXA9NTM2JmNyZWF0aXZlQVNJTj1CMDFIREtBNkRBJmxpbmtDb2RlPXhtMiZ0YWc9Z293aGljaC0yMw==" title="黑啤酒">黑啤酒<i class="fa fa-external-link-alt"></i></span></p>
+<p>一瓶起泡酒</p>
+</blockquote>
+<p>开始搭配：</p>
+<blockquote>
+<p>找个很大的杯子，倒入方糖，找个器材捣碎，然后倒入苏打水，置入冰块，倒入适量<span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNuL2dwL3Byb2R1Y3QvQjAxSERLQTZEQT9pZT1VVEY4JmNhbXA9NTM2JmNyZWF0aXZlQVNJTj1CMDFIREtBNkRBJmxpbmtDb2RlPXhtMiZ0YWc9Z293aGljaC0yMw==" title="黑啤酒">黑啤酒<i class="fa fa-external-link-alt"></i></span>，倒入适量起泡酒。可以去happy了。</p>
+</blockquote>
+<h1 id="3"><a href="#3" class="headerlink" title="搭配术三：绿芽冰啤"></a><a href="#3">搭配术三：绿芽冰啤</a></h1><p>材料准备：</p>
+<blockquote>
+<p>绿茶茶叶</p>
+<p>热水</p>
+<p>绿茶饮料</p>
+<p>冰块</p>
+<p>一瓶<span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNuL2dwL3Byb2R1Y3QvQjAxSE1PTko3Mj9pZT1VVEY4JmNhbXA9NTM2JmNyZWF0aXZlQVNJTj1CMDFITU9OSjcyJmxpbmtDb2RlPXhtMiZ0YWc9Z293aGljaC0yMw==" title="黄啤酒">黄啤酒<i class="fa fa-external-link-alt"></i></span></p>
+<p>柠檬一片</p>
+</blockquote>
+<p>开始搭配：</p>
+<blockquote>
+<p>找个很大的杯子，放入绿茶叶，热水，防止片刻，倒入绿茶饮料，放入冰块，倒入适量<span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNuL2dwL3Byb2R1Y3QvQjAxSE1PTko3Mj9pZT1VVEY4JmNhbXA9NTM2JmNyZWF0aXZlQVNJTj1CMDFITU9OSjcyJmxpbmtDb2RlPXhtMiZ0YWc9Z293aGljaC0yMw==" title="黄啤酒">黄啤酒<i class="fa fa-external-link-alt"></i></span>，在放入柠檬一片。happy time！</p>
+</blockquote>
+<h1 id="4"><a href="#4" class="headerlink" title="搭配术四：雪顶黑皮"></a><a href="#4">搭配术四：雪顶黑皮</a></h1><p>材料准备：</p>
+<blockquote>
+<p>一瓶<span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNuL2dwL3Byb2R1Y3QvQjAxSERLQTZEQT9pZT1VVEY4JmNhbXA9NTM2JmNyZWF0aXZlQVNJTj1CMDFIREtBNkRBJmxpbmtDb2RlPXhtMiZ0YWc9Z293aGljaC0yMw==" title="黑啤酒">黑啤酒<i class="fa fa-external-link-alt"></i></span></p>
+<p>巧克力冰淇淋</p>
+</blockquote>
+<p>开始搭配：</p>
+<blockquote>
+<p>找个很大的杯子，倒入<span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNuL2dwL3Byb2R1Y3QvQjAxSERLQTZEQT9pZT1VVEY4JmNhbXA9NTM2JmNyZWF0aXZlQVNJTj1CMDFIREtBNkRBJmxpbmtDb2RlPXhtMiZ0YWc9Z293aGljaC0yMw==" title="黑啤酒">黑啤酒<i class="fa fa-external-link-alt"></i></span>，放入巧克力冰淇淋。happy happy time!</p>
+</blockquote>
+<h1 id="5"><a href="#5" class="headerlink" title="搭配术五：可口波打"></a><a href="#5">搭配术五：可口波打</a></h1><p>材料准备：</p>
+<blockquote>
+<p>一罐可乐</p>
+<p>冰块</p>
+<p>一瓶<span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNuL2dwL3Byb2R1Y3QvQjAxSERLQTZEQT9pZT1VVEY4JmNhbXA9NTM2JmNyZWF0aXZlQVNJTj1CMDFIREtBNkRBJmxpbmtDb2RlPXhtMiZ0YWc9Z293aGljaC0yMw==" title="黑啤酒">黑啤酒<i class="fa fa-external-link-alt"></i></span></p>
+</blockquote>
+<p>开始搭配：</p>
+<blockquote>
+<p>找一个很大的杯子，倒入适量可乐，放入冰块，倒入适量<span class="exturl" data-url="aHR0cHM6Ly93d3cuYW1hem9uLmNuL2dwL3Byb2R1Y3QvQjAxSERLQTZEQT9pZT1VVEY4JmNhbXA9NTM2JmNyZWF0aXZlQVNJTj1CMDFIREtBNkRBJmxpbmtDb2RlPXhtMiZ0YWc9Z293aGljaC0yMw==" title="黑啤酒">黑啤酒<i class="fa fa-external-link-alt"></i></span>。很简单吧。happy time go！</p>
+</blockquote>
 
       
     </div>
@@ -335,7 +834,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/uglify-error-log-%E5%A4%84%E7%90%86.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E4%B9%8B-%E5%88%86%E4%BA%AB%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -353,7 +852,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/uglify-error-log-%E5%A4%84%E7%90%86.html" class="post-title-link" itemprop="url">uglify error log 处理</a>
+          <a href="/2025/07/03/Nodejs-%E4%B9%8B-%E5%88%86%E4%BA%AB%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95.html" class="post-title-link" itemprop="url">Nodejs 之 分享加密算法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -365,7 +864,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 11:07:30 / 修改时间：11:39:18" itemprop="dateCreated datePublished" datetime="2025-07-03T11:07:30+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 11:08:24 / 修改时间：11:13:46" itemprop="dateCreated datePublished" datetime="2025-07-03T11:08:24+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -387,10 +886,25 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>使用uglify在做js的处理过程中，会遇到js的各种问题，而导致uglify自己报错，但是往往我们不知道具体是哪个文件的js报错了。</p>
-<p>这样情况下</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">uglify</span>().<span class="title function_">on</span>(<span class="string">&#x27;error&#x27;</span>, gutil.<span class="property">log</span>)</span><br></pre></td></tr></table></figure>
-<p>gulp-util就能很好的解决我们的问题。</p>
+          <p>这里分享一个node实现的加解密算法，对接了至少三家的接口但是没加的算法都不一样。看着做为程序员的辛苦，我这里分享了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> zhandapeng &lt;[email protected]&gt;</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 7/12/2016</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * openssl pkcs12 -in 9f_KDJZ_private.pfx -out 9f_KDJZ_private.pem -nodes   </span></span><br><span class="line"><span class="comment"> * openssl x509 -in 9fwlc_public.crt -outform der -out 9fwlc_public.der</span></span><br><span class="line"><span class="comment"> * openssl x509 -in 9fwlc_public.crt -inform der -outform pem -out 9fwlc_public.pem</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 玖富加密解密</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">&#x27;use strict&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> crypto = <span class="built_in">require</span>(<span class="string">&#x27;crypto&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> constants = <span class="built_in">require</span>(<span class="string">&#x27;constants&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> _padding = constants.<span class="property">RSA_PKCS1_PADDING</span>;</span><br><span class="line"><span class="keyword">const</span> _encoding = <span class="string">&#x27;base64&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> _signatureAlgorithm = <span class="string">&#x27;RSA-SHA1&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">XxxxRSA</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params">options</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">options</span> = <span class="title class_">Object</span>.<span class="title function_">assign</span>(&#123;&#125;, options);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 签名</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span>  &#123;<span class="type">String</span>&#125; data [加密的数据]</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@return</span> &#123;<span class="type">String</span>&#125;      [签名的数据]</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="title function_">_sign</span>(<span class="params">data</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> sign = crypto.<span class="title function_">createSign</span>(_signatureAlgorithm);</span><br><span class="line">    sign.<span class="title function_">update</span>(data, <span class="string">&#x27;utf8&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> sign.<span class="title function_">sign</span>(<span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">privateKey</span>, _encoding);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 验签</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span>  &#123;<span class="type">String</span>&#125; sign [签名数据]</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span>  &#123;<span class="type">String</span>&#125; data [加密数据]</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@return</span> &#123;<span class="type">Boolean</span>&#125;      [description]</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="title function_">_verify</span>(<span class="params">sign, data</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> verifier = crypto.<span class="title function_">createVerify</span>(_signatureAlgorithm);</span><br><span class="line">    verifier.<span class="title function_">update</span>(<span class="keyword">new</span> <span class="title class_">Buffer</span>(data, _encoding), <span class="string">&#x27;utf8&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> verifier.<span class="title function_">verify</span>(<span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">publicKey</span>, <span class="keyword">new</span> <span class="title class_">Buffer</span>(sign, _encoding));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 加密</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span>  &#123;<span class="type">String</span>&#125; msg [要加密的数据]</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@return</span> &#123;<span class="type">Object</span>&#125;     [签名的数据和加密的数据]</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="title function_">encrypt</span>(<span class="params">msg</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> blockSize = <span class="number">128</span>;</span><br><span class="line">    <span class="keyword">const</span> padding = <span class="number">11</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> buffer = <span class="keyword">new</span> <span class="title class_">Buffer</span>(msg);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> chunkSize = blockSize - padding;</span><br><span class="line">    <span class="keyword">const</span> nbBlocks = <span class="title class_">Math</span>.<span class="title function_">ceil</span>(buffer.<span class="property">length</span> / (chunkSize));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> outputBuffer = <span class="keyword">new</span> <span class="title class_">Buffer</span>(nbBlocks * blockSize);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; nbBlocks; i++) &#123;</span><br><span class="line">      <span class="keyword">let</span> currentBlock = buffer.<span class="title function_">slice</span>(chunkSize * i, chunkSize * (i + <span class="number">1</span>));</span><br><span class="line">      <span class="keyword">let</span> encryptedChunk = crypto.<span class="title function_">publicEncrypt</span>(&#123;</span><br><span class="line">        <span class="attr">key</span>: <span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">publicKey</span>,</span><br><span class="line">        <span class="attr">padding</span>: _padding</span><br><span class="line">      &#125;, currentBlock);</span><br><span class="line"></span><br><span class="line">      encryptedChunk.<span class="title function_">copy</span>(outputBuffer, i * blockSize);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">data</span>: outputBuffer.<span class="title function_">toString</span>(_encoding),</span><br><span class="line">      <span class="attr">sign</span>: <span class="variable language_">this</span>.<span class="title function_">_sign</span>(outputBuffer)</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 解密</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span>  &#123;<span class="type">Object</span>&#125; obj [签名数据和加密数据]</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@return</span> &#123;<span class="type">String</span>&#125;     [解密的数据]</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="title function_">decrypt</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="title function_">_verify</span>(obj.<span class="property">sign</span>, obj.<span class="property">data</span>)) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;Sign verify field.&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> blockSize = <span class="number">128</span>;</span><br><span class="line">    <span class="keyword">let</span> buffer = <span class="keyword">new</span> <span class="title class_">Buffer</span>(obj.<span class="property">data</span>, _encoding);</span><br><span class="line">    <span class="keyword">const</span> nbBlocks = <span class="title class_">Math</span>.<span class="title function_">ceil</span>(buffer.<span class="property">length</span> / (blockSize));</span><br><span class="line">    <span class="keyword">let</span> outputBuffer = <span class="keyword">new</span> <span class="title class_">Buffer</span>(nbBlocks * blockSize);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> totalLength = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; nbBlocks; i++) &#123;</span><br><span class="line">      <span class="keyword">let</span> currentBlock = buffer.<span class="title function_">slice</span>(blockSize * i, <span class="title class_">Math</span>.<span class="title function_">min</span>(blockSize * (i + <span class="number">1</span>), buffer.<span class="property">length</span>));</span><br><span class="line">      <span class="keyword">let</span> decryptedBuf = crypto.<span class="title function_">privateDecrypt</span>(&#123;</span><br><span class="line">        <span class="attr">key</span>: <span class="variable language_">this</span>.<span class="property">options</span>.<span class="property">privateKey</span>,</span><br><span class="line">        <span class="attr">padding</span>: _padding</span><br><span class="line">      &#125;, currentBlock);</span><br><span class="line"></span><br><span class="line">      decryptedBuf.<span class="title function_">copy</span>(outputBuffer, totalLength);</span><br><span class="line">      totalLength += decryptedBuf.<span class="property">length</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> data = outputBuffer.<span class="title function_">slice</span>(<span class="number">0</span>, totalLength);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> data.<span class="title function_">toString</span>();</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">XxxxRSA</span>;</span><br></pre></td></tr></table></figure>
+
+<p>事实上简单的不得了，只是我不会而已，对不起献丑了。</p>
+<p>这里针对java和php版本做个参考。主要是是说encrypt和decrypt部分。</p>
+<p>encrypt-&gt;java实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">encrypt</span><span class="params">(Key key, String dataStr)</span></span><br><span class="line">        <span class="keyword">throws</span> RuntimeException &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">byte</span>[] data = dataStr.getBytes(<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(transformation);</span><br><span class="line">        cipher.init(Cipher.ENCRYPT_MODE, key);</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">outputSize</span> <span class="operator">=</span> cipher.getOutputSize(data.length);<span class="comment">// 获得加密块加密后块大小</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">leavedSize</span> <span class="operator">=</span> data.length % MAX_ENCRYPT_BLOCK;</span><br><span class="line">        <span class="type">int</span> <span class="variable">blocksSize</span> <span class="operator">=</span> leavedSize != <span class="number">0</span> ? data.length / MAX_ENCRYPT_BLOCK</span><br><span class="line">                + <span class="number">1</span> : data.length / MAX_ENCRYPT_BLOCK;</span><br><span class="line">        <span class="type">byte</span>[] raw = <span class="keyword">new</span> <span class="title class_">byte</span>[outputSize * blocksSize];</span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (data.length - i * MAX_ENCRYPT_BLOCK &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (data.length - i * MAX_ENCRYPT_BLOCK &gt; MAX_ENCRYPT_BLOCK)</span><br><span class="line">                cipher.doFinal(data, i * MAX_ENCRYPT_BLOCK,</span><br><span class="line">                        MAX_ENCRYPT_BLOCK, raw, i * outputSize);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                cipher.doFinal(data, i * MAX_ENCRYPT_BLOCK, data.length - i</span><br><span class="line">                        * MAX_ENCRYPT_BLOCK, raw, i * outputSize);</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Base64.encodeBase64String(raw);</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NoSuchPaddingException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalBlockSizeException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (BadPaddingException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InvalidKeyException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ShortBufferException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>decrypt-&gt;java实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">decrypt</span><span class="params">(Key key, String dataStr)</span></span><br><span class="line">        <span class="keyword">throws</span> RuntimeException &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">byte</span>[] data = Base64.decodeBase64(dataStr);</span><br><span class="line">        <span class="type">Cipher</span> <span class="variable">cipher</span> <span class="operator">=</span> Cipher.getInstance(transformation);</span><br><span class="line">        cipher.init(Cipher.DECRYPT_MODE, key);</span><br><span class="line">        <span class="type">ByteArrayOutputStream</span> <span class="variable">bout</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>(<span class="number">64</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (data.length - j * MAX_DECRYPT_BLOCK &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            bout.write(cipher.doFinal(data, j * MAX_DECRYPT_BLOCK,</span><br><span class="line">                    MAX_DECRYPT_BLOCK));</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">String</span>(bout.toByteArray(), <span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NoSuchPaddingException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InvalidKeyException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalBlockSizeException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (BadPaddingException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>encrypt-&gt;php实现</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">encrypt</span>(<span class="params"><span class="variable">$content</span>, <span class="variable">$public_key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$priKey</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$public_key</span>);</span><br><span class="line">    <span class="variable">$res</span> = <span class="title function_ invoke__">openssl_get_publickey</span>(<span class="variable">$priKey</span>);</span><br><span class="line">    <span class="comment">//把需要加密的内容，按128位拆开加密</span></span><br><span class="line">    <span class="variable">$result</span>  = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; ((<span class="title function_ invoke__">strlen</span>(<span class="variable">$content</span>) - <span class="title function_ invoke__">strlen</span>(<span class="variable">$content</span>)%<span class="number">117</span>)/<span class="number">117</span>+<span class="number">1</span>); <span class="variable">$i</span>++  ) &#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="title function_ invoke__">mb_strcut</span>(<span class="variable">$content</span>, <span class="variable">$i</span>*<span class="number">117</span>, <span class="number">117</span>, <span class="string">&#x27;utf-8&#x27;</span>);</span><br><span class="line">        <span class="title function_ invoke__">openssl_public_encrypt</span>(<span class="variable">$data</span>, <span class="variable">$encrypted</span>, <span class="variable">$res</span>);</span><br><span class="line">        <span class="variable">$result</span> .= <span class="variable">$encrypted</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_ invoke__">openssl_free_key</span>(<span class="variable">$res</span>);</span><br><span class="line">    <span class="comment">//用base64将二进制编码</span></span><br><span class="line">    <span class="variable">$result</span> = <span class="title function_ invoke__">base64_encode</span>(<span class="variable">$result</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$result</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>decrypt-&gt;php实现</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">rsaDecrypt</span>(<span class="params"><span class="variable">$content</span>, <span class="variable">$private_key</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$priKey</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$private_key</span>);</span><br><span class="line">    <span class="variable">$res</span> = <span class="title function_ invoke__">openssl_get_privatekey</span>(<span class="variable">$priKey</span>);</span><br><span class="line">    <span class="comment">// var_dump($priKey);</span></span><br><span class="line">    <span class="comment">// var_dump($res);exit();</span></span><br><span class="line">    <span class="comment">//用base64将内容还原成二进制</span></span><br><span class="line">    <span class="variable">$content</span> = <span class="title function_ invoke__">base64_decode</span>(<span class="variable">$content</span>);</span><br><span class="line">    <span class="comment">//把需要解密的内容，按128位拆开解密</span></span><br><span class="line">    <span class="variable">$result</span>  = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="title function_ invoke__">strlen</span>(<span class="variable">$content</span>)/<span class="number">128</span>; <span class="variable">$i</span>++  ) &#123;</span><br><span class="line">        <span class="variable">$data</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$content</span>, <span class="variable">$i</span> * <span class="number">128</span>, <span class="number">128</span>);</span><br><span class="line">        <span class="title function_ invoke__">openssl_private_decrypt</span>(<span class="variable">$data</span>, <span class="variable">$decrypt</span>, <span class="variable">$res</span>);</span><br><span class="line">        <span class="variable">$result</span> .= <span class="variable">$decrypt</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_ invoke__">openssl_free_key</span>(<span class="variable">$res</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$result</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
 
       
     </div>
@@ -417,7 +931,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E3%80%8A%E9%95%BF%E5%AE%89%E7%9A%84%E8%8D%94%E6%9E%9D%E3%80%8B%E7%AC%AC%E4%B8%80%E9%9B%86%E8%A7%82%E5%90%8E%E6%84%9F.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E4%B8%ADpfx%E5%90%8E%E7%BC%80%E6%96%87%E4%BB%B6%E7%9A%84%E5%A4%84%E7%90%86.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -435,7 +949,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/%E3%80%8A%E9%95%BF%E5%AE%89%E7%9A%84%E8%8D%94%E6%9E%9D%E3%80%8B%E7%AC%AC%E4%B8%80%E9%9B%86%E8%A7%82%E5%90%8E%E6%84%9F.html" class="post-title-link" itemprop="url">《长安的荔枝》第一集观后感</a>
+          <a href="/2025/07/03/Nodejs-%E4%B8%ADpfx%E5%90%8E%E7%BC%80%E6%96%87%E4%BB%B6%E7%9A%84%E5%A4%84%E7%90%86.html" class="post-title-link" itemprop="url">Nodejs 中pfx后缀文件的处理</a>
         </h2>
 
         <div class="post-meta-container">
@@ -447,141 +961,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 09:59:22 / 修改时间：14:36:32" itemprop="dateCreated datePublished" datetime="2025-07-03T09:59:22+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%BD%B1%E8%AF%84/" itemprop="url" rel="index"><span itemprop="name">影评</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1>《长安的荔枝》第一集观后感</h1>
-<p>《长安的荔枝》第一集以紧凑的叙事、鲜活的角色和精良的制作，为观众呈现了一个充满权谋与荒诞的“职场生存记”。结合原著内核与影视化改编，可从以下角度解读：</p>
-<hr>
-<h2 id="一、剧情：荒诞任务下的生存博弈">一、<strong>剧情：荒诞任务下的生存博弈</strong></h2>
-<ol>
-<li>
-<p><strong>“不可能任务”的戏剧张力</strong><br>
-李善德（雷佳音 饰）作为九品小吏，被同僚设计接下从岭南运送鲜荔枝到长安的“死亡任务”。剧中通过“荔枝一日色变，三日味改”的设定，强化了时间紧迫感与任务荒诞性，而官僚体系层层推诿的“踢皮球”现象，则暗讽了职场甩锅文化。<br>
-<em>对比原著</em>：剧版增加了“房贷压力”作为李善德接任务的动机，更贴近现代打工人的生存焦虑。</p>
-</li>
-<li>
-<p><strong>双线叙事初现雏形</strong><br>
-除主线任务外，郑平安（岳云鹏 饰）作为左相派出的卧底，暗中调查岭南刺史行贿右相的阴谋。两条线索在岭南交汇，形成“物流难题”与“政斗暗线”的交织，为后续冲突埋下伏笔。</p>
-</li>
-</ol>
-<hr>
-<h2 id="二、角色：小人物与喜剧色彩的碰撞">二、<strong>角色：小人物与喜剧色彩的碰撞</strong></h2>
-<ol>
-<li>
-<p><strong>雷佳音的“老实人困境”</strong><br>
-李善德被塑造成一个隐忍懦弱却心怀责任感的基层公务员。剧中通过“被同僚灌酒”“被上司算计”等细节，刻画出其面对强权时的无力感。而得知任务真相后“瘫坐痛哭”的镜头，精准传递了小人物被命运碾压的窒息感。</p>
-</li>
-<li>
-<p><strong>岳云鹏的喜剧破局</strong><br>
-郑平安以“陪酒侍郎”身份登场，凭借夸张的肢体语言（如缩肩抖腿、谄媚赔笑）和方言台词（如“房子看了没”），贡献了全剧首批笑点。其表面圆滑、内心重义的性格反差，为沉重剧情注入轻松气息。</p>
-</li>
-</ol>
-<hr>
-<h2 id="三、制作：历史细节与视觉美学的平衡">三、<strong>制作：历史细节与视觉美学的平衡</strong></h2>
-<ol>
-<li>
-<p><strong>服化道的考据与创新</strong><br>
-剧组对唐代官服形制、岭南服饰风格进行严谨还原，如苏谅（吕凉 饰）的胡服融合丝路元素，阿僮（周美君 饰）的衣裙采用草木染工艺。同时，岭南场景通过湿热色调与奇珍异兽道具，构建出异域风情。</p>
-</li>
-<li>
-<p><strong>镜头语言的隐喻性</strong><br>
-李善德赎回宅院时，慢镜头扫过马车外欢呼的群演，再聚焦其强颜欢笑的脸庞，暗示“买房”背后是父爱与生存压力的双重枷锁。暴雨中荔枝运输的追逐戏，则以倾斜构图强化危机感。</p>
-</li>
-</ol>
-<hr>
-<h2 id="四、观众反响与改编争议">四、<strong>观众反响与改编争议</strong></h2>
-<ol>
-<li>
-<p><strong>热度与口碑初显</strong><br>
-首播当日腾讯视频热度突破23000，豆瓣开分8.3。观众盛赞“比悬疑剧更刺激”“岳云鹏颠覆形象”，但也对“剧情节奏过快”（如前4集已出现岭南线）提出疑虑。</p>
-</li>
-<li>
-<p><strong>改编得失讨论</strong><br>
-剧版新增郑平安的故事线，虽丰富了权谋层次，但部分原著粉认为“偏离了马伯庸‘一人一事件’的极简叙事”。此外，喜剧元素与历史正剧风格的混搭，存在“违和感”争议。</p>
-</li>
-</ol>
-<hr>
-<h2 id="五、对比电影版：差异化探索">五、<strong>对比电影版：差异化探索</strong></h2>
-<p>相较于大鹏执导的同名电影（7月25日上映），剧版更注重“职场生态”的细腻刻画，如通过“荔枝小队”成员性格差异（富二代苏谅、纯真阿僮等）探讨团队协作。而电影版或侧重史诗感与视觉奇观，两者形成互补。</p>
-<hr>
-<p><strong>总结</strong>：第一集以高完成度奠定了“古装职场喜剧+历史权谋”的基调，雷佳音与岳云鹏的化学反应、细节中的人性洞察，均展现出超越普通IP改编的潜力。后续能否避免“虎头蛇尾”，取决于岭南线叙事密度与情感爆点的平衡。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E5%AE%89%E5%85%A8-Go-1-25RC2-1-24-5-%E5%92%8C-Go-1-23-11-%E9%A2%84%E5%91%8A.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/%E5%AE%89%E5%85%A8-Go-1-25RC2-1-24-5-%E5%92%8C-Go-1-23-11-%E9%A2%84%E5%91%8A.html" class="post-title-link" itemprop="url">[安全]Go 1.25RC2、1.24.5 和 Go 1.23.11 预告</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 09:42:07 / 修改时间：09:47:00" itemprop="dateCreated datePublished" datetime="2025-07-03T09:42:07+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 11:08:16 / 修改时间：11:14:32" itemprop="dateCreated datePublished" datetime="2025-07-03T11:08:16+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -603,28 +983,55 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1751506623/2025-07-03_09-23_hzmal1.png" alt=""></p>
-<p>原文</p>
-<p>Hello gophers,</p>
-<p>We plan to issue Go 1.25RC2, Go 1.24.5 and Go 1.23.11 during US business hours on Tuesday, July 8.</p>
-<p>These minor releases include PRIVATE security fixes to the toolchain, covering the following CVE:</p>
-<ul>
-<li>CVE-2025-4674</li>
-</ul>
-<p>Following our security policy, this is the pre-announcement of those releases.</p>
-<p>Thanks,<br>
-David for the Go team</p>
-<hr>
-<p>大概是意思是</p>
-<p>你好，Go开发者们，</p>
-<p>我们计划在 7 月 8 日星期二的美国营业时间内发布 Go 1.25RC2、Go 1.24.5 和 Go 1.23.11。</p>
-<p>这些次要版本包括对工具链的 PRIVATE 安全修复，涵盖以下 CVE：</p>
-<ul>
-<li>漏洞 CVE-2025-4674</li>
-</ul>
-<p>根据我们的安全策略，这是这些版本的预先公告。</p>
-<p>谢谢<br>
-Go 团队的 David</p>
+          <p>nodejs中，在做加密解密的时候，会得到第三方的各种各样的加密文件，其后缀也就那么几种吧，.key&#x2F;.pem&#x2F;.pfx等，是不是可以自定义，反正就是一个文件。</p>
+<p>但是今天我看了很多的nodejs库好像也没有找到与java keytool这样的工具，因为在java里面，完全是可以读取pfx,然户进行在进行处理的，如果在nodejs中要如何操作，目前不知道，使用openssl做个转换处理先。</p>
+<p>第一个命令是:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -<span class="keyword">in</span> xxxx.pfx -nocerts -nodes -out domain_encrypted.key</span><br></pre></td></tr></table></figure>
+
+<p>第二个命令是:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rsa -<span class="keyword">in</span> domain_encrypted.key -out private.key</span><br></pre></td></tr></table></figure>
+
+<p>哪位大神知道的，可以告知下，谢谢了。</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;补充&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<p>google上有个办法可以解析出两种格式的文件</p>
+<p>第一种格式文件的方式</p>
+<p>extract private key from .pfx file</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># openssl pkcs12 -in myfile.pfx -nocerts -out private_key.pem -nodes</span></span><br><span class="line">Enter Import Password:</span><br><span class="line">MAC verified OK</span><br></pre></td></tr></table></figure>
+
+<p>第二种格式文件的方式</p>
+<p>extract certificate from .pfx file</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># openssl pkcs12 -in myfile.pfx -nokeys -out certificate_file.crt </span></span><br><span class="line">Enter Import Password:</span><br><span class="line">MAC verified OK</span><br></pre></td></tr></table></figure>
+
+<p>详细的可到这里：<span class="exturl" data-url="aHR0cDovL3RlY2FkbWluLm5ldC9leHRyYWN0LXByaXZhdGUta2V5LWFuZC1jZXJ0aWZpY2F0ZS1maWxlcy1mcm9tLXBmeC1maWxlLw==">http://tecadmin.net/extract-private-key-and-certificate-files-from-pfx-file/<i class="fa fa-external-link-alt"></i></span></p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;强烈补充</p>
+<p>多日奋战，终于解决了这个问题，因为一直是一个私钥解密的问题</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -<span class="keyword">in</span> xxxx_private.pfx -out xxxx_private.pem -nodes</span><br><span class="line">openssl x509 -<span class="keyword">in</span> xxxx_public.crt -inform der -outform pem -out xxxx_public.pem</span><br></pre></td></tr></table></figure>
+
+<p>这里主要是针对具体情况具体描述，可以变通取处理</p>
+<p>因为对方给过来的是一个在window环境下，使用工具生成的pfx和crt文件。</p>
+<p>经过对方给过来的生成工具的描述，这个crt文件还是一个cer后缀文件自己修改的cer-&gt;crt。可见这里如果对文件内容不了解，光从后缀来看会坑了很多人。</p>
+<p>先来看第一行的命令语句.</p>
+<p>经过文档的查询pfx文件是一个带有私钥跟证书的合体文件，通过上面的命令就可以得到一个文件就是private.pem，里面是一个含有证书和私钥的。</p>
+<p>不知道的我这里举例。</p>
+<p>私钥是以</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+
+<p>开头的。</p>
+<p>证书是以</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN CERTIFICATE-----</span><br></pre></td></tr></table></figure>
+
+<p>开头的。对不起不方便把所有内容同时贴出来。很容易辨别的。</p>
+<p>然后对方还会给你一个crt文件，这个事实上就是一个x509对应的证书，需要解出来，但是对于是java的应该就不需要了，不过是php的或这是node的就需要了。</p>
+<p>当然是证书的话，就必须是以</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN CERTIFICATE-----</span><br></pre></td></tr></table></figure>
+
+<p>开头的。</p>
+<p>好了，如果你跟别人对接接口，遇到私钥公钥的问题，但是对方给了你pfx和crt文件的话，就按照这个命令去操作的吧，我已经在php和node环境下试过了。不过具体的算法还是要针对具体的情况来实施。</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;2016-11-11补充&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">REM <span class="built_in">export</span> the ssl cert (normal cases)</span><br><span class="line">openssl pkcs12 -<span class="keyword">in</span> aa.pfx -out aa.pem -nokeys -clcerts</span><br><span class="line"></span><br><span class="line">REM <span class="built_in">export</span> the ssl cert (Crescendo load balancers)</span><br><span class="line"></span><br><span class="line">openssl pkcs12 -<span class="keyword">in</span> aa.pfx -out aa_tmp_cn.pem -nodes</span><br><span class="line">openssl x509 -<span class="keyword">in</span> aa_tmp_cn.pem -out aa_cn.pem -text</span><br></pre></td></tr></table></figure>
+
+
 
       
     </div>
@@ -651,7 +1058,7 @@ Go 团队的 David</p>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/AB-post%E8%AF%B7%E6%B1%82%E6%B5%8B%E8%AF%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E8%AE%A9Bootstrap%E7%9A%84Refresh-Icon%E4%B9%9Fspin%E8%B5%B7%E6%9D%A5.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -669,7 +1076,7 @@ Go 团队的 David</p>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/AB-post%E8%AF%B7%E6%B1%82%E6%B5%8B%E8%AF%95.html" class="post-title-link" itemprop="url">AB post请求测试</a>
+          <a href="/2025/07/03/%E8%AE%A9Bootstrap%E7%9A%84Refresh-Icon%E4%B9%9Fspin%E8%B5%B7%E6%9D%A5.html" class="post-title-link" itemprop="url">让Bootstrap的Refresh Icon也spin起来</a>
         </h2>
 
         <div class="post-meta-container">
@@ -681,7 +1088,7 @@ Go 团队的 David</p>
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-02 16:01:37 / 修改时间：16:02:57" itemprop="dateCreated datePublished" datetime="2025-07-02T16:01:37+08:00">2025-07-02</time>
+      <time title="创建时间：2025-07-03 11:08:13 / 修改时间：11:17:59" itemprop="dateCreated datePublished" datetime="2025-07-03T11:08:13+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -703,18 +1110,13 @@ Go 团队的 David</p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>ab post请求测试</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -c 200 -n 1000 -T <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span> -p postdata.txt http://domain/test.php</span><br></pre></td></tr></table></figure>
-<p>以前不知道的你，很震惊</p>
-<p>postdata.txt的内容类似如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">third=1&amp;third_params=&#123;<span class="string">&quot;uid&quot;</span>:<span class="string">&quot;12345&quot;</span>,<span class="string">&quot;openid&quot;</span>:<span class="string">&quot;12345&quot;</span>,<span class="string">&quot;name&quot;</span>:<span class="string">&quot;12345&quot;</span>,<span class="string">&quot;gender&quot;</span>:<span class="string">&quot;0&quot;</span>,<span class="string">&quot;iconurl&quot;</span>:<span class="string">&quot;12345&quot;</span>&#125;&amp;idfa=12345&amp;device_imei12345&amp;app_client_version=2.3.2.0&amp;platform=android</span><br></pre></td></tr></table></figure>
-<p>这里注意下-c和-n的参数，两个参数的值是成倍数关系的，如果这样设置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -c 2 -n 4 -T <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span> -p postdata.txt http://domain/test.php</span><br></pre></td></tr></table></figure>
-<p>会提示参数错误</p>
-<p>类似如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab: wrong number of arguments</span><br></pre></td></tr></table></figure>
-<p>-n和-c参数说明</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-n：在测试会话中所执行的请求个数。默认时，仅执行一个请求。</span><br><span class="line"></span><br><span class="line">-c：一次产生的请求个数。默认是一次一个。</span><br></pre></td></tr></table></figure>
+          <p>bootstrap下面有个glyphicon-refresh，但是不会自定动态spin[旋转]，下面提供下我的实例</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.spin</span>&#123;</span><br><span class="line">    -webkit-<span class="attribute">transform-origin</span>: <span class="number">50%</span> <span class="number">50%</span>;</span><br><span class="line">    <span class="attribute">transform-origin</span>:<span class="number">50%</span> <span class="number">50%</span>;</span><br><span class="line">    -ms-<span class="attribute">transform-origin</span>:<span class="number">50%</span> <span class="number">50%</span>; <span class="comment">/* IE 9 */</span></span><br><span class="line">    -webkit-<span class="attribute">animation</span>: spin .<span class="number">8s</span> infinite linear;</span><br><span class="line">    -moz-<span class="attribute">animation</span>: spin .<span class="number">8s</span> infinite linear;</span><br><span class="line">    -o-<span class="attribute">animation</span>: spin .<span class="number">8s</span> infinite linear;</span><br><span class="line">    <span class="attribute">animation</span>: spin .<span class="number">8s</span> infinite linear;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">@-webkit-keyframes</span> spin &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">      -webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">0deg</span>);</span><br><span class="line">      <span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">0deg</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">      -webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">359deg</span>);</span><br><span class="line">      <span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">359deg</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">@keyframes</span> spin &#123;</span><br><span class="line">    <span class="number">0%</span> &#123;</span><br><span class="line">      -webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">0deg</span>);</span><br><span class="line">      <span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">0deg</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="number">100%</span> &#123;</span><br><span class="line">      -webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">359deg</span>);</span><br><span class="line">      <span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">359deg</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用方式如下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;glyphicon glyphicon-refresh loading spin&quot;</span>&gt;</span> <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
 
       
     </div>
@@ -741,7 +1143,7 @@ Go 团队的 David</p>
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Gitlab%E9%87%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%91%98%E5%AF%86%E7%A0%81.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Linux%E5%91%BD%E4%BB%A4sed-%E4%B9%8B-%E6%9B%BF%E6%8D%A2.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -759,7 +1161,7 @@ Go 团队的 David</p>
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/Gitlab%E9%87%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E5%91%98%E5%AF%86%E7%A0%81.html" class="post-title-link" itemprop="url">Gitlab重置管理员密码</a>
+          <a href="/2025/07/03/Linux%E5%91%BD%E4%BB%A4sed-%E4%B9%8B-%E6%9B%BF%E6%8D%A2.html" class="post-title-link" itemprop="url">Linux命令sed 之 替换</a>
         </h2>
 
         <div class="post-meta-container">
@@ -771,7 +1173,7 @@ Go 团队的 David</p>
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-02 16:01:34 / 修改时间：16:03:55" itemprop="dateCreated datePublished" datetime="2025-07-02T16:01:34+08:00">2025-07-02</time>
+      <time title="创建时间：2025-07-03 11:08:10 / 修改时间：11:21:06" itemprop="dateCreated datePublished" datetime="2025-07-03T11:08:10+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -793,383 +1195,81 @@ Go 团队的 David</p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>第一步：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Gitlab安装路径</span></span><br><span class="line"><span class="built_in">cd</span> /home/git/gitlab</span><br><span class="line">＃进入Rails控制台</span><br><span class="line"><span class="built_in">sudo</span> -u git -H bundle <span class="built_in">exec</span> rails console production</span><br></pre></td></tr></table></figure>
-<p>第二步：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> gitlab-rails console</span><br></pre></td></tr></table></figure>
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> gitlab-rake rails console</span><br></pre></td></tr></table></figure>
-<p>第三步：找到对应的用户直接修改</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">user = User.find_by(email: <span class="string">&#x27;[email protected]&#x27;</span>)</span><br><span class="line">user.password = <span class="string">&#x27;secret_pass&#x27;</span></span><br><span class="line">user.password_confirmation = <span class="string">&#x27;secret_pass&#x27;</span></span><br><span class="line">user.save</span><br></pre></td></tr></table></figure>
-<p>如果不知道具体的邮箱，可以通过find来查找</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">user = User.find(1)</span><br></pre></td></tr></table></figure>
-<p>然后重新执行如上修改密码的步骤。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Sublime-Text-3-%E4%B8%BB%E9%A2%98%E6%8F%92%E4%BB%B6%E6%8E%A8%E8%8D%90.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/Sublime-Text-3-%E4%B8%BB%E9%A2%98%E6%8F%92%E4%BB%B6%E6%8E%A8%E8%8D%90.html" class="post-title-link" itemprop="url">Sublime Text 3 主题插件推荐</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-02 16:01:31 / 修改时间：16:04:10" itemprop="dateCreated datePublished" datetime="2025-07-02T16:01:31+08:00">2025-07-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>今天无意间在使用sublime text 3的时候发现一个很不错的主题，超赞的。</p>
-<p>名称是Material Theme:</p>
-<p>安装完后，按照说明进行配置完你会发现，界面超赞的。</p>
-<p>插件地址：<span class="exturl" data-url="aHR0cHM6Ly9wYWNrYWdlY29udHJvbC5pby9wYWNrYWdlcy9NYXRlcmlhbCUyMFRoZW1l">https://packagecontrol.io/packages/Material Theme<i class="fa fa-external-link-alt"></i></span></p>
-<p>插件主页：<span class="exturl" data-url="aHR0cDovL2VxdWludXNvY2lvLmdpdGh1Yi5pby9tYXRlcmlhbC10aGVtZS8=">http://equinusocio.github.io/material-theme/<i class="fa fa-external-link-alt"></i></span></p>
-<p>喜欢的同学可以前去参观哦。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E5%AE%89%E8%A3%85Firefox%E5%BF%85%E8%A3%85%E7%9A%84%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/%E5%AE%89%E8%A3%85Firefox%E5%BF%85%E8%A3%85%E7%9A%84%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6.html" class="post-title-link" itemprop="url">安装Firefox必装的扩展插件</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-02 16:01:28 / 修改时间：16:04:43" itemprop="dateCreated datePublished" datetime="2025-07-02T16:01:28+08:00">2025-07-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>插件一：</p>
-<p>Advanced Cookie Manager</p>
-<p>插件二：</p>
-<p>AutoProxy</p>
-<p>插件三：</p>
-<p>Charles Proxy Auto-configuration</p>
-<p>插件四：</p>
-<p>Firebug</p>
-<p>插件五：</p>
-<p>JSON-handle</p>
-<p>插件六：</p>
-<p>JSONView</p>
-<p>插件七：</p>
-<p>User-Agent Switcher</p>
-<p>插件八：</p>
-<p>View Cookies</p>
-<p>后续继续更新</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/ReactJS-0-14-mocha%E7%BB%84%E4%BB%B6%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%BA%8C.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/ReactJS-0-14-mocha%E7%BB%84%E4%BB%B6%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%BA%8C.html" class="post-title-link" itemprop="url">ReactJS 0.14 mocha组件单元测试（二）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-02 16:01:18 / 修改时间：16:06:22" itemprop="dateCreated datePublished" datetime="2025-07-02T16:01:18+08:00">2025-07-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>使用react的情况下，一般也会用到redux，那么对于这种在react中使用redux的情况，写测试的时候就不能只用之前的文章里面介绍的方式写了。</p>
-<p>来看下组件例子</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span>, findDOMNode &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">&#x27;react-redux&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; increase, decrease, fetchItems &#125; <span class="keyword">from</span> <span class="string">&#x27;../../actions/counter&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Home</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123;</span><br><span class="line">      item,</span><br><span class="line">      number,</span><br><span class="line">      isFetching,</span><br><span class="line">      increase,</span><br><span class="line">      decrease,</span><br><span class="line">      fetchItems</span><br><span class="line">    &#125; = <span class="variable language_">this</span>.<span class="property">props</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#x27;container&#x27;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#x27;row&#x27;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          Some state changes:</span></span><br><span class="line"><span class="language-xml">          &#123;number&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>Item Length : &#123;item.length&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">p</span>&gt;</span>Request Item State:&#123;!isFetching ? &#x27;已完成&#x27; : &#x27;获取中&#x27;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#x27;btn-group&#x27;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&#x27;btn btn-primary btn-xs&#x27;</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> increase(1)&#125;&gt;Increase<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&#x27;btn btn-primary btn-xs&#x27;</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> decrease(1)&#125;&gt;Decrease<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">button</span> <span class="attr">className</span>=<span class="string">&#x27;btn btn-primary btn-xs&#x27;</span> </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> fetchItems(item)&#125;&gt;FetchItems<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// const &#123; item, fetchItems &#125; = this.props;</span></span><br><span class="line">    <span class="comment">// fetchItems(item)</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">componentDidUpdate</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;did update&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">connect</span>(</span><br><span class="line">  <span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; counter &#125; = state;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">number</span>: counter.<span class="property">number</span>,</span><br><span class="line">      <span class="attr">item</span>: counter.<span class="property">item</span> || [],</span><br><span class="line">      <span class="attr">isFetching</span>: counter.<span class="property">isFetching</span> || <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, &#123;</span><br><span class="line">    increase,</span><br><span class="line">    decrease,</span><br><span class="line">    fetchItems</span><br><span class="line">  &#125;</span><br><span class="line">)(<span class="title class_">Home</span>)</span><br></pre></td></tr></table></figure>
-<p>这里涉及到了actions，那么代码如下：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="variable constant_">INCREASE</span>,</span><br><span class="line">  <span class="variable constant_">DECREASE</span>,</span><br><span class="line">  <span class="variable constant_">REQUEST_DATA</span>,</span><br><span class="line">  <span class="variable constant_">FETCH_DATA</span>,</span><br><span class="line">  <span class="variable constant_">RECEIVE_DATA</span>,</span><br><span class="line">  <span class="variable constant_">ERROR_DATA</span></span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;../constants&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Utils</span> <span class="keyword">from</span> <span class="string">&#x27;utils&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> $ <span class="keyword">from</span> <span class="string">&#x27;jquery&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> token = <span class="title class_">Utils</span>.<span class="title function_">get_token</span>();</span><br><span class="line"></span><br><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;babel-polyfill&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">increase</span>(<span class="params">n</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="variable constant_">INCREASE</span>,</span><br><span class="line">    <span class="attr">amount</span>: n</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">decrease</span>(<span class="params">n</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="variable constant_">DECREASE</span>,</span><br><span class="line">    <span class="attr">amount</span>: n</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">fetchData</span>(<span class="params">item</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">dispatch</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> sql = <span class="string">`SELECT * FROM qeeniao.user limit 0,10`</span>;</span><br><span class="line">      $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">        <span class="attr">url</span>: <span class="string">&#x27;/proxy/admin/query&#x27;</span>,</span><br><span class="line">        <span class="attr">dataType</span>: <span class="string">&#x27;json&#x27;</span>,</span><br><span class="line">        <span class="attr">type</span>: <span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">        <span class="attr">data</span>: &#123;</span><br><span class="line">          <span class="attr">access_token</span>: token,</span><br><span class="line">          <span class="attr">sql</span>: sql</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">beforeSend</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="title function_">resolve</span>(<span class="title function_">dispatch</span>(<span class="title function_">requestData</span>(item)));</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">success</span>: <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="title function_">resolve</span>(<span class="title function_">dispatch</span>(<span class="title function_">receiveData</span>(item, data)));</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">error</span>: <span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">log</span>(error.<span class="property">message</span>);</span><br><span class="line">          <span class="title function_">reject</span>(<span class="title function_">dispatch</span>(<span class="title function_">errorData</span>(item, error)));</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">errorData</span>(<span class="params">item, error</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="variable constant_">ERROR_DATA</span>,</span><br><span class="line">    <span class="attr">item</span>: item || [],</span><br><span class="line">    <span class="attr">error</span>: error</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">requestData</span>(<span class="params">item</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="variable constant_">REQUEST_DATA</span>,</span><br><span class="line">    <span class="attr">item</span>: item || []</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">receiveData</span>(<span class="params">item, data</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="variable constant_">RECEIVE_DATA</span>,</span><br><span class="line">    <span class="attr">item</span>: (item || []).<span class="title function_">concat</span>(data),</span><br><span class="line">    <span class="attr">data</span>: data</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">fetchItems</span>(<span class="params">item = []</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">dispatch, getState</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">dispatch</span>(<span class="title function_">fetchData</span>(item))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里又涉及到了contants，代码如下</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">INCREASE</span> = <span class="string">&#x27;INCREASE&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">DECREASE</span> = <span class="string">&#x27;DECREASE&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">FETCH_DATA</span> = <span class="string">&#x27;FETCH_DATA&#x27;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">RECEIVE_DATA</span> = <span class="string">&#x27;RECEIVE_DATA&#x27;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">REQUEST_DATA</span> = <span class="string">&#x27;REQUEST_DATA&#x27;</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="variable constant_">ERROR_DATA</span> = <span class="string">&#x27;ERROR_DATA&#x27;</span>;</span><br></pre></td></tr></table></figure>
-<p>到这里基本上一个简单的例子就出来了。让我们写个测试吧。</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> expect <span class="keyword">from</span> <span class="string">&#x27;expect&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; counter &#125; <span class="keyword">from</span> <span class="string">&#x27;../../app/js/reducers&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">TestUtils</span> <span class="keyword">from</span> <span class="string">&#x27;react-addons-test-utils&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Home</span> <span class="keyword">from</span> <span class="string">&#x27;../../app/js/components/test/Home&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Provider</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react-redux&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; createStore, combineReducers &#125; <span class="keyword">from</span> <span class="string">&#x27;redux&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> reducer = <span class="title function_">combineReducers</span>(&#123;</span><br><span class="line">  counter</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">configureStore</span> = (<span class="params">initialState</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> store = <span class="title function_">createStore</span>(reducer, initialState);</span><br><span class="line">  <span class="keyword">return</span> store;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;Home components&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">before</span>(<span class="string">&#x27;render and locate element &#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">const</span> store = <span class="title function_">configureStore</span>(&#123;&#125;);</span><br><span class="line">    <span class="keyword">const</span> renderedComponent = <span class="title class_">TestUtils</span>.<span class="title function_">renderIntoDocument</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">Provider</span> <span class="attr">store</span>=<span class="string">&#123;store&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">Home</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">Provider</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> container = <span class="title class_">TestUtils</span>.<span class="title function_">findRenderedDOMComponentWithClass</span>(</span><br><span class="line">      renderedComponent,</span><br><span class="line">      <span class="string">&#x27;container&#x27;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> row = <span class="title class_">TestUtils</span>.<span class="title function_">findRenderedDOMComponentWithClass</span>(</span><br><span class="line">      renderedComponent,</span><br><span class="line">      <span class="string">&#x27;row&#x27;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> btnGroup = <span class="title class_">TestUtils</span>.<span class="title function_">findRenderedDOMComponentWithClass</span>(</span><br><span class="line">      renderedComponent,</span><br><span class="line">      <span class="string">&#x27;btn-group&#x27;</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">container</span> = container;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">row</span> = row;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">btnGroup</span> = btnGroup;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;container should exist&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">container</span>).<span class="title function_">toExist</span>();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;container class name should be container&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">container</span>.<span class="title function_">getAttribute</span>(<span class="string">&#x27;class&#x27;</span>)).<span class="title function_">toBe</span>(<span class="string">&#x27;container&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;row should exist&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">row</span>).<span class="title function_">toExist</span>();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;row class name should be row&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">row</span>.<span class="title function_">getAttribute</span>(<span class="string">&#x27;class&#x27;</span>)).<span class="title function_">toBe</span>(<span class="string">&#x27;row&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;btnGroup should exist&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">btnGroup</span>).<span class="title function_">toExist</span>();</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;btnGroup class name should be btn-group&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">btnGroup</span>.<span class="title function_">getAttribute</span>(<span class="string">&#x27;class&#x27;</span>)).<span class="title function_">toBe</span>(<span class="string">&#x27;btn-group&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>我去，又牵扯到了reducers了，代码如下：</p>
-<p>这里说下，我是把reducer做了一个目录的方式来调用。</p>
-<p>reducers</p>
-<p>–couner.js</p>
-<p>–index.js</p>
-<p>index.js的代码如下：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> counter <span class="keyword">from</span> <span class="string">&#x27;./counter&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123;</span><br><span class="line">  counter</span><br><span class="line">&#125; ;</span><br></pre></td></tr></table></figure>
-<p>counter.js的代码如下：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="variable constant_">INCREASE</span>,</span><br><span class="line">  <span class="variable constant_">DECREASE</span>,</span><br><span class="line">  <span class="variable constant_">REQUEST_DATA</span>,</span><br><span class="line">  <span class="variable constant_">FETCH_DATA</span>,</span><br><span class="line">  <span class="variable constant_">RECEIVE_DATA</span>,</span><br><span class="line">  <span class="variable constant_">ERROR_DATA</span></span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;../constants&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> initialState = &#123;</span><br><span class="line">  <span class="attr">number</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">counter</span>(<span class="params">state = initialState, action</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.<span class="property">type</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">INCREASE</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span> + action.<span class="property">amount</span>,</span><br><span class="line">        <span class="attr">item</span>: state.<span class="property">item</span> || []</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">DECREASE</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span> - action.<span class="property">amount</span>,</span><br><span class="line">        <span class="attr">item</span>: state.<span class="property">item</span> || []</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">REQUEST_DATA</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span>,</span><br><span class="line">        <span class="attr">isFetching</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">item</span>: action.<span class="property">item</span> || []</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">FETCH_DATA</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span>,</span><br><span class="line">        <span class="attr">isFetching</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">item</span>: action.<span class="property">item</span> || []</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">ERROR_DATA</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span>,</span><br><span class="line">        <span class="attr">isFetching</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">item</span>: action.<span class="property">item</span> || [],</span><br><span class="line">        <span class="attr">error</span>: action.<span class="property">error</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="attr">RECEIVE_DATA</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">number</span>: state.<span class="property">number</span>,</span><br><span class="line">        <span class="attr">isFetching</span>: <span class="literal">false</span>,</span><br><span class="line">        <span class="attr">item</span>: action.<span class="property">item</span> || [],</span><br><span class="line">        <span class="attr">data</span>: action.<span class="property">data</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>好了，到这里，相关的一些配置可以在浏览下这篇文章：<span class="exturl" data-url="aHR0cDovL2dvd2hpY2guY29tL2Jsb2cvNzM0">React 0.14 mocha组件单元测试（一）<i class="fa fa-external-link-alt"></i></span>。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/ReactJS-0-14-mocha%E7%BB%84%E4%BB%B6%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B8%80.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/ReactJS-0-14-mocha%E7%BB%84%E4%BB%B6%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B8%80.html" class="post-title-link" itemprop="url">ReactJS 0.14 mocha组件单元测试（一）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-02 16:01:14 / 修改时间：16:07:51" itemprop="dateCreated datePublished" datetime="2025-07-02T16:01:14+08:00">2025-07-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>先来一个简单的小组件：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span>, &#123; <span class="title class_">Component</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Bar</span> <span class="keyword">extends</span> <span class="title class_ inherited__">Component</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#x27;bar&#x27;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h5</span>&gt;</span>And I am Bar!<span class="tag">&lt;/<span class="name">h5</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Bar</span>;</span><br></pre></td></tr></table></figure>
-<p>好了，到这里就足够了，来看看测试如何写：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> expect <span class="keyword">from</span> <span class="string">&#x27;expect&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">TestUtils</span> <span class="keyword">from</span> <span class="string">&#x27;react-addons-test-utils&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Bar</span> <span class="keyword">from</span> <span class="string">&#x27;../../app/js/components/test/Bar&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;Bar components&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">before</span>(<span class="string">&#x27;render and locate element &#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> renderedComponent = <span class="title class_">TestUtils</span>.<span class="title function_">renderIntoDocument</span>(</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">Bar</span>/&gt;</span></span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> bar = <span class="title class_">TestUtils</span>.<span class="title function_">findRenderedDOMComponentWithClass</span>(</span><br><span class="line">      renderedComponent,</span><br><span class="line">      <span class="string">&#x27;bar&#x27;</span></span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">bar</span> = bar;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;bar should exist&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">bar</span>).<span class="title function_">toExist</span>();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;bar should be closed&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="variable language_">this</span>.<span class="property">bar</span>.<span class="title function_">getAttribute</span>(<span class="string">&#x27;class&#x27;</span>)).<span class="title function_">toBe</span>(<span class="string">&#x27;bar&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>在运行前，做个简单的配置：</p>
-<p>package.json</p>
-<p>在scripts中添加</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;test&quot;</span><span class="punctuation">:</span> <span class="string">&quot;NODE_PATH=./app/js/lib ./node_modules/mocha/bin/mocha --compilers js:babel-register --recursive --require ./test/setup.js&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="attr">&quot;test:watch&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npm test -- --watch&quot;</span></span><br></pre></td></tr></table></figure>
-<p>添加<code>NODE_PATH</code>的原因是我要加载自己的lib库，不然在执行mocha的时候，会因为某些组建中调用了自己的库，而导致找不到对一个恩lib而报错。</p>
-<p>这里还添加了一个setup.js,这个主要是为了解决类似window这类的问题，毕竟react渲染是需要dom的嘛。</p>
-<p>setup.js代码如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; jsdom &#125; <span class="keyword">from</span> <span class="string">&#x27;jsdom&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">global</span>.<span class="property">document</span> = <span class="title function_">jsdom</span>(<span class="string">&#x27;&lt;!doctype html&gt;&lt;html&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;&#x27;</span>)</span><br><span class="line"><span class="variable language_">global</span>.<span class="property">window</span> = <span class="variable language_">document</span>.<span class="property">defaultView</span></span><br><span class="line"><span class="variable language_">global</span>.<span class="property">navigator</span> = <span class="variable language_">global</span>.<span class="property">window</span>.<span class="property">navigator</span></span><br></pre></td></tr></table></figure>
+          <p>最近做redis的集群配置，想到一个问题，就是配置文件要是我能用命令替换就好了，就不需要每次打开文件去编辑一遍。</p>
+<p>于是让我发现了sed这个命令，那么今天就记录下如何来替换文件里面的内容。起始就是学习了，记得下次使用就好了。</p>
+<p>首先新建目录</p>
+<p>test</p>
+<p>新建两个文件</p>
+<p>test&#x2F;a.txt</p>
+<p>test&#x2F;b.txt</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ll <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 00:42 a.txt</span><br><span class="line">-rw-r--r--  1 durban126  staff    15B  7  9 00:25 b.txt</span><br></pre></td></tr></table></figure>
+
+<p>a.text的内容是</p>
+<blockquote>
+<p>wo wo gowhich gowhich</p>
+</blockquote>
+<p>b.text的内容是</p>
+<blockquote>
+<p>eo eo gowhich gowhich</p>
+</blockquote>
+<p>然后我们通过sed命令来做文件内容替换,将wo替换位eo</p>
+<p>Mac OS 环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sed -ig <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br><span class="line">sed -i <span class="string">&quot;&quot;</span> <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;.bak&quot;</span> <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
+
+<p>Linux 环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
+
+<p>之所以不同，是因为Mac OS下要求强制备份。</p>
+<p>我们先执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -ig <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
+
+<p>结果是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 00:55 a.txt</span><br><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 00:42 a.txtg</span><br><span class="line">-rw-r--r--  1 durban126  staff    15B  7  9 00:25 b.txt</span><br></pre></td></tr></table></figure>
+
+<p>a.txt的内容是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  <span class="built_in">cat</span> <span class="built_in">test</span>/a.txt</span><br><span class="line">eo eo gowhich gowhich</span><br><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤</span><br></pre></td></tr></table></figure>
+
+<p>但是a.txtg就不是了，已做了备份处理</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  <span class="built_in">cat</span> <span class="built_in">test</span>/a.txtg</span><br><span class="line">wo wo gowhich gowhich</span><br><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤</span><br></pre></td></tr></table></figure>
+
+<p>再来看看执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;&quot;</span> <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
+
+<p>结果是</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  ll <span class="built_in">test</span> </span><br><span class="line">total 16</span><br><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 01:06 a.txt</span><br><span class="line">-rw-r--r--  1 durban126  staff    21B  7  9 00:58 b.txt</span><br></pre></td></tr></table></figure>
+
+<p>a.txt的内容也变化了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  <span class="built_in">cat</span> <span class="built_in">test</span>/a.txt </span><br><span class="line">eo eo gowhich gowhich</span><br></pre></td></tr></table></figure>
+
+<p>但是没有了备份文件了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;.bak&quot;</span> <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
+
+<p>这个命令就会跟</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -ig <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
+
+<p>类似了，做了文件备份喽</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  ll <span class="built_in">test</span> </span><br><span class="line">total 24</span><br><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 01:09 a.txt</span><br><span class="line">-rw-r--r--  1 durban126  staff    22B  7  9 01:09 a.txt.bak</span><br><span class="line">-rw-r--r--  1 durban126  staff    21B  7  9 00:58 b.txt</span><br></pre></td></tr></table></figure>
+
+<p>a.txt.bak的内容就是备份a.txt的内容了。</p>
+<p>还有另外一个命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
+
+<p>结果是会报错了，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">╭─xxxx@xxxx ~/php ‹ruby-2.2.1› </span><br><span class="line">╰─➤  sed -i <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test` </span><br><span class="line">sed: 1: <span class="string">&quot;./test/a.txt.bak&quot;</span>: invalid <span class="built_in">command</span> code .</span><br></pre></td></tr></table></figure>
+
+<p>所以还是区分下环境比较好。</p>
+<p>但是命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -ig <span class="string">&quot;s/wo/eo/g&quot;</span> `grep wo -rl ./test`</span><br></pre></td></tr></table></figure>
+
+<p>是在另种情况下通用的。</p>
+<p>PS:</p>
+<p>-i 表示inplace edit，就地修改文件<br>-r 表示搜索子目录<br>-l 表示输出匹配的文件名</p>
 
       
     </div>
@@ -1189,7 +1289,7 @@ Go 团队的 David</p>
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/82/">82</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/9/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/84/">84</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
