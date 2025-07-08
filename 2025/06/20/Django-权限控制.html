@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">154</span>
+        <span class="site-state-item-count">155</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -306,13 +306,13 @@
     <div class="post-body" itemprop="articleBody"><p>关于 django 权限控制，也是出于项目需求，一般的项目都差不多需要这样的权限控制</p>
 <p>在django中，这里实现的其实是最简单的控制，非登录用户禁止访问产品管理界面，在django中只需要在view函数中增加<code>@login_required</code>修饰符即可:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@login_required</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">woman</span>(<span class="params">request</span>):</span><br><span class="line">    <span class="keyword">if</span> request.user.is_authenticated():</span><br><span class="line">        user = request.user;</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        user = request.user;</span><br><span class="line"></span><br><span class="line">    items_woman = Woman.objects.<span class="built_in">filter</span>(is_show=<span class="number">0</span>).order_by(<span class="string">&#x27;-create_date&#x27;</span>)[:<span class="number">10</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> render_to_response(<span class="string">&#x27;accounts/woman.html&#x27;</span>,&#123;<span class="string">&#x27;user&#x27;</span>:user,<span class="string">&#x27;action&#x27;</span>:<span class="string">&#x27;woman&#x27;</span>,<span class="string">&#x27;items&#x27;</span>:items_woman&#125;,context_instance=RequestContext(request))</span><br></pre></td></tr></table></figure>
-
-<p>修饰符实现了如下功能：  </p>
-<p>如果用户没有登录，重定向到&#x2F;account&#x2F;login&#x2F;，并且把当前绝对url作为next参数用get方法传递过去；<br>如果已经正常登录，则直接正常执行视图函数；  </p>
-<p>这样例子中需要的功能就实现了。但是这充其量是“登录限制”，而更常见的需求是“访问控制”，即区分已经登录的用户，对不同的视图有不同的访问权限。因为我们的例子中没有涉及到，所以只把相关的做法简单例举在下面：  </p>
-<p>访问控制通过django的<code>request.user.has_perm()</code>实现，函数返回true和false。表示该用户是否有权限，而权限是auth应用中定义的Permission类型；User与Permission是many-to-many的关系  </p>
-<p>django还提供了一个<code>@permission_required</code>修饰符，来限定view函数只有在User具有相应权限的情况下才能访问  </p>
-<p>django对于每个模型类，自动增加add,change,delete三种权限，以便于控制权限，也可以自己设定自己的权限  </p>
+<p>修饰符实现了如下功能：</p>
+<p>如果用户没有登录，重定向到/account/login/，并且把当前绝对url作为next参数用get方法传递过去；<br>
+如果已经正常登录，则直接正常执行视图函数；</p>
+<p>这样例子中需要的功能就实现了。但是这充其量是“登录限制”，而更常见的需求是“访问控制”，即区分已经登录的用户，对不同的视图有不同的访问权限。因为我们的例子中没有涉及到，所以只把相关的做法简单例举在下面：</p>
+<p>访问控制通过django的<code>request.user.has_perm()</code>实现，函数返回true和false。表示该用户是否有权限，而权限是auth应用中定义的Permission类型；User与Permission是many-to-many的关系</p>
+<p>django还提供了一个<code>@permission_required</code>修饰符，来限定view函数只有在User具有相应权限的情况下才能访问</p>
+<p>django对于每个模型类，自动增加add,change,delete三种权限，以便于控制权限，也可以自己设定自己的权限</p>
 <p>这部分代码可以自己实现</p>
 
     </div>

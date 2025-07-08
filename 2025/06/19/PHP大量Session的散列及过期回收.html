@@ -26,12 +26,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="最近服务器登录不了啦，登录后就退出来了，为什么？看下面吧 一台服务器流量比较大，因为程序的需要，session的过期时间设置的是3小时，导致&#x2F;tmp下堆积了近20万的session文件。进而导致内核占用 的cpu急剧上升。因为session的读写涉及到大量小文件的随机读写，并且是集中在一个目录下，iowait也急剧升高。 首先考虑将session放入内存中最简单的办法莫过于将&#x2F;">
+    <meta name="description" content="最近服务器登录不了啦，登录后就退出来了，为什么？看下面吧 一台服务器流量比较大，因为程序的需要，session的过期时间设置的是3小时，导致&#x2F;tmp下堆积了近20万的session文件。进而导致内核占用 的cpu急剧上升。因为session的读写涉及到大量小文件的随机读写，并且是集中在一个目录下，iowait也急剧升高。 首先考虑将session放入内存中 最简单的办法莫过于将&#x2F;tmp挂载为 tm">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="PHP大量Session的散列及过期回收">
 <meta property="og:url" content="https://blog.gowhich.com/2025/06/19/PHP%E5%A4%A7%E9%87%8FSession%E7%9A%84%E6%95%A3%E5%88%97%E5%8F%8A%E8%BF%87%E6%9C%9F%E5%9B%9E%E6%94%B6.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="最近服务器登录不了啦，登录后就退出来了，为什么？看下面吧 一台服务器流量比较大，因为程序的需要，session的过期时间设置的是3小时，导致&#x2F;tmp下堆积了近20万的session文件。进而导致内核占用 的cpu急剧上升。因为session的读写涉及到大量小文件的随机读写，并且是集中在一个目录下，iowait也急剧升高。 首先考虑将session放入内存中最简单的办法莫过于将&#x2F;">
+<meta property="og:description" content="最近服务器登录不了啦，登录后就退出来了，为什么？看下面吧 一台服务器流量比较大，因为程序的需要，session的过期时间设置的是3小时，导致&#x2F;tmp下堆积了近20万的session文件。进而导致内核占用 的cpu急剧上升。因为session的读写涉及到大量小文件的随机读写，并且是集中在一个目录下，iowait也急剧升高。 首先考虑将session放入内存中 最简单的办法莫过于将&#x2F;tmp挂载为 tm">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-19T05:54:31.000Z">
 <meta property="article:modified_time" content="2025-06-19T06:04:56.663Z">
@@ -179,7 +179,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1"><span class="nav-number">1.</span> <span class="nav-text">首先考虑将session放入内存中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2"><span class="nav-number">2.</span> <span class="nav-text">将session存储到不通的目录中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3"><span class="nav-number">3.</span> <span class="nav-text">创建session存储文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4"><span class="nav-number">4.</span> <span class="nav-text">session的回收</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A6%96%E5%85%88%E8%80%83%E8%99%91%E5%B0%86session%E6%94%BE%E5%85%A5%E5%86%85%E5%AD%98%E4%B8%AD"><span class="nav-number">1.</span> <span class="nav-text">首先考虑将session放入内存中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%86session%E5%AD%98%E5%82%A8%E5%88%B0%E4%B8%8D%E9%80%9A%E7%9A%84%E7%9B%AE%E5%BD%95%E4%B8%AD"><span class="nav-number">2.</span> <span class="nav-text">将session存储到不通的目录中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAsession%E5%AD%98%E5%82%A8%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">3.</span> <span class="nav-text">创建session存储文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#session%E7%9A%84%E5%9B%9E%E6%94%B6"><span class="nav-number">4.</span> <span class="nav-text">session的回收</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">154</span>
+        <span class="site-state-item-count">155</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -305,24 +305,24 @@
     
     
     <div class="post-body" itemprop="articleBody"><p>最近服务器登录不了啦，登录后就退出来了，为什么？看下面吧</p>
-<p>一台服务器流量比较大，因为程序的需要，session的过期时间设置的是3小时，导致&#x2F;tmp下堆积了近20万的session文件。进而导致内核占用 的cpu急剧上升。因为session的读写涉及到大量小文件的随机读写，并且是集中在一个目录下，iowait也急剧升高。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="首先考虑将session放入内存中"></a><a href="#1">首先考虑将session放入内存中</a></h3><p>最简单的办法莫过于将&#x2F;tmp挂载为 tmpfs文件系统，也就是内存中</p>
-<h3 id="2"><a href="#2" class="headerlink" title="将session存储到不通的目录中"></a><a href="#2">将session存储到不通的目录中</a></h3><p>php本身支持session的多级散列  </p>
+<p>一台服务器流量比较大，因为程序的需要，session的过期时间设置的是3小时，导致/tmp下堆积了近20万的session文件。进而导致内核占用 的cpu急剧上升。因为session的读写涉及到大量小文件的随机读写，并且是集中在一个目录下，iowait也急剧升高。</p>
+<h3 id="首先考虑将session放入内存中"><a href="#1">首先考虑将session放入内存中</a></h3>
+<p>最简单的办法莫过于将/tmp挂载为 tmpfs文件系统，也就是内存中</p>
+<h3 id="将session存储到不通的目录中"><a href="#2">将session存储到不通的目录中</a></h3>
+<p>php本身支持session的多级散列</p>
 <p>在php.ini中，将</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">;session.save_path = /tmp</span><br></pre></td></tr></table></figure>
-
 <p>改为</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session.save_path = <span class="string">&quot;2;/tmp/session&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>表示将session存储到 <code>/tmp/session</code>这个文件夹中，并且是用2及散列。  </p>
+<p>表示将session存储到 <code>/tmp/session</code>这个文件夹中，并且是用2及散列。</p>
 <p>保存退出，等第三步结束后重启php</p>
-<h3 id="3"><a href="#3" class="headerlink" title="创建session存储文件夹"></a><a href="#3">创建session存储文件夹</a></h3><p>php并不会自动去创建这些文件夹，不过在源文件中提供了一些创建文件夹的脚本。下面这个脚本也好用</p>
+<h3 id="创建session存储文件夹"><a href="#3">创建session存储文件夹</a></h3>
+<p>php并不会自动去创建这些文件夹，不过在源文件中提供了一些创建文件夹的脚本。下面这个脚本也好用</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">I=<span class="string">&quot;0 1 2 3 4 5 6 7 8 9 a b c d e f&quot;</span></span><br><span class="line"><span class="keyword">for</span> acm <span class="keyword">in</span> <span class="variable">$I</span>;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> <span class="variable">$I</span>;</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">mkdir</span> -p /tmp/session/<span class="variable">$acm</span>/<span class="variable">$x</span>;</span><br><span class="line"><span class="keyword">done</span>;</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"><span class="built_in">chown</span> -R nobody:nobody /tmp/session</span><br><span class="line"><span class="built_in">chmod</span> -R 1777 /tmp/session</span><br></pre></td></tr></table></figure>
-
-<p>因为&#x2F;tmp是用的内存，服务器重启后，里面的所有文件都会丢失，所以，需要把上面的脚本加入到 <code>/etc/rc.local</code>中，并且要放在启动php之前</p>
-<h3 id="4"><a href="#4" class="headerlink" title="session的回收"></a><a href="#4">session的回收</a></h3><p>session在经过<code>session.gc_maxlifetime</code>后会过期，但并不会马上被删除，时间长了以后会造成<code>/tmp</code>空间占用很大。具体的删除算法懒得去研究。下面这个命令可以删除过期的session，我这里定义的过期时间是3小时。</p>
+<p>因为/tmp是用的内存，服务器重启后，里面的所有文件都会丢失，所以，需要把上面的脚本加入到 <code>/etc/rc.local</code>中，并且要放在启动php之前</p>
+<h3 id="session的回收"><a href="#4">session的回收</a></h3>
+<p>session在经过<code>session.gc_maxlifetime</code>后会过期，但并不会马上被删除，时间长了以后会造成<code>/tmp</code>空间占用很大。具体的删除算法懒得去研究。下面这个命令可以删除过期的session，我这里定义的过期时间是3小时。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /tmp/session -amin +180 -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure>
-
 <p>放入cron中，10分钟执行一次，完事。</p>
 <p>其中有些步骤本网站已经有说明，但是缺少的是如果删除生成的session文件，娘炮哦，我原因为它会自动删除生成的session文件的哈，结果，跟我想的逆天啦。</p>
 <p>关于php.ini文件的配置和session文件的目录的设置，这篇文章有讲到的</p>
@@ -330,7 +330,6 @@
 <p>可以去看下，我这里主要记录下，关于删除生成的session文件的处理办法</p>
 <p>很简单的：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find /tmp/session -mtime +1 -<span class="built_in">type</span> f -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure>
-
 <p>就是这条语句，想知道如何理解这行命令吗？要不继续往下看，要不就自己google去吧。</p>
 
     </div>

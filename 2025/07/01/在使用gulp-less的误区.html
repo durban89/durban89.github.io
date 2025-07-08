@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">154</span>
+        <span class="site-state-item-count">155</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -306,12 +306,10 @@
     <div class="post-body" itemprop="articleBody"><p>在使用gulp-less的时候会出现这样的一个问题</p>
 <p><strong>这个修改之前的代码</strong></p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//变量声明</span></span><br><span class="line"><span class="keyword">var</span> paths = &#123;</span><br><span class="line">  <span class="string">&#x27;less&#x27;</span>:[</span><br><span class="line">      <span class="string">&#x27;./app/less/**/*.less&#x27;</span>,</span><br><span class="line">    ]</span><br><span class="line">&#125;;</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;less&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>(paths.<span class="property">less</span>)</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">gulpLess</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./app/css&#x27;</span>))</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
 <p>其实我的意思就是，将我less目录下面的所有文件合并成一个app.css</p>
 <p>但是这样执行确实行不通，会爆出来很多的错误。之前还是一头雾水，后来换了方式</p>
 <p><strong>这个修改之后的代码</strong></p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//变量声明</span></span><br><span class="line"><span class="keyword">var</span> paths = &#123;</span><br><span class="line">  <span class="string">&#x27;less&#x27;</span>:[</span><br><span class="line">      <span class="string">&#x27;./app/less/app.less&#x27;</span>,</span><br><span class="line">      <span class="string">&#x27;./app/less/main.less&#x27;</span>, </span><br><span class="line">    ]</span><br><span class="line">&#125;;</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;less&#x27;</span>,<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>(paths.<span class="property">less</span>)</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">gulpLess</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./app/css&#x27;</span>))</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
 <p>其实这样执行就没有问题了，其实很明了，问题已经出现了，也知道了原因，因为我们要生成一个文件app.css，那么其实app.less是主要文件</p>
 <p>那么在其中的一些变量都是引过来，然后执行。那么我之前的代码问题就是在于我要将所有的less文件都编译成对应的css，我的天，怎么可能，</p>
 <p>那要解决的问题就是每个文件都要引入需要的文件，哈哈，糊涂了。</p>
