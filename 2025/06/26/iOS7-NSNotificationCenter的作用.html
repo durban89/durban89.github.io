@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-count">152</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -311,14 +311,19 @@
 <p>使用方法如下：</p>
 <p>第一步：定义一个方法，当注册信息侦听的对象，接受到消息后就调用该函数作为消息相应的函数</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)update:(<span class="built_in">NSNotificationCenter</span>*)notification</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> addHeadImage];</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span></span><br><span class="line">                                                    name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                  object:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>第二步：对象注册，并关连消息。实质上也就是注册事件的侦听，可以单独调用，也可以放在自己的函数内部进行调用。</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                             selector:<span class="keyword">@selector</span>(update:)</span><br><span class="line">                                                 name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                               object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+
 <p>在函数中进行调用</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) sinaLogin:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                             selector:<span class="keyword">@selector</span>(update:)</span><br><span class="line">                                                 name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                               object:<span class="literal">nil</span>];</span><br><span class="line">    </span><br><span class="line">    WBAuthorizeRequest *request = [WBAuthorizeRequest request];</span><br><span class="line">    request.redirectURI = kRedirectURI;</span><br><span class="line">    request.scope = <span class="string">@&quot;all&quot;</span>;</span><br><span class="line">    [WeiboSDK sendRequest:request];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>第三步：在要发出通知消息的地方调用。</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] postNotificationName:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                            object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+
 <p>第四步：使用完后，别忘了注销掉该消息的侦听函数</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span></span><br><span class="line">                                                    name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                  object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+
 <p>其实这里我是放在了我的调用函数里面，如果你觉的你的函数在调用完之后不去注销，也可以去掉的，然后在其他的地方进行注销。</p>
 <hr>
 <p>参考文章：</p>

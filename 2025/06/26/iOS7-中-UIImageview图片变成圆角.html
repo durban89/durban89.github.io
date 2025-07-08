@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-count">152</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -306,6 +306,7 @@
     <div class="post-body" itemprop="articleBody"><p>之前做图片的圆角是使用了一个别人写的类库叫做GBPathImageView，实现起来是相当的复杂啊，重写了UIImageview这个类，不过呢用起来也是很不错的，但是遇到的问题是，在进行图片异步加载的时候，要怎么处理呢，首先是要拿到这个图片，但是图片异步的话，图片首先是不在本地的，那么你重新绘制的话就是一张默认的空图片，最后你要获取新图片再进行绘制，导致的结果就是重复做了两次操作，但是在cell这样的操作，感觉起来是相当的复杂，在你进行这个操作的时候，滑动的cell要做什么呢？</p>
 <p>好了，不多说说了，解决方法其实很简答，只怪自己对原生的类库不了解，也不怪别人的。</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *defaultImageString = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;person_default&quot;</span> ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">    <span class="built_in">UIImageView</span> *imageView = [[<span class="built_in">UIImageView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(imageViewX,</span><br><span class="line">                                                                           imageViewY,</span><br><span class="line">                                                                           imageViewWidth,</span><br><span class="line">                                                                           imageViewHeight)];</span><br><span class="line">    [imageView setImageWithURL:[<span class="built_in">NSURL</span> URLWithString:[storage fetchCelebrityPicWithId:_personId]]</span><br><span class="line">              placeholderImage:[<span class="built_in">UIImage</span> imageWithContentsOfFile:defaultImageString]</span><br><span class="line">   usingActivityIndicatorStyle:<span class="built_in">UIActivityIndicatorViewStyleWhiteLarge</span>];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CALayer</span> *lay  = imageView.layer;<span class="comment">//获取ImageView的层</span></span><br><span class="line">    [lay setMasksToBounds:<span class="literal">YES</span>];</span><br><span class="line">    [lay setCornerRadius:<span class="number">45.0</span>];</span><br></pre></td></tr></table></figure>
+
 <p>圆角的尺寸大家自己定义就好了。</p>
 <p>效果很明显。大家可以尝试一下。</p>
 <hr>

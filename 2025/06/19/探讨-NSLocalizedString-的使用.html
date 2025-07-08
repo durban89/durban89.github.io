@@ -204,7 +204,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">155</span>
+        <span class="site-state-item-count">152</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -306,19 +306,21 @@
     <div class="post-body" itemprop="articleBody"><p>程序本地化是扩展应用市场的重要砝码.iOS提供了简便的方法来实现本地化,其中用的最多的就是NSLocalizedString.</p>
 <p>首先查看下NSLocalizedString是什么:</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> NSLocalizedString(key, comment) \</span></span><br><span class="line"><span class="meta">        [[NSBundle mainBundle] localizedStringForKey:(key) value:@<span class="string">&quot;&quot;</span> table:nil]</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NSLocalizedStringFromTable(key, tbl, comment) \</span></span><br><span class="line"><span class="meta">        [[NSBundle mainBundle] localizedStringForKey:(key) value:@<span class="string">&quot;&quot;</span> table:(tbl)]</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NSLocalizedStringFromTableInBundle(key, tbl, bundle, comment) \</span></span><br><span class="line"><span class="meta">        [bundle localizedStringForKey:(key) value:@<span class="string">&quot;&quot;</span> table:(tbl)]</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> NSLocalizedStringWithDefaultValue(key, tbl, bundle, val, comment) \</span></span><br><span class="line"><span class="meta">        [bundle localizedStringForKey:(key) value:(val) table:(tbl)]</span></span><br></pre></td></tr></table></figure>
+
 <p>这里我们只看第一个</p>
 <p>这是一个宏,本质上是调用了函数 locakizedStrigForKey:.这样,这个宏做的其实就是在当前bundle中查找资源文件名Localizable.strings</p>
 <p>中键值key所指向的字符串.这样就不难理解还有诸如:NSLocalizedStringFromTable的宏了.</p>
 <p>下面我们就来具体实现一下.</p>
 <p>新建任一工程,然后添加新文件Localizable.strings</p>
-<p>然后选择文件属性中的&quot;Make File Localizable&quot;,页面自然跳转,再选择&quot;General&quot;选项卡时就会发现&quot;Add Localization&quot;了.</p>
-<p>默认有English,我们可以添加zh-hans ,然后在相应的文件中输入: “NAME” = “你好”,这样在代码中只需要简单的调用:</p>
+<p>然后选择文件属性中的”Make File Localizable”,页面自然跳转,再选择”General”选项卡时就会发现”Add Localization”了.</p>
+<p>默认有English,我们可以添加zh-hans ,然后在相应的文件中输入: “NAME” &#x3D; “你好”,这样在代码中只需要简单的调用:</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nameLabel.text = <span class="built_in">NSLocalizedString</span>(<span class="string">@&quot;NAME&quot;</span>,<span class="literal">nil</span>);</span><br></pre></td></tr></table></figure>
+
 <p>此时在工程文件下出现了 *.lpjo的文件夹,下面安置了相应的本地化文件.由此可以判断,对于其他资源文件如图片,xib文件都可以进行本地化.</p>
 <p>最后,我们再实现对程序名称的本地化.</p>
-<p>在工程的info.plist文件的属性中选择&quot;Make File Localizable&quot;,然后会发现工程下出现InfoPlist.strings的文件,如法炮制,添加zh-hans,并在</p>
-<p>相应的文件中添加&quot;CFBundleDisplayName&quot; = “中文名称” 即可.这样,你会发现你的机器上程序名称变成了中文.</p>
-<p>PS:我还遇到一个问题,就是在本地化的时候语言代码是需要手工添加的,apple的文档上说所有的语言代码可以从ISO639( <span class="exturl" data-url="aHR0cDovL3d3dy5sb2MuZ292L3N0YW5kYXJkcy9pc282MzktMi9waHAvRW5nbGlzaCU1Q19saXN0LnBocA==">http://www.loc.gov/standards/iso639-2/php/English\_list.php<i class="fa fa-external-link-alt"></i></span>)查询,可这个列表上中文对应的是chi/zho.而这显然没有区分简体和繁体中文.</p>
+<p>在工程的info.plist文件的属性中选择”Make File Localizable”,然后会发现工程下出现InfoPlist.strings的文件,如法炮制,添加zh-hans,并在</p>
+<p>相应的文件中添加”CFBundleDisplayName” &#x3D; “中文名称” 即可.这样,你会发现你的机器上程序名称变成了中文.</p>
+<p>PS:我还遇到一个问题,就是在本地化的时候语言代码是需要手工添加的,apple的文档上说所有的语言代码可以从ISO639( <span class="exturl" data-url="aHR0cDovL3d3dy5sb2MuZ292L3N0YW5kYXJkcy9pc282MzktMi9waHAvRW5nbGlzaC9fbGlzdC5waHApJUU2JTlGJUE1JUU4JUFGJUEyLCVFNSU4RiVBRiVFOCVCRiU5OSVFNCVCOCVBQSVFNSU4OCU5NyVFOCVBMSVBOCVFNCVCOCU4QSVFNCVCOCVBRCVFNiU5NiU4NyVFNSVBRiVCOSVFNSVCQSU5NCVFNyU5QSU4NCVFNiU5OCVBRmNoaS96aG8uJUU4JTgwJThDJUU4JUJGJTk5JUU2JTk4JUJFJUU3JTg0JUI2JUU2JUIyJUExJUU2JTlDJTg5JUU1JThDJUJBJUU1JTg4JTg2JUU3JUFFJTgwJUU0JUJEJTkzJUU1JTkyJThDJUU3JUI5JTgxJUU0JUJEJTkzJUU0JUI4JUFEJUU2JTk2JTg3">http://www.loc.gov/standards/iso639-2/php/English\_list.php)查询,可这个列表上中文对应的是chi/zho.而这显然没有区分简体和繁体中文<i class="fa fa-external-link-alt"></i></span>.</p>
 
     </div>
 
