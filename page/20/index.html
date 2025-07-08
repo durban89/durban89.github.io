@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">869</span>
+          <span class="site-state-item-count">908</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">152</span>
+        <span class="site-state-item-count">156</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Python%E5%BC%80%E5%8F%91%E8%A7%A3%E5%86%B3%E4%BE%9D%E8%B5%96%E5%BA%93%E7%9A%84%E5%8A%9E%E6%B3%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Webpack+gulp-%E5%AE%9E%E7%8E%B0-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%B9%B6%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%88%B0%E4%B8%83%E7%89%9B%E5%AE%8C%E7%BE%8E%E7%A4%BA%E4%BE%8B.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Python%E5%BC%80%E5%8F%91%E8%A7%A3%E5%86%B3%E4%BE%9D%E8%B5%96%E5%BA%93%E7%9A%84%E5%8A%9E%E6%B3%95.html" class="post-title-link" itemprop="url">Python开发解决依赖库的办法</a>
+          <a href="/2025/07/02/Webpack+gulp-%E5%AE%9E%E7%8E%B0-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%B9%B6%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%88%B0%E4%B8%83%E7%89%9B%E5%AE%8C%E7%BE%8E%E7%A4%BA%E4%BE%8B.html" class="post-title-link" itemprop="url">Webpack+Gulp 实现 静态文件打包并自动上传到七牛完美示例</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-01 11:54:18 / 修改时间：12:05:31" itemprop="dateCreated datePublished" datetime="2025-07-01T11:54:18+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 15:40:19 / 修改时间：15:53:12" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:19+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,14 +294,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><strong>python开发解决依赖库的办法</strong></p>
-<p>你可以用pip导出你的dependency:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip freeze &gt; requirements.txt</span><br></pre></td></tr></table></figure>
+          <p>经过几天的努力终于实现了一个完美的作品，webpack可以与gulp完美结合的进行打包静态文件，并将静态文件上传到七牛云存储，当然也可以传到你想传的云存储了，这里只分享一个七牛的云存储方案。</p>
+<p>关于如何使用webpack打包静态代码，这个可以参考我之前的一些文章和方案，不行的话可以进群交流。</p>
+<p>这里只分享一下gulp这边的操作，然后给一个例子实现如何一条命令打包静态文件并更新cdn文件的方法。</p>
+<p>先展示一下gulpfile.js文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> gulp = <span class="built_in">require</span>(<span class="string">&#x27;gulp&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> uglify = <span class="built_in">require</span>(<span class="string">&#x27;gulp-uglify&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> concat = <span class="built_in">require</span>(<span class="string">&#x27;gulp-concat&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> shrink = <span class="built_in">require</span>(<span class="string">&#x27;gulp-cssshrink&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;gulp-webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> qn = <span class="built_in">require</span>(<span class="string">&#x27;gulp-qn&#x27;</span>);</span><br><span class="line"><span class="comment">// MD5戳</span></span><br><span class="line"><span class="keyword">const</span> rev = <span class="built_in">require</span>(<span class="string">&#x27;gulp-rev-qn&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> revCollector = <span class="built_in">require</span>(<span class="string">&#x27;gulp-rev-collector&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> runSequence = <span class="built_in">require</span>(<span class="string">&#x27;run-sequence&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> qiniu_options = &#123;</span><br><span class="line">  <span class="attr">accessKey</span>: <span class="string">&#x27;xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">secretKey</span>: <span class="string">&#x27;xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">bucket</span>: <span class="string">&#x27;xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">domain</span>: <span class="string">&#x27;http://xxx.com&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-js&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/js/*.js&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">uglify</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">rev</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/js&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">qn</span>(&#123;</span><br><span class="line">      <span class="attr">qiniu</span>: qiniu_options,</span><br><span class="line">      <span class="attr">prefix</span>: <span class="string">&#x27;js&#x27;</span></span><br><span class="line">    &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(rev.<span class="title function_">manifest</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/rev/js&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-font-img&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/js/*.svg&#x27;</span>,<span class="string">&#x27;./build/js/*.gif&#x27;</span>,<span class="string">&#x27;./build/js/*.woff2&#x27;</span>,<span class="string">&#x27;./build/js/*.ttf&#x27;</span>,<span class="string">&#x27;./build/js/*.eot&#x27;</span>,<span class="string">&#x27;./build/js/*.woff&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">qn</span>(&#123;</span><br><span class="line">      <span class="attr">qiniu</span>: qiniu_options,</span><br><span class="line">      <span class="attr">prefix</span>: <span class="string">&#x27;js&#x27;</span></span><br><span class="line">    &#125;));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-css&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/js/*.css&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">rev</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/js&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">qn</span>(&#123;</span><br><span class="line">      <span class="attr">qiniu</span>: qiniu_options,</span><br><span class="line">      <span class="attr">prefix</span>: <span class="string">&#x27;css&#x27;</span></span><br><span class="line">    &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(rev.<span class="title function_">manifest</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/rev/css&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-html&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/rev/**/*.json&#x27;</span>, <span class="string">&#x27;./build/views/*.html&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">revCollector</span>(&#123;</span><br><span class="line">      <span class="attr">dirReplacements</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;/js/&#x27;</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/views&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;default&#x27;</span>,<span class="keyword">function</span>(<span class="params">callback</span>)&#123;</span><br><span class="line">  <span class="title function_">runSequence</span>(</span><br><span class="line">    [<span class="string">&#x27;publish-css&#x27;</span>,<span class="string">&#x27;publish-js&#x27;</span>,<span class="string">&#x27;publish-font-img&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;publish-html&#x27;</span>,</span><br><span class="line">    callback);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>然后在通过以下命令安装dependency:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install -r requirements.txt</span><br></pre></td></tr></table></figure>
-
-<p>如此依赖如果你在服务器部署的话，就可以直接安装需要的依赖库，就不用等着报错才去一个一个安装了。</p>
+<p>publish-js部分是将我的js文件进行版本更新并上传到七牛。</p>
+<p>publish-font-img部分是将我的字体文件、图片文件上传到七牛</p>
+<p>publish-css部分是将我的css文件进行版本更新并上传到七牛</p>
+<p>publish-html将我html文件中对应的js路径进行替换，好了，可以直接发布这个build文件夹下的文件了。</p>
 
       
     </div>
@@ -328,7 +330,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/NVM%E7%AE%A1%E7%90%86node-%E5%B9%B6%E5%8A%A0%E9%80%9Fnvm-%E5%8A%A0%E9%80%9Fnpm.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E6%BF%80%E6%B4%BB%E5%90%8E%E5%8F%AF%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8200M%E6%B5%81%E9%87%8FVPN.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -346,7 +348,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/NVM%E7%AE%A1%E7%90%86node-%E5%B9%B6%E5%8A%A0%E9%80%9Fnvm-%E5%8A%A0%E9%80%9Fnpm.html" class="post-title-link" itemprop="url">NVM管理node，并加速nvm、加速npm</a>
+          <a href="/2025/07/02/%E6%BF%80%E6%B4%BB%E5%90%8E%E5%8F%AF%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8200M%E6%B5%81%E9%87%8FVPN.html" class="post-title-link" itemprop="url">激活后可免费使用200M流量VPN</a>
         </h2>
 
         <div class="post-meta-container">
@@ -358,7 +360,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-01 11:54:15 / 修改时间：14:39:02" itemprop="dateCreated datePublished" datetime="2025-07-01T11:54:15+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 15:40:07 / 修改时间：15:53:40" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:07+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -380,392 +382,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>nvm的安装请转到这里：</p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NyZWF0aW9uaXgvbnZt">https://github.com/creationix/nvm<i class="fa fa-external-link-alt"></i></span></p>
-<p><strong>下面先说nvm的加速</strong></p>
-<p>nvm 默认是从 <span class="exturl" data-url="aHR0cDovL25vZGVqcy5vcmcvZGlzdC8=">http://nodejs.org/dist/<i class="fa fa-external-link-alt"></i></span> 下载的, 国外服务器, 必然很慢,</p>
-<p>好在 nvm 以及支持从镜像服务器下载包, 于是我们可以方便地从七牛的 node dist 镜像下载:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ NVM_NODEJS_ORG_MIRROR=http://dist.u.qiniudn.com nvm install 0.12.7</span><br></pre></td></tr></table></figure>
-
-<p>于是你就会看到一段非常快速进度条:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">######################################################################## 100.0%</span></span><br><span class="line">Now using node v0.12.7</span><br></pre></td></tr></table></figure>
-
-<p>如果你不想每次都输入环境变量 NVM_NODEJS_ORG_MIRROR, 那么我建议你加入到 .bashrc 文件中:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nvm</span></span><br><span class="line"><span class="built_in">export</span> NVM_NODEJS_ORG_MIRROR=http://dist.u.qiniudn.com</span><br><span class="line"><span class="built_in">source</span> ~/git/nvm/nvm.sh</span><br></pre></td></tr></table></figure>
-
-<p>然后你可以继续非常方便地安装各个版本的 node 了, 你可以查看一下你当前已经安装的版本:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
-
-<p>查看远端的</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm ls-remote</span><br></pre></td></tr></table></figure>
-
-<p><strong>下面再说下npm加速</strong></p>
-<p>同理 nvm , npm 默认是从国外的源获取和下载包信息, 不慢才奇怪.</p>
-<p>可以通过简单的 —registry 参数, 使用国内的镜像 <span class="exturl" data-url="aHR0cDovL3IuY25wbWpzLm9yZy8=">http://r.cnpmjs.org<i class="fa fa-external-link-alt"></i></span> :</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm --registry=http://r.cnpmjs.org install koa</span><br></pre></td></tr></table></figure>
-
-<p>但是毕竟镜像跟官方的 npm 源还是会有一个同步时间差异, 目前 cnpm 的默认同步时间间隔是 15 分钟.</p>
-<p>如果你是模块发布者, 或者你想马上同步一个模块, 那么推荐你安装 cnpm cli:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm --registry=http://r.cnpmjs.org install cnpm -g</span><br></pre></td></tr></table></figure>
-
-<p>通过 cnpm 命令行, 你可以快速同步任意模块:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cnpm <span class="built_in">sync</span> koa connect mocha</span><br></pre></td></tr></table></figure>
-
-<p>呃, 我就是不想安装 cnpm cli 怎么办? 哈哈, 早就想到你会这么懒了, 于是我们还有一个 web 页面:</p>
-<p>例如我想马上同步 koa, 直接打开浏览器: <span class="exturl" data-url="aHR0cDovL2NucG1qcy5vcmcvc3luYy9rb2E=">http://cnpmjs.org/sync/koa<i class="fa fa-external-link-alt"></i></span></p>
-<p>或者你是命令行控, 通过 open 命令打开:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ open http://cnpmjs.org/sync/koa</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/%E5%9B%BD%E5%86%85%E8%A7%A3%E5%86%B3github%E8%AE%BF%E9%97%AE%E6%85%A2%E7%9A%84%E5%8A%9E%E6%B3%95.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/%E5%9B%BD%E5%86%85%E8%A7%A3%E5%86%B3github%E8%AE%BF%E9%97%AE%E6%85%A2%E7%9A%84%E5%8A%9E%E6%B3%95.html" class="post-title-link" itemprop="url">国内解决github访问慢的办法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-01 11:53:20 / 修改时间：12:07:30" itemprop="dateCreated datePublished" datetime="2025-07-01T11:53:20+08:00">2025-07-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>github 慢, 或者说是它的资源 host 被堵而已, 大家可以通过简单的 hosts 映射解决:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">185.31.16.184 github.global.ssl.fastly.net</span><br></pre></td></tr></table></figure>
-
-<p>原因是这样的吧： <span class="exturl" data-url="aHR0cDovL3dlaWJvLmNvbS8xNDE1MzM4MjQ0L0FDVFlrcTh4Sw==">http://weibo.com/1415338244/ACTYkq8xK<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Nodejs-iconv-lite-%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%87%A0%E4%B8%AA%E7%8E%AF%E8%8A%82.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Nodejs-iconv-lite-%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%87%A0%E4%B8%AA%E7%8E%AF%E8%8A%82.html" class="post-title-link" itemprop="url">Nodejs iconv-lite 使用过程中需要注意的几个环节</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-07-01 11:52:51" itemprop="dateCreated datePublished" datetime="2025-07-01T11:52:51+08:00">2025-07-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-08 09:41:06" itemprop="dateModified" datetime="2025-07-08T09:41:06+08:00">2025-07-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近在使用Nodejs的一个库Iconv-lite，有时候会报出这样一个提示</p>
-<blockquote>
-<p>Iconv-lite warning: decode()-ing strings is deprecated. Refer to <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FzaHR1Y2hraW4vaWNvbnYtbGl0ZS93aWtpL1VzZS1CdWZmZXJzLXdoZW4tZGVjb2Rpbmc=">https://github.com/ashtuchkin/iconv-lite/wiki/Use-Buffers-when-decoding<i class="fa fa-external-link-alt"></i></span></p>
-</blockquote>
-<p>已经给出了对应的Refer。</p>
-<p>具体详情见：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FzaHR1Y2hraW4vaWNvbnYtbGl0ZS93aWtpL1VzZS1CdWZmZXJzLXdoZW4tZGVjb2Rpbmc=">https://github.com/ashtuchkin/iconv-lite/wiki/Use-Buffers-when-decoding<i class="fa fa-external-link-alt"></i></span><br>其实看完之后，很简单就是<br>如果有一个Buffer数据的话，你进行了toString()后，就已经进行了一层默认的decode操作，一般默认的是utf-8，<br>所以如果你在进行iconv.decode()的时候，就会出现一个提示，这个在最新版本会出现这个问题，其他的版本我就不知道了，<br>如果你在使用的过程中，decode之后，没有效果的话，可以试试，在decode之前先不要任何操作，直接将Buffer数据进行<br>decode，进过测试，直接decode(Bufffer)数据会效果比较好，谁用谁知道。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/DNS-%E6%94%B6%E9%9B%86.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/DNS-%E6%94%B6%E9%9B%86.html" class="post-title-link" itemprop="url">DNS 收集</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-01 11:52:47 / 修改时间：12:08:47" itemprop="dateCreated datePublished" datetime="2025-07-01T11:52:47+08:00">2025-07-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>&#x3D;&gt;]Open DNS</p>
-<p>208.67.222.222</p>
-<p>208.67.220.220</p>
-</blockquote>
-<blockquote>
-<p>&#x3D;&gt;]V2EX DNS</p>
-<p>199.91.73.222</p>
-<p>178.79.131.110</p>
-</blockquote>
-<blockquote>
-<p>&#x3D;&gt;]OneDNS</p>
-<p>112.124.47.27</p>
-</blockquote>
-<blockquote>
-<p>&#x3D;&gt;]Comodo Secure DNS</p>
-<p>8.26.56.26</p>
-<p>8.20.247.20</p>
-</blockquote>
-<blockquote>
-<p>&#x3D;&gt;]Google Public DNS</p>
-<p>The Google Public DNS IPv4 addresses</p>
-<p>8.8.8.8</p>
-<p>8.8.4.4</p>
-</blockquote>
-<blockquote>
-<p>The Google Public DNS IPv6 addresses</p>
-<p>2001:4860:4860::8888</p>
-<p>2001:4860:4860::8844</p>
-</blockquote>
-<blockquote>
-<p>&#x3D;&gt;]114 DNS</p>
-<p>无劫持</p>
-<p>114.114.114.114</p>
-<p>114.114.115.115</p>
-<p>拦截有害网站</p>
-<p>114.114.114.119</p>
-<p>114.114.115.119</p>
-<p>拦截色情网站</p>
-<p>114.114.114.110</p>
-<p>114.114.115.110</p>
-</blockquote>
-<blockquote>
-<p>&#x3D;&gt;]Norton ConnectSafe</p>
-<p>A - Security (malware, phishing sites and scam sites)</p>
-<p>Preferred DNS: 199.85.126.10</p>
-<p>Alternate DNS: 199.85.127.10</p>
-<p>B - Security + Pornography</p>
-<p>Preferred DNS: 199.85.126.20</p>
-<p>Alternate DNS: 199.85.127.20</p>
-<p>C - Security + Pornography + Non-Family Friendly</p>
-<p>Preferred DNS: 199.85.126.30</p>
-<p>Alternate DNS: 199.85.127.30</p>
-</blockquote>
-<blockquote>
-<p>&#x3D;&gt;]DNS派 公共DNS</p>
-<p>电信：</p>
-<p>101.226.4.6</p>
-<p>218.30.118.6</p>
-</blockquote>
-<blockquote>
-<p>联通：</p>
-<p>123.125.81.6</p>
-<p>140.207.198.6</p>
-</blockquote>
-<blockquote>
-<p>移动：</p>
-<p>101.226.4.6</p>
-<p>218.30.118.6</p>
-</blockquote>
-<blockquote>
-<p>铁通：</p>
-<p>101.226.4.6</p>
-<p>218.30.118.6</p>
-</blockquote>
-<blockquote>
-<p>&#x3D;&gt;]阿里DNS</p>
-<p>223.5.5.5</p>
-<p>223.6.6.6</p>
-</blockquote>
+          <p>激活后可免费使用200M流量VPN：</p>
+<p>点击如下链接可免费获取：<span class="exturl" data-url="aHR0cDovL2dqc3EubWUvMTE1NDQ0NDI=" title="免费VPN">免费VPN<i class="fa fa-external-link-alt"></i></span></p>
 <hr>
-<p>DNS 网站</p>
-<blockquote>
-<p><span class="exturl" data-url="aHR0cDovL2Rucy52MmV4LmNvbS8=">http://dns.v2ex.com/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy4xMTRkbnMuY29tLw==">http://www.114dns.com/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5hbGlkbnMuY29tLw==">http://www.alidns.com/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5vcGVuZG5zLmNvbS8=">http://www.opendns.com/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5pbnRlcm5pYy5uZXQv">http://www.internic.net/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5ub3J0b25kbnMuY29tLw==">http://www.nortondns.com/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5td3NsLm9yZy5jbi9vbmVkbnM=">http://www.mwsl.org.cn/onedns<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5kbnNwYWkuY29tL3B1YmxpYy5odG1s">http://www.dnspai.com/public.html<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jb21vZG8uY29tL3NlY3VyZS1kbnMv">http://www.comodo.com/secure-dns/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL2NvZGUuZ29vZ2xlLmNvbS9pbnRsL3poLUNOL3NwZWVkL3B1YmxpYy1kbnM=">http://code.google.com/intl/zh-CN/speed/public-dns<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5kbnNiZWQuY29tLw==">http://www.dnsbed.com/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy56bmRucy5jb20v">http://www.zndns.com/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy44amRucy5jb20v">http://www.8jdns.com/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy4zNjBkbnMuY29tLw==">http://www.360dns.com/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3B1YmxpYy1kbnMudGsv">http://public-dns.tk/<i class="fa fa-external-link-alt"></i></span></p>
-</blockquote>
+<p>以上已不再免费，稳定的VPN可<span class="exturl" data-url="aHR0cHM6Ly9wb3J0YWwuc2hhZG93c29ja3MuYXUvYWZmLnBocD9hZmY9MzAwMzk=">点击这里<i class="fa fa-external-link-alt"></i></span>进行购买</p>
 
       
     </div>
@@ -792,7 +412,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/MacOS-%E4%B8%8B-%E4%BD%BF%E7%94%A8powerline%E4%B8%BABash%E5%92%8CVIM%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AA%E7%BE%8E%E8%A7%82%E5%A5%A2%E5%8D%8E%E7%9A%84%E7%8A%B6%E6%80%81%E6%8F%90%E7%A4%BA%E6%A0%8F.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Git%E6%8B%89%E5%8F%96%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%88%B0%E6%9C%AC%E5%9C%B0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -810,7 +430,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/MacOS-%E4%B8%8B-%E4%BD%BF%E7%94%A8powerline%E4%B8%BABash%E5%92%8CVIM%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AA%E7%BE%8E%E8%A7%82%E5%A5%A2%E5%8D%8E%E7%9A%84%E7%8A%B6%E6%80%81%E6%8F%90%E7%A4%BA%E6%A0%8F.html" class="post-title-link" itemprop="url">MacOS 下 使用powerline为Bash和VIM配置一个美观奢华的状态提示栏</a>
+          <a href="/2025/07/02/Git%E6%8B%89%E5%8F%96%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%88%B0%E6%9C%AC%E5%9C%B0.html" class="post-title-link" itemprop="url">Git拉取远程分支到本地</a>
         </h2>
 
         <div class="post-meta-container">
@@ -822,7 +442,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-01 11:36:21 / 修改时间：11:37:32" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:21+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 15:39:59 / 修改时间：15:54:28" itemprop="dateCreated datePublished" datetime="2025-07-02T15:39:59+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -844,117 +464,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><strong>开始Mac上安装powerline</strong></p>
-<p>首先我们需要下载安装powerline。在正式安装之前先啰嗦几句powerline的代码结构，github上的powerline项目下涵盖了用于适配各种APP(bash，vim等)的代码。因此，你完全可以在Mac任何一个地方下载该代码包，然后将不同的APP配置使用这个路径，以Plugin形式加载。为了方便读者选择性安装，本文对于不同的程序将分开给出安装路径和配置。</p>
-<p>先确定本机环境有一套版本大于等于2.7的Python的环境。如果没有合适环境的话，可以通过homebrew安装，这里不多做赘述。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; python -v</span><br><span class="line">Python 2.7.9</span><br></pre></td></tr></table></figure>
-
-<p>然后通过pip安装powerline：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; pip install powerline-status</span><br></pre></td></tr></table></figure>
-
-<p>安装完成后通过pip show powerline-status查看powerline所处的具体路径。注意：这个路径很重要，会用在之后的配置环节</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; pip show powerline-status</span><br><span class="line">Name: powerline-status</span><br><span class="line">Version: 2.0</span><br><span class="line">Location: /Library/Python/2.7/site-packages</span><br><span class="line">Requires:</span><br></pre></td></tr></table></figure>
-
-<p><strong>配置Bash使用powerline</strong></p>
-<p>配置方法很简单，只需要在Bash配置文件(例如：&#x2F;etc&#x2F;bashrc，<del>&#x2F;.bashrc，</del>&#x2F;.bash_profile)中增加一行调用安装路径下的bindings&#x2F;bash&#x2F;powerline.sh即可。这样每次调用生成新的Bash窗口时，都会自动执行powerline.sh文件中的内容。下面以~&#x2F;.bash_profile为例：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; <span class="built_in">echo</span> &lt;&lt; <span class="string">EOF &gt;&gt; ~/.bash_profile </span></span><br><span class="line"><span class="string">. /Library/Python/2.7/site-packages/powerline/bindings/bash/powerline.sh</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line">shell&gt; . /Library/Python/2.7/site-packages/powerline/bindings/bash/powerline.sh</span><br></pre></td></tr></table></figure>
-
-<p>注意：根据python安装方式的不同，你的powerline所在路径也可能不同。如果你是通过python官网或者apple store通过安装工具安装的python，那么你的powerline安装路径就是&#x2F;Library&#x2F;Python&#x2F;2.7&#x2F;site-packages&#x2F;powerline&#x2F;。如果你是通过brew install python的话，那么你的powerline路径可能会有不同。请根据实际情况修改上面的命令。</p>
-<p><strong>Teriminal字体配置</strong></p>
-<p>执行完上面两步后，不出意外powerline就已经开始工作了。但是你会发现Bash提示符会是一些非常恶心的符号。</p>
-<p>出现这样情况的原因是powerline为了美观自己造了一些符号，而这些符号不在Unicode字库内（如果你不知道Unicode字库是什么的话可以看下博主以前的相关介绍）。所以想要powerline正常显示的话，需要安装特殊处理过的字体。好在有一位热心人的帮助，他把大部分的程序猿常用的等宽字体都打上了powerline patch使得我们的这部配置将异常简单。首先我们从github上下载并安装字体：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; git <span class="built_in">clone</span> https://github.com/powerline/fonts.git</span><br><span class="line">shell&gt; <span class="built_in">cd</span> fonts</span><br><span class="line">shell&gt; ./install.sh</span><br></pre></td></tr></table></figure>
-
-<p>安装完成后我们就可以在iTerm2或者Terminal的字体选项里看到并选择多个xxx for powerline的字体了。*注意：对于ASCII fonts和non-ASCII fonts都需要选择for powerline的字体</p>
-<p><strong>VIM相关配置</strong></p>
-<p>这部分我们将介绍如何为VIM配置powerline。首先你需要确保你的vim编译时开启了python支持。如果通过python –version|grep +python没有结果的话，那么你需要通过brew install vim –with-python –with-ruby –with-perl重新编译安装vim，或者使用brew install macvim –env-std –override-system-vim安装macvim。</p>
-<p>然后，你只需要在~&#x2F;.vimrc中加上以下部分，VIM就能够正常加载powerline功能了：</p>
-<p>注意：其中set rtp+&#x3D;&#x2F;Library&#x2F;Python&#x2F;2.7&#x2F;site-packages&#x2F;powerline&#x2F;bindings&#x2F;vim和上文一样需要按照自己的实际情况调整。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> rtp+=/Library/Python/2.7/site-packages/powerline/bindings/vim</span><br><span class="line"><span class="string">&quot; These lines setup the environment to show graphics and colors correctly.</span></span><br><span class="line"><span class="string">set nocompatible</span></span><br><span class="line"><span class="string">set t_Co=256</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">let g:minBufExplForceSyntaxEnable = 1</span></span><br><span class="line"><span class="string">python from powerline.vim import setup as powerline_setup</span></span><br><span class="line"><span class="string">python powerline_setup()</span></span><br><span class="line"><span class="string">python del powerline_setup</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">if ! has(&#x27;gui_running&#x27;)</span></span><br><span class="line"><span class="string">   set ttimeoutlen=10</span></span><br><span class="line"><span class="string">   augroup FastEscape</span></span><br><span class="line"><span class="string">      autocmd!</span></span><br><span class="line"><span class="string">      au InsertEnter * set timeoutlen=0</span></span><br><span class="line"><span class="string">      au InsertLeave * set timeoutlen=1000</span></span><br><span class="line"><span class="string">   augroup END</span></span><br><span class="line"><span class="string">endif</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">set laststatus=2 &quot;</span> Always display the statusline <span class="keyword">in</span> all windows</span><br><span class="line"><span class="built_in">set</span> guifont=Inconsolata\ <span class="keyword">for</span>\ Powerline:h14</span><br><span class="line"><span class="built_in">set</span> noshowmode <span class="string">&quot; Hide the default mode text (e.g. -- INSERT -- below the statusline</span></span><br></pre></td></tr></table></figure>
-
-<p>如果有不明白的可以借鉴这篇文章：</p>
-<p><span class="exturl" data-url="aHR0cHM6Ly9jb2RlcndhbGwuY29tL3AveWlvdDRxL3NldHVwLXZpbS1wb3dlcmxpbmUtYW5kLWl0ZXJtMi1vbi1tYWMtb3MteA==">https://coderwall.com/p/yiot4q/setup-vim-powerline-and-iterm2-on-mac-os-x<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/%E9%80%9A%E8%BF%87ps-grep%E5%92%8Ckill%E6%89%B9%E9%87%8F%E6%9D%80%E6%AD%BB%E8%BF%9B%E7%A8%8B.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/%E9%80%9A%E8%BF%87ps-grep%E5%92%8Ckill%E6%89%B9%E9%87%8F%E6%9D%80%E6%AD%BB%E8%BF%9B%E7%A8%8B.html" class="post-title-link" itemprop="url">通过ps、grep和kill批量杀死进程</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-01 11:36:15 / 修改时间：11:38:08" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:15+08:00">2025-07-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>这两天Node的程序kill到手都软了，网上查了一个很好的方法，直接拿来用了。</p>
-<p>功能：杀死进程名称中包含node的所有进程</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep node | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> | xargs <span class="built_in">kill</span> -9</span><br></pre></td></tr></table></figure>
+          <p>前提是远程仓库已经存在某个分支，本地并没有对应的分支【这是情景描述前提】</p>
+<p>对应的标题操作很简单，方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch origin remote_branch:local_branch</span><br></pre></td></tr></table></figure>
 
 
 
@@ -983,7 +495,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/KoaJS-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E5%85%A8%E5%B1%80%E7%BB%9F%E4%B8%80%E5%A4%84%E7%90%86.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-0-0-webpack-%E7%BB%93%E5%90%88-%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E4%BB%A3%E7%A0%81.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1001,7 +513,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/KoaJS-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E5%85%A8%E5%B1%80%E7%BB%9F%E4%B8%80%E5%A4%84%E7%90%86.html" class="post-title-link" itemprop="url">KoaJS 异常处理 全局统一处理</a>
+          <a href="/2025/07/02/KoaJS-2-0-0-webpack-%E7%BB%93%E5%90%88-%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E4%BB%A3%E7%A0%81.html" class="post-title-link" itemprop="url">KoaJS 2.0.0 webpack 结合 动态调试代码</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1013,7 +525,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-01 11:36:12 / 修改时间：11:39:57" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:12+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 15:39:52 / 修改时间：15:55:20" itemprop="dateCreated datePublished" datetime="2025-07-02T15:39:52+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1035,27 +547,19 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>记录下koajs的异常使用:</p>
-<p>下面介绍一下 几个文件</p>
-<p>test.js启动文件</p>
-<p>router.js 路由文件</p>
-<p>api&#x2F;Admin.js 逻辑处理文件</p>
-<p>koajs的异常处理逻辑代码如下[放在test.js 启动文件中]</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 统一处理默认Error</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">app.<span class="title function_">use</span>(<span class="keyword">function</span> *(next) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">yield</span> next;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">status</span> = err.<span class="property">status</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">body</span> = &#123;</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&quot;GowhichApiServerError&quot;</span>,</span><br><span class="line">      <span class="attr">code</span>: err.<span class="property">status</span> || <span class="number">600</span>,</span><br><span class="line">      <span class="attr">message</span>: err.<span class="property">message</span> || <span class="string">&quot;Server internal error.&quot;</span>,</span><br><span class="line">      <span class="attr">success</span>: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+          <p>koa2.0.0 的路由和视图渲染完之后的一个问题就是，如何高效的开发前端代码。</p>
+<p>因为我之前的前端代码是用webpack进行打包，然后打包过程中，使用babel实现了，ES6语法的转换，这行我就不能太干脆的丢弃webpack，然后里面使用了react+react-router+reflux,整个开发体系还是比较可以的。为了整合之前的代码，需要将之前的connect框架改为koa2.0.0，毕竟koa的实现方式还有与express，connect等这样的框架，实现方式不太一样，所以，稍微还有有点小困难，不过我这里记录下，也就不困难了。</p>
+<p>从webpack-dev-server说起，我们使用webpack-dev-server是为了能够时时监控我们的代码改变，然后用它自己的socket-io去刷新我们的页面，实现了代码修改即页面重载，当然只是在开发环境。</p>
+<p>webpack-dev-server并没有多大的改变，只是将原来的一个proxy的操作去掉了，然后整合到koa的启动文件里面了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">WebpackDevServer</span> = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-server&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.development&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> debug = <span class="built_in">require</span>(<span class="string">&#x27;debug&#x27;</span>);</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">WebpackDevServer</span>(<span class="title function_">webpack</span>(config), &#123;</span><br><span class="line">  <span class="attr">publicPath</span>: config.<span class="property">output</span>.<span class="property">publicPath</span>,</span><br><span class="line">  <span class="attr">hot</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">noInfo</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">historyApiFallback</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">stats</span>: &#123; <span class="attr">colors</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">  <span class="attr">headers</span>: &#123; <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>: <span class="string">&#x27;*&#x27;</span> &#125;</span><br><span class="line">&#125;).<span class="title function_">listen</span>(<span class="number">8080</span>, <span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="keyword">function</span>(<span class="params">err,result</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Webpack Listening at 127.0.0.1:8080&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>600 :我自己定义的,为了区别系统的错误</p>
-<p>接下来简单的看下路由:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">post</span>(<span class="string">&#x27;/xxx/xxxxx&#x27;</span>, <span class="title class_">Admin</span>.<span class="property">mailxxxxImport</span>);</span><br><span class="line">router.<span class="title function_">post</span>(<span class="string">&#x27;/xxxx/xxxx&#x27;</span>, <span class="title class_">Admin</span>.<span class="property">mailxxxxBill</span>);</span><br></pre></td></tr></table></figure>
+<p>关于webpack的config文件的代码是不需要改变的，继续使用。</p>
+<p>下面就是在koa的启动文件里面加入启动需要的proxy处理。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//解析 开发环境 development</span></span><br><span class="line">app.<span class="title function_">use</span>(<span class="title function_">convert</span>(<span class="title function_">proxy</span>(&#123;</span><br><span class="line">  <span class="attr">host</span>:<span class="string">&#x27;http://127.0.0.1:8080/js&#x27;</span>,</span><br><span class="line">  <span class="attr">match</span>: <span class="regexp">/^\/js\//</span></span><br><span class="line">&#125;)));</span><br></pre></td></tr></table></figure>
 
-<p>这个router 我使用的是koa-router</p>
-<p>好了, 到这里应该说一切都没问题了.下面就看我们如何出发这个错误了</p>
-<p>那么在Admin.js里面我们写段代码:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">mailxxxxBill</span> = <span class="keyword">function</span> *(next)&#123;</span><br><span class="line">  <span class="keyword">var</span> uid = <span class="title function_">_uid</span>(<span class="variable language_">this</span>.<span class="property">request</span>);</span><br><span class="line">  <span class="keyword">var</span> taskid = <span class="variable language_">this</span>.<span class="property">request</span>.<span class="property">body</span>.<span class="property">taskid</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!uid || !taskid) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="keyword">throw</span>(<span class="string">&#x27;任务参数不能为空&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//测试使用</span></span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="keyword">throw</span>(<span class="string">&#x27;任务参数不能为空&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>没错就是这句代码:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="keyword">throw</span>(<span class="string">&#x27;任务参数不能为空&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>当触发的时候,就会调用test.js的错误处理逻辑,可以了,动起来吧.</p>
+<p>就这么简单，这里使用了两个中间件：</p>
+<p>koa-proxy，koa-convert。</p>
+<p>解释一下好了，就是将访问的path中有带&#x2F;js&#x2F;部分的路径，进行重新proxy一下就好，这样就将文件转向到了webpack-dev-server这边的对应的文件了。相关的其他的问题可以参考我之前的几篇文章.</p>
 
       
     </div>
@@ -1082,7 +586,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/NPM-node%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7-%E5%91%BD%E4%BB%A4%E6%A6%82%E8%BF%B0.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-0-0-%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1100,7 +604,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/NPM-node%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7-%E5%91%BD%E4%BB%A4%E6%A6%82%E8%BF%B0.html" class="post-title-link" itemprop="url">npm-node模块管理工具 命令概述</a>
+          <a href="/2025/07/02/KoaJS-2-0-0-%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4.html" class="post-title-link" itemprop="url">KoaJS 2.0.0 表单提交</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1112,7 +616,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-01 11:36:09 / 修改时间：11:41:54" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:09+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 11:31:55 / 修改时间：14:28:14" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:55+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1134,129 +638,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>npm (node package manager)是node模块管理工具，类似与Linux下的yum和apt。</p>
-<p>常用npm命令（参考：<span class="exturl" data-url="aHR0cHM6Ly9ucG1qcy5vcmcvZG9jLyVFRiVCQyU4OQ==">https://npmjs.org/doc/）<i class="fa fa-external-link-alt"></i></span></p>
-<p>安装模块</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure>
+          <p>对于koa2.0.0的表单提交如何处理，也是费了我很久的时间，在多次尝试与研究之下，可以这样来处理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">proxy.post(<span class="string">&#x27;/admin/:path&#x27;</span>, (ctx, next) =&gt; &#123;</span><br><span class="line">  const url = ctx.config.hostDomain + <span class="string">&#x27;/admin/&#x27;</span> +ctx.params.path;</span><br><span class="line">  const options = &#123;</span><br><span class="line">    <span class="built_in">timeout</span>: ctx.config.httpTimeout,</span><br><span class="line">    method: ctx.request.method,</span><br><span class="line">    headers: ctx.request.headers,</span><br><span class="line">    data: ctx.request.body</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">return</span> next().<span class="keyword">then</span>(() =&gt; &#123;</span><br><span class="line">    const request = urllib.request(url, options);</span><br><span class="line">    return request.then( (data) =&gt; &#123;</span><br><span class="line">      ctx.body = data.data.toString()</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;).catch((err) =&gt; &#123;</span><br><span class="line">    console.log(err);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>安装当前目录package.json文件中配置的dependencies模块</p>
-<p>安装本地的模块文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;tarball file&gt;</span><br></pre></td></tr></table></figure>
+<p>我这里只是做了一个接口的调用，其实最重要的是在获得request后如何去进行对应的promise的操作和获取结果，这里其实很简单的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> request = urllib.<span class="title function_">request</span>(url, options);</span><br><span class="line">  <span class="keyword">return</span> request.<span class="title function_">then</span>( <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">    ctx.<span class="property">body</span> = data.<span class="property">data</span>.<span class="title function_">toString</span>()</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>Example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install ./package.tgz</span><br></pre></td></tr></table></figure>
-
-<p>安装指定URL的模块</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;tarball url&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install https://github.com/indexzero/forever/tarball/v0.5.6</span><br></pre></td></tr></table></figure>
-
-<p>安装本地文件系统中指定的目录包含的模块</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;folder&gt;</span><br></pre></td></tr></table></figure>
-
-<p>安装并更新package.json中的版本配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;name&gt; [–save|–save-dev|–save-optional]</span><br></pre></td></tr></table></figure>
-
-<p>其中：</p>
-<p>添加–save 参数安装的模块的名字及其版本信息会出现在package.json的dependencies选项中</p>
-<p>添加–save-dev 参数安装的模块的名字及其版本信息会出现在package.json的devDependencies选项中</p>
-<p>添加–save-optional 参数安装的模块的名字及其版本信息会出现在package.json的optionalDependencies选项中</p>
-<p>安装模块的config的tag配置中含有指定tag的版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;name&gt;@&lt;tag&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install sax@latest</span><br></pre></td></tr></table></figure>
-
-<p>安装模块的指定版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;name&gt;@&lt;version&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install [email protected]</span><br></pre></td></tr></table></figure>
-
-<p>安装模块指定版本号范围内的某一个版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;name&gt;@&lt;version range&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install async@”&gt;=0.2.0 &lt;0.2.9″</span><br></pre></td></tr></table></figure>
-
-<p>–force强制拉取远程资源，即使本地已经安装这个模块</p>
-<p>Example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install underscore –force</span><br></pre></td></tr></table></figure>
-
-<p>-g或–global全局安装模块，如果没有这个参数，会安装在当前目录的node_modules子目录下</p>
-<p>Example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g express</span><br></pre></td></tr></table></figure>
-
-<p>显示npm的bin目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm bin</span><br></pre></td></tr></table></figure>
-
-<p>设置npm配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> &lt;key&gt; &lt;value&gt; [–global]</span><br></pre></td></tr></table></figure>
-
-<p>使用–global参数，设置全局配置</p>
-<p>Example:</p>
-<p>设置代理</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> proxy=http://proxy.tencent.com:8080</span><br></pre></td></tr></table></figure>
-
-<p>设置npm的镜像地址</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry http://npm.oa.com</span><br></pre></td></tr></table></figure>
-
-<p>获取npm配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config get &lt;key&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Example:</p>
-<p>获取npm当前镜像地址</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config get registory</span><br></pre></td></tr></table></figure>
-
-<p>删除npm配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config delete &lt;key&gt;</span><br></pre></td></tr></table></figure>
-
-<p>Example:</p>
-<p>删除代理设置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config delete proxy</span><br></pre></td></tr></table></figure>
-
-<p>在编辑器中打开npm配置文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config edit</span><br></pre></td></tr></table></figure>
-
-<p>交互式的创建package.json文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init</span><br></pre></td></tr></table></figure>
-
-<p>创建模块的压缩包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm pack [&lt;pkg&gt; [&lt;pkg&gt; … ]]</span><br></pre></td></tr></table></figure>
-
-<p>如果没有参数，则npm会打包当前模块目录</p>
-<p>发布模块，发布后可通过名称来安装该模块</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm publish &lt;tarball&gt;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm publish &lt;folder&gt;</span><br></pre></td></tr></table></figure>
-
-<p>其中：</p>
-<p><folder>：包含package.json文件的目录</p>
-<p><tarball>：经过gzip压缩并归档的一个URL或文件路径，该压缩包包含单个目录，且该目录内有package.json文件</p>
-<p>删除模块</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">rm</span> &lt;name&gt;</span><br><span class="line">npm r &lt;name&gt;</span><br><span class="line">npm uninstall &lt;name&gt;</span><br><span class="line">npm un &lt;name&gt;</span><br></pre></td></tr></table></figure>
-
-<p>注意：不会删除package.json文件dependencies选项中对应的依赖配置</p>
-<p>查找模块</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm search [search terms ..]</span><br><span class="line">npm s [search terms ..]</span><br><span class="line">npm se [search terms ..]</span><br></pre></td></tr></table></figure>
-
-<p>查找匹配查找字符串的模块</p>
-<p>更新模块</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm update [-g] [&lt;name&gt; [&lt;name&gt; … ]]</span><br></pre></td></tr></table></figure>
-
-<p>更新指定name列表中的模块。-g参数更新全局安装的模块。</p>
-<p>如果没有指定name，且不是在某个模块内，会更新当前目录依赖的所有包都会被更新（包括全局和模块内）；如果当前目录在某个模块目录内，会更新该模块依赖的模块，所以不指定name直接运行npm update时，最好在某个模块内运行，以免更新到其他不想更新的模块。</p>
-<p>执行脚本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm start [&lt;name&gt;]</span><br><span class="line">npm stop [&lt;name&gt;]</span><br><span class="line">npm <span class="built_in">test</span> [&lt;name&gt;]</span><br></pre></td></tr></table></figure>
-
-<p>等</p>
-<p>运行package的start脚本，该脚本写在package.json文件scripts的start字段中。</p>
-<p>该字段的值可以是当前系统控制台可执行的脚本，也可以是当前系统可执行文件的路径。</p>
-<p>如果不传name参数，则执行当前目录下package.json文件中定义的脚本。</p>
-<p>详见<span class="exturl" data-url="aHR0cHM6Ly9ucG1qcy5vcmcvZG9jL21pc2MvbnBtLXNjcmlwdHMuaHRtbA==">https://npmjs.org/doc/misc/npm-scripts.html<i class="fa fa-external-link-alt"></i></span></p>
-<p>package.json文件</p>
-<p>模块的配置文件，详见<span class="exturl" data-url="aHR0cHM6Ly9ucG1qcy5vcmcvZG9jL2ZpbGVzL3BhY2thZ2UuanNvbi5odG1s">https://npmjs.org/doc/files/package.json.html<i class="fa fa-external-link-alt"></i></span></p>
+<p>注意这里的两个return操作，做完request的操作后，直接在开头进行一个return操作就可以了，这样body的值也回调过去了。</p>
 
       
     </div>
@@ -1283,7 +671,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Chrome%E7%9A%84%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95-Chrome%E7%9A%84%E6%89%A9%E5%B1%95%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-0-0%E7%9A%84%E6%B5%8B%E8%AF%95%E7%89%88%E6%9C%AC-%E8%A7%86%E5%9B%BE%E6%B8%B2%E6%9F%93-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E8%B0%83%E7%94%A8%E7%9A%84%E9%85%8D%E7%BD%AE.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1301,7 +689,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Chrome%E7%9A%84%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95-Chrome%E7%9A%84%E6%89%A9%E5%B1%95%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95.html" class="post-title-link" itemprop="url">Chrome的插件安装目录 Chrome的扩展安装目录</a>
+          <a href="/2025/07/02/KoaJS-2-0-0%E7%9A%84%E6%B5%8B%E8%AF%95%E7%89%88%E6%9C%AC-%E8%A7%86%E5%9B%BE%E6%B8%B2%E6%9F%93-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E8%B0%83%E7%94%A8%E7%9A%84%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">KoaJS 2.0.0的测试版本-视图渲染、静态文件调用的配置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1313,7 +701,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-01 11:36:06 / 修改时间：11:42:21" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:06+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 11:31:52 / 修改时间：14:28:58" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:52+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1335,15 +723,374 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Chrome的插件目录在：</p>
-<blockquote>
-<pre><code>Ubuntu:      ~/.config/google-chrome/Default/Extensions
+          <p>针对koa2.0.0的测试版本，在使用的过程中遇到了很多的问题，这篇文章讲解一下如何进行操作html的调用和静态文件的调用</p>
+<p>因为koa2.0.0版本的升级，很多的中间件都没有跟随着一起调整，所以有些中间件就出现了很多问题，这里说的就是针对试图文件的调用渲染和静态文件的调用</p>
+<p>视图文件的调用使用的是如下的中间件：koa-swig</p>
+<p>安装koa-swig:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa-swig --save</span><br></pre></td></tr></table></figure>
 
-Windows:   C:\Users\Administrator\AppData\Local\Google\Chrome\User Data/Default/Extensions/
+<p>配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.context.render = co.wrap(render(&#123;</span><br><span class="line">  root: path.join(__dirname, <span class="string">&#x27;dest&#x27;</span>),</span><br><span class="line">  autoescape: <span class="literal">true</span>,</span><br><span class="line">  cache: <span class="string">&#x27;memory&#x27;</span>, // <span class="built_in">disable</span>, <span class="built_in">set</span> to <span class="literal">false</span> </span><br><span class="line">  ext: <span class="string">&#x27;html&#x27;</span></span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
 
-Mac OS X:   ./Library/Application Support/Google/Chrome/Default/Extensions
-</code></pre>
-</blockquote>
+<p>路由中调用的方式如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">router.get(<span class="string">&#x27;/home&#x27;</span>, (ctx, next) =&gt; &#123;</span><br><span class="line">  <span class="built_in">return</span> next().<span class="keyword">then</span>(() =&gt; &#123;</span><br><span class="line">    ctx.render(&#x27;index.html&#x27;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里到这里就解决了视图调用的问题，访问的时候如果页面中调用的是本地的js或者css的话，会包404的错误，就是找不到对应的路由，OK，下面记录下。</p>
+<p>这里调用得了两个中间件:koa-convert,koa-static</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const convert = require(<span class="string">&#x27;koa-convert&#x27;</span>);</span><br><span class="line">const serve = require(<span class="string">&#x27;koa-static&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>安装这两个中间件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa-static koa-convert --save</span><br></pre></td></tr></table></figure>
+
+<p>对应的配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(convert(serve(__dirname + <span class="string">&#x27;/dest&#x27;</span>)));</span><br></pre></td></tr></table></figure>
+
+<p>这里就是很简单了，刚开始的时候是无效的，后来在github上问了一下，就找打了解决办法。可以到这里看下：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2tvYWpzL3N0YXRpYy9pc3N1ZXMvNTk=">https://github.com/koajs/static/issues/59<i class="fa fa-external-link-alt"></i></span></p>
+<p>好了，到这里两个部分的操作就完成了。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E8%96%AA%E8%B5%84%E6%B0%B4%E5%B9%B3%E6%9F%A5%E8%AF%A2-%E5%B0%8F%E4%BC%99%E4%BC%B4%E4%BB%AC-%E4%BD%A0%E4%BB%AC%E8%BF%98%E6%8B%85%E5%BF%83%E4%B8%AA%E5%95%A5%E5%91%A2.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/02/%E8%96%AA%E8%B5%84%E6%B0%B4%E5%B9%B3%E6%9F%A5%E8%AF%A2-%E5%B0%8F%E4%BC%99%E4%BC%B4%E4%BB%AC-%E4%BD%A0%E4%BB%AC%E8%BF%98%E6%8B%85%E5%BF%83%E4%B8%AA%E5%95%A5%E5%91%A2.html" class="post-title-link" itemprop="url">薪资水平查询，小伙伴们，你们还担心个啥呢</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-02 11:31:49 / 修改时间：14:30:06" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:49+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>薪资水平查询，不同地区的薪资水平查询地址:</p>
+<p><span class="exturl" data-url="aHR0cDovL2JlaWppbmcuYmFpY2FpLmNvbS9zYWxhcnktSU9TJUU1JUJDJTgwJUU1JThGJTkxJUU1JUI3JUE1JUU3JUE4JThCJUU1JUI4JTg4Lw==">http://beijing.baicai.com/salary-IOS%E5%BC%80%E5%8F%91%E5%B7%A5%E7%A8%8B%E5%B8%88/<i class="fa fa-external-link-alt"></i></span></p>
+<p>下面我来分析一下这个地址如何使用【对于程序员】</p>
+<p>http:&#x2F;&#x2F;{address}.baicai.com&#x2F;salary-{position}&#x2F;</p>
+<p>address:对应地区的拼音【shanghai,beijing】</p>
+<p>position:对应职位【IOS工程师，Android工程师】</p>
+<p>就这些自己去对应查吧，我就不提供接口了</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E4%B8%BA%E5%95%A5npm%E5%AE%89%E8%A3%85%E7%9A%84%E6%97%B6%E5%80%99devDependencies%E8%BF%99%E9%87%8C%E9%9D%A2%E7%9A%84%E4%BB%A3%E7%A0%81%E4%B9%9F%E5%AE%89%E8%A3%85%E4%BA%86.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/02/%E4%B8%BA%E5%95%A5npm%E5%AE%89%E8%A3%85%E7%9A%84%E6%97%B6%E5%80%99devDependencies%E8%BF%99%E9%87%8C%E9%9D%A2%E7%9A%84%E4%BB%A3%E7%A0%81%E4%B9%9F%E5%AE%89%E8%A3%85%E4%BA%86.html" class="post-title-link" itemprop="url">为啥npm安装的时候devDependencies这里面的代码也安装了</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-02 11:31:46 / 修改时间：14:30:44" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:46+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>为啥npm安装的时候devDependencies这里面的代码也安装了，琢磨了好久，也搜索了很久，终于找到了答案，哈哈。其实觉得npm还是蛮智能的，只是自己比较低能了，没看npm的源码，测试结果是让我觉得，npm会根据<code>NODE_ENV</code>的环境变量值，来判断你当前的环境是开发环境和生产环境，然后根据环境来安装对应的依赖包。</p>
+<p>解决方式就是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NODE_ENV=production</span><br><span class="line">npm install --save</span><br></pre></td></tr></table></figure>
+
+<p>这样就会很快的将dependencies里面的包安装了，就会自动忽略掉devDependencies里面的依赖包了，就这么简单。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-0-0-%E4%B8%8E-Router%E6%95%B4%E5%90%88.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/02/KoaJS-2-0-0-%E4%B8%8E-Router%E6%95%B4%E5%90%88.html" class="post-title-link" itemprop="url">KoaJS 2.0.0 与 Router整合</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-02 11:31:43 / 修改时间：15:29:29" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:43+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近koajs更新了一个很重要的版本，就是2.0.0,虽然这个版本是一个还在开发中的版本，但是已经可以下载使用了，当然，我用来下，唉，遗憾的是，虽然koa更新了，但是对应的中间插件并没有更新，这个是为什么呢，其他中间件的人不积极呗，只能试用了下，最重要的一个就是，Router这个中间件，既然也没有更新，不兼容最新版本的koa，好吧，还有在issue中发现了两点，已经有人根据koa-router，自己写了一个koa-66,使用完还不错，下面正式记录一下：</p>
+<p>安装 <span class="exturl" data-url="bWFpbHRvOiYjeDZiOyYjeDZmOyYjOTc7JiN4NDA7JiN4MzI7JiN4MmU7JiN4MzA7JiM0NjsmIzQ4OyYjeDJkOyYjeDYxOyYjMTA4OyYjMTEyOyYjMTA0OyYjOTc7JiN4MmU7JiM1MDs=">koa@2.0.0-alpha.2<i class="fa fa-external-link-alt"></i></span></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa@<span class="number">2.0</span><span class="number">.0</span>-alpha<span class="number">.2</span> --save</span><br></pre></td></tr></table></figure>
+
+<p>安装koa-66</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa-66 --save</span><br></pre></td></tr></table></figure>
+
+<p>安装完了看个示例吧,app.js代码如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Koa</span> = <span class="built_in">require</span>(<span class="string">&#x27;koa&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> <span class="title class_">Koa</span>();</span><br><span class="line"><span class="keyword">const</span> co = <span class="built_in">require</span>(<span class="string">&#x27;co&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Router</span> = <span class="built_in">require</span>(<span class="string">&#x27;koa-66&#x27;</span>);</span><br><span class="line"><span class="comment">// const router = new Router();</span></span><br><span class="line"><span class="keyword">const</span> mountRouter = <span class="keyword">new</span> <span class="title class_">Router</span>();</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Controller</span> = <span class="built_in">require</span>(<span class="string">&#x27;./router&#x27;</span>);</span><br><span class="line">app.<span class="title function_">use</span>(<span class="function">(<span class="params">ctx, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> start = <span class="keyword">new</span> <span class="title class_">Date</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> ms = <span class="keyword">new</span> <span class="title class_">Date</span> - start;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;ctx.method&#125;</span> <span class="subst">$&#123;ctx.url&#125;</span> - <span class="subst">$&#123;ms&#125;</span>`</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// app.use((ctx) =&gt; &#123;</span></span><br><span class="line"><span class="comment">//   ctx.body = &#x27;Hello World!&#x27;;</span></span><br><span class="line"><span class="comment">// &#125;);</span></span><br><span class="line">mountRouter.<span class="title function_">mount</span>(<span class="string">&#x27;/blog&#x27;</span>, <span class="title class_">Controller</span>.<span class="property">router</span>);</span><br><span class="line">app.<span class="title function_">use</span>(mountRouter.<span class="title function_">routes</span>());</span><br><span class="line">app.<span class="title function_">listen</span>(<span class="number">3002</span>);</span><br></pre></td></tr></table></figure>
+
+<p>router.js代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by durban on 15/10/17.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Router</span> = <span class="built_in">require</span>(<span class="string">&#x27;koa-66&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> <span class="title class_">Router</span>();</span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/home&#x27;</span>, <span class="function">(<span class="params">ctx, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(ctx);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(ctx.<span class="property">req</span>);</span><br><span class="line">    ctx.<span class="property">body</span> = <span class="string">&#x27;Router Hello World!&#x27;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/views/:id&#x27;</span>, <span class="function">(<span class="params">ctx,next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(ctx.<span class="property">params</span>);</span><br><span class="line">    ctx.<span class="property">body</span> = <span class="string">&#x27;views&#x27;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/about&#x27;</span>, <span class="function">(<span class="params">ctx, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    ctx.<span class="property">body</span> = <span class="string">&#x27;about&#x27;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">router</span> = router;</span><br></pre></td></tr></table></figure>
+
+<p>好了，运行app.js,开始测试吧，终于搞定了router的代码不用跟app.js写在一起了。</p>
+<p>当然这里的node版本是最新的版本v4.2.1。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Bootstrap%E5%9B%BA%E5%AE%9A%E8%A1%A8%E6%A0%BC%E5%AE%BD%E5%BA%A6%E6%88%96%E8%80%85%E8%87%AA%E9%80%82%E5%BA%94%E5%86%85%E5%AE%B9%E7%9A%84%E5%AE%BD%E5%BA%A6.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/02/Bootstrap%E5%9B%BA%E5%AE%9A%E8%A1%A8%E6%A0%BC%E5%AE%BD%E5%BA%A6%E6%88%96%E8%80%85%E8%87%AA%E9%80%82%E5%BA%94%E5%86%85%E5%AE%B9%E7%9A%84%E5%AE%BD%E5%BA%A6.html" class="post-title-link" itemprop="url">Bootstrap固定表格宽度或者自适应内容的宽度</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-02 11:31:40 / 修改时间：15:32:57" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:40+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>这个可以通过colgroup来控制单元格的宽度，如果只定义部分宽度，其他的单元格会自适应的调整。  </p>
+<p>实例代码如下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">thead</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">colgroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span> <span class="attr">width</span>=<span class="string">&#x27;20%&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">colgroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>用户名称<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>登录方式<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>联系方式<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>内容<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>客户端<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>备注<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>最后记账时间<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>操作<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">thead</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
 
       
     </div>
@@ -1363,7 +1110,7 @@ Mac OS X:   ./Library/Application Support/Google/Chrome/Default/Extensions
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/19/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/87/">87</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/21/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/19/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/91/">91</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/21/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

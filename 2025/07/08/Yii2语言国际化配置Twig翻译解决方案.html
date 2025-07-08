@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/black/pace-theme-flat-top.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.gowhich.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js" defer></script>
+
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+    <meta name="description" content="我自己在写项目的时候，不喜欢使用php自身的模板，主要是各种PHP标签让我烦，而且对Html的标签兼容也不够友好，所以我后面采用了twig模板，配置之类的也是很方便，写起来也很顺手，但是在Yii2语言国际化翻译这块就遇到了坑，当我们指定文件类型，除了处理php扩展的之外，也处理twig扩展的文件的时候，就不会解析twig中的内容，因为不符合PHP的标签处理逻辑，在PHP中我们使用Yii::t()，">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Yii2语言国际化配置Twig翻译解决方案">
+<meta property="og:url" content="https://blog.gowhich.com/2025/07/08/Yii2%E8%AF%AD%E8%A8%80%E5%9B%BD%E9%99%85%E5%8C%96%E9%85%8D%E7%BD%AETwig%E7%BF%BB%E8%AF%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html">
+<meta property="og:site_name" content="Gowhich">
+<meta property="og:description" content="我自己在写项目的时候，不喜欢使用php自身的模板，主要是各种PHP标签让我烦，而且对Html的标签兼容也不够友好，所以我后面采用了twig模板，配置之类的也是很方便，写起来也很顺手，但是在Yii2语言国际化翻译这块就遇到了坑，当我们指定文件类型，除了处理php扩展的之外，也处理twig扩展的文件的时候，就不会解析twig中的内容，因为不符合PHP的标签处理逻辑，在PHP中我们使用Yii::t()，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-08T08:02:09.000Z">
+<meta property="article:modified_time" content="2025-07-08T09:48:24.049Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="PHP">
+<meta property="article:tag" content="Yii">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.gowhich.com/2025/07/08/Yii2%E8%AF%AD%E8%A8%80%E5%9B%BD%E9%99%85%E5%8C%96%E9%85%8D%E7%BD%AETwig%E7%BF%BB%E8%AF%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.gowhich.com/2025/07/08/Yii2%E8%AF%AD%E8%A8%80%E5%9B%BD%E9%99%85%E5%8C%96%E9%85%8D%E7%BD%AETwig%E7%BF%BB%E8%AF%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html","path":"2025/07/08/Yii2语言国际化配置Twig翻译解决方案.html","title":"Yii2语言国际化配置Twig翻译解决方案"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Yii2语言国际化配置Twig翻译解决方案 | Gowhich</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BZ00EJSZ9"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-3BZ00EJSZ9","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js" defer></script>
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js","integrity":"sha256-2obLuIPcceEhkE3G09G33hBdmE55ivVcZUlcKcGNHjU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+  <script src="/js/third-party/addtoany.js" defer></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":true,"archive":true,"delay":true,"timeout":3000,"priority":true,"url":"https://blog.gowhich.com/2025/07/08/Yii2%E8%AF%AD%E8%A8%80%E5%9B%BD%E9%99%85%E5%8C%96%E9%85%8D%E7%BD%AETwig%E7%BF%BB%E8%AF%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Gowhich" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Gowhich</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Durban's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5-%E6%98%BE%E7%A4%BA%E4%BF%AE%E6%94%B9i18n%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">第一步 显示修改i18n配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5-%E7%BB%A7%E6%89%BF%E9%87%8D%E5%86%99"><span class="nav-number">2.</span> <span class="nav-text">第二步 继承重写</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="durban"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">durban</p>
+  <div class="site-description" itemprop="description">人最大的烦恼，就是记性太好</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">908</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">156</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2R1cmJhbjg5" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;durban89"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmR1cmJhbi56aGFuZ0BnbWFpbC5jb20=" title="E-Mail → mailto:durban.zhang@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly94LmNvbS9kdXJiYW5femhhbmc=" title="Twitter → https:&#x2F;&#x2F;x.com&#x2F;durban_zhang"><i class="fab fa-twitter fa-fw"></i>Twitter</span>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/08/Yii2%E8%AF%AD%E8%A8%80%E5%9B%BD%E9%99%85%E5%8C%96%E9%85%8D%E7%BD%AETwig%E7%BF%BB%E8%AF%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Yii2语言国际化配置Twig翻译解决方案 | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Yii2语言国际化配置Twig翻译解决方案
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-08 16:02:09 / 修改时间：17:48:24" itemprop="dateCreated datePublished" datetime="2025-07-08T16:02:09+08:00">2025-07-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>我自己在写项目的时候，不喜欢使用php自身的模板，主要是各种PHP标签让我烦，而且对Html的标签兼容也不够友好，所以我后面采用了twig模板，配置之类的也是很方便，写起来也很顺手，但是在Yii2语言国际化翻译这块就遇到了坑，当我们指定文件类型，除了处理php扩展的之外，也处理twig扩展的文件的时候，就不会解析twig中的内容，因为不符合PHP的标签处理逻辑，在PHP中我们使用Yii::t()，但是在twig中使用的是Yii.t()这个函数在translator的配置中，显得很乏力，而且看源码也可以发现，实际上也只处理php文件，网上找了很多针对这个问题的处理方式，似乎也没有几个使用的。现在看下我是如何解决的</p>
+<h2 id="第一步-显示修改i18n配置"><a href="#第一步-显示修改i18n配置" class="headerlink" title="第一步 显示修改i18n配置"></a>第一步 显示修改i18n配置</h2><p>将twig扩展加入进去，修改后如下:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="string">&#x27;color&#x27;</span> =&gt; <span class="literal">null</span>,</span><br><span class="line">    <span class="string">&#x27;interactive&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">    <span class="string">&#x27;help&#x27;</span> =&gt; <span class="literal">null</span>,</span><br><span class="line">    <span class="string">&#x27;sourcePath&#x27;</span> =&gt; <span class="string">&#x27;@app&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;messagePath&#x27;</span> =&gt; <span class="string">&#x27;@app/messages&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;languages&#x27;</span> =&gt; [<span class="string">&#x27;zh-CN&#x27;</span>, <span class="string">&#x27;ru-RU&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;translator&#x27;</span> =&gt; <span class="string">&#x27;Yii::t&#x27;</span>, <span class="comment">// 翻译器</span></span><br><span class="line">    <span class="string">&#x27;sort&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">    <span class="string">&#x27;overwrite&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">    <span class="string">&#x27;removeUnused&#x27;</span> =&gt; <span class="literal">false</span>,</span><br><span class="line">    <span class="string">&#x27;markUnused&#x27;</span> =&gt; <span class="literal">true</span>,</span><br><span class="line">    <span class="string">&#x27;except&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;.svn&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;.git&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;.gitignore&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;.gitkeep&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;.hgignore&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;.hgkeep&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;/messages&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;/BaseYii.php&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;vendor&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;tests&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;runtime&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;migrations&#x27;</span>,</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&#x27;only&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;*.php&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;*.twig&#x27;</span>, <span class="comment">// 添加模板扩展</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&#x27;format&#x27;</span> =&gt; <span class="string">&#x27;php&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;db&#x27;</span> =&gt; <span class="string">&#x27;db&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;sourceMessageTable&#x27;</span> =&gt; <span class="string">&#x27;&#123;&#123;%source_message&#125;&#125;&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;messageTable&#x27;</span> =&gt; <span class="string">&#x27;&#123;&#123;%message&#125;&#125;&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;catalog&#x27;</span> =&gt; <span class="string">&#x27;messages&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;ignoreCategories&#x27;</span> =&gt; [],</span><br><span class="line">    <span class="string">&#x27;phpFileHeader&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;phpDocBlock&#x27;</span> =&gt; <span class="literal">null</span>,</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<h2 id="第二步-继承重写"><a href="#第二步-继承重写" class="headerlink" title="第二步 继承重写"></a>第二步 继承重写</h2><p>创建文件app&#x2F;commands&#x2F;TranslatorController.php，内容如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">app</span>\<span class="title class_">commands</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">yii</span>\<span class="title">console</span>\<span class="title">controllers</span>\<span class="title">MessageController</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">yii</span>\<span class="title">helpers</span>\<span class="title">Console</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Extracts messages to be translated from source files.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> durban.zhang &lt;[email protected]&gt;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TranslatorController</span> <span class="keyword">extends</span> <span class="title">MessageController</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="built_in">parent</span>::<span class="title function_ invoke__">init</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * This command echoes what you have entered as the message.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> string $message the message to be echoed.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">extractMessages</span>(<span class="params"><span class="variable">$fileName</span>, <span class="variable">$translator</span>, <span class="variable">$ignoreCategories</span> = []</span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$messages</span> = [];</span><br><span class="line"></span><br><span class="line">        <span class="variable">$extInfo</span> = <span class="title function_ invoke__">pathinfo</span>(<span class="variable">$fileName</span>, PATHINFO_EXTENSION);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="string">&#x27;twig&#x27;</span> == <span class="variable">$extInfo</span>) &#123;</span><br><span class="line">            <span class="variable">$coloredFileName</span> = <span class="title class_">Console</span>::<span class="title function_ invoke__">ansiFormat</span>(<span class="variable">$fileName</span>, [<span class="title class_">Console</span>::<span class="variable constant_">FG_CYAN</span>]);</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">stdout</span>(<span class="string">&quot;Extracting messages from <span class="subst">$coloredFileName</span>...\n&quot;</span>);</span><br><span class="line">            <span class="variable">$subject</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$fileName</span>);</span><br><span class="line"></span><br><span class="line">            <span class="variable">$preg</span> = <span class="string">&#x27;/\&#123;\&#123; Yii\.t\(\&#x27;(.*?)\&#x27;, \&#x27;(.*?)\&#x27;\) \&#125;\&#125;/&#x27;</span>;</span><br><span class="line"></span><br><span class="line">            <span class="variable">$content</span> = <span class="title function_ invoke__">preg_replace</span>(<span class="variable">$preg</span>, <span class="string">&quot;&lt;?php Yii::t(&#x27;<span class="subst">$1</span>&#x27;, &#x27;<span class="subst">$2</span>&#x27;); ?&gt;&quot;</span>, <span class="variable">$subject</span>);</span><br><span class="line"></span><br><span class="line">            <span class="variable">$tokens</span> = <span class="title function_ invoke__">token_get_all</span>(<span class="variable">$content</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> ((<span class="keyword">array</span>) <span class="variable">$translator</span> <span class="keyword">as</span> <span class="variable">$currentTranslator</span>) &#123;</span><br><span class="line">                <span class="variable">$translatorTokens</span> = <span class="title function_ invoke__">token_get_all</span>(<span class="string">&#x27;&lt;?php &#x27;</span> . <span class="variable">$currentTranslator</span>);</span><br><span class="line"></span><br><span class="line">                <span class="title function_ invoke__">array_shift</span>(<span class="variable">$translatorTokens</span>);</span><br><span class="line"></span><br><span class="line">                <span class="variable">$messages</span> = <span class="title function_ invoke__">array_merge_recursive</span>(</span><br><span class="line">                    <span class="variable">$messages</span>,</span><br><span class="line">                    <span class="variable">$this</span>-&gt;<span class="title function_ invoke__">extractMessagesFromTokens</span>(</span><br><span class="line">                        <span class="variable">$tokens</span>,</span><br><span class="line">                        <span class="variable">$translatorTokens</span>,</span><br><span class="line">                        <span class="variable">$ignoreCategories</span>));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">stdout</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable">$messages</span> = <span class="built_in">parent</span>::<span class="title function_ invoke__">extractMessages</span>(<span class="variable">$fileName</span>, <span class="variable">$translator</span>, <span class="variable">$ignoreCategories</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$messages</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">extractMessagesFromTokens</span>(<span class="params"><span class="keyword">array</span> <span class="variable">$tokens</span>, <span class="keyword">array</span> <span class="variable">$translatorTokens</span>, <span class="keyword">array</span> <span class="variable">$ignoreCategories</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$messages</span> = [];</span><br><span class="line">        <span class="variable">$translatorTokensCount</span> = <span class="title function_ invoke__">count</span>(<span class="variable">$translatorTokens</span>);</span><br><span class="line">        <span class="variable">$matchedTokensCount</span> = <span class="number">0</span>;</span><br><span class="line">        <span class="variable">$buffer</span> = [];</span><br><span class="line">        <span class="variable">$pendingParenthesisCount</span> = <span class="number">0</span>;<span class="keyword">foreach</span> (<span class="variable">$tokens</span> <span class="keyword">as</span> <span class="variable">$token</span>) &#123;</span><br><span class="line">            <span class="comment">// finding out translator call</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$matchedTokensCount</span> &lt; <span class="variable">$translatorTokensCount</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">tokensEqual</span>(<span class="variable">$token</span>, <span class="variable">$translatorTokens</span>[<span class="variable">$matchedTokensCount</span>])) &#123;</span><br><span class="line">                    <span class="variable">$matchedTokensCount</span>++;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="variable">$matchedTokensCount</span> = <span class="number">0</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">elseif</span> (<span class="variable">$matchedTokensCount</span> === <span class="variable">$translatorTokensCount</span>) &#123;</span><br><span class="line">                <span class="comment">// translator found</span></span><br><span class="line"></span><br><span class="line">                <span class="comment">// end of function call</span></span><br><span class="line">                <span class="keyword">if</span> (<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">tokensEqual</span>(<span class="string">&#x27;)&#x27;</span>, <span class="variable">$token</span>)) &#123;</span><br><span class="line">                    <span class="variable">$pendingParenthesisCount</span>--;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span> (<span class="number">0</span> === <span class="variable">$pendingParenthesisCount</span>) &#123;</span><br><span class="line">                        <span class="comment">// end of translator call or end of something that we can&#x27;t extract</span></span><br><span class="line">                        <span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$buffer</span>[<span class="number">0</span>][<span class="number">0</span>], <span class="variable">$buffer</span>[<span class="number">1</span>], <span class="variable">$buffer</span>[<span class="number">2</span>][<span class="number">0</span>]) &amp;&amp; T_CONSTANT_ENCAPSED_STRING === <span class="variable">$buffer</span>[<span class="number">0</span>][<span class="number">0</span>] &amp;&amp; <span class="string">&#x27;,&#x27;</span> === <span class="variable">$buffer</span>[<span class="number">1</span>] &amp;&amp; T_CONSTANT_ENCAPSED_STRING === <span class="variable">$buffer</span>[<span class="number">2</span>][<span class="number">0</span>]) &#123;</span><br><span class="line">                            <span class="comment">// is valid call we can extract</span></span><br><span class="line">                            <span class="variable">$category</span> = <span class="title function_ invoke__">stripcslashes</span>(<span class="variable">$buffer</span>[<span class="number">0</span>][<span class="number">1</span>]);</span><br><span class="line">                            <span class="variable">$category</span> = <span class="title function_ invoke__">mb_substr</span>(<span class="variable">$category</span>, <span class="number">1</span>, -<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">                            <span class="keyword">if</span> (!<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">isCategoryIgnored</span>(<span class="variable">$category</span>, <span class="variable">$ignoreCategories</span>)) &#123;</span><br><span class="line">                                <span class="variable">$message</span> = <span class="title function_ invoke__">stripcslashes</span>(<span class="variable">$buffer</span>[<span class="number">2</span>][<span class="number">1</span>]);</span><br><span class="line">                                <span class="variable">$message</span> = <span class="title function_ invoke__">mb_substr</span>(<span class="variable">$message</span>, <span class="number">1</span>, -<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">                                <span class="variable">$messages</span>[<span class="variable">$category</span>][] = <span class="variable">$message</span>;</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                            <span class="variable">$nestedTokens</span> = <span class="title function_ invoke__">array_slice</span>(<span class="variable">$buffer</span>, <span class="number">3</span>);</span><br><span class="line">                            <span class="keyword">if</span> (<span class="title function_ invoke__">count</span>(<span class="variable">$nestedTokens</span>) &gt; <span class="variable">$translatorTokensCount</span>) &#123;</span><br><span class="line">                                <span class="comment">// search for possible nested translator calls</span></span><br><span class="line">                                <span class="variable">$messages</span> = <span class="title function_ invoke__">array_merge_recursive</span>(<span class="variable">$messages</span>, <span class="variable">$this</span>-&gt;<span class="title function_ invoke__">extractMessagesFromTokens</span>(<span class="variable">$nestedTokens</span>, <span class="variable">$translatorTokens</span>, <span class="variable">$ignoreCategories</span>));</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                            <span class="comment">// invalid call or dynamic call we can&#x27;t extract</span></span><br><span class="line">                            <span class="variable">$line</span> = <span class="title class_">Console</span>::<span class="title function_ invoke__">ansiFormat</span>(<span class="variable">$this</span>-&gt;<span class="title function_ invoke__">getLine</span>(<span class="variable">$buffer</span>), [<span class="title class_">Console</span>::<span class="variable constant_">FG_CYAN</span>]);</span><br><span class="line">                            <span class="variable">$skipping</span> = <span class="title class_">Console</span>::<span class="title function_ invoke__">ansiFormat</span>(<span class="string">&#x27;Skipping line&#x27;</span>, [<span class="title class_">Console</span>::<span class="variable constant_">FG_YELLOW</span>]);</span><br><span class="line">                            <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">stdout</span>(<span class="string">&quot;<span class="subst">$skipping</span> <span class="subst">$line</span>. Make sure both category and message are static strings.\n&quot;</span>);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                        <span class="comment">// prepare for the next match</span></span><br><span class="line">                        <span class="variable">$matchedTokensCount</span> = <span class="number">0</span>;</span><br><span class="line">                        <span class="variable">$pendingParenthesisCount</span> = <span class="number">0</span>;</span><br><span class="line">                        <span class="variable">$buffer</span> = [];</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="variable">$buffer</span>[] = <span class="variable">$token</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">elseif</span> (<span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">tokensEqual</span>(<span class="string">&#x27;(&#x27;</span>, <span class="variable">$token</span>)) &#123;</span><br><span class="line">                    <span class="comment">// count beginning of function call, skipping translator beginning</span></span><br><span class="line">                    <span class="keyword">if</span> (<span class="variable">$pendingParenthesisCount</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="variable">$buffer</span>[] = <span class="variable">$token</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="variable">$pendingParenthesisCount</span>++;</span><br><span class="line">                &#125; <span class="keyword">elseif</span> (<span class="keyword">isset</span>(<span class="variable">$token</span>[<span class="number">0</span>]) &amp;&amp; !<span class="title function_ invoke__">in_array</span>(<span class="variable">$token</span>[<span class="number">0</span>], [T_WHITESPACE, T_COMMENT])) &#123;</span><br><span class="line">                    <span class="comment">// ignore comments and whitespaces</span></span><br><span class="line">                    <span class="variable">$buffer</span>[] = <span class="variable">$token</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$messages</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面的代码可以看出，实现了两个方法<br><strong>extractMessages</strong>和<strong>extractMessagesFromTokens</strong><br>本来是不需要实现extractMessagesFromTokens这个方法的，但是父类中的private，试过了实例化类，但是需要传递需要的参数，为了避免出现问题，暂时没用实例化的方式。<br>最后extractMessagesFromTokens 这个只是父类的copy版本。那么重点就在extractMessages<br>判断如果文件是twig文件，则进行处理，处理逻辑我写的也很简单，暂时能解决问题</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$preg = <span class="string">&#x27;/\&#123;\&#123; Yii\.t\(\&#x27;(.*?)\&#x27;, \&#x27;(.*?)\&#x27;\) \&#125;\&#125;/&#x27;</span>;</span><br><span class="line">$content = <span class="title function_">preg_replace</span>($preg, <span class="string">&quot;&lt;?php Yii::t(&#x27;$1&#x27;, &#x27;$2&#x27;); ?&gt;&quot;</span>, $subject);</span><br><span class="line">$tokens = <span class="title function_">token_get_all</span>($content);</span><br></pre></td></tr></table></figure>
+
+<p>主要是将Yii.t转为了含有PHP标签的字符串，实际上父类也只是针对代码进行字符串的过滤处理，以此类推的话，如果有其他模板的话也可以采用此方法</p>
+<p>到这里就处理完了，</p>
+<p>但是执行的命令不是下面这个</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./yii message/extract @app/config/i18n.php</span><br></pre></td></tr></table></figure>
+
+<p>而是下面这个</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./yii translator/extract @app/config/i18n.php</span><br></pre></td></tr></table></figure>
+
+<p>OK，问题解决，如您有其他方案，请指教</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechat.png" alt="durban 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="durban 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>durban
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.gowhich.com/2025/07/08/Yii2%E8%AF%AD%E8%A8%80%E5%9B%BD%E9%99%85%E5%8C%96%E9%85%8D%E7%BD%AETwig%E7%BF%BB%E8%AF%91%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html" title="Yii2语言国际化配置Twig翻译解决方案">https://blog.gowhich.com/2025/07/08/Yii2语言国际化配置Twig翻译解决方案.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/PHP/" rel="tag"><i class="fa fa-tag"></i> PHP</a>
+              <a href="/tags/Yii/" rel="tag"><i class="fa fa-tag"></i> Yii</a>
+          </div>
+
+        
+  <div class="social-like a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_facebook"></a>
+      <a class="a2a_button_twitter"></a>
+  </div>
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/08/Yii2%E8%AF%AD%E8%A8%80%E5%9B%BD%E9%99%85%E5%8C%96%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE.html" rel="prev" title="Yii2语言国际化自动配置">
+                  <i class="fa fa-angle-left"></i> Yii2语言国际化自动配置
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2014 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Copyright © durban. All Rights Reserved.</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZw==">NexT.Gemini</span> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

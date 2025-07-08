@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">869</span>
+          <span class="site-state-item-count">908</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">152</span>
+        <span class="site-state-item-count">156</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E4%BD%BF%E7%94%A8NSString-%E5%8E%BB%E6%8E%89%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC%E6%88%96%E5%9B%9E%E8%BD%A6%E7%AC%A6.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/iOS%E5%BC%80%E5%8F%91-%E8%A7%86%E5%9B%BE%E7%BF%BB%E8%BD%AC%E6%95%88%E6%9E%9C%E7%9A%84%E5%AE%9E%E7%8E%B0-transition.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/%E4%BD%BF%E7%94%A8NSString-%E5%8E%BB%E6%8E%89%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC%E6%88%96%E5%9B%9E%E8%BD%A6%E7%AC%A6.html" class="post-title-link" itemprop="url">使用NSString 去掉前后空格或回车符</a>
+          <a href="/2025/06/20/iOS%E5%BC%80%E5%8F%91-%E8%A7%86%E5%9B%BE%E7%BF%BB%E8%BD%AC%E6%95%88%E6%9E%9C%E7%9A%84%E5%AE%9E%E7%8E%B0-transition.html" class="post-title-link" itemprop="url">iOS开发 视图翻转效果的实现  transition</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:24 / 修改时间：10:36:59" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:24+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 10:36:25 / 修改时间：10:42:42" itemprop="dateCreated datePublished" datetime="2025-06-20T10:36:25+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,8 +294,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>想要去掉字符串的前后空格和回车符，很简单，如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string = <span class="string">@&quot; spaces in front and at the end &quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *trimmedString = [string stringByTrimmingCharactersInSet:</span><br><span class="line">[<span class="built_in">NSCharacterSet</span> whitespaceAndNewlineCharacterSet]]; </span><br><span class="line"><span class="built_in">NSLog</span>(trimmedString);</span><br></pre></td></tr></table></figure>
+          <p>关于视图的翻转效果，最近我稍微的做了一下研究</p>
+<p>主要的是使用了一个函数</p>
+<p><code>+ (void)transitionFromView:(UIView *)fromView toView:(UIView *)toView duration:(NSTimeInterval)duration options:(UIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion NS_AVAILABLE_IOS(4_0);</code></p>
+<p>还是演示一下吧，我这里是使用的storyboard</p>
+<p>FlipViewViewController.h</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  FlipViewViewController.h</span></span><br><span class="line"><span class="comment">//  FlipView</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-8-4.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FlipViewViewController</span> : <span class="title">UIViewController</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">UIView</span> *frontView;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">UIView</span> *backView;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>) <span class="type">BOOL</span> goingToFrontView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UIBarButtonItem</span> *FlipButton;</span><br><span class="line">- (<span class="keyword">IBAction</span>)FlipButtonAction:(<span class="type">id</span>)sender;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>FlipViewViewController.m</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  FlipViewViewController.m</span></span><br><span class="line"><span class="comment">//  FlipView</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-8-4.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;FlipViewViewController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FlipViewViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FlipViewViewController</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> frontView;</span><br><span class="line"><span class="keyword">@synthesize</span> backView;</span><br><span class="line"><span class="keyword">@synthesize</span> FlipButton;</span><br><span class="line"><span class="keyword">@synthesize</span> goingToFrontView;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span>.frontView = [[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="keyword">self</span>.view.frame];</span><br><span class="line">    <span class="keyword">self</span>.backView = [[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="keyword">self</span>.view.frame];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) viewWillAppear:(<span class="type">BOOL</span>)animated&#123;</span><br><span class="line">    <span class="keyword">self</span>.FlipButton.title = <span class="string">@&quot;前视图&quot;</span>;</span><br><span class="line">    <span class="keyword">self</span>.goingToFrontView = <span class="literal">YES</span>;</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> initFrontViewBackgroundColor];</span><br><span class="line">    [<span class="keyword">self</span> initBackViewBackGroundColor];</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span>.view addSubview:<span class="keyword">self</span>.frontView];</span><br><span class="line">    [<span class="keyword">self</span>.view addSubview:<span class="keyword">self</span>.backView];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> didReceiveMemoryWarning];</span><br><span class="line">    <span class="comment">// Dispose of any resources that can be recreated.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)FlipButtonAction:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="keyword">self</span>.goingToFrontView = !<span class="keyword">self</span>.goingToFrontView;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIView</span> *fromView = <span class="keyword">self</span>.goingToFrontView ? <span class="keyword">self</span>.backView : <span class="keyword">self</span>.frontView;</span><br><span class="line">    <span class="built_in">UIView</span> *toView = <span class="keyword">self</span>.goingToFrontView ? <span class="keyword">self</span>.frontView : <span class="keyword">self</span>.backView;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIViewAnimationOptions</span> transitionDirection = <span class="keyword">self</span>.goingToFrontView ? <span class="built_in">UIViewAnimationOptionTransitionFlipFromRight</span> : <span class="built_in">UIViewAnimationOptionTransitionFlipFromLeft</span>;</span><br><span class="line">    </span><br><span class="line">    [<span class="built_in">UIView</span> transitionFromView:fromView</span><br><span class="line">                        toView:toView</span><br><span class="line">                      duration:<span class="number">1.0</span></span><br><span class="line">                       options:transitionDirection</span><br><span class="line">                    completion:^(<span class="type">BOOL</span> finished) &#123;</span><br><span class="line">                        </span><br><span class="line">                        [<span class="keyword">self</span> showButtonTitle];</span><br><span class="line">                        </span><br><span class="line">                    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) initFrontViewBackgroundColor&#123;</span><br><span class="line">    <span class="keyword">self</span>.frontView.backgroundColor = [<span class="built_in">UIColor</span> redColor];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) initBackViewBackGroundColor&#123;</span><br><span class="line">    <span class="keyword">self</span>.backView.backgroundColor = [<span class="built_in">UIColor</span> blueColor];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) showButtonTitle&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">self</span>.goingToFrontView)&#123;</span><br><span class="line">        <span class="keyword">self</span>.FlipButton.title = <span class="string">@&quot;前视图&quot;</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">self</span>.FlipButton.title = <span class="string">@&quot;后视图&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -322,7 +329,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/NGINX%E7%A6%81%E6%AD%A2%E7%9B%B4%E6%8E%A5%E4%BB%A5IP%E8%AE%BF%E9%97%AE.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/SVN-Can-connect-to-host%E9%97%AE%E9%A2%98.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -340,7 +347,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/NGINX%E7%A6%81%E6%AD%A2%E7%9B%B4%E6%8E%A5%E4%BB%A5IP%E8%AE%BF%E9%97%AE.html" class="post-title-link" itemprop="url">NGINX禁止直接以IP访问</a>
+          <a href="/2025/06/20/SVN-Can-connect-to-host%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">SVN Can't connect to host问题</a>
         </h2>
 
         <div class="post-meta-container">
@@ -352,7 +359,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:20 / 修改时间：10:36:37" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:20+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 10:36:21 / 修改时间：10:44:18" itemprop="dateCreated datePublished" datetime="2025-06-20T10:36:21+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -374,10 +381,20 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>今天搞了一下禁止nginx的ip访问，哈哈，找了一篇文章</p>
-<p>看下面‍</p>
-<p>在虚拟主机最前面加上如下即可，记住一定要以它开头（不然不生效）。如下,返回值404，可以改403等。</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">         <span class="attribute">server_name</span>  _;  <span class="comment">#default</span></span><br><span class="line">         <span class="attribute">return</span> <span class="number">404</span>;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">server&#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>  .test.com;  <span class="comment">#(域名前加点，不然可能访问不了)</span></span><br><span class="line">    <span class="attribute">index</span> main.php index.php;</span><br><span class="line">    <span class="attribute">root</span>  /var/htdocs/www/test;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> <span class="regexp">~ .*\.(php|php5)?$</span>&#123;</span><br><span class="line">      <span class="comment">#fastcgi_pass  unix:/tmp/php-cgi.sock;</span></span><br><span class="line">      <span class="attribute">fastcgi_pass</span>  <span class="number">127.0.0.1:9000</span>;</span><br><span class="line">      <span class="attribute">fastcgi_index</span> index.php;</span><br><span class="line">      <span class="attribute">include</span> fcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">log_format</span>  testlogs  <span class="string">&#x27;<span class="variable">$remote_addr</span> - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] &quot;<span class="variable">$request</span>&quot; &#x27;</span></span><br><span class="line">               <span class="string">&#x27;<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> &quot;<span class="variable">$http_referer</span>&quot; &#x27;</span></span><br><span class="line">               <span class="string">&#x27;&quot;<span class="variable">$http_user_agent</span>&quot; <span class="variable">$http_x_forwarded_for</span>&#x27;</span>;</span><br><span class="line">    <span class="attribute">access_log</span>  /var/htdocs/logs/testlogs.log  testlogs;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <blockquote>
+<p>当出现’目标机器积极拒绝，无法连接’或svn: Can’t connect to host …时，应依次检查下面各项</p>
+<p>1，服务器有没有运行，有没有打开相应端口</p>
+<p>如果服务器是svnserve，检查有没有运行svnserve，有没有打开3690端口</p>
+<p>如果服务器是apache，检查apahce是否运行，是否打开80端口</p>
+<p>检查时可以在服务器运行netstat -na看看相应端口是否在LISTEN</p>
+<p>2，防火墙有没有开放相应端口</p>
+<p>3，客户端是否可以连接服务器的相应端口</p>
+<p>使用命令telnet 服务器IP 相应端口</p>
+<p>如：telnet 192.168.0.1 3690</p>
+</blockquote>
+<p>我的服务器是ubuntu的，里面使用的是ufw来作防火墙的，因此可以判定我的这儿端口没有开</p>
+<p>执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ufw allow 3690</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -404,7 +421,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Objective-C%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F-%E4%BB%A3%E7%A0%81%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/SVN-commit%E6%88%96import%E6%97%B6%E5%87%BA%E7%8E%B0-can-open-file-xn-current-lock-permission-denied-%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -422,7 +439,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Objective-C%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F-%E4%BB%A3%E7%A0%81%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.html" class="post-title-link" itemprop="url">Objective-C的实例变量，局部变量，代码的执行过程</a>
+          <a href="/2025/06/20/SVN-commit%E6%88%96import%E6%97%B6%E5%87%BA%E7%8E%B0-can-open-file-xn-current-lock-permission-denied-%E7%9A%84%E5%8E%9F%E5%9B%A0%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">SVN commit或import时出现 can't open file 'txn-current-lock' permission denied 的原因及解决方法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -434,7 +451,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:17 / 修改时间：10:36:04" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:17+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 10:36:18 / 修改时间：10:44:59" itemprop="dateCreated datePublished" datetime="2025-06-20T10:36:18+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -456,14 +473,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>实例变量是在类里面的变量<br>比如：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FindPerformersViewController</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>i就是实例变量</p>
-<p>局部变量是在方法里面的变量<br>比如：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) getVariable &#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里的i就是局部变量</p>
+          <p>SVN commit或import时出现 can’t open file ‘txn-current-lock’ permission denied 的原因及解决方法</p>
+<blockquote>
+<p>svn: 提交失败(细节如下):<br>svn: can’t open file ‘txn-current-lock’ permission denied</p>
+<p>或者</p>
+<p>svn: 提交失败(细节如下):<br>svn: Can’t create directory ‘&#x2F;usr&#x2F;local&#x2F;svn&#x2F;repos&#x2F;test&#x2F;db&#x2F;transactions&#x2F;1-2.txn’: Permission denied</p>
+<p>这个主要原因：在svnadmin create时是root身份，所以，mod_dav_svn就没有write权限等。</p>
+<p>解决办法：</p>
+</blockquote>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R daemon /var/svnroot/yiiblog</span><br><span class="line">sudo chmod -R <span class="number">755</span> /var/svnroot/yiiblog</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -490,7 +508,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E6%A0%B9%E6%8D%AE%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E4%BD%BF%E7%94%A8%E5%93%AA%E4%B8%AAStoryboard.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/iOS%E5%BC%80%E5%8F%91%E7%9F%AD%E4%BF%A1%E7%9A%84%E5%8F%91%E9%80%81-SMS-%E7%9A%84%E5%8A%9F%E8%83%BD.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -508,7 +526,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/%E6%A0%B9%E6%8D%AE%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E4%BD%BF%E7%94%A8%E5%93%AA%E4%B8%AAStoryboard.html" class="post-title-link" itemprop="url">根据条件判断使用哪个Storyboard</a>
+          <a href="/2025/06/20/iOS%E5%BC%80%E5%8F%91%E7%9F%AD%E4%BF%A1%E7%9A%84%E5%8F%91%E9%80%81-SMS-%E7%9A%84%E5%8A%9F%E8%83%BD.html" class="post-title-link" itemprop="url">iOS开发短信的发送（SMS）的功能</a>
         </h2>
 
         <div class="post-meta-container">
@@ -520,7 +538,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:13 / 修改时间：10:35:23" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:13+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 10:36:15 / 修改时间：10:45:36" itemprop="dateCreated datePublished" datetime="2025-06-20T10:36:15+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -542,10 +560,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于根据条件选择Storyboard，我之前的一篇文章，今天使用的时候，不起作用了，悲剧，今天又自己写了一个。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//主要的storyboard - xunYi7TabBarViewController</span></span><br><span class="line"><span class="comment">//login的storyboard - login</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UIViewController</span> *rootViewController;</span><br><span class="line"><span class="keyword">self</span>.window = [[<span class="built_in">UIWindow</span> alloc] initWithFrame:[[<span class="built_in">UIScreen</span> mainScreen] bounds]];</span><br><span class="line"><span class="keyword">self</span>.window.backgroundColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line"><span class="keyword">if</span>([[<span class="built_in">NSUserDefaults</span> standardUserDefaults] boolForKey:<span class="string">@&quot;logged_in&quot;</span>]) &#123;</span><br><span class="line">  </span><br><span class="line">  rootViewController = [[<span class="built_in">UIStoryboard</span> </span><br><span class="line">storyboardWithName:<span class="string">@&quot;MainStoryboard&quot;</span> bundle:<span class="literal">nil</span>] </span><br><span class="line">instantiateViewControllerWithIdentifier:<span class="string">@&quot;xunYi7TabBarViewController&quot;</span>];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">  </span><br><span class="line">  rootViewController = [[<span class="built_in">UIStoryboard</span> </span><br><span class="line">storyboardWithName:<span class="string">@&quot;LoginStoryboard&quot;</span> bundle:<span class="literal">nil</span>] </span><br><span class="line">instantiateViewControllerWithIdentifier:<span class="string">@&quot;login&quot;</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">self</span>.window.rootViewController=rootViewController;</span><br><span class="line"></span><br><span class="line">[<span class="keyword">self</span>.window makeKeyAndVisible];</span><br><span class="line"><span class="keyword">return</span> yes;</span><br></pre></td></tr></table></figure>
+          <p>在ios的开发中，如果自己想调用一个发送短信的方式，其实可以很简答的调用的</p>
+<p>短信的发送（SMS）的发送，是使用了一个MessageUI库，然后使用里面的MFMessageComposeViewControllerDelegate协议</p>
+<p>我将自己的演示代码贴到下面：</p>
+<p>SMSViewController.h</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  SMSViewController.h</span></span><br><span class="line"><span class="comment">//  SMS</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-8-2.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&lt;MessageUI/MessageUI.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">SMSViewController</span> : <span class="title">UIViewController</span>&lt;<span class="title">MFMessageComposeViewControllerDelegate</span>,<span class="title">UINavigationBarDelegate</span>&gt;</span></span><br><span class="line">- (<span class="keyword">IBAction</span>)showSMSPicker:(<span class="type">id</span>)sender;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 
-<p>如果这个例子不起作用，也可以尝试我之前的那篇文章<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy8yNjg=">iOS启动 判断使用不同的 storyboard<i class="fa fa-external-link-alt"></i></span></p>
+<p>SMSViewController.m</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  SMSViewController.m</span></span><br><span class="line"><span class="comment">//  SMS</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-8-2.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;SMSViewController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">SMSViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SMSViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">    <span class="comment">// Do any additional setup after loading the view, typically from a nib.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> didReceiveMemoryWarning];</span><br><span class="line">    <span class="comment">// Dispose of any resources that can be recreated.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)showSMSPicker:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>([MFMessageComposeViewController canSendText])&#123;</span><br><span class="line">        [<span class="keyword">self</span> displaySMSComposeSheet];</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Device not configured to send SMS.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) displaySMSComposeSheet&#123;</span><br><span class="line">    MFMessageComposeViewController *picker = [[MFMessageComposeViewController alloc] init];</span><br><span class="line">    picker.messageComposeDelegate = <span class="keyword">self</span>;</span><br><span class="line">    </span><br><span class="line">    picker.body = <span class="string">@&quot;你好，今天很想与你共进午餐&quot;</span>;</span><br><span class="line">    [<span class="keyword">self</span> presentViewController:picker</span><br><span class="line">                       animated:<span class="literal">YES</span></span><br><span class="line">                     completion:<span class="literal">NULL</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Notifies users about errors associated with the interface</span></span><br><span class="line">    <span class="keyword">switch</span> (result)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">case</span> MessageComposeResultCancelled:</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;Result: SMS sending canceled&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MessageComposeResultSent:</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;Result: SMS sent&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MessageComposeResultFailed:</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;Result: SMS sending failed&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;Result: SMS not sent&quot;</span>);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> dismissViewControllerAnimated:<span class="literal">YES</span> completion:<span class="literal">NULL</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">BOOL</span>) shouldAutorotateToInterfaceOrientation:(<span class="built_in">UIInterfaceOrientation</span>)toInterfaceOrientation&#123;</span><br><span class="line">    <span class="keyword">return</span> (toInterfaceOrientation == <span class="built_in">UIInterfaceOrientationMaskPortrait</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>ok，直接运行一下就可以了。模拟器似乎是不能使用的，要在真机上才可以测试的</p>
 
       
     </div>
@@ -572,7 +596,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Session_save_path%E7%9B%AE%E5%BD%95%E5%A4%A7%E9%87%8Fsession%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%E5%B8%A6%E6%9D%A5%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%88%E7%8E%87%E9%97%AE%E9%A2%98.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/iOS%E5%BC%80%E5%8F%91-%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E7%9A%84%E5%8F%91%E9%80%81.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -590,7 +614,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Session_save_path%E7%9B%AE%E5%BD%95%E5%A4%A7%E9%87%8Fsession%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%E5%B8%A6%E6%9D%A5%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%88%E7%8E%87%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">session.save_path目录大量session临时文件带来的服务器效率问题</a>
+          <a href="/2025/06/20/iOS%E5%BC%80%E5%8F%91-%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E7%9A%84%E5%8F%91%E9%80%81.html" class="post-title-link" itemprop="url">iOS开发 电子邮件的发送</a>
         </h2>
 
         <div class="post-meta-container">
@@ -602,7 +626,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:09 / 修改时间：10:32:58" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:09+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 10:36:11 / 修改时间：10:46:09" itemprop="dateCreated datePublished" datetime="2025-06-20T10:36:11+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -624,11 +648,18 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>如果访问量大，可能产生的 SESSION 文件会比较多，这时可以设置分级目录进行 SESSION 文件的保存，效率会提高很多，设置方法为：session.save_path&#x3D;”N;&#x2F;save_path”，N 为分级的级数，save_path 为开始目录。当写入 SESSION 数据的时候，PHP 会获取到客户端的 SESSION_ID，然后根据这个 SESSION ID 到指定的 SESSION 文件保存目录中找到相应的 SESSION 文件，不存在则创建之，最后将数据序列化之后写入文件。     检查了下各web节点，所有web服务器的httpd线程均达到满负荷，很奇怪。因为所有web节点都通过nfs来共享session目录来达到 session的一致性，检查了下nfs文件服务器，IO读写比较大，检查了session_tmp目录，发现session目录临时文件达到 70000多个，初步判断也许是因为一级目录下文件过多带来的IO性能下降。  </p>
-<p>以前没有想过session存放的效率问题，今天由此想到了session多级存放的问题，来解决一个目录下session文件过多带来的读写效率问题，查了下php.net其实php在配置中已经给出了有关选项。</p>
-<p>php.net上的：<span class="exturl" data-url="aHR0cDovL3d3dy5waHAubmV0L21hbnVhbC9lbi9yZWYuc2Vzc2lvbi5waHA=">http://www.php.net/manual/en/ref.session.php<i class="fa fa-external-link-alt"></i></span></p>
-<p><code>session.save_path</code> 定义了传递给存储处理器的参数。如果选择了默认的 files 文件处理器，则此值是创建文件的路径。默认为 <code>/tmp</code>。参见 <code>session_save_path()</code>。 此指令还有一个可选的 N 参数来决定会话文件分布的目录深度。例如，设定为 ‘5;&#x2F;tmp’ 将使创建的会话文件和路径类似于<br><code>/tmp/4/b/1/e/3/sess_4b1e384ad74619bd212e236e52a5a174If</code>。 要使用 N 参数，必须在使用前先创建好这些目录。在 ext&#x2F;session 目录下有个小的 shell 脚本名叫 mod_files.sh 可以用来做这件事。此外注意如果使用了 N 参数并且 N 大于 0，那么将不会执行自动垃圾回收，更多信息见 php.ini。另外如果用了 N 参数，要确保将 session.save_path 的值用双引号 “quotes” 括起来，因为分隔符分号（ ;）在 php.ini 中也是注释符号。<br><code>session.save_path string</code><br>在定义session.save_path中可以定义多级存放的路径，修改php.ini<br><code>session.save_path = &quot;3;/tmp/session&quot;</code><br>将session文件分成两级存放，即<code>/tmp/session/c/m/d/0/o/sess_cmd0on71pr8kf1dogkesn59s30</code>，取前两位字符，但是php并不生成目录，需要自己手工生成，所以写了个脚本来生成初始的目录。<br>附上一个创建四级文件夹包的代码。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/local/php/bin/php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$string</span> = <span class="string">&#x27;0123456789abcdefghijklmnopqrstuvwxyz&#x27;</span>;</span><br><span class="line"><span class="variable">$length</span> = <span class="title function_ invoke__">strlen</span>(<span class="variable">$string</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="variable">$length</span>;<span class="variable">$i</span>++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$j</span>=<span class="number">0</span>;<span class="variable">$j</span>&lt;<span class="variable">$length</span>;<span class="variable">$j</span>++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="variable">$k</span>=<span class="number">0</span>;<span class="variable">$k</span>&lt;<span class="variable">$length</span>;<span class="variable">$k</span>++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="variable">$m</span>=<span class="number">0</span>;<span class="variable">$m</span>&lt;<span class="variable">$length</span>;<span class="variable">$m</span>++)&#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="variable">$path</span> = <span class="string">&#x27;/tmp/session/&#x27;</span>.<span class="variable">$string</span>[<span class="variable">$i</span>].<span class="string">&#x27;/&#x27;</span>.<span class="variable">$string</span>[<span class="variable">$j</span>].<span class="string">&#x27;/&#x27;</span>.<span class="variable">$string</span>[<span class="variable">$k</span>].<span class="string">&#x27;/&#x27;</span>.<span class="variable">$string</span>[<span class="variable">$m</span>];</span><br><span class="line">                <span class="title function_ invoke__">createFolder</span>(<span class="variable">$path</span>);</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFolder</span>(<span class="params"><span class="variable">$path</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="title function_ invoke__">file_exists</span>(<span class="variable">$path</span>))&#123;</span><br><span class="line">        <span class="title function_ invoke__">createFolder</span>(<span class="title function_ invoke__">dirname</span>(<span class="variable">$path</span>));</span><br><span class="line">        <span class="title function_ invoke__">mkdir</span>(<span class="variable">$path</span>,<span class="number">0777</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">exit</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+          <p>在ios开发中，电子邮件的发送，看起来是很简单的</p>
+<p>只要使用这个MFMailComposeViewControllerDelegate代理就好了</p>
+<p>同时还有调用#import &lt;MessageUI&#x2F;MessageUI.h&gt;这个库</p>
+<p>演示一下吧</p>
+<p>MailViewController.h</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  MailViewController.h</span></span><br><span class="line"><span class="comment">//  Mail</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-8-2.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&lt;MessageUI/MessageUI.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MailViewController</span> : <span class="title">UIViewController</span>&lt;<span class="title">MFMailComposeViewControllerDelegate</span>, <span class="title">UINavigationBarDelegate</span>&gt;</span></span><br><span class="line">- (<span class="keyword">IBAction</span>)showMailPicker:(<span class="type">id</span>)sender;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>MailViewController.m</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  MailViewController.m</span></span><br><span class="line"><span class="comment">//  Mail</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-8-2.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;MailViewController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MailViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MailViewController</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">    <span class="comment">// Do any additional setup after loading the view, typically from a nib.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> didReceiveMemoryWarning];</span><br><span class="line">    <span class="comment">// Dispose of any resources that can be recreated.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">IBAction</span>)showMailPicker:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="keyword">if</span>([MFMailComposeViewController canSendMail])&#123;</span><br><span class="line">        [<span class="keyword">self</span> displayMailComposerSheet];</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Device not configured to send SMS.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)displayMailComposerSheet</span><br><span class="line">&#123;</span><br><span class="line">    MFMailComposeViewController *picker = [[MFMailComposeViewController alloc] init];</span><br><span class="line">    picker.mailComposeDelegate = <span class="keyword">self</span>;</span><br><span class="line">    </span><br><span class="line">    [picker setSubject:<span class="string">@&quot;Hello from California!&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Set up recipients</span></span><br><span class="line">    <span class="built_in">NSArray</span> *toRecipients = [<span class="built_in">NSArray</span> arrayWithObject:<span class="string">@&quot;[email protected]&quot;</span>];</span><br><span class="line">    <span class="built_in">NSArray</span> *ccRecipients = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;[email protected]&quot;</span>, <span class="string">@&quot;[email protected]&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line">    <span class="built_in">NSArray</span> *bccRecipients = [<span class="built_in">NSArray</span> arrayWithObject:<span class="string">@&quot;[email protected]&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    [picker setToRecipients:toRecipients];</span><br><span class="line">    [picker setCcRecipients:ccRecipients];</span><br><span class="line">    [picker setBccRecipients:bccRecipients];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Attach an image to the email</span></span><br><span class="line">    <span class="built_in">NSString</span> *path = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;rainy&quot;</span> ofType:<span class="string">@&quot;jpg&quot;</span>];</span><br><span class="line">    <span class="built_in">NSData</span> *myData = [<span class="built_in">NSData</span> dataWithContentsOfFile:path];</span><br><span class="line">    [picker addAttachmentData:myData mimeType:<span class="string">@&quot;image/jpeg&quot;</span> fileName:<span class="string">@&quot;rainy&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Fill out the email body text</span></span><br><span class="line">    <span class="built_in">NSString</span> *emailBody = <span class="string">@&quot;It is raining in sunny California!&quot;</span>;</span><br><span class="line">    [picker setMessageBody:emailBody isHTML:<span class="literal">NO</span>];</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> presentViewController:picker animated:<span class="literal">YES</span> completion:<span class="literal">NULL</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - delegate Methods</span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)mailComposeController:(MFMailComposeViewController*)controller</span><br><span class="line">          didFinishWithResult:(MFMailComposeResult)result error:(<span class="built_in">NSError</span>*)error&#123;</span><br><span class="line">    <span class="comment">// Notifies users about errors associated with the interface</span></span><br><span class="line">    <span class="keyword">switch</span> (result)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">case</span> MFMailComposeResultCancelled:</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;Result: Mail sending canceled&quot;</span>) ;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MFMailComposeResultSaved:</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;Result: Mail saved&quot;</span>) ;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MFMailComposeResultSent:</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;Result: Mail sent&quot;</span>) ;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MFMailComposeResultFailed:</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;Result: Mail sending failed&quot;</span>) ;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;Result: Mail not sent&quot;</span>) ;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> dismissViewControllerAnimated:<span class="literal">YES</span> completion:<span class="literal">NULL</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">BOOL</span>)shouldAutorotateToInterfaceOrientation:(<span class="built_in">UIInterfaceOrientation</span>)interfaceOrientation</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> (interfaceOrientation == <span class="built_in">UIInterfaceOrientationPortrait</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>运行一下就可以了。如果提示“Device not configured to send SMS.”</p>
+<p>那么请在设置中打开邮件那个选项吧</p>
 
       
     </div>
@@ -655,7 +686,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/iOS-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83-%E6%97%A5%E6%9C%9F%E6%AF%94%E8%BE%83.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/Django%E6%A8%A1%E6%9D%BF%E5%86%85%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%88%AA%E5%8F%96.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -673,7 +704,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/iOS-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83-%E6%97%A5%E6%9C%9F%E6%AF%94%E8%BE%83.html" class="post-title-link" itemprop="url">iOS 字符串比较 日期比较</a>
+          <a href="/2025/06/20/Django%E6%A8%A1%E6%9D%BF%E5%86%85%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%88%AA%E5%8F%96.html" class="post-title-link" itemprop="url">Django模板内的字符串截取</a>
         </h2>
 
         <div class="post-meta-container">
@@ -685,7 +716,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:06 / 修改时间：10:30:30" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:06+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 10:31:49 / 修改时间：10:47:03" itemprop="dateCreated datePublished" datetime="2025-06-20T10:31:49+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -707,25 +738,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>字符串比较</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//字符串比较</span></span><br><span class="line"><span class="built_in">NSString</span> *string = <span class="string">@&quot;hello nihao&quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *otherString = <span class="string">@&quot;hello niyeyao&quot;</span>;</span><br><span class="line"><span class="keyword">if</span>([string compare:otherString] == <span class="built_in">NSOrderedAscending</span>)&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我比你大&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我是小三&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>django模板内的字符串截取</p>
+<p>1,变量前30个字符,用于中文不行</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; content |truncatewords:&quot;30&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
 
-<p>日期比较</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//日期比较</span></span><br><span class="line"><span class="built_in">NSDate</span> *nowDate = [<span class="built_in">NSDate</span> date];</span><br><span class="line"><span class="built_in">NSDate</span> *yesterdayDate = [[<span class="built_in">NSDate</span> alloc] initWithTimeIntervalSinceNow:<span class="number">-24</span> * <span class="number">60</span> * <span class="number">60</span>];</span><br><span class="line"><span class="keyword">if</span>([nowDate compare:yesterdayDate] == <span class="built_in">NSOrderedAscending</span>)&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我是今天&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我是我昨天&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当然这里也可以，将指定的字符串转换为时间进行比较，字符串的时间格式要跟自己设定的时间格式相对应</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//日期比较</span></span><br><span class="line"><span class="built_in">NSString</span> *nowDateString = <span class="string">@&quot;2013/7/13&quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *yesterdayDateString = <span class="string">@&quot;2013/7/12&quot;</span>;</span><br><span class="line"><span class="built_in">NSDateFormatter</span> *dateFromatter = [[<span class="built_in">NSDateFormatter</span> alloc] init];</span><br><span class="line">[dateFromatter setDateFormat:<span class="string">@&quot;yy/MM/dd&quot;</span>];</span><br><span class="line"><span class="built_in">NSDate</span> *nowDate = [dateFromatter dateFromString:nowDateString];</span><br><span class="line"><span class="built_in">NSDate</span> *yesterdayDate = [dateFromatter dateFromString:yesterdayDateString];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>([nowDate compare:yesterdayDate] == <span class="built_in">NSOrderedAscending</span>)&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我是今天&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我是我昨天&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果他的表现就是</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2013</span><span class="number">-07</span><span class="number">-20</span> <span class="number">18</span>:<span class="number">18</span>:<span class="number">03.165</span> 寻艺[<span class="number">90532</span>:c07] 我比你大</span><br><span class="line"><span class="number">2013</span><span class="number">-07</span><span class="number">-20</span> <span class="number">18</span>:<span class="number">18</span>:<span class="number">03.168</span> 寻艺[<span class="number">90532</span>:c07] 我是我昨天</span><br></pre></td></tr></table></figure>
-
-<p>这里需要注意的就是</p>
-<p>NSOrderedAscending</p>
-<p>我们在Xcode定位的话</p>
-<p>会找到这样的代码</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSInteger</span>, <span class="built_in">NSComparisonResult</span>) &#123;<span class="built_in">NSOrderedAscending</span> = <span class="number">-1</span>L, <span class="built_in">NSOrderedSame</span>, <span class="built_in">NSOrderedDescending</span>&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>结果 跟 -1 0 1应该是一样的。</p>
+<p>取变量前500个字符，可用于中文</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; content |slice:&quot;30&quot; &#125;&#125; </span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -752,7 +770,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/iOS-%E6%A0%B9%E6%8D%AE%E5%86%85%E5%AE%B9%E8%AE%A1%E7%AE%97%E9%AB%98%E5%BA%A6.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/Django-%E7%9B%B4%E6%8E%A5%E6%89%A7%E8%A1%8Csql%E8%AF%AD%E5%8F%A5%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95-Performing-raw-SQL-queries.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -770,7 +788,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/iOS-%E6%A0%B9%E6%8D%AE%E5%86%85%E5%AE%B9%E8%AE%A1%E7%AE%97%E9%AB%98%E5%BA%A6.html" class="post-title-link" itemprop="url">iOS 根据内容计算高度</a>
+          <a href="/2025/06/20/Django-%E7%9B%B4%E6%8E%A5%E6%89%A7%E8%A1%8Csql%E8%AF%AD%E5%8F%A5%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95-Performing-raw-SQL-queries.html" class="post-title-link" itemprop="url">Django 直接执行sql语句的使用方法 Performing raw SQL queries</a>
         </h2>
 
         <div class="post-meta-container">
@@ -782,7 +800,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:01 / 修改时间：10:30:11" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:01+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:52:25 / 修改时间：09:53:02" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:25+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -804,15 +822,22 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>iOS 根据内容计算高度,网络上搜索到的，自己记录下，看到的就看到了</p>
-<p>第一步属性声明</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSString</span> *personProfile</span><br></pre></td></tr></table></figure>
+          <p>开始展示的前提是，看一下表的结构</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span>(models.Model):</span><br><span class="line">    first_name = models.CharField(...)</span><br><span class="line">    last_name = models.CharField(...)</span><br><span class="line">    birth_date = models.DateField(...)</span><br></pre></td></tr></table></figure>
 
-<p>第二步属性赋值</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.personProfile = <span class="string">@&quot;xxxxxxxxxxxxxxxx x x x  x x xx x &quot;</span>;</span><br></pre></td></tr></table></figure>
+<p>1，Performing raw SQL queries</p>
+<p>你可以直接执行一个语句像这样</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> Person.objects.raw(<span class="string">&#x27;SELECT * FROM myapp_person&#x27;</span>):</span><br><span class="line">    <span class="built_in">print</span>(p)</span><br></pre></td></tr></table></figure>
 
-<p>第三步求出高度</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//根据内容计算高度</span></span><br><span class="line"><span class="built_in">CGSize</span> lineSize = [<span class="keyword">self</span>.personProfile sizeWithFont:[<span class="built_in">UIFont</span> systemFontOfSize:<span class="number">14</span>]</span><br><span class="line">                         constrainedToSize:<span class="built_in">CGSizeMake</span>(<span class="number">240</span>, <span class="number">2000</span>)</span><br><span class="line">                             lineBreakMode:<span class="built_in">UILineBreakModeWordWrap</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot; lineSize.height = %f&quot;</span>, lineSize.height);</span><br></pre></td></tr></table></figure>
+<p>官方提示不要使用下面这种方式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lname = <span class="string">&#x27;Doe&#x27;</span></span><br><span class="line">query = <span class="string">&#x27;SELECT * FROM myapp_person WHERE last_name = %s&#x27;</span> % lname</span><br><span class="line">Person.objects.raw(query)</span><br></pre></td></tr></table></figure>
+
+<p>2，Executing custom SQL directly</p>
+<p>Sometimes even Manager.raw() isn’t quite enough: you might need to perform queries that don’t map cleanly to models, or directly execute UPDATE, INSERT, or DELETE queries.</p>
+<p>是的，有时候Raw Sql Queries是满足不了我们的需求的，那么我们就直接执行一下好了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cursor = connection.cursor()</span><br><span class="line">cursor.execute(<span class="string">&quot;UPDATE myapp_person SET first_name = 1 WHERE first_name = %s&quot;</span>, [<span class="variable language_">self</span>.bar])</span><br><span class="line">cursor.execute(<span class="string">&quot;SELECT `last_name` FROM myapp_person WHERE last_name = %s&quot;</span>, [<span class="variable language_">self</span>.baz])</span><br><span class="line">row = cursor.fetchone()</span><br><span class="line">print_r(row)</span><br></pre></td></tr></table></figure>
+
+<p>还不错，需求挺大，满足也挺大，操作也简便，对项目的操作很便利</p>
 
       
     </div>
@@ -839,7 +864,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/XCode%E4%B8%8B%E7%9A%84iOS%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-GHUnit.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/%E8%AE%A9Django%E7%9A%84admin%E7%BB%84%E4%BB%B6%E6%98%BE%E7%A4%BA%E4%B8%BA%E4%B8%AD%E6%96%87.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -857,7 +882,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/XCode%E4%B8%8B%E7%9A%84iOS%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-GHUnit.html" class="post-title-link" itemprop="url">XCode下的iOS单元测试 GHUnit</a>
+          <a href="/2025/06/20/%E8%AE%A9Django%E7%9A%84admin%E7%BB%84%E4%BB%B6%E6%98%BE%E7%A4%BA%E4%B8%BA%E4%B8%AD%E6%96%87.html" class="post-title-link" itemprop="url">让Django的admin组件显示为中文</a>
         </h2>
 
         <div class="post-meta-container">
@@ -867,15 +892,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-06-19 10:24:13" itemprop="dateCreated datePublished" datetime="2025-06-19T10:24:13+08:00">2025-06-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-20 15:15:37" itemprop="dateModified" datetime="2025-06-20T15:15:37+08:00">2025-06-20</time>
+      <time title="创建时间：2025-06-20 09:52:21 / 修改时间：09:53:44" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:21+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -897,41 +916,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于GHUnit的使用，我是摘自一篇比较不错的文章，里面即讲到了Xcode本身自带的测试工具OCUnit，同时也介绍了GHUnit，看完后很是受益呀。</p>
-<p>XCode 内置了 OCUnit 单元测试框架，但目前最好用的测试框架应该是 GHUnit。通过 GHUnit + OCMock 组合，我们可以在 iOS 下进行较强大的单元测试功能。本文将演示如何在 XCode 4.2 下使用 OCUnit， GHUnit 和 OCMock 进行单元测试。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="OCUnit"></a><a href="#1">OCUnit</a></h3><p>在 XCode 下新建一个 OCUnitProject 工程，选中 Include Unit Tests 选择框，  </p>
-<p>OCUnit 框架则会为我们自动添加 Unit Test 框架代码：  </p>
-<p>XCode 在 OCUnitProjectTests.m 中为我们自动生成了一个 Fail 的测试：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)testExample</span><br><span class="line">&#123;</span><br><span class="line">    STFail(<span class="string">@&quot;Unit tests are not implemented yet in OCUnitProjectTests&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>让我们来运行 Test，看看效果：  </p>
-<p>从图中的红色下划线部分可以看出，测试没有通过，符合预期。我们只要像类 OCUnitProjectTests 一样编写继承自 SenTestCase 类的子类，在其中添加形式如：- (void) testXXX(); 的测试函数既可，注意必须是一个无参无返回类型且名称是以 test 为前缀的函数。  </p>
-<p>OCUnit 的有点是官方支持，于 XCode 集成的比较好。</p>
-<h3 id="2"><a href="#2" class="headerlink" title="GHUnit"></a><a href="#2">GHUnit</a></h3><p>GHUnit 是一个开源的单元测试框架，具有可视化界面，功能亦相当强大。Mark 写了一篇 OCUnit vs GHUnit 的文章，有兴趣的童鞋可以看一看。OCMock 是由 Mulle Kybernetik 为 OS X 和 iOS 平台编写的遵循 mock object 理念的单元测试框架。  </p>
-<p>下面来介绍如何配置 GHUnit 和 OCMock  </p>
-<p>1，首先，创建一个名为 GHUnitProject 的单视图应用程序，注意：不要选中 Include Unit Tests 选择框。然后运行，应该出现白屏。</p>
-<p>2，添加新的 test target，选中左边的工程名，点击右侧的 Add Target，新增一个名为 Tests 的 Empty Application 应用程序，让其附属于 GHUnitProject注意：不要选中 Include Unit Tests 选择框。</p>
-<p>3，向 Tests 工程中（注意是 Tests 工程）添加 GHUnitIOS Framework。首先下载与 XCode 版本对应的 GHUnitIOS Framework。英文好的可以直接查看官方 iOS 版的安装文档：点此查看，跳过此第 3 节；否则请接着看。</p>
-<p>3.1，解压 GHUnitIOS 框架到 GHUnitProject 下，让 GHUnitIOS.framework 与 Tests 在同一目录下。</p>
-<p>3.2，回到 XCode，右击工程中的 Frameworks group，选中 Add Files to…菜单，选取 GHUnitIOS.framework ，注意 targets 要选择 Tests。</p>
-<p>3.3，设置 Tests 的 Build Settings：在 Other Linker Flags 中增加两个 flag： -ObjC 和 -all_load。</p>
-<p>3.4，删除 Tests 工程中的 UTSAppDelegate.h 和  UTSAppDelegate.m 两个文件；</p>
-<p>3.5，修改 Tests 工程中的 main.m 为:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line"></span><br><span class="line">#import &lt;GHUnitIOS/GHUnitIOSAppDelegate.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        return UIApplicationMain(argc, argv, nil, NSStringFromClass([GHUnitIOSAppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>3.6，选择编译目标 Tests&gt;iPhone 5.0 Simulator，编译运行，应该能得到如下效果。目前我们还没有编写任何实际测试，所以列表为空。  </p>
-<p>4，编写 GHUnit 测试。向 Tests 工程中添加名为 GHUnitSampleTest 的 Objective C class。其内容如下：  </p>
-<figure class="highlight objectivec"><figcaption><span>GHUnitSampleTest.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;GHUnitIOS/GHUnit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">GHUnitSampleTest</span>: <span class="title">GHTestCase</span></span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight objectivec"><figcaption><span>GHUnitSampleTest.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;GHUnitSampleTest.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">GHUnitSampleTest</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)testStrings</span><br><span class="line"></span><br><span class="line">&#123;       </span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *string1 = <span class="string">@&quot;a string&quot;</span>;</span><br><span class="line"></span><br><span class="line">    GHTestLog(<span class="string">@&quot;I can log to the GHUnit test console: %@&quot;</span>, string1);</span><br><span class="line"></span><br><span class="line">     <span class="comment">// Assert string1 is not NULL, with no custom error description</span></span><br><span class="line"></span><br><span class="line">    GHAssertNotNULL(string1, <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line">     <span class="comment">// Assert equal objects, add custom error description</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *string2 = <span class="string">@&quot;a string&quot;</span>;</span><br><span class="line"></span><br><span class="line">    GHAssertEqualObjects(string1, string2, <span class="string">@&quot;A custom error message. string1 should be equal to: %@.&quot;</span>, string2);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-<p>然后编译运行，点击 Run，效果如下：</p>
-<p>图中的 All 栏显示所以的测试，Failed 栏显示没有通过的测试。强大吧，GHUnit。你可以向 GHUnitSampleTest 添加新的测试，比如：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)testSimpleFail</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    GHAssertTrue(<span class="literal">NO</span>, <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们可以向 Tests 添加更多测试类，只要该类是继承自 GHTestCase，且其中的测试方法都是无参无返回值且方法名字是以 test 为前缀即可</p>
-<p>是不是有种感觉就是，以后再多的bug都不怕啦。哦也</p>
+          <p>django的admin组件默认显示为英文，使用中还是有很多不方便的。其实，django还是做好了国际化的工作的，要实现语言的转变，只需要如下操作：</p>
+<p>在settings.py中找到<code>MIDDLEWARE_CLASSES</code>，在 <code>&#39;django.contrib.sessions.middleware.SessionMiddleware&#39;</code>后面添加一个中间件 <code>&#39;django.middleware.locale.LocaleMiddleware&#39;</code>，启动django，就会发现admin显示为中文的了</p>
 
       
     </div>
@@ -958,7 +944,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/iOS%E5%90%AF%E5%8A%A8-%E5%88%A4%E6%96%AD%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%9A%84-storyboard.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/iOS-%E5%85%B3%E9%97%AD%E9%94%AE%E7%9B%98-%E9%80%80%E5%87%BA%E9%94%AE%E7%9B%98-%E7%9A%845%E7%A7%8D%E6%96%B9%E5%BC%8F.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -976,7 +962,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/iOS%E5%90%AF%E5%8A%A8-%E5%88%A4%E6%96%AD%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%9A%84-storyboard.html" class="post-title-link" itemprop="url">iOS启动 判断使用不同的 storyboard</a>
+          <a href="/2025/06/20/iOS-%E5%85%B3%E9%97%AD%E9%94%AE%E7%9B%98-%E9%80%80%E5%87%BA%E9%94%AE%E7%9B%98-%E7%9A%845%E7%A7%8D%E6%96%B9%E5%BC%8F.html" class="post-title-link" itemprop="url">iOS 关闭键盘 退出键盘 的5种方式</a>
         </h2>
 
         <div class="post-meta-container">
@@ -988,7 +974,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 09:58:40 / 修改时间：10:10:18" itemprop="dateCreated datePublished" datetime="2025-06-19T09:58:40+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:52:17 / 修改时间：10:13:16" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:17+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1010,10 +996,30 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于这个问题，也是一直困扰我很久的问题了，一直记恨于心啊，终于今天让我知道了，如何解决这个问题啦，哈哈，大笑江湖呀。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions</span><br><span class="line">&#123;</span><br><span class="line">     <span class="built_in">UIViewController</span> *rootVC;</span><br><span class="line">    <span class="keyword">self</span>.window = [[<span class="built_in">UIWindow</span> alloc] initWithFrame:[[<span class="built_in">UIScreen</span> mainScreen] bounds]];</span><br><span class="line">    <span class="keyword">self</span>.window.backgroundColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">    <span class="keyword">if</span>(![[<span class="built_in">NSUserDefaults</span> standardUserDefaults] boolForKey:<span class="string">@&quot;logged_in&quot;</span>]) &#123;</span><br><span class="line">           rootVC=[<span class="keyword">self</span>.storyboard instantiateViewControllerWithIdentifier: <span class="string">@&quot;vc1&quot;</span>];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           rootVC=[<span class="keyword">self</span>.storyboard instantiateViewControllerWithIdentifier: <span class="string">@&quot;vc2&quot;</span>];</span><br><span class="line">     &#125;</span><br><span class="line">    window.rootViewConroller=rootVC;</span><br><span class="line">    [<span class="keyword">self</span>.window makeKeyAndVisible];</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <h3 id="1"><a href="#1" class="headerlink" title="点击编辑区以外的地方（UIView）"></a><a href="#1">点击编辑区以外的地方（UIView）</a></h3><p>这是一种很直觉的方法，当不再需要使用虚拟键盘时，只要点击虚拟键盘和编辑区域外的地方，就可以将键盘收起，下面程式码是在 UIView 中内建的触碰事件方法函式，您可以参考 Touch Panel &#x2F; 触碰萤幕 &#x2F; 压力感应器的基本使用方式一文，找到更多关于触碰事件的方法函式。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)touchesEnded:(<span class="built_in">NSSet</span> *)touches withEvent:(<span class="built_in">UIEvent</span> *)event &#123;  </span><br><span class="line">    <span class="keyword">if</span> (![myTextView isExclusiveTouch]) &#123;  </span><br><span class="line">        [myTextView resignFirstResponder];  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这里面的“vc1”和“vc2”，其实就是storyboard的表示符，自己在创建storyboard的时候一般都会看到的，如果自己还不知道的话，多创建几个自己就知道了。</p>
+<p>如果要使用此方式请务必记得，你操作画面的 Custom Class 一定要是 UIView 才行。<br>画面的 Custom Class 为 UIView</p>
+<h3 id="2"><a href="#2" class="headerlink" title="点击编辑区域以外的地方（UIControl）"></a><a href="#2">点击编辑区域以外的地方（UIControl）</a></h3><p>收起虚拟键盘的方式与前一种相同，但是如果你的触碰事件里已经且写满了程式码，那么就可以考虑使用，UIControl 的 Touch Up Inside 事件来收起键盘，方法是将以下程式码与 UIControl 的 Touch Up Inside 事件连结即可。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)dismissKeyboard:(<span class="type">id</span>)sender &#123;  </span><br><span class="line">    [myTextView resignFirstResponder];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 如果要使用此方式请务必记得，你操作画面的 Custom Class 一定要是 UIControl 才行。<br> 画面的 Custom Class 为 UIControl<br> 将收起键盘的方法与 UIControl 事件连结</p>
+<h3 id="3"><a href="#3" class="headerlink" title="使用制作收起键盘的按钮"></a><a href="#3">使用制作收起键盘的按钮</a></h3><p>当没有编辑区域以外的地方可供点击来收起键盘，自己制作一个按钮来收起目前的虚拟键盘，也是一个不错的方法，由于按钮必须在虚拟键盘出现才能显示于画面上，因此必须借用 NSNotificationCenter 来帮助我们判断目前键盘的状态。<br>首先在 viewDidLoad: 事件中，向 NSNotificationCenter 进行註册，告诉 NSNotificationCenter 我们的 doneButtonshow: 方法函式。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)viewDidLoad &#123;  </span><br><span class="line">   [<span class="variable language_">super</span> viewDidLoad];  </span><br><span class="line">   [[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span> selector:<span class="keyword">@selector</span> (doneButtonshow:) name: <span class="built_in">UIKeyboardDidShowNotification</span> object:<span class="literal">nil</span>];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在每当虚拟键盘出现时，就会自动呼叫我们自定义的 doneButtonshow: 方法函式，接下来只要在该方法函式里定义按钮出现的方法即可。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) doneButtonshow: (<span class="built_in">NSNotification</span> *)notification &#123;  </span><br><span class="line">   doneButton = [<span class="built_in">UIButton</span> buttonWithType: <span class="built_in">UIButtonTypeRoundedRect</span>];  </span><br><span class="line">   doneButton.frame = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">228</span>, <span class="number">70</span>, <span class="number">35</span>);  </span><br><span class="line">   [doneButton setTitle:<span class="string">@&quot;完成编辑&quot;</span> forState: <span class="built_in">UIControlStateNormal</span>];  </span><br><span class="line">   [doneButton addTarget: <span class="keyword">self</span> action:<span class="keyword">@selector</span>(hideKeyboard) forControlEvents: <span class="built_in">UIControlEventTouchUpInside</span>];  </span><br><span class="line">  </span><br><span class="line">   [<span class="keyword">self</span>.view addSubview:doneButton];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后是实作按钮按下去时的 hideKeyboard: 方法函式，务必记得要在函式中移除该按钮。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) hideKeyboard &#123;  </span><br><span class="line">   [doneButton removeFromSuperview];  </span><br><span class="line">   [myTextView resignFirstResponder];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4"><a href="#4" class="headerlink" title="使用判断输入字元"></a><a href="#4">使用判断输入字元</a></h3><p>如果要使用输入特定字元（例如 return 换行字元）来收起键盘，必须先在类别内的 @interface 区段採用  协定，您可以参考 Protocol 协定的使用方式一文，获得更多关于协定的资讯。<br>在采用  协定之后，接着实作出协定内的 textView:shouldChangeTextInRange:replacementText:方法函式，此方法函式会在字元输入时触发，而回传的 BOOL 值则代表该字元是否要作用，下列程式码就是在此方法函式中，使用判断输入字元的方式来收起虚拟键盘（判断字元为 return 换行字元）。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">BOOL</span>)textView:(<span class="built_in">UITextView</span> *)textView shouldChangeTextInRange:(<span class="built_in">NSRange</span>)range replacementText:(<span class="built_in">NSString</span> *)text &#123;  </span><br><span class="line">    <span class="keyword">if</span> ([text isEqualToString:<span class="string">@&quot;\n&quot;</span>]) &#123;  </span><br><span class="line">        [myTextView resignFirstResponder];  </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NO</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后别忘记在 viewDidLoad: 事件中，将 UITextView 的代理物件指向自己，这样程式才能正确找到实作  协定方法函式的类别。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)viewDidLoad  &#123;  </span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];  </span><br><span class="line">    myTextView.delegate = <span class="keyword">self</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5"><a href="#5" class="headerlink" title="关于键盘遮蔽的问题"></a><a href="#5">关于键盘遮蔽的问题</a></h3><p>如果您在实作上有遭遇到键盘遮蔽编辑区域的问题，可以参考使用 Animation 解决小键盘挡住 UITextField 的问题一文，透过 Core Graphic 的 Animation 功能，在键盘出现时同时移动编辑区域来解决遮蔽的问题。</p>
 
       
     </div>
@@ -1040,7 +1046,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/iOS-Application-tried-to-push-a-nil-view-controller-on-target-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/iPhone%E4%B8%AD-%E7%82%B9%E5%87%BB%E6%8D%A2%E8%A1%8C-%E9%94%AE%E7%9B%98%E6%B6%88%E5%A4%B1-%E9%94%AE%E7%9B%98%E9%80%80%E5%87%BA.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1058,7 +1064,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/iOS-Application-tried-to-push-a-nil-view-controller-on-target-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86.html" class="post-title-link" itemprop="url">'iOS Application tried to push a nil view controller on target'错误处理</a>
+          <a href="/2025/06/20/iPhone%E4%B8%AD-%E7%82%B9%E5%87%BB%E6%8D%A2%E8%A1%8C-%E9%94%AE%E7%9B%98%E6%B6%88%E5%A4%B1-%E9%94%AE%E7%9B%98%E9%80%80%E5%87%BA.html" class="post-title-link" itemprop="url">iPhone中，点击换行，键盘消失，键盘退出</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1070,7 +1076,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 09:58:37 / 修改时间：10:09:58" itemprop="dateCreated datePublished" datetime="2025-06-19T09:58:37+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:52:13 / 修改时间：09:55:25" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:13+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1092,17 +1098,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于“ios Application tried to push a nil view controller on target”这个错误，原因其实很简单，问题都是找到了才觉得简单，处理的时候不知道有多烦恼。呵呵，本来就应该是这样吧。</p>
-<p>没有错误的作法：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span>.window = [[<span class="built_in">UIWindow</span> alloc] initWithFrame:[[<span class="built_in">UIScreen</span> mainScreen] bounds]];</span><br><span class="line">    </span><br><span class="line">    rootViewController = [[WalkerUITestViewController alloc] initWithNibName:<span class="string">@&quot;WalkerUITestViewController&quot;</span> bundle:<span class="literal">nil</span>];</span><br><span class="line">    navigationController = [[<span class="built_in">UINavigationController</span> alloc] initWithRootViewController:rootViewController];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span>.window.rootViewController = navigationController;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span>.window.backgroundColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">    [<span class="keyword">self</span>.window makeKeyAndVisible];</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>实现的步骤一个都不能少</p>
+<p>1、要在声明文件中实现 UItextFieldDelegate 协议</p>
+<p>2、在实现文件中实现 UItextFieldDelegate 协议 中键盘消失的方法即：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>)textFieldShouldReturn:(<span class="built_in">UITextField</span> *)textField&#123;</span><br><span class="line"></span><br><span class="line">     [textField resignFirstResponder];</span><br><span class="line"></span><br><span class="line">     <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>有错误的作法</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span>.window = [[<span class="built_in">UIWindow</span> alloc] initWithFrame:[[<span class="built_in">UIScreen</span> mainScreen] bounds]];</span><br><span class="line">    </span><br><span class="line">    navigationController = [[<span class="built_in">UINavigationController</span> alloc] </span><br><span class="line">    initWithRootViewController:rootViewController];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span>.window.rootViewController = navigationController;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span>.window.backgroundColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">    [<span class="keyword">self</span>.window makeKeyAndVisible];</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当然在这两个例子里面，属性的声明是一样的</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@synthesize</span> navigationController;</span><br><span class="line"><span class="keyword">@synthesize</span> rootViewController;</span><br></pre></td></tr></table></figure>
-
-<p>其实就是在使用之前，自己有木有初始化的问题。ok。</p>
+<p>3、在viewDidLoad方法中添加代理。例如：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)viewDidLoad&#123;</span><br><span class="line"></span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//设置代理点击换行，键盘消失</span></span><br><span class="line"></span><br><span class="line">     textSample.delegate =<span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -1122,7 +1124,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/59/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/59/">59</a><span class="page-number current">60</span><a class="page-number" href="/page/61/">61</a><span class="space">&hellip;</span><a class="page-number" href="/page/87/">87</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/61/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/59/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/59/">59</a><span class="page-number current">60</span><a class="page-number" href="/page/61/">61</a><span class="space">&hellip;</span><a class="page-number" href="/page/91/">91</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/61/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
