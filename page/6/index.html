@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">840</span>
+          <span class="site-state-item-count">869</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Github-%E4%B9%8B-Connection-timed-out-%E7%9A%84%E9%97%AE%E9%A2%98.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/04/Nodejs%E6%96%B0%E7%89%88%E6%9C%AC8-9-0%E5%92%8C9-2-0%E6%9B%B4%E6%96%B0%E5%95%A6.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/Github-%E4%B9%8B-Connection-timed-out-%E7%9A%84%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">Github 之 Connection timed out 的问题</a>
+          <a href="/2025/07/04/Nodejs%E6%96%B0%E7%89%88%E6%9C%AC8-9-0%E5%92%8C9-2-0%E6%9B%B4%E6%96%B0%E5%95%A6.html" class="post-title-link" itemprop="url">Nodejs新版本8.9.0和9.2.0更新啦</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 16:49:52 / 修改时间：17:05:50" itemprop="dateCreated datePublished" datetime="2025-07-03T16:49:52+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-04 11:47:55 / 修改时间：14:10:09" itemprop="dateCreated datePublished" datetime="2025-07-04T11:47:55+08:00">2025-07-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,29 +294,301 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>最近push代码到github的时候出现了问题</p>
+          <p>这个11月，Nodejs新版本更新了，欢呼雀跃呀。</p>
+<p>记得大概从2014年刚开始接触，到进入新公司后正式使用Nodejs已经有大概会3年了，大概也算是我比较喜欢的语言中的一种。</p>
+<p>第一次接触的时候，就基本上只是用来运行js脚本，当时爬取网站的时候，有很多js的调用，需要运行后才有结果，当时自己还只是在用PHP，重写的话有相当的耗时，于是就有了第一次接触，之后断断续续就没有怎么接触了。</p>
+<p>第二次接触是在进入奇鸟后，认识了磊哥，于是又开始了Nodejs之旅，这回让我对js有了重新的认识，以往的普通语法认知和视野认知进入到了一个更深的层面。</p>
+<p>当时记得做一个逻辑，需要查询数据库，然后需要根据查询的结果做逻辑处理，要是知道，js的特性，那个时候就是一层层的嵌套，后来在使用过程中，了解到了co，async之类的库，就摆脱了一层一层剥洋葱的感觉，也学会了原来，还可以有这样的库能够被使用</p>
+<p>比如下面这样一层一层深入</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">connection.<span class="title function_">query</span>(sql, <span class="keyword">function</span>(<span class="params">data, <span class="keyword">function</span>(err, callback) &#123;</span></span><br><span class="line"><span class="params">  <span class="keyword">if</span> (err) &#123;</span></span><br><span class="line"><span class="params">    <span class="keyword">return</span> callback();</span></span><br><span class="line"><span class="params">  &#125;</span></span><br><span class="line"><span class="params"></span></span><br><span class="line"><span class="params">  <span class="keyword">if</span> (data) &#123; // 具体的逻辑处理</span></span><br><span class="line"><span class="params">    connection.query(sql, <span class="keyword">function</span>(data, <span class="keyword">function</span>(err, callback) &#123;</span></span><br><span class="line"><span class="params">      // 具体的逻辑处理 可能还有其他的需求</span></span><br><span class="line"><span class="params">    &#125;);</span></span><br><span class="line"><span class="params">  &#125;</span></span><br><span class="line"><span class="params">&#125;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>下面试用co跟async的方法</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span>.<span class="title function_">waterfall</span>([</span><br><span class="line">  <span class="keyword">function</span>(<span class="params">callback</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (accessToken) &#123;</span><br><span class="line">      <span class="title function_">getUidByToken</span>(accessToken, <span class="keyword">function</span>(<span class="params">err, uid</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">callback</span>(<span class="literal">null</span>, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="title function_">callback</span>(<span class="literal">null</span>, uid);</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="title function_">callback</span>(<span class="literal">null</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="keyword">function</span>(<span class="params">uid, callback</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> sql = <span class="string">`... where user_id = uid`</span>;</span><br><span class="line">    mysql.<span class="title function_">query</span>(&#123;<span class="attr">sql</span>: sql&#125;, <span class="keyword">function</span>(<span class="params">err, row</span>) &#123;</span><br><span class="line">      <span class="title function_">callback</span>(err, row);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  ], <span class="keyword">function</span>(<span class="params">err</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">next</span>(err);</span><br><span class="line">    &#125;</span><br><span class="line">    res.<span class="title function_">json</span>(<span class="title class_">OKPacket</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">co</span>(<span class="keyword">function</span>* () &#123;</span><br><span class="line">  <span class="keyword">let</span> _isAdmin = <span class="keyword">yield</span> <span class="title class_">Promise</span>.<span class="title function_">resolve</span>(<span class="literal">true</span>);</span><br><span class="line">  <span class="keyword">if</span> (!_isAdmin) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;Admin only.&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> sql = <span class="string">``</span>;</span><br><span class="line">  <span class="keyword">yield</span> mysql.<span class="title function_">queyr</span>(sql);</span><br><span class="line">&#125;)</span><br><span class="line">.<span class="title function_">then</span>(<span class="function"><span class="params">val</span> =&gt;</span> res.<span class="title function_">json</span>(&#123;<span class="attr">suceess</span>: <span class="literal">true</span>, <span class="attr">data</span>: []&#125;))</span><br><span class="line">.<span class="title function_">catch</span>(<span class="function"><span class="params">e</span> =&gt;</span> <span class="title function_">next</span>(e));</span><br></pre></td></tr></table></figure>
+
+<p>是不是感觉要比一层一层深入要好很多，虽然是这样，但是依然不能达到自己去深入Nodejs这块的学习。</p>
+<p>后来又了解到了koajs，感觉自己时刻跟不上时代的进步，仅仅不到一年的时间，各种新的技术如雨后春笋般，一个一个冒出来。</p>
+<p>后来又接触到了Reactjs，ReactNative，Webpack，Gulp，Grunt，Pm2等，短短的时间内感觉自己提升了好几个级别。</p>
+<p>但是Nodejs中的各种新的语法也在渐渐的完善。</p>
+<p>如今我自己写的代码，大部分是使用了Babel进行了编译后去运行，毕竟使用的版本中很多新的语法还不支持。</p>
+<p>比如这个，就是目前我使用了8.9.1这个版本后的.babelrc配置文件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;plugins&quot;</span>: [</span><br><span class="line">    <span class="string">&#x27;transform-es2015-modules-commonjs&#x27;</span>,</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对比下以前的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;presets&quot;</span>: [<span class="string">&quot;es2015&quot;</span>],</span><br><span class="line">  <span class="string">&quot;plugins&quot;</span>: [</span><br><span class="line">    <span class="string">&#x27;transform-async-to-generator&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;transform-strict-mode&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;transform-object-assign&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;transform-class-properties&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;transform-export-extensions&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;transform-runtime&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;transform-decorators-legacy&#x27;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>感觉瞬间清爽了许多，应该在开发中，每次写完代码进行编译的速度都快了很多。再过几年import&#x2F;export被支持的时候，就彻底释放了。</p>
+<p>感觉Nodejs这种语言很随意又很严格，随意就是，你可以啥也不管，只能运行就行，可以使用原来的方式。</p>
+<p>严格就是，当你对自己严格的时候，你的代码也会严格起来，而且严格的结果就是感觉新的血液不停的在沸腾。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E4%B8%AD%E8%A7%A3%E5%86%B3-no-await-in-loop.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Nodejs-%E4%B8%AD%E8%A7%A3%E5%86%B3-no-await-in-loop.html" class="post-title-link" itemprop="url">Nodejs 中解决 no-await-in-loop</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 17:37:49 / 修改时间：17:38:44" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:49+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>在使用nodejs中的async&#x2F;await方法的时候，在map,forEach中使用await的时候，eslint总是提示我no-await-in-loop。对于我比较喜欢正规写代码的人讲，忍受不了这种错误提示。最终还是找到了解决办法。</p>
+<p>一般什么情况会有这个错误的呢，如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="title function_">test</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> testData = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line">  testData.<span class="title function_">forEach</span>(<span class="function">(<span class="params">v</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 这里就会提示 no-await-in-loop</span></span><br><span class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">getItem</span>(v); <span class="comment">// 假设这里的getItem是一个Promise </span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解决的办法如下,改成如下方式就可以了，针对forEach也一并改为map。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="title function_">test</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> testData = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line">  testData.<span class="title function_">map</span>(<span class="title function_">async</span> (v) =&gt; &#123;</span><br><span class="line">    <span class="comment">// 这里就会提示 no-await-in-loop</span></span><br><span class="line">    <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">getItem</span>(v); <span class="comment">// 假设这里的getItem是一个Promise </span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/PHP%E4%B8%ADCurl%E5%A6%82%E4%BD%95%E4%BD%BF%E8%AF%B7%E6%B1%82%E7%9A%84%E5%9F%9F%E5%90%8D%E8%A2%AB%E8%A7%A3%E6%9E%90%E5%88%B0%E6%8C%87%E5%AE%9AIP%E4%B8%8A.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/PHP%E4%B8%ADCurl%E5%A6%82%E4%BD%95%E4%BD%BF%E8%AF%B7%E6%B1%82%E7%9A%84%E5%9F%9F%E5%90%8D%E8%A2%AB%E8%A7%A3%E6%9E%90%E5%88%B0%E6%8C%87%E5%AE%9AIP%E4%B8%8A.html" class="post-title-link" itemprop="url">PHP中Curl如何使请求的域名被解析到指定IP上</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 17:37:46 / 修改时间：17:39:02" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:46+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>我们在测试的时候会遇到一个情况，就是在做上线前的接口测试的时候，想要模拟真实的环境，那么接口的域名地址是少不了的，这个情况下，我们又不想直接调用线上的数据，想通过域名跟IP的映射，调用另外一台机器上的代码【即将要上线的代码】。可以采用php中curl的参数配置来操作，具体如下：</p>
+<p>这里的Curl使用的是ixudra&#x2F;curl</p>
+<p>简单的实例代码如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$response</span> = <span class="title class_">Curl</span>::<span class="title function_ invoke__">to</span>(<span class="variable">$host</span>)</span><br><span class="line">-&gt;<span class="title function_ invoke__">enableDebug</span>(<span class="string">&#x27;/usr/local/openresty/nginx/html/api.qeeniao.com/qeeniao/storage/logs/laravel-2017-11-03.log&#x27;</span>)</span><br><span class="line">-&gt;<span class="title function_ invoke__">withOption</span>(<span class="string">&#x27;RESOLVE&#x27;</span>,[<span class="string">&#x27;xxx.xxxx.com:443:xxx.xxx.xxx.xxx&#x27;</span>])</span><br><span class="line">-&gt;<span class="title function_ invoke__">withData</span>(<span class="variable">$params</span>)-&gt;<span class="title function_ invoke__">get</span>();</span><br></pre></td></tr></table></figure>
+
+<p>其实熟悉curl的话对这个就不陌生了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --resolve fdh5imgcdn.oz1997.com:443:58.216.109.182</span><br></pre></td></tr></table></figure>
+
+<p>如果不用ixudra&#x2F;curl的话，可以参照下面的代码使用，效果其实是一样的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$resolve</span> = <span class="keyword">array</span>(<span class="title function_ invoke__">sprintf</span>(</span><br><span class="line">    <span class="string">&quot;%s:%d:%s&quot;</span>, </span><br><span class="line">    <span class="variable">$hostname</span>,</span><br><span class="line">    <span class="variable">$port</span>,</span><br><span class="line">    <span class="variable">$host_ip</span></span><br><span class="line">));</span><br><span class="line"></span><br><span class="line"><span class="variable">$ch</span> = <span class="title function_ invoke__">curl_init</span>(<span class="variable">$url</span>); </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RESOLVE, <span class="variable">$resolve</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="literal">true</span>); </span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>); </span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/CentOS-%E4%B9%8B-%E9%9D%9Eroot%E6%83%85%E5%86%B5%E4%B8%8Bzsh%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/CentOS-%E4%B9%8B-%E9%9D%9Eroot%E6%83%85%E5%86%B5%E4%B8%8Bzsh%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95.html" class="post-title-link" itemprop="url">CentOS 之 非root情况下zsh安装命令记录</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 17:37:43 / 修改时间：17:39:42" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:43+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>第一步就是：下载zsh源码包</p>
+<p>安装的前提是需要安装ncurses，可以看前面的文章[<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy84MDY=">Centos 之 非root情况下ncurses安装问题<i class="fa fa-external-link-alt"></i></span>]<br>然后使用下面的命令进行安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LDFLAGS=-L<span class="variable">$HOME</span>/lib CPPFLAGS=-I<span class="variable">$HOME</span>/include ./configure --prefix=<span class="variable">$HOME</span> --with-tcsetpgrp</span><br><span class="line">make &amp;&amp; make instal</span><br></pre></td></tr></table></figure>
+
+<p>运行zsh发生如下错误</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zsh --version</span><br></pre></td></tr></table></figure>
+
 <blockquote>
-<p>$ git push origin master</p>
-<p>ssh: connect to host github.com port 22: Operation timed out</p>
-<p>fatal: Could not read from remote repository.</p>
-<p>Please make sure you have the correct access rights</p>
-<p>and the repository exists.</p>
+<p>error while loading shared libraries: libncursesw.so.6: cannot open shared object file: No such file or directory</p>
 </blockquote>
-<p>经过google后找到了解决办法</p>
-<p>先用如下命令进行测试</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T -p 443 [email protected]</span><br></pre></td></tr></table></figure>
+<p>这个问题经过网络搜索，是由于执行zsh没有加载对应的动态库，因为我们的动态库安装在了我们自己的目录下面，通知执行下面的命令，即可得到解决</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=<span class="variable">$HOME</span>/lib:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
 
-<p>如果测试后出现下面类似的提示说明可以继续操作了</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hi userName! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br></pre></td></tr></table></figure>
+<p>顺便把它加到.bash_profile里面吧，再次执行安装命令，即可安装完毕。</p>
+<p>但是安装完 运行下面的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exec</span> <span class="variable">$HOME</span>/bin/zsh -l </span><br></pre></td></tr></table></figure>
 
-<p>接下来编辑~&#x2F;.ssh&#x2F;config文件（没有则创建一个），然后加入下面的代码：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Host github.com </span><br><span class="line">    Hostname ssh.github.com </span><br><span class="line">    Port 443</span><br></pre></td></tr></table></figure>
-
-<p>最后在进行测试下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -T xx@xxx</span><br></pre></td></tr></table></figure>
-
-<p>如果有如下提示表示可以进行正常操作了</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Warning: Permanently added the RSA host key <span class="keyword">for</span> IP address <span class="string">&#x27;[192.30.253.122]:443&#x27;</span> to the list of known hosts. </span><br><span class="line">Hi yourname! You<span class="string">&#x27;ve successfully authenticated, but GitHub does not provide shell access.</span></span><br></pre></td></tr></table></figure>
+<p>会发生一直卡住不动，暂时不知道原因，哪位高手遇到解决了，可以留言给我，一起探讨。</p>
 
       
     </div>
@@ -343,7 +615,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E5%A6%82%E4%BD%95%E5%9C%A8vim%E4%B8%AD%E6%90%9C%E7%B4%A2%E9%A1%B9%E7%9B%AE%E4%BB%A3%E7%A0%81.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/CentOS-%E4%B9%8B-%E9%9D%9Eroot%E6%83%85%E5%86%B5%E4%B8%8Bncurses%E5%AE%89%E8%A3%85%E9%97%AE%E9%A2%98.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -361,7 +633,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/%E5%A6%82%E4%BD%95%E5%9C%A8vim%E4%B8%AD%E6%90%9C%E7%B4%A2%E9%A1%B9%E7%9B%AE%E4%BB%A3%E7%A0%81.html" class="post-title-link" itemprop="url">如何在vim中搜索项目代码</a>
+          <a href="/2025/07/03/CentOS-%E4%B9%8B-%E9%9D%9Eroot%E6%83%85%E5%86%B5%E4%B8%8Bncurses%E5%AE%89%E8%A3%85%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">CentOS 之 非root情况下ncurses安装问题</a>
         </h2>
 
         <div class="post-meta-container">
@@ -373,7 +645,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 16:49:47 / 修改时间：17:06:43" itemprop="dateCreated datePublished" datetime="2025-07-03T16:49:47+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 17:37:38 / 修改时间：17:40:12" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:38+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -395,27 +667,22 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>如何在vim中搜索项目代码</p>
-<p>这里使用的工具分别是Ag和Ack</p>
-<p>Ag和Ack都是一个全局搜索工具，但是Ag会更快，比Ack和Grep都要快</p>
-<p>通过网络搜索后：<span class="exturl" data-url="aHR0cDovL2hhcnR0bGUuY29tLzIwMTUvMTIvMjEvdmltLXNlYXJjaC5odG1s">http://harttle.com/2015/12/21/vim-search.html<i class="fa fa-external-link-alt"></i></span></p>
-<p>使用方式是用Ag来进行搜索，使用Ack用来展示结果。</p>
-<p>现在来进行安装步骤总结</p>
-<h1 id="安装Ag"><a href="#安装Ag" class="headerlink" title="安装Ag"></a>安装Ag</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># OSX</span></span><br><span class="line">brew install the_silver_searcher</span><br><span class="line"><span class="comment"># Archlinux</span></span><br><span class="line">pacman -S the_silver_searcher</span><br><span class="line"><span class="comment"># Ubuntu</span></span><br><span class="line">apt-get install silversearcher-ag</span><br></pre></td></tr></table></figure>
+          <p>最近使用主机发现，没有root权限，然后想用zsh，发现没有root权限也是安装不了，但是安装zsh又需要ncurses，但是网上都是一些yum之类的命令，但是yum只能root用哇，苦于无奈，只能安装在自己的目录下使用了。具体过程如下。</p>
+<h3 id="系统版本："><a href="#系统版本：" class="headerlink" title="系统版本："></a>系统版本：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lsb_release -a</span><br></pre></td></tr></table></figure>
 
-<h1 id="安装Ack-vim"><a href="#安装Ack-vim" class="headerlink" title="安装Ack.vim"></a>安装Ack.vim</h1><p>在~&#x2F;.vimrc中加入：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Plugin <span class="string">&#x27;mileszs/ack.vim&#x27;</span></span><br><span class="line"><span class="built_in">let</span> g:ackprg = <span class="string">&#x27;ag --nogroup --nocolor --column&#x27;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>LSB Version:    :core-4.1-amd64:core-4.1-noarch<br>Distributor ID: CentOS<br>Description:    CentOS Linux release 7.3.1611 (Core)<br>Release:        7.3.1611<br>Codename:       Core</p>
+</blockquote>
+<h3 id="源码包下载"><a href="#源码包下载" class="headerlink" title="源码包下载"></a>源码包下载</h3><p><span class="exturl" data-url="aHR0cDovL2Z0cC5nbnUub3JnL3B1Yi9nbnUvbmN1cnNlcy8=">http://ftp.gnu.org/pub/gnu/ncurses/<i class="fa fa-external-link-alt"></i></span><br>这里可以找到需要的版本</p>
+<p>正常安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=<span class="variable">$HOME</span></span><br></pre></td></tr></table></figure>
 
-<p>安装完之后需要重新启动vim，不然 光是 so ~&#x2F;.vimrc 不起作用的，</p>
-<h1 id="Ack的基本操作"><a href="#Ack的基本操作" class="headerlink" title="Ack的基本操作"></a>Ack的基本操作</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Ack [options] &#123;pattern&#125; [&#123;directories&#125;]</span><br></pre></td></tr></table></figure>
-
-<p>常用快捷键如下：</p>
-<p>?           帮助，显示所有快捷键</p>
-<p>Enter&#x2F;o     打开文件</p>
-<p>O           打开文件并关闭Quickfix</p>
-<p>go          预览文件，焦点仍然在Quickfix</p>
-<p>t           新标签页打开文件</p>
-<p>q           关闭Quickfix</p>
+<p>会遇到一个问题，如下</p>
+<blockquote>
+<p>&#x2F;usr&#x2F;bin&#x2F;ld: &#x2F;usr&#x2F;lib&#x2F;libncurses.a(lib_addch.o): relocation R_X86_64_32 against <code>a local symbol&#39; can not be used when making a    shared object; recompile with -fPIC /usr/lib/libncurses.a: could not read symbols: Bad value    collect2: ld returned 1 exit status    make[1]: \*\*\* [http://www.cnblogs.com/.ext/x86\_64-linux/curses.so] Error 1    make[1]: Leaving directory </code>&#x2F;home&#x2F;deploy&#x2F;tmp&#x2F;ruby-<br>enterprise-1.8.6-20081215&#x2F;source&#x2F;ext&#x2F;curses’<br>make: *** [all] Error 1</p>
+</blockquote>
+<p>从错误中可以定位到可能是ncurses这个静态链接库的问题，从网上找了很久，解决方法如下在安装ncurses时如下方法安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$./configure --prefix=<span class="variable">$HOME</span> --with-shared --without-debug --enable-widec</span><br><span class="line"><span class="variable">$make</span> &amp;&amp; make install</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -442,7 +709,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E5%88%A9%E7%94%A8Cloudflare%E5%B0%86URL%E6%98%A0%E5%B0%84%E5%88%B0Workers%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0URL%E9%87%8D%E5%AE%9A%E5%90%91.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/NGINX%E9%85%8D%E7%BD%AE%E4%B9%8BHttps%E9%85%8D%E7%BD%AE.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -460,7 +727,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/%E5%88%A9%E7%94%A8Cloudflare%E5%B0%86URL%E6%98%A0%E5%B0%84%E5%88%B0Workers%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0URL%E9%87%8D%E5%AE%9A%E5%90%91.html" class="post-title-link" itemprop="url">利用Cloudflare将URL映射到Workers路由实现URL重定向</a>
+          <a href="/2025/07/03/NGINX%E9%85%8D%E7%BD%AE%E4%B9%8BHttps%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">NGINX配置之Https配置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -472,7 +739,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 14:42:38 / 修改时间：15:09:48" itemprop="dateCreated datePublished" datetime="2025-07-03T14:42:38+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 17:37:34 / 修改时间：17:40:46" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:34+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -494,24 +761,111 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>我想到达到的效果</p>
-<p>当访问 <code>https://www.gowhich.com/blog/1</code> 时301跳转到 <code>https://blog.gowhich.com/2025/05/29/ubuntu和centos的时间更新操作.html</code></p>
-<p>如果是一个两个的跳转 通过nginx倒是也可以实现</p>
-<p>但是我有1124个贴子需要全部跳转，用nginx就实现不了了</p>
-<p>而且这个跳转也不是直接对应<code>id</code>跳转，</p>
-<p>比如 <code>https://www.gowhich.com/blog/1</code> 时301跳转到 <code>https://blog.gowhich.com/blog/1</code></p>
-<p>因为之前的文章都通过hexo重新生成了，带id不好分辨文章，所以新的文章的url就跟之前变化很大，需要一步一步调整所有贴子</p>
-<p>还好不多，调整起来就是花费点时间，跳转倒是个比较大的问题</p>
+          <p>现在的https越来越流行，这个未来应该是必备技能了，下面举个Yii2的项目，进行https配置，https证书自己需要准备好，不会的可以看我的文章<br>下面就是示例配置【仅供参考】</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl http2;</span><br><span class="line"></span><br><span class="line">    ssl_certificate /etc/letsencrypt/live/gowhich.com/fullchain.pem;</span><br><span class="line">    ssl_certificate_key /etc/letsencrypt/live/gowhich.com/privkey.pem;</span><br><span class="line"></span><br><span class="line">    ssl_session_timeout 10m;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line">    ssl_ciphers HIGH:!aNULL:!MD5;</span><br><span class="line">    ssl_session_cache <span class="built_in">builtin</span>:1000 shared:SSL:10m;</span><br><span class="line"></span><br><span class="line">    resolver 8.8.8.8 8.8.4.4 valid=300s;</span><br><span class="line"></span><br><span class="line">    resolver_timeout 5s;</span><br><span class="line"></span><br><span class="line">    server_name www.gowhich.com gowhich.com;</span><br><span class="line"></span><br><span class="line">    access_log  /home/wwwlogs/www.gowhich.com.log  access;</span><br><span class="line">    error_log  /home/wwwlogs/www.gowhich.com.error.log;</span><br><span class="line"></span><br><span class="line">    index index.html index.htm index.php default.html default.htm default.php;</span><br><span class="line">    root  /home/wwwroot/www1.gowhich.com/web;</span><br><span class="line"></span><br><span class="line">    include yii.conf;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$host</span> = <span class="string">&#x27;gowhich.com&#x27;</span>) &#123;</span><br><span class="line">        rewrite ^/(.*)$ https://www.gowhich.com/<span class="variable">$1</span> permanent;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~ [^/]\.php(/|$) &#123;</span><br><span class="line">        <span class="comment"># comment try_files $uri =404; to enable pathinfo</span></span><br><span class="line">        try_files <span class="variable">$uri</span> =404;</span><br><span class="line">        fastcgi_pass  unix:/tmp/php-cgi.sock;</span><br><span class="line">        fastcgi_index index.php;</span><br><span class="line">        include fastcgi.conf;</span><br><span class="line">        <span class="comment">#include pathinfo.conf;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$ &#123;</span><br><span class="line">        expires      30d;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~ .*\.(js|css)?$ &#123;</span><br><span class="line">        expires      12h;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Certbot%E5%85%8D%E8%B4%B9https%E8%AF%81%E4%B9%A6%E5%AE%89%E8%A3%85.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Certbot%E5%85%8D%E8%B4%B9https%E8%AF%81%E4%B9%A6%E5%AE%89%E8%A3%85.html" class="post-title-link" itemprop="url">Certbot免费https证书安装</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 17:37:31 / 修改时间：17:41:21" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:31+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="Install-certbot-安装certbot"><a href="#Install-certbot-安装certbot" class="headerlink" title="Install certbot 安装certbot"></a>Install certbot 安装certbot</h2><p>安装步骤可到这里 <span class="exturl" data-url="aHR0cHM6Ly9jZXJ0Ym90LmVmZi5vcmcvI2RlYmlhbmplc3NpZS1uZ2lueA==">https://certbot.eff.org/#debianjessie-nginx<i class="fa fa-external-link-alt"></i></span> 根据自己的服务器情况选择具体的安装版本</p>
+<h2 id="配置证书"><a href="#配置证书" class="headerlink" title="配置证书"></a>配置证书</h2><p>可以使用如下命令，这样的好处是我们可以在下次进行自动更新证书的话，可以方便的处理证书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certbot certonly --webroot -w /home/wwwroot/www1.gowhich.com/web -d gowhich.com -d www.gowhich.com</span><br></pre></td></tr></table></figure>
+
+<p>注意这里的webroot路径一定是你静态文件能够被访问到的，不然，无法进行证书验证</p>
+<p>比如我的另外一个域名可以这样设置【Flask项目】</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certbot certonly --webroot -w /home/wwwroot/www.walkerfree.com/walkerfree/static -d walkerfree.com -d www.walkerfree.com</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Saving debug <span class="built_in">log</span> to /var/log/letsencrypt/letsencrypt.log</span><br><span class="line">Starting new HTTPS connection (1): acme-v01.api.letsencrypt.org</span><br><span class="line">Obtaining a new certificate</span><br><span class="line">Performing the following challenges:</span><br><span class="line">http-01 challenge <span class="keyword">for</span> walkerfree.com</span><br><span class="line">http-01 challenge <span class="keyword">for</span> www.walkerfree.com</span><br><span class="line">Using the webroot path /home/wwwroot/www.walkerfree.com/walkerfree/static <span class="keyword">for</span> all unmatched domains.</span><br><span class="line">Waiting <span class="keyword">for</span> verification...</span><br><span class="line">Cleaning up challenges</span><br><span class="line">Generating key (2048 bits): /etc/letsencrypt/keys/0003_key-certbot.pem</span><br><span class="line">Creating CSR: /etc/letsencrypt/csr/0003_csr-certbot.pem</span><br><span class="line"></span><br><span class="line">IMPORTANT NOTES:</span><br><span class="line"> - Congratulations! Your certificate and chain have been saved at</span><br><span class="line">   /etc/letsencrypt/live/walkerfree.com/fullchain.pem. Your cert will</span><br><span class="line">   expire on 2018-01-22. To obtain a new or tweaked version of this</span><br><span class="line">   certificate <span class="keyword">in</span> the future, simply run certbot again. To</span><br><span class="line">   non-interactively renew *all* of your certificates, run <span class="string">&quot;certbot</span></span><br><span class="line"><span class="string">   renew&quot;</span></span><br><span class="line"> - If you like Certbot, please consider supporting our work by:</span><br><span class="line"></span><br><span class="line">   Donating to ISRG / Let<span class="string">&#x27;s Encrypt:   https://letsencrypt.org/donate</span></span><br><span class="line"><span class="string">   Donating to EFF:                    https://eff.org/donate-le</span></span><br></pre></td></tr></table></figure>
+
+<p>然后就可以进行nginx配置了</p>
+<p>当我们不希望每次都来自己更新，或者自己忘记了更新，证书过期了，不就很危险了，执行下面的命令试试 是否可以正常的自动更新，如果可以的话 我们就把此命令加入我们的定时任务中就可以了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> certbot renew --dry-run</span><br></pre></td></tr></table></figure>
+
+<p>加入定时任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">30 2 * * 1 /usr/bin/certbot renew  &gt;&gt; /var/log/certbot-renew.log</span><br></pre></td></tr></table></figure>
+
+<p>每周一半夜2点30分执行renew任务。</p>
 <hr>
-<p>以上就是事情原因，解决方案就是使用Cloudflare的Workers路由</p>
-<h2 id="1"><a href="#1" class="headerlink" title="Cloudflare的Workers路由创建"></a><a href="#1">Cloudflare的Workers路由创建</a></h2><p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1751526064/2025-07-03_14-53_aggaka.png"><br><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1751526195/2025-07-03_15-03_zfymsz.png"></p>
-<h2 id="2"><a href="#2" class="headerlink" title="Workers路由代码编辑"></a><a href="#2">Workers路由代码编辑</a></h2><p>我的实现逻辑就是上面说的，代码如下</p>
-<figure class="highlight js"><figcaption><span>worker.js</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Welcome to Cloudflare Workers! This is your first worker.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * - Run &quot;npm run dev&quot; in your terminal to start a development server</span></span><br><span class="line"><span class="comment"> * - Open a browser tab at http://localhost:8787/ to see your worker in action</span></span><br><span class="line"><span class="comment"> * - Run &quot;npm run deploy&quot; to publish your worker</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Learn more at https://developers.cloudflare.com/workers/</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> dictData = &#123;</span><br><span class="line">  <span class="number">1</span>: <span class="string">&quot;/2025/05/29/ubuntu和centos的时间更新操作.html&quot;</span>,</span><br><span class="line">  <span class="number">2</span>: <span class="string">&quot;/2025/05/29/Yii%E4%B8%ADurlManager%E7%9A%84%E9%85%8D%E7%BD%AE.html&quot;</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">addEventListener</span>(<span class="string">&#x27;fetch&#x27;</span>, <span class="function"><span class="params">event</span> =&gt;</span> &#123;</span><br><span class="line">  event.<span class="title function_">respondWith</span>(<span class="title function_">handleRequest</span>(event.<span class="property">request</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">handleRequest</span>(<span class="params">request</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> url = <span class="keyword">new</span> <span class="title function_">URL</span>(request.<span class="property">url</span>);</span><br><span class="line">  <span class="keyword">const</span> pathArr = url.<span class="property">pathname</span>.<span class="title function_">split</span>(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(pathArr);</span><br><span class="line">  <span class="keyword">if</span> (pathArr.<span class="property">length</span> &lt; <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">fetch</span>(request); <span class="comment">// Response.redirect(request.url, 200);</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> pathId = pathArr[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(url.<span class="property">pathname</span>);</span><br><span class="line">  <span class="keyword">if</span> (url.<span class="property">pathname</span>.<span class="title function_">match</span>(<span class="string">&#x27;/blog/view/id/*&#x27;</span>)) &#123;</span><br><span class="line">    pathId = pathArr[<span class="number">4</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置新域名</span></span><br><span class="line">  <span class="keyword">const</span> newDomain = <span class="string">&#x27;https://blog.gowhich.com&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> newPathName = dictData[pathId] || <span class="literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// console.log(dictData);</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(newPathName);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (newPathName == <span class="literal">undefined</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">fetch</span>(request); <span class="comment">// Response.redirect(request.url, 200);</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 保留路径和查询参数</span></span><br><span class="line">  <span class="keyword">const</span> newUrl = newDomain + newPathName + url.<span class="property">search</span></span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(newUrl);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回 301 重定向</span></span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Response</span>.<span class="title function_">redirect</span>(newUrl, <span class="number">301</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 无匹配则正常访问</span></span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">fetch</span>(request);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><strong>2019-02-20补充</strong></p>
+<p>通过下面命令可以通过certbot自己的服务器来验证证书 - 这个只在自己的网站不支持验证证书的情况下使用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certbot certonly --standalone --preferred-challenges http -d walkerfree.com -d www.walkerfree.com</span><br></pre></td></tr></table></figure>
 
-<p>编辑完之后点击部署就可以了</p>
-<h2 id="3"><a href="#3" class="headerlink" title="配置"></a><a href="#3">配置</a></h2><p>点击创建好的路由，配置按照如下步骤</p>
-<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1751526065/2025-07-03_14-57_gbmlx8.png"><br><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1751526315/2025-07-03_14-59_oqjfkk.png"></p>
-<p>然后点击添加路由</p>
+<p>注意：前提可能需要将自己本地监听80端口的服务器暂时停掉一会</p>
 
       
     </div>
@@ -538,7 +892,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/x509--certificate-signed-by-unknown-authority-%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E4%B9%9F%E8%AE%B8%E6%B2%A1%E6%9C%89%E4%BD%A0%E6%83%B3%E7%9A%84%E9%82%A3%E4%B9%88%E5%A4%8D%E6%9D%82.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E8%8B%B9%E6%9E%9CMac-OS-X%E6%98%BE%E7%A4%BA%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -556,7 +910,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/x509--certificate-signed-by-unknown-authority-%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E4%B9%9F%E8%AE%B8%E6%B2%A1%E6%9C%89%E4%BD%A0%E6%83%B3%E7%9A%84%E9%82%A3%E4%B9%88%E5%A4%8D%E6%9D%82.html" class="post-title-link" itemprop="url">x509: certificate signed by unknown authority 这个问题也许没有你想的那么复杂</a>
+          <a href="/2025/07/03/%E8%8B%B9%E6%9E%9CMac-OS-X%E6%98%BE%E7%A4%BA%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">苹果Mac OS X显示隐藏文件的方法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -568,7 +922,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 14:20:35 / 修改时间：14:21:43" itemprop="dateCreated datePublished" datetime="2025-07-03T14:20:35+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 17:37:28 / 修改时间：17:41:40" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:28+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -590,17 +944,14 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><code>x509: certificate signed by unknown authority</code> 这个问题也许没有你想的那么复杂</p>
-<p>起初是遇到了个问题</p>
-<p>我就更新了个cdn的证书</p>
-<p>结果golang的http库无法正常请求接口，php的file_get_contents也无法正常请求接口</p>
-<p>报错信息</p>
-<p>golang的http库反馈的是 x509: certificate signed by unknown authority</p>
-<p>php的file_get_contents 反馈的是 error:14090086:SSL routines:ssl3_get_server_certificate:certificate verify failed on line 1</p>
-<p>经过多种的猜测，发现执行完这个命令后一切都恢复了正常</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update ca-certificates -y</span><br></pre></td></tr></table></figure>
+          <p>打开“终端”，根据自己的版本选择命令</p>
+<p>早期的OS X（10.6~10.8）系统可以使用如下两条命令来开始或者关闭系统隐藏文件的显示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">defaults write com.apple.Finder AppleShowAllFiles Yes &amp;&amp; killall Finder //显示隐藏文件</span><br><span class="line">defaults write com.apple.Finder AppleShowAllFiles No &amp;&amp; killall Finder //不显示隐藏文件</span><br></pre></td></tr></table></figure>
 
+<p>当升级到OS X 10.9 Mavericks版本之后，这两条命令需要做一些修改，变成了如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">defaults write com.apple.finder AppleShowAllFiles Yes &amp;&amp; killall Finder //显示隐藏文件</span><br><span class="line">defaults write com.apple.finder AppleShowAllFiles No &amp;&amp; killall Finder //不显示隐藏文件</span><br></pre></td></tr></table></figure>
 
+<p>复制命令，在“终端”中粘贴命令，按下enter键–执行。</p>
 
       
     </div>
@@ -627,7 +978,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E4%BC%A0%E8%BE%93.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E4%BB%A3%E7%90%86-%E7%BB%88%E7%AB%AF%E5%92%8CGit%E4%BD%BF%E7%94%A8%E5%A6%82%E4%BD%95%E4%BB%A3%E7%90%86.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -645,7 +996,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/Nodejs-%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E4%BC%A0%E8%BE%93.html" class="post-title-link" itemprop="url">Nodejs 数据加密传输</a>
+          <a href="/2025/07/03/%E4%BB%A3%E7%90%86-%E7%BB%88%E7%AB%AF%E5%92%8CGit%E4%BD%BF%E7%94%A8%E5%A6%82%E4%BD%95%E4%BB%A3%E7%90%86.html" class="post-title-link" itemprop="url">代理 - 终端和Git使用如何代理</a>
         </h2>
 
         <div class="post-meta-container">
@@ -657,7 +1008,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 11:59:52 / 修改时间：12:00:24" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:52+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 17:37:24 / 修改时间：17:42:50" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:24+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -679,18 +1030,34 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>数据加密传输，这个目前我接触的几个方式，一个是密文传输，一个明文传输</p>
-<p>密文传输，就是用密钥对数据加密，使用公钥对数据解密，传输的通道可以是https的也可以是http的。</p>
-<p>明文传输，前提是建立一个安全的传输通道，这里使用证书对通道的安全做了防护，然后传输数据，使用的是明文。</p>
-<p>比较专业的 可以后面慢慢分享，不过这里我就介绍下明文传输，如果是用nodejs建立安全通道</p>
-<p>使用两个库，分别是urllib和request，这里的证书只介绍使用pfx文件</p>
-<p>urllib库的方式</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">urllibRequest</span> = (<span class="params">url, method, data, pfx, pass</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span>(<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> options = &#123;</span><br><span class="line">      <span class="attr">data</span>: data,</span><br><span class="line">      <span class="attr">method</span>: method,</span><br><span class="line">      <span class="attr">pfx</span>: pfx,</span><br><span class="line">      <span class="attr">passphrase</span>: pass,</span><br><span class="line">      <span class="attr">rejectUnauthorized</span>: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    urllib.<span class="title function_">request</span>(url, options, <span class="keyword">function</span>(<span class="params">err, data, res</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">reject</span>(err);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">resolve</span>(data.<span class="title function_">toString</span>());</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <h2 id="GIT"><a href="#GIT" class="headerlink" title="GIT"></a>GIT</h2><p>设置HTTP协议</p>
+<ul>
+<li>socks5方式</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy <span class="string">&#x27;socks5://127.0.0.1:1080&#x27;</span> </span><br><span class="line">git config --global https.proxy <span class="string">&#x27;socks5://127.0.0.1:1080&#x27;</span></span><br></pre></td></tr></table></figure>
 
-<p>request库的方法</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">httpRequest</span> = (<span class="params">url, method, data, pfx, pass</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> options = &#123;</span><br><span class="line">      <span class="attr">url</span>: url,</span><br><span class="line">      <span class="attr">method</span>: method,</span><br><span class="line">      <span class="attr">form</span>: data,</span><br><span class="line">      <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;Content-type&#x27;</span>: <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">agentOptions</span>: &#123;</span><br><span class="line">        <span class="attr">pfx</span>: pfx,</span><br><span class="line">        <span class="attr">passphrase</span>: pass,</span><br><span class="line">        <span class="attr">rejectUnauthorized</span>: <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="title function_">request</span>(options, <span class="keyword">function</span>(<span class="params">err, httpResponse, data</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">reject</span>(err);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">resolve</span>(data);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>http方式</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy <span class="string">&quot;http://127.0.0.1:6667&quot;</span></span><br><span class="line">git config --global https.proxy <span class="string">&quot;http://127.0.0.1:6667&quot;</span></span><br></pre></td></tr></table></figure>
 
+<ul>
+<li>取消设置</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global --<span class="built_in">unset</span> http.proxy</span><br><span class="line">git config --global --<span class="built_in">unset</span> https.proxy</span><br></pre></td></tr></table></figure>
 
+<p>设置SSH协议</p>
+<p>创建文件 ~&#x2F;.ssh&#x2F;config 【如果存在可忽略】</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Host bitbucket.org</span><br><span class="line">	User git</span><br><span class="line"> 	HostName altssh.bitbucket.org</span><br><span class="line"> 	Port 443</span><br><span class="line"> 	ProxyCommand connect -S 127.0.0.1:1080 %h %p</span><br><span class="line"></span><br><span class="line">Host github.com</span><br><span class="line"> 	User git</span><br><span class="line"> 	HostName ssh.github.com</span><br><span class="line"> 	Port 443</span><br><span class="line"> 	ProxyCommand connect -S 127.0.0.1:1080 %h %p%</span><br></pre></td></tr></table></figure>
+
+<h2 id="终端-terminal"><a href="#终端-terminal" class="headerlink" title="终端 terminal"></a>终端 terminal</h2><p>打开终端执行下面命令即可，无须重启终端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> http_proxy=<span class="string">&quot;socks5://127.0.0.1:1080&quot;</span></span><br><span class="line"><span class="built_in">export</span> https_proxy=<span class="string">&quot;socks5://127.0.0.1:1080&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>设置完后 执行下面命令查看自己的IP</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -i http://ip.cn</span><br></pre></td></tr></table></figure>
+
+<p>有个问题就是设置完代理，上面的命令无法测试自己的IP了，应该是这个地址也同时被墙了。</p>
+<p>参考：<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmtlbHUub3JnL3RlY2gvMjAxNy8wNi8xOS9zZXR0aW5nLXNvY2tzNS1wcm94eS5odG1s">https://blog.kelu.org/tech/2017/06/19/setting-socks5-proxy.html<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -717,7 +1084,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/PM2%E5%90%AF%E5%8A%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8F%82%E6%95%B0.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E9%80%9A%E8%BF%87-fs.createWriteStream-%E4%BF%9D%E5%AD%98%E6%96%87%E4%BB%B6.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -735,7 +1102,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/PM2%E5%90%AF%E5%8A%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8F%82%E6%95%B0.html" class="post-title-link" itemprop="url">PM2启动配置文件参数</a>
+          <a href="/2025/07/03/Nodejs-%E9%80%9A%E8%BF%87-fs.createWriteStream-%E4%BF%9D%E5%AD%98%E6%96%87%E4%BB%B6.html" class="post-title-link" itemprop="url">Nodejs 通过 fs.createWriteStream 保存文件</a>
         </h2>
 
         <div class="post-meta-container">
@@ -747,7 +1114,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 11:59:49 / 修改时间：12:01:13" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:49+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 17:37:21 / 修改时间：17:43:23" itemprop="dateCreated datePublished" datetime="2025-07-03T17:37:21+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -769,359 +1136,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>PM2启动配置文件参数比较全的一个。如下：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span>             <span class="punctuation">:</span> <span class="string">&quot;node-app&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;cwd&quot;</span>              <span class="punctuation">:</span> <span class="string">&quot;/srv/node-app/current&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;args&quot;</span>             <span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;--toto=heya coco&quot;</span><span class="punctuation">,</span> <span class="string">&quot;-d&quot;</span><span class="punctuation">,</span> <span class="string">&quot;1&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;script&quot;</span>           <span class="punctuation">:</span> <span class="string">&quot;bin/app.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;node_args&quot;</span>        <span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;--harmony&quot;</span><span class="punctuation">,</span> <span class="string">&quot; --max-stack-size=102400000&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;log_date_format&quot;</span>  <span class="punctuation">:</span> <span class="string">&quot;YYYY-MM-DD HH:mm Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;error_file&quot;</span>       <span class="punctuation">:</span> <span class="string">&quot;/var/log/node-app/node-app.stderr.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;out_file&quot;</span>         <span class="punctuation">:</span> <span class="string">&quot;log/node-app.stdout.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;pid_file&quot;</span>         <span class="punctuation">:</span> <span class="string">&quot;pids/node-geo-api.pid&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;instances&quot;</span>        <span class="punctuation">:</span> <span class="number">6</span><span class="punctuation">,</span> <span class="comment">//or 0 =&gt; &#x27;max&#x27;</span></span><br><span class="line">  <span class="attr">&quot;min_uptime&quot;</span>       <span class="punctuation">:</span> <span class="string">&quot;200s&quot;</span><span class="punctuation">,</span> <span class="comment">// 200 seconds, defaults to 1000</span></span><br><span class="line">  <span class="attr">&quot;max_restarts&quot;</span>     <span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span> <span class="comment">// defaults to 15</span></span><br><span class="line">  <span class="attr">&quot;max_memory_restart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1M&quot;</span><span class="punctuation">,</span> <span class="comment">// 1 megabytes, e.g.: &quot;2G&quot;, &quot;10M&quot;, &quot;100K&quot;, 1024 the default unit is byte.</span></span><br><span class="line">  <span class="attr">&quot;cron_restart&quot;</span>     <span class="punctuation">:</span> <span class="string">&quot;1 0 * * *&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;watch&quot;</span>            <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;ignore_watch&quot;</span>      <span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;[\\/\\\\]\\./&quot;</span><span class="punctuation">,</span> <span class="string">&quot;node_modules&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;merge_logs&quot;</span>       <span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;exec_interpreter&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;node&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;exec_mode&quot;</span>        <span class="punctuation">:</span> <span class="string">&quot;fork&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;autorestart&quot;</span>      <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="comment">// enable/disable automatic restart when an app crashes or exits</span></span><br><span class="line">  <span class="attr">&quot;vizion&quot;</span>           <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="comment">// enable/disable vizion features (versioning control)</span></span><br><span class="line">  <span class="comment">// Default environment variables that will be injected in any environment and at any start</span></span><br><span class="line">  <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;NODE_ENV&quot;</span><span class="punctuation">:</span> <span class="string">&quot;production&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;AWESOME_SERVICE_API_TOKEN&quot;</span><span class="punctuation">:</span> <span class="string">&quot;xxx&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="attr">&quot;env_*&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;SPECIFIC_ENV&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>比较有用的参数:</p>
-<p>cron_restart:定时启动，解决重启能解决的问题</p>
-<p>max_memory_restart：解决内容不够用的问题，不过会有风险【数据丢失】</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/React-Router-%E4%B9%8B-routerWillLeave-%E5%AE%9E%E7%8E%B0-%E8%87%AA%E5%AE%9A%E4%B9%89Dialog.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/React-Router-%E4%B9%8B-routerWillLeave-%E5%AE%9E%E7%8E%B0-%E8%87%AA%E5%AE%9A%E4%B9%89Dialog.html" class="post-title-link" itemprop="url">react-router 之 routerWillLeave 实现 自定义Dialog</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:44 / 修改时间：12:02:12" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:44+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>react-router 可以在 react中起到路由的作用，同时也有一个routerWillLeave，这个函数帮助我们再处理路由的时候，离开某个路由要做的某个判断起到了很好的作用，但是version 2 才有这个功能，这里记录下如何自定自己弹出框。</p>
-<p>由于react-router自带的功能不是很好，需要我们自己处理一下，于是google参考了stackoverflow上的一篇文章，先建立一个函数</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">setAsyncRouteLeaveHook</span>(<span class="params">router, route, hook</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> withinHook = <span class="literal">false</span></span><br><span class="line">  <span class="keyword">let</span> finalResult = <span class="literal">undefined</span></span><br><span class="line">  <span class="keyword">let</span> finalResultSet = <span class="literal">false</span></span><br><span class="line">  router.<span class="title function_">setRouteLeaveHook</span>(route, <span class="function"><span class="params">nextLocation</span> =&gt;</span> &#123;</span><br><span class="line">    withinHook = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">if</span> (!finalResultSet) &#123;</span><br><span class="line">      <span class="title function_">hook</span>(nextLocation).<span class="title function_">then</span>(<span class="function"><span class="params">result</span> =&gt;</span> &#123;</span><br><span class="line">        finalResult = result</span><br><span class="line">        finalResultSet = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">if</span> (!withinHook &amp;&amp; nextLocation) &#123;</span><br><span class="line">          router.<span class="title function_">replace</span>(nextLocation)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> result = finalResultSet ? finalResult : <span class="literal">false</span></span><br><span class="line">    withinHook = <span class="literal">false</span></span><br><span class="line">    finalResult = <span class="literal">undefined</span></span><br><span class="line">    finalResultSet = <span class="literal">false</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>原来的push，我这里改成了replace，为了适合我自己的逻辑。</p>
-<p>然后添加一下routerWillLeave的逻辑</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">routerWillLeave</span>(<span class="params">nextLocation</span>) &#123;</span><br><span class="line">    <span class="comment">//获取红包相关的信息</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="title class_">Popbox</span>.<span class="title function_">pop</span>(&#123;</span><br><span class="line">        <span class="attr">text</span>: <span class="string">&#x27;你离使用红包只差一步之遥，确定放弃吗？&#x27;</span>,</span><br><span class="line">        <span class="attr">confirmBtnText</span>: <span class="string">&#x27;继续绑卡&#x27;</span>,</span><br><span class="line">        <span class="attr">cancelBtnText</span>: <span class="string">&#x27;放弃&#x27;</span>,</span><br><span class="line">        <span class="attr">cancelFunc</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="title function_">resolve</span>(<span class="literal">true</span>);</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里是需要返回一个Promise的，所以自己的代码记得处理一下。</p>
-<p>最后我们跟根据自己的逻辑来设置一下这个Hook。</p>
-<p>我这里是放在了componentDidMount中做的处理</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; type &#125; = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">params</span>;</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">if</span>(type)&#123;</span><br><span class="line">      <span class="title function_">setAsyncRouteLeaveHook</span>(<span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">router</span>, <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">route</span>, <span class="variable language_">this</span>.<span class="property">routerWillLeave</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>好了，希望能帮到不了解英文的你，或者是找不到资料的你。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/PHP-%E4%B9%8B-multipart-form-data-%E6%96%B9%E5%BC%8F-Post-%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/PHP-%E4%B9%8B-multipart-form-data-%E6%96%B9%E5%BC%8F-Post-%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE.html" class="post-title-link" itemprop="url">PHP 之 multipart/form-data 方式 Post 提交数据</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:30 / 修改时间：12:02:34" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:30+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>post的curl库，模拟post提交的时候，默认的方式 multipart&#x2F;form-data ，这个算是post提交的几个基础的实现方式。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$postUrl</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="variable">$postData</span> = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">&#x27;user_name&#x27;</span>=&gt;<span class="variable">$userName</span>,</span><br><span class="line">    <span class="string">&#x27;identity_no&#x27;</span>=&gt;<span class="variable">$idCardNo</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable">$curl</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_URL, <span class="variable">$postUrl</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_USERAGENT,<span class="string">&#x27;Opera/9.80 (Windows NT 6.2; Win64; x64) Presto/2.12.388 Version/12.15&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_SSL_VERIFYPEER, <span class="literal">false</span>); <span class="comment">// stop verifying certificate</span></span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_RETURNTRANSFER, <span class="literal">true</span>); </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_POST, <span class="literal">true</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_POSTFIELDS, <span class="variable">$postData</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_FOLLOWLOCATION, <span class="literal">true</span>);</span><br><span class="line"><span class="variable">$r</span> = <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$curl</span>); </span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$curl</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="variable">$r</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/PHP-%E4%B9%8B-x-www-form-urlencoded-%E6%96%B9%E5%BC%8F-Post-%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/PHP-%E4%B9%8B-x-www-form-urlencoded-%E6%96%B9%E5%BC%8F-Post-%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE.html" class="post-title-link" itemprop="url">PHP 之 x-www-form-urlencoded 方式 Post 提交数据</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:27 / 修改时间：12:07:54" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:27+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>php的curl库进行post提交还是蛮方便的。但是提交方式不同，contentType 不同导致你的api是否能接收到数据也是个变数，这里来个简单的实例。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$postUrl</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="variable">$postData</span> = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">&#x27;user_name&#x27;</span>=&gt;<span class="variable">$userName</span>,</span><br><span class="line">    <span class="string">&#x27;identity_no&#x27;</span>=&gt;<span class="variable">$idCardNo</span></span><br><span class="line">);</span><br><span class="line"><span class="variable">$postData</span> = <span class="title function_ invoke__">http_build_query</span>(<span class="variable">$postData</span>);</span><br><span class="line"><span class="variable">$curl</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_URL, <span class="variable">$postUrl</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_USERAGENT,<span class="string">&#x27;Opera/9.80 (Windows NT 6.2; Win64; x64) Presto/2.12.388 Version/12.15&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_SSL_VERIFYPEER, <span class="literal">false</span>); <span class="comment">// stop verifying certificate</span></span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_RETURNTRANSFER, <span class="literal">true</span>); </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_POST, <span class="literal">true</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_HTTPHEADER, <span class="keyword">array</span>(<span class="string">&#x27;Content-Type: application/x-www-form-urlencoded&#x27;</span>));</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_POSTFIELDS, <span class="variable">$postData</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_FOLLOWLOCATION, <span class="literal">true</span>);</span><br><span class="line"><span class="variable">$r</span> = <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$curl</span>); </span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$curl</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="variable">$r</span>);</span><br></pre></td></tr></table></figure>
-
-<p>关键一段代码是</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_HTTPHEADER, <span class="keyword">array</span>(<span class="string">&#x27;Content-Type: application/x-www-form-urlencoded&#x27;</span>));</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Docker-%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E6%94%B6%E9%9B%86.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/Docker-%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E6%94%B6%E9%9B%86.html" class="post-title-link" itemprop="url">Docker 国内镜像配置收集</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:22 / 修改时间：12:08:26" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:22+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Docker 国内镜像配置收集</p>
-<p>&#x2F;&#x2F;DaoCloud</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-machine ssh default</span><br><span class="line"><span class="built_in">sudo</span> sed -i <span class="string">&quot;s|EXTRA_ARGS=&#x27;|EXTRA_ARGS=&#x27;--registry-mirror=http://723acd29.m.daocloud.io |g&quot;</span> /var/lib/boot2docker/profile</span><br></pre></td></tr></table></figure>
-
-<p>&#x2F;&#x2F;灵雀云</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-machine ssh default</span><br><span class="line"><span class="built_in">sudo</span> sh -c <span class="string">&quot;echo EXTRA_ARGS=&#x27;--registry-mirror=http://houchaohann.m.alauda.cn&#x27; &gt;&gt;/var/lib/boot2docker/profile</span></span><br></pre></td></tr></table></figure>
-
-<p>&#x2F;&#x2F;是速云</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create -d virtualbox --engine-registry-mirror http://dapeng89.m.tenxcloud.net mydocker</span><br></pre></td></tr></table></figure>
-
+          <p>工作中难免会遇到处理大文件的时候，有这种stream的处理方式，就不需要一次处理太大的文件，从而导致内存不够用，或者内存占用太多。</p>
+<p>fs.createWriteStream 似乎不会自己创建不存在的文件夹，所以在使用之前需要注意，保存文件的文件夹一定要提前创建。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="string">&#x27;/xxxxxx/ddd/&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!fs.<span class="title function_">existsSync</span>(path)) &#123;</span><br><span class="line">  fs.<span class="title function_">mkdirSync</span>(path);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建完文件夹，我们就可以进行文件添加操作了。我们希望在使用文件添加操作的时候是通过saveFile(filePath, fileData);这样的方式来调用。</p>
+<p>这里我采用了Promise的方式，个人比较喜欢这样的方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * [saveFileWithStream description]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  &#123;<span class="type">String</span>&#125; filePath [文件路径]</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  &#123;<span class="type">Buffer</span>&#125; readData [Buffer 数据]</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="title function_">saveFile</span>(<span class="params">filePath, fileData</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 块方式写入文件</span></span><br><span class="line">    <span class="keyword">const</span> wstream = fs.<span class="title function_">createWriteStream</span>(filePath);</span><br><span class="line"></span><br><span class="line">    wstream.<span class="title function_">on</span>(<span class="string">&#x27;open&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> blockSize = <span class="number">128</span>;</span><br><span class="line">      <span class="keyword">const</span> nbBlocks = <span class="title class_">Math</span>.<span class="title function_">ceil</span>(fileData.<span class="property">length</span> / (blockSize));</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; nbBlocks; i += <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> currentBlock = fileData.<span class="title function_">slice</span>(</span><br><span class="line">          blockSize * i,</span><br><span class="line">          <span class="title class_">Math</span>.<span class="title function_">min</span>(blockSize * (i + <span class="number">1</span>), fileData.<span class="property">length</span>),</span><br><span class="line">        );</span><br><span class="line">        wstream.<span class="title function_">write</span>(currentBlock);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      wstream.<span class="title function_">end</span>();</span><br><span class="line">    &#125;);</span><br><span class="line">    wstream.<span class="title function_">on</span>(<span class="string">&#x27;error&#x27;</span>, <span class="function">(<span class="params">err</span>) =&gt;</span> &#123; <span class="title function_">reject</span>(err); &#125;);</span><br><span class="line">    wstream.<span class="title function_">on</span>(<span class="string">&#x27;finish&#x27;</span>, <span class="function">() =&gt;</span> &#123; <span class="title function_">resolve</span>(<span class="literal">true</span>); &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实际调用的时候，如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="keyword">await</span> <span class="title function_">saveFileWithStream</span>(filePath, fileData); <span class="comment">// 这里的fileData是Buffer类型</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err.<span class="property">stack</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -1141,7 +1165,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/84/">84</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/87/">87</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

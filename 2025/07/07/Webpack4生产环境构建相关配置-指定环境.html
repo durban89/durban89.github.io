@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/black/pace-theme-flat-top.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.gowhich.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js" defer></script>
+
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+    <meta name="description" content="继续之前的分享【Webpack4生产环境构建相关配置 - 代码压缩】 下面让我们用我们之前文章的项目来做下实践 12git clone https:&#x2F;&#x2F;github.com&#x2F;durban89&#x2F;webpack4-react16-reactrouter-demo.git react-webpack-demo &amp;&amp; cd react-webpack-demonpm install">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Webpack4生产环境构建相关配置 - 指定环境">
+<meta property="og:url" content="https://blog.gowhich.com/2025/07/07/Webpack4%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9E%84%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE-%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83.html">
+<meta property="og:site_name" content="Gowhich">
+<meta property="og:description" content="继续之前的分享【Webpack4生产环境构建相关配置 - 代码压缩】 下面让我们用我们之前文章的项目来做下实践 12git clone https:&#x2F;&#x2F;github.com&#x2F;durban89&#x2F;webpack4-react16-reactrouter-demo.git react-webpack-demo &amp;&amp; cd react-webpack-demonpm install">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529324253/gowhich/16080123385115.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529323878/gowhich/%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83_1_WX20180613-133903.png">
+<meta property="og:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529323894/gowhich/%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83_2_WX20180613-134154.png">
+<meta property="article:published_time" content="2025-07-07T07:54:04.000Z">
+<meta property="article:modified_time" content="2025-07-07T07:55:38.436Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="Webpack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529324253/gowhich/16080123385115.jpg">
+
+
+<link rel="canonical" href="https://blog.gowhich.com/2025/07/07/Webpack4%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9E%84%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE-%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.gowhich.com/2025/07/07/Webpack4%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9E%84%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE-%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83.html","path":"2025/07/07/Webpack4生产环境构建相关配置-指定环境.html","title":"Webpack4生产环境构建相关配置 - 指定环境"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Webpack4生产环境构建相关配置 - 指定环境 | Gowhich</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BZ00EJSZ9"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-3BZ00EJSZ9","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js" defer></script>
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js","integrity":"sha256-2obLuIPcceEhkE3G09G33hBdmE55ivVcZUlcKcGNHjU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+  <script src="/js/third-party/addtoany.js" defer></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":true,"archive":true,"delay":true,"timeout":3000,"priority":true,"url":"https://blog.gowhich.com/2025/07/07/Webpack4%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9E%84%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE-%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83.html"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Gowhich" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Gowhich</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Durban's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="durban"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">durban</p>
+  <div class="site-description" itemprop="description">人最大的烦恼，就是记性太好</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">869</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">154</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2R1cmJhbjg5" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;durban89"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmR1cmJhbi56aGFuZ0BnbWFpbC5jb20=" title="E-Mail → mailto:durban.zhang@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly94LmNvbS9kdXJiYW5femhhbmc=" title="Twitter → https:&#x2F;&#x2F;x.com&#x2F;durban_zhang"><i class="fab fa-twitter fa-fw"></i>Twitter</span>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/07/Webpack4%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9E%84%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE-%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Webpack4生产环境构建相关配置 - 指定环境 | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Webpack4生产环境构建相关配置 - 指定环境
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-07 15:54:04 / 修改时间：15:55:38" itemprop="dateCreated datePublished" datetime="2025-07-07T15:54:04+08:00">2025-07-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529324253/gowhich/16080123385115.jpg"></p>
+<p>继续之前的分享【<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy84MzM=">Webpack4生产环境构建相关配置 - 代码压缩<i class="fa fa-external-link-alt"></i></span>】</p>
+<p>下面让我们用我们之前文章的项目来做下实践</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/durban89/webpack4-react16-reactrouter-demo.git react-webpack-demo &amp;&amp; <span class="built_in">cd</span> react-webpack-demo</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>许多 library 将通过与 process.env.NODE_ENV 环境变量关联，以决定 library 中应该引用哪些内容。例如，当不处于生产环境中时，某些 library 为了使调试变得容易，可能会添加额外的日志记录(log)和测试(test)。其实，当使用 process.env.NODE_ENV &#x3D;&#x3D;&#x3D; ‘production’ 时，一些 library 可能针对具体用户的环境进行代码优化，从而删除或添加一些重要代码。我们可以使用 webpack 内置的 DefinePlugin 为所有的依赖定义这个变量：</p>
+</blockquote>
+<p>大概设置配置如下<br>修改webpack.prod.js,在plugins里面加入如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> webpack.<span class="title class_">DefinePlugin</span>(&#123;</span><br><span class="line">  <span class="string">&#x27;process.env.NODE_ENV&#x27;</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(<span class="string">&#x27;production&#x27;</span>),</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure>
+
+<p>最终plugins如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">plugins</span>: [</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">CleanWebpackPlugin</span>([<span class="string">&#x27;dist&#x27;</span>]),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">HtmlWebpackPlugin</span>(&#123;</span><br><span class="line">    <span class="attr">title</span>: <span class="string">&#x27;React + ReactRouter&#x27;</span>,</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;./index.html&#x27;</span>, <span class="comment">// 调用的文件</span></span><br><span class="line">    <span class="attr">template</span>: <span class="string">&#x27;./index.html&#x27;</span>, <span class="comment">// 模板文件</span></span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">UglifyJsPlugin</span>(&#123;</span><br><span class="line">    <span class="attr">sourceMap</span>: <span class="literal">true</span>,</span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="keyword">new</span> webpack.<span class="title class_">DefinePlugin</span>(&#123;</span><br><span class="line">    <span class="string">&#x27;process.env.NODE_ENV&#x27;</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(<span class="string">&#x27;production&#x27;</span>),</span><br><span class="line">  &#125;),</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
+<p>官方还有一个说明</p>
+<blockquote>
+<p>技术上讲，NODE_ENV 是一个由 Node.js 暴露给执行脚本的系统环境变量。通常用于决定在开发环境与生产环境(dev-vs-prod)下，服务器工具、构建脚本和客户端 library 的行为。然而，与预期不同的是，无法在构建脚本 webpack.config.js 中，将 process.env.NODE_ENV 设置为 “production”，请查看 #2537[<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3dlYnBhY2svd2VicGFjay9pc3N1ZXMvMjUzN10lRTMlODAlODIlRTUlOUIlQTAlRTYlQUQlQTQlRUYlQkMlOEMlRTQlQkUlOEIlRTUlQTYlODI=">https://github.com/webpack/webpack/issues/2537]。因此，例如<i class="fa fa-external-link-alt"></i></span> process.env.NODE_ENV &#x3D;&#x3D;&#x3D; ‘production’ ? ‘[name].[hash].bundle.js’ : ‘[name].bundle.js’ 这样的条件语句，在 webpack 配置文件中，无法按照预期运行。</p>
+</blockquote>
+<p>我记得以前是可以按照预期执行的，但是现在说不行，我们就认为不行吧，以防做了其他的改动，也为了跟官方一致，我们按照官方的说明来配置</p>
+<p>如果有印象的话，之前文章有一个环节是配置redux-logger的，在src&#x2F;index.jsx里面有个</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> __DEV__ !== <span class="string">&#x27;undefined&#x27;</span>) &#123;</span><br><span class="line">  middleware.<span class="title function_">push</span>(<span class="title function_">createLogger</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然这种方式也能实现，但是感觉不专业，毕竟像react库自己或者其他大型的库都是通过使用process.env.NODE_ENV这样的方式来判断的，为了保持自己库也能跟国际挂钩，咱也按照标准来，修改如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (process.<span class="property">env</span>.<span class="property">NODE_ENV</span> !== <span class="string">&#x27;production&#x27;</span>) &#123;</span><br><span class="line">  middleware.<span class="title function_">push</span>(<span class="title function_">createLogger</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p>打包完之后我们打开index.html，这里会个问题，就是需要一个真实的server去运行咱们的项目根目录就设置在dist下面，<br>推荐一个http-server<br>如果没有的话按照我的步骤安装下，安装如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install http-server -g</span><br></pre></td></tr></table></figure>
+
+<p>安装为之后通过终端进入到本项目的dist目录下，然后执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http-server ./ -p 8084</span><br></pre></td></tr></table></figure>
+
+<p>如果有如下输出表示已经启动成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Starting up http-server, serving ./</span><br><span class="line">Available on:</span><br><span class="line">  http://127.0.0.1:8084</span><br><span class="line">  http://172.18.0.70:8084</span><br><span class="line">Hit CTRL-C to stop the server</span><br></pre></td></tr></table></figure>
+
+<p>用Chrome浏览器打开<span class="exturl" data-url="aHR0cDovLzEyNy4wLjAuMTo4MDg077yM54S25ZCO6LCD5Ye6RGV2VG9vbHPvvIznhLblkI7ov5vlhaXliLDorqHmlbDlmajvvIzngrnlh7vliqDlh4/lj7fvvIzlj7PkvqfnmoRjb25zb2xl5Lit5piv5rKh5pyJ5Lu75L2V6L6T5Ye677yM5aaC5LiL5Zu+77yM6KGo56S65oiR5Lus55qEd2VicGFjay5wb3JkLmpz55qE6YWN572u5piv6LW35L2c55So55qE44CC">http://127.0.0.1:8084，然后调出DevTools，然后进入到计数器，点击加减号，右侧的console中是没有任何输出，如下图，表示我们的webpack.pord.js的配置是起作用的。<i class="fa fa-external-link-alt"></i></span></p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529323878/gowhich/%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83_1_WX20180613-133903.png"></p>
+<p>我们运行下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run start</span><br></pre></td></tr></table></figure>
+
+<p>效果如下图</p>
+<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529323894/gowhich/%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83_2_WX20180613-134154.png"><br>console中会有对应的输出，这是因为我们没有在webpack.dev.js做任何配置</p>
+<p>以后在生产环境和开发环境有任何的需要根据环境变量来做判断处理，这个就是一个很好的例子</p>
+<p>项目地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/durban89/webpack4-react16-reactrouter-demo.git</span><br><span class="line">tag：v_1.0.8</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechat.png" alt="durban 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="durban 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>durban
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.gowhich.com/2025/07/07/Webpack4%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9E%84%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE-%E6%8C%87%E5%AE%9A%E7%8E%AF%E5%A2%83.html" title="Webpack4生产环境构建相关配置 - 指定环境">https://blog.gowhich.com/2025/07/07/Webpack4生产环境构建相关配置-指定环境.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Webpack/" rel="tag"><i class="fa fa-tag"></i> Webpack</a>
+          </div>
+
+        
+  <div class="social-like a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_facebook"></a>
+      <a class="a2a_button_twitter"></a>
+  </div>
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/07/Webpack4%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9E%84%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE-%E4%BB%A3%E7%A0%81%E5%8E%8B%E7%BC%A9.html" rel="prev" title="Webpack4生产环境构建相关配置 - 代码压缩">
+                  <i class="fa fa-angle-left"></i> Webpack4生产环境构建相关配置 - 代码压缩
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/07/Webpack4%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9E%84%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE-Split-CSS%E5%8D%B3%E5%88%86%E7%A6%BB%E6%A0%B7%E5%BC%8F.html" rel="next" title="Webpack4生产环境构建相关配置 - Split CSS即分离样式">
+                  Webpack4生产环境构建相关配置 - Split CSS即分离样式 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2014 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Copyright © durban. All Rights Reserved.</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZw==">NexT.Gemini</span> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

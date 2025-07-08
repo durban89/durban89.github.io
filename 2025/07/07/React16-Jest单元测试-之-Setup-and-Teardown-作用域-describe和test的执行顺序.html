@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/black/pace-theme-flat-top.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.gowhich.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js" defer></script>
+
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+    <meta name="description" content="项目初始化【这里使用之前的项目，节省时间】项目地址 12https:&#x2F;&#x2F;github.com&#x2F;durban89&#x2F;webpack4-react16-reactrouter-demo.gittag：v_1.0.18  拉取 12345git clone https:&#x2F;&#x2F;github.com&#x2F;durban89&#x2F;webpack4-react16-reactrouter-demo.git cd webpac">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="React16 Jest单元测试 之 Setup and Teardown(作用域、describe和test的执行顺序)">
+<meta property="og:url" content="https://blog.gowhich.com/2025/07/07/React16-Jest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B9%8B-Setup-and-Teardown-%E4%BD%9C%E7%94%A8%E5%9F%9F-describe%E5%92%8Ctest%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F.html">
+<meta property="og:site_name" content="Gowhich">
+<meta property="og:description" content="项目初始化【这里使用之前的项目，节省时间】项目地址 12https:&#x2F;&#x2F;github.com&#x2F;durban89&#x2F;webpack4-react16-reactrouter-demo.gittag：v_1.0.18  拉取 12345git clone https:&#x2F;&#x2F;github.com&#x2F;durban89&#x2F;webpack4-react16-reactrouter-demo.git cd webpac">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-07-07T08:41:44.000Z">
+<meta property="article:modified_time" content="2025-07-07T08:56:23.704Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="ReactJS">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.gowhich.com/2025/07/07/React16-Jest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B9%8B-Setup-and-Teardown-%E4%BD%9C%E7%94%A8%E5%9F%9F-describe%E5%92%8Ctest%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.gowhich.com/2025/07/07/React16-Jest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B9%8B-Setup-and-Teardown-%E4%BD%9C%E7%94%A8%E5%9F%9F-describe%E5%92%8Ctest%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F.html","path":"2025/07/07/React16-Jest单元测试-之-Setup-and-Teardown-作用域-describe和test的执行顺序.html","title":"React16 Jest单元测试 之 Setup and Teardown(作用域、describe和test的执行顺序)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>React16 Jest单元测试 之 Setup and Teardown(作用域、describe和test的执行顺序) | Gowhich</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BZ00EJSZ9"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-3BZ00EJSZ9","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js" defer></script>
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js","integrity":"sha256-2obLuIPcceEhkE3G09G33hBdmE55ivVcZUlcKcGNHjU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+  <script src="/js/third-party/addtoany.js" defer></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":true,"archive":true,"delay":true,"timeout":3000,"priority":true,"url":"https://blog.gowhich.com/2025/07/07/React16-Jest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B9%8B-Setup-and-Teardown-%E4%BD%9C%E7%94%A8%E5%9F%9F-describe%E5%92%8Ctest%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F.html"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Gowhich" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Gowhich</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Durban's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%88%9D%E5%A7%8B%E5%8C%96%E3%80%90%E8%BF%99%E9%87%8C%E4%BD%BF%E7%94%A8%E4%B9%8B%E5%89%8D%E7%9A%84%E9%A1%B9%E7%9B%AE%EF%BC%8C%E8%8A%82%E7%9C%81%E6%97%B6%E9%97%B4%E3%80%91"><span class="nav-number">1.</span> <span class="nav-text">项目初始化【这里使用之前的项目，节省时间】</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scoping-%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="nav-number">2.</span> <span class="nav-text">Scoping 作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Order-of-execution-of-describe-and-test-blocks-describe%E5%92%8Ctest%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="nav-number">3.</span> <span class="nav-text">Order of execution of describe and test blocks - describe和test的执行顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%BA%E8%AE%AE"><span class="nav-number">4.</span> <span class="nav-text">建议</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="durban"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">durban</p>
+  <div class="site-description" itemprop="description">人最大的烦恼，就是记性太好</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">869</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">154</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2R1cmJhbjg5" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;durban89"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmR1cmJhbi56aGFuZ0BnbWFpbC5jb20=" title="E-Mail → mailto:durban.zhang@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly94LmNvbS9kdXJiYW5femhhbmc=" title="Twitter → https:&#x2F;&#x2F;x.com&#x2F;durban_zhang"><i class="fab fa-twitter fa-fw"></i>Twitter</span>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/07/React16-Jest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B9%8B-Setup-and-Teardown-%E4%BD%9C%E7%94%A8%E5%9F%9F-describe%E5%92%8Ctest%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="React16 Jest单元测试 之 Setup and Teardown(作用域、describe和test的执行顺序) | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React16 Jest单元测试 之 Setup and Teardown(作用域、describe和test的执行顺序)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-07 16:41:44 / 修改时间：16:56:23" itemprop="dateCreated datePublished" datetime="2025-07-07T16:41:44+08:00">2025-07-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="项目初始化【这里使用之前的项目，节省时间】"><a href="#项目初始化【这里使用之前的项目，节省时间】" class="headerlink" title="项目初始化【这里使用之前的项目，节省时间】"></a><strong>项目初始化【这里使用之前的项目，节省时间】</strong></h3><p>项目地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/durban89/webpack4-react16-reactrouter-demo.git</span><br><span class="line">tag：v_1.0.18</span><br></pre></td></tr></table></figure>
+
+<p>拉取</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/durban89/webpack4-react16-reactrouter-demo.git </span><br><span class="line"><span class="built_in">cd</span> webpack4-react16-reactrouter-demo</span><br><span class="line">git fetch origin</span><br><span class="line">git checkout v_1.0.18</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<h3 id="Scoping-作用域"><a href="#Scoping-作用域" class="headerlink" title="Scoping 作用域"></a><strong>Scoping 作用域</strong></h3><p>默认情况下，before和after中的代码适用于每个测试模块。</p>
+<p>describe可以将测试分组，将多个测分到一个有意义的组里面。</p>
+<p>当describe块将测试分组在一起时，before和after中的代码仅适用于describe块内的测试。具体如下</p>
+<p>假设有城市数据库和食品数据库。我们分别可以为不同的测试做不同的设置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> citys = [];</span><br><span class="line"><span class="keyword">const</span> foods = [];</span><br><span class="line"><span class="keyword">let</span> time1 = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">let</span> time2 = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">isCity</span> = (<span class="params">city</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (citys.<span class="title function_">indexOf</span>(city) &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">isCityAndFood</span> = (<span class="params">cityAndFood</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> hasCity = <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">let</span> hasFood = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (citys.<span class="title function_">indexOf</span>(cityAndFood.<span class="property">city</span>) &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">    hasCity = <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (foods.<span class="title function_">indexOf</span>(cityAndFood.<span class="property">food</span>) &gt; -<span class="number">1</span>) &#123;</span><br><span class="line">    hasFood = <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (hasCity &amp;&amp; hasFood) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">initCityDatabase</span> = (<span class="params"></span>) =&gt; <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> promise;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;initCityDatabase time = &#x27;</span>, time1);</span><br><span class="line">      <span class="keyword">if</span> (time1 === <span class="number">1</span>) &#123;</span><br><span class="line">        citys.<span class="title function_">push</span>(<span class="string">&#x27;Shanghai&#x27;</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (time1 === <span class="number">2</span>) &#123;</span><br><span class="line">        citys.<span class="title function_">push</span>(<span class="string">&#x27;Chifeng&#x27;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      time1 += <span class="number">1</span>;</span><br><span class="line">      promise = <span class="title function_">resolve</span>(citys);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">reject</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> promise;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">initFoodDatabase</span> = (<span class="params"></span>) =&gt; <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> promise;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;initFoodDatabase time = &#x27;</span>, time2);</span><br><span class="line">      <span class="keyword">if</span> (time2 === <span class="number">1</span>) &#123;</span><br><span class="line">        foods.<span class="title function_">push</span>(<span class="string">&#x27;Banana&#x27;</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (time2 === <span class="number">2</span>) &#123;</span><br><span class="line">        foods.<span class="title function_">push</span>(<span class="string">&#x27;Apple&#x27;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      time2 += <span class="number">1</span>;</span><br><span class="line">      promise = <span class="title function_">resolve</span>(foods);</span><br><span class="line">    &#125;, <span class="number">1000</span>);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">reject</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> promise;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">beforeEach</span>(<span class="function">() =&gt;</span> <span class="title function_">initCityDatabase</span>());</span><br><span class="line"></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&#x27;city database has Shanghai&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">expect</span>(<span class="title function_">isCity</span>(<span class="string">&#x27;Shanghai&#x27;</span>)).<span class="title function_">toBeTruthy</span>();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&#x27;city database has Chifeng&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">expect</span>(<span class="title function_">isCity</span>(<span class="string">&#x27;Chifeng&#x27;</span>)).<span class="title function_">toBeTruthy</span>();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;matching cities to foods&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">beforeEach</span>(<span class="function">() =&gt;</span> <span class="title function_">initFoodDatabase</span>());</span><br><span class="line"></span><br><span class="line">  <span class="title function_">test</span>(<span class="string">&#x27;database has Shanghai and Banana&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="title function_">isCityAndFood</span>(&#123;</span><br><span class="line">      <span class="attr">city</span>: <span class="string">&#x27;Shanghai&#x27;</span>,</span><br><span class="line">      <span class="attr">food</span>: <span class="string">&#x27;Banana&#x27;</span>,</span><br><span class="line">    &#125;)).<span class="title function_">toBe</span>(<span class="literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">test</span>(<span class="string">&#x27;database has Chifeng and Apple&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">expect</span>(<span class="title function_">isCityAndFood</span>(&#123;</span><br><span class="line">      <span class="attr">city</span>: <span class="string">&#x27;Chifeng&#x27;</span>,</span><br><span class="line">      <span class="attr">food</span>: <span class="string">&#x27;Apple&#x27;</span>,</span><br><span class="line">    &#125;)).<span class="title function_">toBe</span>(<span class="literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>执行npm test得到类似如下结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&gt; xx@xx <span class="built_in">test</span> /Users/durban/nodejs/webpack-react-demo</span><br><span class="line">&gt; jest --notify --watchman=<span class="literal">false</span></span><br><span class="line"></span><br><span class="line"> PASS  src/__tests__/jest_async_promise.test.js (6.41s)</span><br><span class="line"> PASS  src/__tests__/jest_async_await.test.js (6.401s)</span><br><span class="line"> PASS  src/__tests__/jest_setup_describe.js (7.09s)</span><br><span class="line">  ● Console</span><br><span class="line"></span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:35</span><br><span class="line">      initCityDatabase <span class="keyword">time</span> =  1</span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:35</span><br><span class="line">      initCityDatabase <span class="keyword">time</span> =  2</span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:35</span><br><span class="line">      initCityDatabase <span class="keyword">time</span> =  3</span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:56</span><br><span class="line">      initFoodDatabase <span class="keyword">time</span> =  1</span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:35</span><br><span class="line">      initCityDatabase <span class="keyword">time</span> =  4</span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:56</span><br><span class="line">      initFoodDatabase <span class="keyword">time</span> =  2</span><br><span class="line"></span><br><span class="line"> PASS  src/__tests__/jest_async_callback.test.js</span><br><span class="line"> PASS  src/__tests__/CheckboxWithLabelComponent.test.jsx</span><br><span class="line"> PASS  src/__tests__/jest_common.test.js</span><br><span class="line"> PASS  src/__tests__/sum.test.js</span><br><span class="line"> PASS  src/__tests__/jest_setup_each_onetime.test.js</span><br><span class="line"> PASS  src/__tests__/jest_setup_each_moretime.test.js</span><br><span class="line"></span><br><span class="line">Test Suites: 9 passed, 9 total</span><br><span class="line">Tests:       30 passed, 30 total</span><br><span class="line">Snapshots:   0 total</span><br><span class="line">Time:        12.94s</span><br><span class="line">Ran all <span class="built_in">test</span> suites.</span><br></pre></td></tr></table></figure>
+
+<p>请注意这里</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">● Console</span><br><span class="line"></span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:35</span><br><span class="line">      initCityDatabase <span class="keyword">time</span> =  1</span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:35</span><br><span class="line">      initCityDatabase <span class="keyword">time</span> =  2</span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:35</span><br><span class="line">      initCityDatabase <span class="keyword">time</span> =  3</span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:56</span><br><span class="line">      initFoodDatabase <span class="keyword">time</span> =  1</span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:35</span><br><span class="line">      initCityDatabase <span class="keyword">time</span> =  4</span><br><span class="line">    console.log src/__tests__/jest_setup_describe.js:56</span><br><span class="line">      initFoodDatabase <span class="keyword">time</span> =  2</span><br></pre></td></tr></table></figure>
+
+<p>initCityDatabase执行了4次，initFoodDatabase执行了2次，这是因为顶级beforeEach在describe块内的beforeEach之前执行。</p>
+<p>这可能有助于说明所有钩子的执行顺序。下面来做个比较</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">beforeAll</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;1 - beforeAll&#x27;</span>));</span><br><span class="line"><span class="title function_">afterAll</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;1 - afterAll&#x27;</span>));</span><br><span class="line"><span class="title function_">beforeEach</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;1 - beforeEach&#x27;</span>));</span><br><span class="line"><span class="title function_">afterEach</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;1 - afterEach&#x27;</span>));</span><br><span class="line"><span class="title function_">test</span>(<span class="string">&#x27;&#x27;</span>, <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;1 - test&#x27;</span>));</span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;Scoped / Nested block&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">beforeAll</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;2 - beforeAll&#x27;</span>));</span><br><span class="line">  <span class="title function_">afterAll</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;2 - afterAll&#x27;</span>));</span><br><span class="line">  <span class="title function_">beforeEach</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;2 - beforeEach&#x27;</span>));</span><br><span class="line">  <span class="title function_">afterEach</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;2 - afterEach&#x27;</span>));</span><br><span class="line">  <span class="title function_">test</span>(<span class="string">&#x27;&#x27;</span>, <span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;2 - test&#x27;</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>运行npm test得到结果如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">xx@xx <span class="built_in">test</span> /Users/durban/nodejs/webpack-react-demo</span><br><span class="line">&gt; jest --notify --watchman=<span class="literal">false</span></span><br><span class="line"></span><br><span class="line"> PASS  src/__tests__/jest_setup_describe_diff.js</span><br><span class="line">  ● Console</span><br><span class="line"></span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:1</span><br><span class="line">      1 - beforeAll</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:3</span><br><span class="line">      1 - beforeEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:5</span><br><span class="line">      1 - <span class="built_in">test</span></span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:4</span><br><span class="line">      1 - afterEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:7</span><br><span class="line">      2 - beforeAll</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:3</span><br><span class="line">      1 - beforeEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:9</span><br><span class="line">      2 - beforeEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:11</span><br><span class="line">      2 - <span class="built_in">test</span></span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:10</span><br><span class="line">      2 - afterEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:4</span><br><span class="line">      1 - afterEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:8</span><br><span class="line">      2 - afterAll</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:2</span><br><span class="line">      1 - afterAll</span><br><span class="line"></span><br><span class="line"> PASS  src/__tests__/jest_async_promise.test.js (6.439s)</span><br><span class="line"> PASS  src/__tests__/jest_setup_describe.js (7.13s)</span><br><span class="line"> PASS  src/__tests__/jest_async_await.test.js (6.063s)</span><br><span class="line"> PASS  src/__tests__/jest_async_callback.test.js</span><br><span class="line"> PASS  src/__tests__/jest_common.test.js</span><br><span class="line"> PASS  src/__tests__/CheckboxWithLabelComponent.test.jsx</span><br><span class="line"> PASS  src/__tests__/sum.test.js</span><br><span class="line"> PASS  src/__tests__/jest_setup_each_onetime.test.js</span><br><span class="line"> PASS  src/__tests__/jest_setup_each_moretime.test.js</span><br><span class="line"></span><br><span class="line">Test Suites: 10 passed, 10 total</span><br><span class="line">Tests:       32 passed, 32 total</span><br><span class="line">Snapshots:   0 total</span><br><span class="line">Time:        12.892s</span><br><span class="line">Ran all <span class="built_in">test</span> suites.</span><br></pre></td></tr></table></figure>
+
+<p>可以从这里看出其执行的顺序</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">● Console</span><br><span class="line"></span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:1</span><br><span class="line">      1 - beforeAll</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:3</span><br><span class="line">      1 - beforeEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:5</span><br><span class="line">      1 - <span class="built_in">test</span></span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:4</span><br><span class="line">      1 - afterEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:7</span><br><span class="line">      2 - beforeAll</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:3</span><br><span class="line">      1 - beforeEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:9</span><br><span class="line">      2 - beforeEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:11</span><br><span class="line">      2 - <span class="built_in">test</span></span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:10</span><br><span class="line">      2 - afterEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:4</span><br><span class="line">      1 - afterEach</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:8</span><br><span class="line">      2 - afterAll</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_diff.js:2</span><br><span class="line">      1 - afterAll</span><br></pre></td></tr></table></figure>
+
+<h3 id="Order-of-execution-of-describe-and-test-blocks-describe和test的执行顺序"><a href="#Order-of-execution-of-describe-and-test-blocks-describe和test的执行顺序" class="headerlink" title="Order of execution of describe and test blocks - describe和test的执行顺序"></a><strong>Order of execution of describe and test blocks - describe和test的执行顺序</strong></h3><p>在一个测试文件中Jest在执行真实的测试之前先执行所有describe的handlers。</p>
+<p>这是在before*和after*的handlers中进行setup和teardown的另一个原因而不是在describe blocks。</p>
+<p>一旦describe blocks完成，默认情况下，Jest将按照它们在collection phase遇到的顺序依次运行所有测试，等待每个测试完成并在继续之前进行整理。</p>
+<p>理解起来很难，看下下面的例子，考虑下下面的代码猜测下输出的顺序是什么：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;outer&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;describe outer-a&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">describe</span>(<span class="string">&#x27;describe inner 1&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;describe inner 1&#x27;</span>);</span><br><span class="line">    <span class="title function_">test</span>(<span class="string">&#x27;test 1&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;test for describe inner 1&#x27;</span>);</span><br><span class="line">      <span class="title function_">expect</span>(<span class="literal">true</span>).<span class="title function_">toEqual</span>(<span class="literal">true</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;describe outer-b&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">test</span>(<span class="string">&#x27;test 1&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;test for describe outer&#x27;</span>);</span><br><span class="line">    <span class="title function_">expect</span>(<span class="literal">true</span>).<span class="title function_">toEqual</span>(<span class="literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">describe</span>(<span class="string">&#x27;describe inner 2&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;describe inner 2&#x27;</span>);</span><br><span class="line">    <span class="title function_">test</span>(<span class="string">&#x27;test for describe inner 2&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;test for describe inner 2&#x27;</span>);</span><br><span class="line">      <span class="title function_">expect</span>(<span class="literal">false</span>).<span class="title function_">toEqual</span>(<span class="literal">false</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;describe outer-c&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>执行npm test，看下下面这块的输出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">● Console</span><br><span class="line"></span><br><span class="line">    console.log src/__tests__/jest_setup_describe_order.js:2</span><br><span class="line">      describe outer-a</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_order.js:5</span><br><span class="line">      describe inner 1</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_order.js:12</span><br><span class="line">      describe outer-b</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_order.js:20</span><br><span class="line">      describe inner 2</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_order.js:27</span><br><span class="line">      describe outer-c</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_order.js:7</span><br><span class="line">      <span class="built_in">test</span> <span class="keyword">for</span> describe inner 1</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_order.js:15</span><br><span class="line">      <span class="built_in">test</span> <span class="keyword">for</span> describe outer</span><br><span class="line">    console.log src/__tests__/jest_setup_describe_order.js:22</span><br><span class="line">      <span class="built_in">test</span> <span class="keyword">for</span> describe inner 2</span><br></pre></td></tr></table></figure>
+
+<p>从输出中可以看出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">describe outer-a</span><br><span class="line">describe inner 1</span><br><span class="line">describe outer-b</span><br><span class="line">describe inner 2</span><br><span class="line">describe outer-c</span><br></pre></td></tr></table></figure>
+
+<p>这几行的输出表示从外到内的执行了describe里面的代码，并没有按照顺序执行测试模块，而是在执行完describe只有，在从上到下的按照顺序执行测试模块，这个顺序要好好理解，对于以后的写测试模块的逻辑非常重要。</p>
+<h3 id="建议"><a href="#建议" class="headerlink" title="建议"></a><strong>建议</strong></h3><p>如果一个测试失败了，首先要检查的事情应该是当测试单独运行的时候测试是否失败。</p>
+<p>在Jest中，只运行一个测试很简单 - 只需暂时将该测试命令更改为test.only，如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">test.<span class="title function_">only</span>(<span class="string">&#x27;this will be the only test that runs&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">expect</span>(<span class="literal">true</span>).<span class="title function_">toBe</span>(<span class="literal">false</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="title function_">test</span>(<span class="string">&#x27;this test will not run&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">expect</span>(<span class="string">&#x27;A&#x27;</span>).<span class="title function_">toBe</span>(<span class="string">&#x27;A&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这次换个测试命令，不然每次执行npm test会把之前的也一起执行了，命令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx jest src/__tests__/jest_setup_test_only.js</span><br></pre></td></tr></table></figure>
+
+<p>会得到如下的输出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">FAIL  src/__tests__/jest_setup_test_only.js</span><br><span class="line">  ✕ this will be the only <span class="built_in">test</span> that runs (10ms)</span><br><span class="line">  ○ skipped 1 <span class="built_in">test</span></span><br><span class="line"></span><br><span class="line">  ● this will be the only <span class="built_in">test</span> that runs</span><br><span class="line"></span><br><span class="line">    expect(received).toBe(expected) // Object.is equality</span><br><span class="line"></span><br><span class="line">    Expected: <span class="literal">false</span></span><br><span class="line">    Received: <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">      1 | test.only(<span class="string">&#x27;this will be the only test that runs&#x27;</span>, () =&gt; &#123;</span><br><span class="line">    &gt; 2 |   expect(<span class="literal">true</span>).toBe(<span class="literal">false</span>);</span><br><span class="line">        |                ^</span><br><span class="line">      3 | &#125;);</span><br><span class="line">      4 |</span><br><span class="line">      5 | <span class="built_in">test</span>(<span class="string">&#x27;this test will not run&#x27;</span>, () =&gt; &#123;</span><br><span class="line"></span><br><span class="line">      at Object.&lt;anonymous&gt; (src/__tests__/jest_setup_test_only.js:2:16)</span><br><span class="line"></span><br><span class="line">Test Suites: 1 failed, 1 total</span><br><span class="line">Tests:       1 failed, 1 skipped, 2 total</span><br><span class="line">Snapshots:   0 total</span><br><span class="line">Time:        2.344s</span><br><span class="line">Ran all <span class="built_in">test</span> suites matching /src\/__tests__\/jest_setup_test_only.js/i.</span><br></pre></td></tr></table></figure>
+
+<p>从这里可以看出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✕ this will be the only <span class="built_in">test</span> that runs (10ms)</span><br><span class="line">  ○ skipped 1 <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<p>有两个测试的但是其中一个被跳过了。</p>
+<p>当有一个比较复杂的测试中有一个小的测试总是事变，但是单独运行的时候又是成功的，可能是的原因是不同的测试中的有一些干扰元素干扰了这个测试。可以通过用beforeEach清除一些共享状态来解决这个问题。如果不确定是共享的转状态是否被修改，可以通过加入一些日志来判断。</p>
+<p>项目地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/durban89/webpack4-react16-reactrouter-demo.git</span><br><span class="line">tag：v_1.0.19</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechat.png" alt="durban 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="durban 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>durban
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.gowhich.com/2025/07/07/React16-Jest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B9%8B-Setup-and-Teardown-%E4%BD%9C%E7%94%A8%E5%9F%9F-describe%E5%92%8Ctest%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F.html" title="React16 Jest单元测试 之 Setup and Teardown(作用域、describe和test的执行顺序)">https://blog.gowhich.com/2025/07/07/React16-Jest单元测试-之-Setup-and-Teardown-作用域-describe和test的执行顺序.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ReactJS/" rel="tag"><i class="fa fa-tag"></i> ReactJS</a>
+          </div>
+
+        
+  <div class="social-like a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_facebook"></a>
+      <a class="a2a_button_twitter"></a>
+  </div>
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/07/React16-Jest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B9%8B-Setup-and-Teardown-%E9%87%8D%E5%A4%8D%E8%AE%BE%E7%BD%AE%E6%88%96%E9%87%8D%E5%A4%8D%E5%AE%89%E8%A3%85-%E4%B8%80%E6%AC%A1%E8%AE%BE%E7%BD%AE%E6%88%96%E4%B8%80%E6%AC%A1%E5%AE%89%E8%A3%85.html" rel="prev" title="React16 Jest单元测试 之 Setup and Teardown(重复设置或重复安装、一次设置或一次安装)">
+                  <i class="fa fa-angle-left"></i> React16 Jest单元测试 之 Setup and Teardown(重复设置或重复安装、一次设置或一次安装)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/07/React16-Jest%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-%E4%B9%8B-Mock-Functions-Using-a-mock-function.html" rel="next" title="React16 Jest单元测试 之 Mock Functions(Using a mock function)">
+                  React16 Jest单元测试 之 Mock Functions(Using a mock function) <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2014 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Copyright © durban. All Rights Reserved.</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZw==">NexT.Gemini</span> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">840</span>
+          <span class="site-state-item-count">869</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Django-%E9%94%99%E8%AF%AF-Non-ASCII-character.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/iPhone%E4%B8%AD-%E7%82%B9%E5%87%BB%E6%8D%A2%E8%A1%8C-%E9%94%AE%E7%9B%98%E6%B6%88%E5%A4%B1-%E9%94%AE%E7%9B%98%E9%80%80%E5%87%BA.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Django-%E9%94%99%E8%AF%AF-Non-ASCII-character.html" class="post-title-link" itemprop="url">Django 错误 Non-ASCII character '\xe6'</a>
+          <a href="/2025/06/20/iPhone%E4%B8%AD-%E7%82%B9%E5%87%BB%E6%8D%A2%E8%A1%8C-%E9%94%AE%E7%9B%98%E6%B6%88%E5%A4%B1-%E9%94%AE%E7%9B%98%E9%80%80%E5%87%BA.html" class="post-title-link" itemprop="url">iPhone中，点击换行，键盘消失，键盘退出</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:28 / 修改时间：10:45:14" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:28+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:52:13 / 修改时间：09:55:25" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:13+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,16 +294,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>在使用django的时候，会遇到一个问题，就是“Non-ASCII character ‘\xe6’”这个错误</p>
-<p>原因是如下，是我的配置文件中的一部分代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DEBUG = <span class="literal">True</span></span><br><span class="line">TEMPLATE_DEBUG = DEBUG</span><br><span class="line"></span><br><span class="line">ADMINS = (</span><br><span class="line">    (<span class="string">&#x27;漫步者Feeling&#x27;</span>, <span class="string">&#x27;[email protected]&#x27;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+          <p>实现的步骤一个都不能少</p>
+<p>1、要在声明文件中实现 UItextFieldDelegate 协议</p>
+<p>2、在实现文件中实现 UItextFieldDelegate 协议 中键盘消失的方法即：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>)textFieldShouldReturn:(<span class="built_in">UITextField</span> *)textField&#123;</span><br><span class="line"></span><br><span class="line">     [textField resignFirstResponder];</span><br><span class="line"></span><br><span class="line">     <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>提示一下，这里有中文，就是这个原因</p>
-<p>修改一下，如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># Django settings for walkerfree project.</span></span><br><span class="line"></span><br><span class="line">DEBUG = <span class="literal">True</span></span><br><span class="line">TEMPLATE_DEBUG = DEBUG</span><br><span class="line"></span><br><span class="line">ADMINS = (</span><br><span class="line">    (<span class="string">&#x27;漫步者Feeling&#x27;</span>, <span class="string">&#x27;[email protected]&#x27;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>就是这句代码：<code># -*- coding: utf-8 -*-  </code></p>
-<p>解决了。</p>
+<p>3、在viewDidLoad方法中添加代理。例如：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)viewDidLoad&#123;</span><br><span class="line"></span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//设置代理点击换行，键盘消失</span></span><br><span class="line"></span><br><span class="line">     textSample.delegate =<span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -330,7 +327,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E4%BD%BF%E7%94%A8NSString-%E5%8E%BB%E6%8E%89%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC%E6%88%96%E5%9B%9E%E8%BD%A6%E7%AC%A6.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/layoutSubviews%E4%BD%95%E6%97%B6%E8%B0%83%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -348,7 +345,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/%E4%BD%BF%E7%94%A8NSString-%E5%8E%BB%E6%8E%89%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC%E6%88%96%E5%9B%9E%E8%BD%A6%E7%AC%A6.html" class="post-title-link" itemprop="url">使用NSString 去掉前后空格或回车符</a>
+          <a href="/2025/06/20/layoutSubviews%E4%BD%95%E6%97%B6%E8%B0%83%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">layoutSubviews何时调用的问题</a>
         </h2>
 
         <div class="post-meta-container">
@@ -360,7 +357,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:24 / 修改时间：10:36:59" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:24+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:52:10 / 修改时间：09:55:46" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:10+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -382,8 +379,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>想要去掉字符串的前后空格和回车符，很简单，如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string = <span class="string">@&quot; spaces in front and at the end &quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *trimmedString = [string stringByTrimmingCharactersInSet:</span><br><span class="line">[<span class="built_in">NSCharacterSet</span> whitespaceAndNewlineCharacterSet]]; </span><br><span class="line"><span class="built_in">NSLog</span>(trimmedString);</span><br></pre></td></tr></table></figure>
+          <p>layoutSubviews何时调用的问题，这个方法是当你需要在调整subview的大小的时候需要重写（我这个翻译不严谨，以下是原文：You should override this method only if the autoresizing behaviors of the subviews do not offer the behavior you want.），但有时候经常指望它被调用的时候没被调用，不希望它被调用的时候被调用了，搞的很上火。根据国外社区一个人帖子，做了总结性翻译。</p>
+<p>layoutSubviews在以下情况下会被调用：</p>
+<p>1、init初始化不会触发layoutSubviews<br>2、addSubview会触发layoutSubviews<br>3、设置view的Frame会触发layoutSubviews，当然前提是frame的值设置前后发生了变化<br>4、滚动一个UIScrollView会触发layoutSubviews<br>5、旋转Screen会触发父UIView上的layoutSubviews事件<br>6、改变一个UIView大小的时候也会触发父UIView上的layoutSubviews事件</p>
 
       
     </div>
@@ -410,7 +408,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/NGINX%E7%A6%81%E6%AD%A2%E7%9B%B4%E6%8E%A5%E4%BB%A5IP%E8%AE%BF%E9%97%AE.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/%E5%85%B3%E4%BA%8Eapp-%E7%9A%84-icons%E7%9A%84%E4%BD%BF%E7%94%A8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -428,7 +426,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/NGINX%E7%A6%81%E6%AD%A2%E7%9B%B4%E6%8E%A5%E4%BB%A5IP%E8%AE%BF%E9%97%AE.html" class="post-title-link" itemprop="url">NGINX禁止直接以IP访问</a>
+          <a href="/2025/06/20/%E5%85%B3%E4%BA%8Eapp-%E7%9A%84-icons%E7%9A%84%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">关于app 的 icons的使用</a>
         </h2>
 
         <div class="post-meta-container">
@@ -440,7 +438,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:20 / 修改时间：10:36:37" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:20+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:52:05 / 修改时间：10:18:59" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:05+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -462,10 +460,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>今天搞了一下禁止nginx的ip访问，哈哈，找了一篇文章</p>
-<p>看下面‍</p>
-<p>在虚拟主机最前面加上如下即可，记住一定要以它开头（不然不生效）。如下,返回值404，可以改403等。</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">         <span class="attribute">server_name</span>  _;  <span class="comment">#default</span></span><br><span class="line">         <span class="attribute">return</span> <span class="number">404</span>;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">server&#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>  .test.com;  <span class="comment">#(域名前加点，不然可能访问不了)</span></span><br><span class="line">    <span class="attribute">index</span> main.php index.php;</span><br><span class="line">    <span class="attribute">root</span>  /var/htdocs/www/test;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> <span class="regexp">~ .*\.(php|php5)?$</span>&#123;</span><br><span class="line">      <span class="comment">#fastcgi_pass  unix:/tmp/php-cgi.sock;</span></span><br><span class="line">      <span class="attribute">fastcgi_pass</span>  <span class="number">127.0.0.1:9000</span>;</span><br><span class="line">      <span class="attribute">fastcgi_index</span> index.php;</span><br><span class="line">      <span class="attribute">include</span> fcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">log_format</span>  testlogs  <span class="string">&#x27;<span class="variable">$remote_addr</span> - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] &quot;<span class="variable">$request</span>&quot; &#x27;</span></span><br><span class="line">               <span class="string">&#x27;<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> &quot;<span class="variable">$http_referer</span>&quot; &#x27;</span></span><br><span class="line">               <span class="string">&#x27;&quot;<span class="variable">$http_user_agent</span>&quot; <span class="variable">$http_x_forwarded_for</span>&#x27;</span>;</span><br><span class="line">    <span class="attribute">access_log</span>  /var/htdocs/logs/testlogs.log  testlogs;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>最近在官方中有一份关于，app icons的说明。简单 说了一些不同尺寸的app icons的使用</p>
+<p>尺寸的类型有</p>
+<p>57：这种型号的尺寸的图片主要用于（Homescreen icon on iPhone&#x2F;iPod touch），在iPhone&#x2F;iPod touch的主屏幕上</p>
+<p>72：这种型号的尺寸的图片主要用于（Homescreen icon on iPad），在iPad的主屏幕上</p>
+<p>114：上面的一倍，这种尺寸的图片用于（Homescreen icon on iPhone Retina），在iPhone Retina的主屏幕上</p>
+<p>65：这种型号的图片主要用于（Icon in Spotlight and Settings app on iPhone&#x2F;iPod touch and icon in Settings app on iPad），说到Spotlight这个，大家都知道的，没错就是搜索时，出现的，如果不知道，说明你安装的应用还不够多，哈哈</p>
+<p>50：这个大小的图片，（Icon in Spotlight on iPad），是存在于iPad上的，说的跟上面那个型号差不多，就是小了点，但是这个很重要，尤其是在ios开发中</p>
+<p>58：这个尺寸的图片，用过iPhone5的或者有Retina屏都知道（Icon in Spotlight and Settings app on iPhone Retina），没错，就是在那里使用的。</p>
+<p>114：这个尺寸的介绍是这样的（Icon in iTunes for Ad Hoc distribution builds），估计是跟开发有关点的，但是事实上在iPunes里面也能看得到的，</p>
+<p>基于以上尺寸的图片，在自己项目开发中，显的很重要，不同尺寸出来的效果是不一样，尤其是对已苹果这个追求完美的产品，不容小视</p>
 
       
     </div>
@@ -492,7 +496,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Objective-C%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F-%E4%BB%A3%E7%A0%81%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA-UIScrollView--%E8%83%BD%E5%A4%9F%E5%AE%9E%E7%8E%B0%E6%A8%AA%E5%90%91%E6%BB%9A%E5%8A%A8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -510,7 +514,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Objective-C%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F-%E4%BB%A3%E7%A0%81%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.html" class="post-title-link" itemprop="url">Objective-C的实例变量，局部变量，代码的执行过程</a>
+          <a href="/2025/06/20/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA-UIScrollView--%E8%83%BD%E5%A4%9F%E5%AE%9E%E7%8E%B0%E6%A8%AA%E5%90%91%E6%BB%9A%E5%8A%A8.html" class="post-title-link" itemprop="url">自定义一个 UIScrollView ，能够实现横向滚动</a>
         </h2>
 
         <div class="post-meta-container">
@@ -522,7 +526,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:17 / 修改时间：10:36:04" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:17+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:52:02 / 修改时间：09:56:42" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:02+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -544,14 +548,35 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>实例变量是在类里面的变量<br>比如：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FindPerformersViewController</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>关于自定义UIScrollview的方式，其实很简单，但是如何做到横向滚动，我自己是第一次使用，</p>
+<p>先来定义一个类吧:customScrollView.h</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">customScrollView</span> : <span class="title">UIScrollView</span> &lt;<span class="title">UIScrollViewDelegate</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 
-<p>i就是实例变量</p>
-<p>局部变量是在方法里面的变量<br>比如：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) getVariable &#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面看customScrollView.m的定义</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSMutableArray</span> *visibleLabels;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UIView</span> *labelContainerView;</span><br></pre></td></tr></table></figure>
 
-<p>这里的i就是局部变量</p>
+<p>定义两个属性，第一个是label数组，第二个是一个UIView</p>
+<p>然后实现一下初始化的代码操作</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">id</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ((<span class="keyword">self</span> = [<span class="variable language_">super</span> initWithCoder:aDecoder]))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">self</span>.contentSize = <span class="built_in">CGSizeMake</span>(<span class="number">5000</span>, <span class="keyword">self</span>.frame.size.height);</span><br><span class="line">        </span><br><span class="line">        _visibleLabels = [[<span class="built_in">NSMutableArray</span> alloc] init];</span><br><span class="line">        </span><br><span class="line">        _labelContainerView = [[<span class="built_in">UIView</span> alloc] init];</span><br><span class="line">        <span class="keyword">self</span>.labelContainerView.frame = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="keyword">self</span>.contentSize.width, <span class="keyword">self</span>.contentSize.height/<span class="number">2</span>);</span><br><span class="line">        [<span class="keyword">self</span> addSubview:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line"></span><br><span class="line">        [<span class="keyword">self</span>.labelContainerView setUserInteractionEnabled:<span class="literal">NO</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// hide horizontal scroll indicator so our recentering trick is not revealed</span></span><br><span class="line">        [<span class="keyword">self</span> setShowsHorizontalScrollIndicator:<span class="literal">NO</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>都是一些基本的初始化的操作</p>
+<p>下面看一下这个方法，这个方法，是在UIScrollView在滚动的时候进行调用的</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)layoutSubviews</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> layoutSubviews];</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> recenterIfNecessary];</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// tile content in visible bounds</span></span><br><span class="line">    <span class="built_in">CGRect</span> visibleBounds = [<span class="keyword">self</span> convertRect:[<span class="keyword">self</span> bounds] toView:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line">    <span class="built_in">CGFloat</span> minimumVisibleX = <span class="built_in">CGRectGetMinX</span>(visibleBounds);</span><br><span class="line">    <span class="built_in">CGFloat</span> maximumVisibleX = <span class="built_in">CGRectGetMaxX</span>(visibleBounds);</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> tileLabelsFromMinX:minimumVisibleX toMaxX:maximumVisibleX];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>里面有一个方法，我写下下面</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)recenterIfNecessary</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGPoint</span> currentOffset = [<span class="keyword">self</span> contentOffset];</span><br><span class="line">    <span class="built_in">CGFloat</span> contentWidth = [<span class="keyword">self</span> contentSize].width;</span><br><span class="line">    <span class="built_in">CGFloat</span> centerOffsetX = (contentWidth - [<span class="keyword">self</span> bounds].size.width) / <span class="number">2.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> distanceFromCenter = fabs(currentOffset.x - centerOffsetX);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (distanceFromCenter &gt; (contentWidth / <span class="number">4.0</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">self</span>.contentOffset = <span class="built_in">CGPointMake</span>(centerOffsetX, currentOffset.y);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// move content by the same amount so it appears to stay still</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">UILabel</span> *label <span class="keyword">in</span> <span class="keyword">self</span>.visibleLabels) &#123;</span><br><span class="line">            <span class="built_in">CGPoint</span> center = [<span class="keyword">self</span>.labelContainerView convertPoint:label.center toView:<span class="keyword">self</span>];</span><br><span class="line">            center.x += (centerOffsetX - currentOffset.x);</span><br><span class="line">            label.center = [<span class="keyword">self</span> convertPoint:center toView:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法是用来控制label的位置的。</p>
+<p>当UIScrollview在滚动的时候，我们需要做一些操作</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UILabel</span> *)insertLabel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>, <span class="number">80</span>)];</span><br><span class="line">    [label setNumberOfLines:<span class="number">3</span>];</span><br><span class="line">    [label setText:<span class="string">@&quot;1024 Block Street\nShaffer, CA\n95014&quot;</span>];</span><br><span class="line">    [<span class="keyword">self</span>.labelContainerView addSubview:label];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> label;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)placeNewLabelOnRight:(<span class="built_in">CGFloat</span>)rightEdge</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [<span class="keyword">self</span> insertLabel];</span><br><span class="line">    [<span class="keyword">self</span>.visibleLabels addObject:label]; <span class="comment">// add rightmost label at the end of the array</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGRect</span> frame = [label frame];</span><br><span class="line">    frame.origin.x = rightEdge;</span><br><span class="line">    frame.origin.y = [<span class="keyword">self</span>.labelContainerView bounds].size.height - frame.size.height;</span><br><span class="line">    [label setFrame:frame];</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CGRectGetMaxX</span>(frame);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)placeNewLabelOnLeft:(<span class="built_in">CGFloat</span>)leftEdge</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [<span class="keyword">self</span> insertLabel];</span><br><span class="line">    [<span class="keyword">self</span>.visibleLabels insertObject:label atIndex:<span class="number">0</span>]; <span class="comment">// add leftmost label at the beginning of the array</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGRect</span> frame = [label frame];</span><br><span class="line">    frame.origin.x = leftEdge - frame.size.width;</span><br><span class="line">    frame.origin.y = [<span class="keyword">self</span>.labelContainerView bounds].size.height - frame.size.height;</span><br><span class="line">    [label setFrame:frame];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CGRectGetMinX</span>(frame);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)tileLabelsFromMinX:(<span class="built_in">CGFloat</span>)minimumVisibleX toMaxX:(<span class="built_in">CGFloat</span>)maximumVisibleX</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// the upcoming tiling logic depends on there already being at least one label in the visibleLabels array, so</span></span><br><span class="line">    <span class="comment">// to kick off the tiling we need to make sure there&#x27;s at least one label</span></span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span>.visibleLabels count] == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        [<span class="keyword">self</span> placeNewLabelOnRight:minimumVisibleX];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// add labels that are missing on right side</span></span><br><span class="line">    <span class="built_in">UILabel</span> *lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    <span class="built_in">CGFloat</span> rightEdge = <span class="built_in">CGRectGetMaxX</span>([lastLabel frame]);</span><br><span class="line">    <span class="keyword">while</span> (rightEdge &lt; maximumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        rightEdge = [<span class="keyword">self</span> placeNewLabelOnRight:rightEdge];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// add labels that are missing on left side</span></span><br><span class="line">    <span class="built_in">UILabel</span> *firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">CGFloat</span> leftEdge = <span class="built_in">CGRectGetMinX</span>([firstLabel frame]);</span><br><span class="line">    <span class="keyword">while</span> (leftEdge &gt; minimumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        leftEdge = [<span class="keyword">self</span> placeNewLabelOnLeft:leftEdge];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// remove labels that have fallen off right edge</span></span><br><span class="line">    lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    <span class="keyword">while</span> ([lastLabel frame].origin.x &gt; maximumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        [lastLabel removeFromSuperview];</span><br><span class="line">        [<span class="keyword">self</span>.visibleLabels removeLastObject];</span><br><span class="line">        lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// remove labels that have fallen off left edge</span></span><br><span class="line">    firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">CGRectGetMaxX</span>([firstLabel frame]) &lt; minimumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        [firstLabel removeFromSuperview];</span><br><span class="line">        [<span class="keyword">self</span>.visibleLabels removeObjectAtIndex:<span class="number">0</span>];</span><br><span class="line">        firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个是插入label的方法</p>
+<p>一个是从左侧到右侧滑动的操作</p>
+<p>一个是从右侧到左侧滑动的操作</p>
+<p>还有一个方法是用来控制label的</p>
+<p>好了。一些基本的操作就在这里面了，打击可以自己复制一份自己看看</p>
+<p>我来个完整版的,当然我这个调用的时候，是在自己的xib文件中调用的。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&quot;customScrollView.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">InfiniteScrollView</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSMutableArray</span> *visibleLabels;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UIView</span> *labelContainerView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">InfiniteScrollView</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">id</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ((<span class="keyword">self</span> = [<span class="variable language_">super</span> initWithCoder:aDecoder]))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">self</span>.contentSize = <span class="built_in">CGSizeMake</span>(<span class="number">5000</span>, <span class="keyword">self</span>.frame.size.height);</span><br><span class="line">        </span><br><span class="line">        _visibleLabels = [[<span class="built_in">NSMutableArray</span> alloc] init];</span><br><span class="line">        </span><br><span class="line">        _labelContainerView = [[<span class="built_in">UIView</span> alloc] init];</span><br><span class="line">        <span class="keyword">self</span>.labelContainerView.frame = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="keyword">self</span>.contentSize.width, <span class="keyword">self</span>.contentSize.height/<span class="number">2</span>);</span><br><span class="line">        [<span class="keyword">self</span> addSubview:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line"></span><br><span class="line">        [<span class="keyword">self</span>.labelContainerView setUserInteractionEnabled:<span class="literal">NO</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// hide horizontal scroll indicator so our recentering trick is not revealed</span></span><br><span class="line">        [<span class="keyword">self</span> setShowsHorizontalScrollIndicator:<span class="literal">NO</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - Layout</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// recenter content periodically to achieve impression of infinite scrolling</span></span><br><span class="line">- (<span class="type">void</span>)recenterIfNecessary</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGPoint</span> currentOffset = [<span class="keyword">self</span> contentOffset];</span><br><span class="line">    <span class="built_in">CGFloat</span> contentWidth = [<span class="keyword">self</span> contentSize].width;</span><br><span class="line">    <span class="built_in">CGFloat</span> centerOffsetX = (contentWidth - [<span class="keyword">self</span> bounds].size.width) / <span class="number">2.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> distanceFromCenter = fabs(currentOffset.x - centerOffsetX);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (distanceFromCenter &gt; (contentWidth / <span class="number">4.0</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">self</span>.contentOffset = <span class="built_in">CGPointMake</span>(centerOffsetX, currentOffset.y);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// move content by the same amount so it appears to stay still</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">UILabel</span> *label <span class="keyword">in</span> <span class="keyword">self</span>.visibleLabels) &#123;</span><br><span class="line">            <span class="built_in">CGPoint</span> center = [<span class="keyword">self</span>.labelContainerView convertPoint:label.center toView:<span class="keyword">self</span>];</span><br><span class="line">            center.x += (centerOffsetX - currentOffset.x);</span><br><span class="line">            label.center = [<span class="keyword">self</span> convertPoint:center toView:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)layoutSubviews</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> layoutSubviews];</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> recenterIfNecessary];</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// tile content in visible bounds</span></span><br><span class="line">    <span class="built_in">CGRect</span> visibleBounds = [<span class="keyword">self</span> convertRect:[<span class="keyword">self</span> bounds] toView:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line">    <span class="built_in">CGFloat</span> minimumVisibleX = <span class="built_in">CGRectGetMinX</span>(visibleBounds);</span><br><span class="line">    <span class="built_in">CGFloat</span> maximumVisibleX = <span class="built_in">CGRectGetMaxX</span>(visibleBounds);</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> tileLabelsFromMinX:minimumVisibleX toMaxX:maximumVisibleX];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - Label Tiling</span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">UILabel</span> *)insertLabel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>, <span class="number">80</span>)];</span><br><span class="line">    [label setNumberOfLines:<span class="number">3</span>];</span><br><span class="line">    [label setText:<span class="string">@&quot;1024 Block Street\nShaffer, CA\n95014&quot;</span>];</span><br><span class="line">    [<span class="keyword">self</span>.labelContainerView addSubview:label];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> label;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)placeNewLabelOnRight:(<span class="built_in">CGFloat</span>)rightEdge</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [<span class="keyword">self</span> insertLabel];</span><br><span class="line">    [<span class="keyword">self</span>.visibleLabels addObject:label]; <span class="comment">// add rightmost label at the end of the array</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGRect</span> frame = [label frame];</span><br><span class="line">    frame.origin.x = rightEdge;</span><br><span class="line">    frame.origin.y = [<span class="keyword">self</span>.labelContainerView bounds].size.height - frame.size.height;</span><br><span class="line">    [label setFrame:frame];</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CGRectGetMaxX</span>(frame);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)placeNewLabelOnLeft:(<span class="built_in">CGFloat</span>)leftEdge</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [<span class="keyword">self</span> insertLabel];</span><br><span class="line">    [<span class="keyword">self</span>.visibleLabels insertObject:label atIndex:<span class="number">0</span>]; <span class="comment">// add leftmost label at the beginning of the array</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGRect</span> frame = [label frame];</span><br><span class="line">    frame.origin.x = leftEdge - frame.size.width;</span><br><span class="line">    frame.origin.y = [<span class="keyword">self</span>.labelContainerView bounds].size.height - frame.size.height;</span><br><span class="line">    [label setFrame:frame];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CGRectGetMinX</span>(frame);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)tileLabelsFromMinX:(<span class="built_in">CGFloat</span>)minimumVisibleX toMaxX:(<span class="built_in">CGFloat</span>)maximumVisibleX</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// the upcoming tiling logic depends on there already being at least one label in the visibleLabels array, so</span></span><br><span class="line">    <span class="comment">// to kick off the tiling we need to make sure there&#x27;s at least one label</span></span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span>.visibleLabels count] == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        [<span class="keyword">self</span> placeNewLabelOnRight:minimumVisibleX];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// add labels that are missing on right side</span></span><br><span class="line">    <span class="built_in">UILabel</span> *lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    <span class="built_in">CGFloat</span> rightEdge = <span class="built_in">CGRectGetMaxX</span>([lastLabel frame]);</span><br><span class="line">    <span class="keyword">while</span> (rightEdge &lt; maximumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        rightEdge = [<span class="keyword">self</span> placeNewLabelOnRight:rightEdge];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// add labels that are missing on left side</span></span><br><span class="line">    <span class="built_in">UILabel</span> *firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">CGFloat</span> leftEdge = <span class="built_in">CGRectGetMinX</span>([firstLabel frame]);</span><br><span class="line">    <span class="keyword">while</span> (leftEdge &gt; minimumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        leftEdge = [<span class="keyword">self</span> placeNewLabelOnLeft:leftEdge];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// remove labels that have fallen off right edge</span></span><br><span class="line">    lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    <span class="keyword">while</span> ([lastLabel frame].origin.x &gt; maximumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        [lastLabel removeFromSuperview];</span><br><span class="line">        [<span class="keyword">self</span>.visibleLabels removeLastObject];</span><br><span class="line">        lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// remove labels that have fallen off left edge</span></span><br><span class="line">    firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">CGRectGetMaxX</span>([firstLabel frame]) &lt; minimumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        [firstLabel removeFromSuperview];</span><br><span class="line">        [<span class="keyword">self</span>.visibleLabels removeObjectAtIndex:<span class="number">0</span>];</span><br><span class="line">        firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -578,7 +603,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E6%A0%B9%E6%8D%AE%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E4%BD%BF%E7%94%A8%E5%93%AA%E4%B8%AAStoryboard.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/CentOS%E4%B8%8Biptables%E5%BF%85%E9%A1%BB%E6%87%82%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -596,7 +621,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/%E6%A0%B9%E6%8D%AE%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E4%BD%BF%E7%94%A8%E5%93%AA%E4%B8%AAStoryboard.html" class="post-title-link" itemprop="url">根据条件判断使用哪个Storyboard</a>
+          <a href="/2025/06/20/CentOS%E4%B8%8Biptables%E5%BF%85%E9%A1%BB%E6%87%82%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9.html" class="post-title-link" itemprop="url">CentOS下iptables必须懂的知识点</a>
         </h2>
 
         <div class="post-meta-container">
@@ -608,7 +633,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:13 / 修改时间：10:35:23" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:13+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:51:58 / 修改时间：09:57:43" itemprop="dateCreated datePublished" datetime="2025-06-20T09:51:58+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -630,10 +655,25 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于根据条件选择Storyboard，我之前的一篇文章，今天使用的时候，不起作用了，悲剧，今天又自己写了一个。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//主要的storyboard - xunYi7TabBarViewController</span></span><br><span class="line"><span class="comment">//login的storyboard - login</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">UIViewController</span> *rootViewController;</span><br><span class="line"><span class="keyword">self</span>.window = [[<span class="built_in">UIWindow</span> alloc] initWithFrame:[[<span class="built_in">UIScreen</span> mainScreen] bounds]];</span><br><span class="line"><span class="keyword">self</span>.window.backgroundColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line"><span class="keyword">if</span>([[<span class="built_in">NSUserDefaults</span> standardUserDefaults] boolForKey:<span class="string">@&quot;logged_in&quot;</span>]) &#123;</span><br><span class="line">  </span><br><span class="line">  rootViewController = [[<span class="built_in">UIStoryboard</span> </span><br><span class="line">storyboardWithName:<span class="string">@&quot;MainStoryboard&quot;</span> bundle:<span class="literal">nil</span>] </span><br><span class="line">instantiateViewControllerWithIdentifier:<span class="string">@&quot;xunYi7TabBarViewController&quot;</span>];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">  </span><br><span class="line">  rootViewController = [[<span class="built_in">UIStoryboard</span> </span><br><span class="line">storyboardWithName:<span class="string">@&quot;LoginStoryboard&quot;</span> bundle:<span class="literal">nil</span>] </span><br><span class="line">instantiateViewControllerWithIdentifier:<span class="string">@&quot;login&quot;</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">self</span>.window.rootViewController=rootViewController;</span><br><span class="line"></span><br><span class="line">[<span class="keyword">self</span>.window makeKeyAndVisible];</span><br><span class="line"><span class="keyword">return</span> yes;</span><br></pre></td></tr></table></figure>
+          <ol>
+<li>基本操作：启用防火墙<br>这里的指令都是从 Linux 控制终端（命令行）直接输入的。<br>输入下面的两条指令来启用防火墙：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chkconfig iptables on</span><br><span class="line">service iptables start</span><br></pre></td></tr></table></figure>
 
-<p>如果这个例子不起作用，也可以尝试我之前的那篇文章<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy8yNjg=">iOS启动 判断使用不同的 storyboard<i class="fa fa-external-link-alt"></i></span></p>
+<p>其中上一条是将 iptables 加入到系统服务，随系统启动而启动；下一条是直接启动 iptables 服务。<br>重起防火墙：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service iptables restart</span><br></pre></td></tr></table></figure>
+
+<p>停止防火墙：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service iptables stop</span><br></pre></td></tr></table></figure>
+
+<p>2,配置 &#x2F;etc&#x2F;sysconfig&#x2F;iptables 文件<br>虽然可以通过 iptables 指令来编辑防火墙规则，可是对于大量的规则来说一条一条的输入总是很麻烦，实际上可以直接按照正确格式编辑 iptables 的配置文件，然后重新加载 iptables 即可使之生效。<br>要编辑 &#x2F;etc&#x2F;sysconfig&#x2F;iptables，输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/sysconfig/iptables</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到文件中存储的前述默认规则显示如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">*filter</span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line">:FORWARD ACCEPT [0:0]</span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line">:RH-Firewall-1-INPUT - [0:0]</span><br><span class="line">-A INPUT -j RH-Firewall-1-INPUT</span><br><span class="line">-A FORWARD -j RH-Firewall-1-INPUT</span><br><span class="line">-A RH-Firewall-1-INPUT -i lo -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -p icmp --icmp-type any -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -p udp --dport 5353 -d 1.2.3.4 -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -p udp -m udp --dport 53 -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 53 -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -j REJECT --reject-with icmp-host-prohibited</span><br><span class="line">COMMIT</span><br></pre></td></tr></table></figure>
+
+<p>其中 -j 参数表示 jump 跳转到。  </p>
+<p>可以看到其中的规则形式与我们通过命令行来输入的规则是一样的，因为启用 iptables 的时候就是将此文件中的指令一行一行的自动加载的，就像批处理一样。</p>
 
       
     </div>
@@ -660,7 +700,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Session_save_path%E7%9B%AE%E5%BD%95%E5%A4%A7%E9%87%8Fsession%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%E5%B8%A6%E6%9D%A5%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%88%E7%8E%87%E9%97%AE%E9%A2%98.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/QeePHP-memcache%E7%9A%84session%E5%AD%98%E5%82%A8%E8%AE%BE%E7%BD%AE.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -678,7 +718,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Session_save_path%E7%9B%AE%E5%BD%95%E5%A4%A7%E9%87%8Fsession%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6%E5%B8%A6%E6%9D%A5%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%88%E7%8E%87%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">session.save_path目录大量session临时文件带来的服务器效率问题</a>
+          <a href="/2025/06/20/QeePHP-memcache%E7%9A%84session%E5%AD%98%E5%82%A8%E8%AE%BE%E7%BD%AE.html" class="post-title-link" itemprop="url">QeePHP memcache的session存储设置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -690,7 +730,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:09 / 修改时间：10:32:58" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:09+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:51:54 / 修改时间：09:58:36" itemprop="dateCreated datePublished" datetime="2025-06-20T09:51:54+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -712,11 +752,17 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>如果访问量大，可能产生的 SESSION 文件会比较多，这时可以设置分级目录进行 SESSION 文件的保存，效率会提高很多，设置方法为：session.save_path&#x3D;”N;&#x2F;save_path”，N 为分级的级数，save_path 为开始目录。当写入 SESSION 数据的时候，PHP 会获取到客户端的 SESSION_ID，然后根据这个 SESSION ID 到指定的 SESSION 文件保存目录中找到相应的 SESSION 文件，不存在则创建之，最后将数据序列化之后写入文件。     检查了下各web节点，所有web服务器的httpd线程均达到满负荷，很奇怪。因为所有web节点都通过nfs来共享session目录来达到 session的一致性，检查了下nfs文件服务器，IO读写比较大，检查了session_tmp目录，发现session目录临时文件达到 70000多个，初步判断也许是因为一级目录下文件过多带来的IO性能下降。  </p>
-<p>以前没有想过session存放的效率问题，今天由此想到了session多级存放的问题，来解决一个目录下session文件过多带来的读写效率问题，查了下php.net其实php在配置中已经给出了有关选项。</p>
-<p>php.net上的：<span class="exturl" data-url="aHR0cDovL3d3dy5waHAubmV0L21hbnVhbC9lbi9yZWYuc2Vzc2lvbi5waHA=">http://www.php.net/manual/en/ref.session.php<i class="fa fa-external-link-alt"></i></span></p>
-<p><code>session.save_path</code> 定义了传递给存储处理器的参数。如果选择了默认的 files 文件处理器，则此值是创建文件的路径。默认为 <code>/tmp</code>。参见 <code>session_save_path()</code>。 此指令还有一个可选的 N 参数来决定会话文件分布的目录深度。例如，设定为 ‘5;&#x2F;tmp’ 将使创建的会话文件和路径类似于<br><code>/tmp/4/b/1/e/3/sess_4b1e384ad74619bd212e236e52a5a174If</code>。 要使用 N 参数，必须在使用前先创建好这些目录。在 ext&#x2F;session 目录下有个小的 shell 脚本名叫 mod_files.sh 可以用来做这件事。此外注意如果使用了 N 参数并且 N 大于 0，那么将不会执行自动垃圾回收，更多信息见 php.ini。另外如果用了 N 参数，要确保将 session.save_path 的值用双引号 “quotes” 括起来，因为分隔符分号（ ;）在 php.ini 中也是注释符号。<br><code>session.save_path string</code><br>在定义session.save_path中可以定义多级存放的路径，修改php.ini<br><code>session.save_path = &quot;3;/tmp/session&quot;</code><br>将session文件分成两级存放，即<code>/tmp/session/c/m/d/0/o/sess_cmd0on71pr8kf1dogkesn59s30</code>，取前两位字符，但是php并不生成目录，需要自己手工生成，所以写了个脚本来生成初始的目录。<br>附上一个创建四级文件夹包的代码。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/local/php/bin/php</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$string</span> = <span class="string">&#x27;0123456789abcdefghijklmnopqrstuvwxyz&#x27;</span>;</span><br><span class="line"><span class="variable">$length</span> = <span class="title function_ invoke__">strlen</span>(<span class="variable">$string</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="variable">$length</span>;<span class="variable">$i</span>++)&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$j</span>=<span class="number">0</span>;<span class="variable">$j</span>&lt;<span class="variable">$length</span>;<span class="variable">$j</span>++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="variable">$k</span>=<span class="number">0</span>;<span class="variable">$k</span>&lt;<span class="variable">$length</span>;<span class="variable">$k</span>++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="variable">$m</span>=<span class="number">0</span>;<span class="variable">$m</span>&lt;<span class="variable">$length</span>;<span class="variable">$m</span>++)&#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="variable">$path</span> = <span class="string">&#x27;/tmp/session/&#x27;</span>.<span class="variable">$string</span>[<span class="variable">$i</span>].<span class="string">&#x27;/&#x27;</span>.<span class="variable">$string</span>[<span class="variable">$j</span>].<span class="string">&#x27;/&#x27;</span>.<span class="variable">$string</span>[<span class="variable">$k</span>].<span class="string">&#x27;/&#x27;</span>.<span class="variable">$string</span>[<span class="variable">$m</span>];</span><br><span class="line">                <span class="title function_ invoke__">createFolder</span>(<span class="variable">$path</span>);</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createFolder</span>(<span class="params"><span class="variable">$path</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!<span class="title function_ invoke__">file_exists</span>(<span class="variable">$path</span>))&#123;</span><br><span class="line">        <span class="title function_ invoke__">createFolder</span>(<span class="title function_ invoke__">dirname</span>(<span class="variable">$path</span>));</span><br><span class="line">        <span class="title function_ invoke__">mkdir</span>(<span class="variable">$path</span>,<span class="number">0777</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">exit</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+          <p>关于session的memcache的存储，原因为什么要使用它。要看你的项目的需求，网站访问量大的话，默认使用session的文件存储，会导致一个问题就是用户登录不了，原始是，session文件的大量生成，导致读取文件出现问题，就是IO的问题，这时候我们可以考虑使用memcache，还有另外一种是mysql的使用方式。但是目前对于我的这个项目还打不到这种需求，so，还是使用memcache吧。</p>
+<p>目前又因为我的项目是使用Qeephp，哈哈，估计现在使用的人少了，不过这里还是说一下，使用他如何进行配置吧。</p>
+<p>用过qee的都知道，qee有个文件叫做myapp的文件，ok，解决的问题的办法就在这里。</p>
+<p>代码如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 打开 session</span></span><br><span class="line"><span class="keyword">if</span> (Q::<span class="title function_ invoke__">ini</span>(<span class="string">&#x27;runtime_session_start&#x27;</span>))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line">	<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br><span class="line">	<span class="title function_ invoke__">session_start</span>();</span><br><span class="line">	            </span><br><span class="line">	<span class="comment">// #IFDEF DEBUG</span></span><br><span class="line">	<span class="title class_">QLog</span>::<span class="title function_ invoke__">log</span>(<span class="string">&#x27;session_start()&#x27;</span>, <span class="title class_">QLog</span>::<span class="variable constant_">DEBUG</span>);</span><br><span class="line">	<span class="title class_">QLog</span>::<span class="title function_ invoke__">log</span>(<span class="string">&#x27;session_id: &#x27;</span> . <span class="title function_ invoke__">session_id</span>(), <span class="title class_">QLog</span>::<span class="variable constant_">DEBUG</span>);</span><br><span class="line">	<span class="comment">// #ENDIF</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实就是在打开session的地方加上了关于session的存储设置</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>memcache考虑的还是蛮周到。</p>
+<p>关于memcache的安装，请使用站内搜索</p>
 
       
     </div>
@@ -743,7 +789,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/iOS-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83-%E6%97%A5%E6%9C%9F%E6%AF%94%E8%BE%83.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/Ubuntu%E4%B8%8BMemcache%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -761,7 +807,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/iOS-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83-%E6%97%A5%E6%9C%9F%E6%AF%94%E8%BE%83.html" class="post-title-link" itemprop="url">iOS 字符串比较 日期比较</a>
+          <a href="/2025/06/20/Ubuntu%E4%B8%8BMemcache%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">Ubuntu下Memcache的安装与基本使用</a>
         </h2>
 
         <div class="post-meta-container">
@@ -773,7 +819,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:06 / 修改时间：10:30:30" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:06+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:51:50 / 修改时间：10:20:37" itemprop="dateCreated datePublished" datetime="2025-06-20T09:51:50+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -795,25 +841,31 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>字符串比较</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//字符串比较</span></span><br><span class="line"><span class="built_in">NSString</span> *string = <span class="string">@&quot;hello nihao&quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *otherString = <span class="string">@&quot;hello niyeyao&quot;</span>;</span><br><span class="line"><span class="keyword">if</span>([string compare:otherString] == <span class="built_in">NSOrderedAscending</span>)&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我比你大&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我是小三&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>关于Memcache与memcached</p>
+<p>Memcache是项目名，memcached是服务名。让很多初接触的人感觉很是莫名其妙。个人认为正确的应该是用前者用更为正确一点。</p>
+<p>1)安装Memcache服务端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install memcached</span><br></pre></td></tr></table></figure>
 
-<p>日期比较</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//日期比较</span></span><br><span class="line"><span class="built_in">NSDate</span> *nowDate = [<span class="built_in">NSDate</span> date];</span><br><span class="line"><span class="built_in">NSDate</span> *yesterdayDate = [[<span class="built_in">NSDate</span> alloc] initWithTimeIntervalSinceNow:<span class="number">-24</span> * <span class="number">60</span> * <span class="number">60</span>];</span><br><span class="line"><span class="keyword">if</span>([nowDate compare:yesterdayDate] == <span class="built_in">NSOrderedAscending</span>)&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我是今天&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我是我昨天&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>安装完Memcache服务端以后，我们需要启动该服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memcached -d -m 128 -p 11211 -u www</span><br></pre></td></tr></table></figure>
 
-<p>当然这里也可以，将指定的字符串转换为时间进行比较，字符串的时间格式要跟自己设定的时间格式相对应</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//日期比较</span></span><br><span class="line"><span class="built_in">NSString</span> *nowDateString = <span class="string">@&quot;2013/7/13&quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *yesterdayDateString = <span class="string">@&quot;2013/7/12&quot;</span>;</span><br><span class="line"><span class="built_in">NSDateFormatter</span> *dateFromatter = [[<span class="built_in">NSDateFormatter</span> alloc] init];</span><br><span class="line">[dateFromatter setDateFormat:<span class="string">@&quot;yy/MM/dd&quot;</span>];</span><br><span class="line"><span class="built_in">NSDate</span> *nowDate = [dateFromatter dateFromString:nowDateString];</span><br><span class="line"><span class="built_in">NSDate</span> *yesterdayDate = [dateFromatter dateFromString:yesterdayDateString];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>([nowDate compare:yesterdayDate] == <span class="built_in">NSOrderedAscending</span>)&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我是今天&quot;</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;我是我昨天&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>memcached服务的启动参数：</p>
+<p>-p 监听的端口<br>-l 连接的IP地址, 默认是本机<br>-d start 启动memcached服务<br>-d restart 重起memcached服务<br>-d stop|shutdown 关闭正在运行的memcached服务<br>-d install 安装memcached服务<br>-d uninstall 卸载memcached服务<br>-u 以的身份运行 (仅在以root运行的时候有效)<br>-m 最大内存使用，单位MB。默认64MB<br>-M 内存耗尽时返回错误，而不是删除项<br>-c 最大同时连接数，默认是1024<br>-f 块大小增长因子，默认是1.25-n 最小分配空间，key+value+flags默认是48<br>-h 显示帮助</p>
+</blockquote>
+<p>我们使用php脚本做一个测试(这个是在qeephp里面做的测试)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">actionTestMema</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line">    <span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br><span class="line">    <span class="title function_ invoke__">session_start</span>();</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;test0&#x27;</span>] = <span class="string">&#x27;my value&#x27;</span>;</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;test1&#x27;</span>] = <span class="string">&#x27;Thisvalue&#x27;</span>;</span><br><span class="line">    <span class="variable">$sid</span> = <span class="title function_ invoke__">session_id</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;a href=&#x27;&quot;</span>.<span class="title function_ invoke__">url</span>(<span class="string">&#x27;default/testmemb&#x27;</span>,<span class="keyword">array</span>(<span class="string">&#x27;sid&#x27;</span>=&gt;<span class="variable">$sid</span>)).<span class="string">&quot;&#x27;&gt;session&lt;/a&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">actionTestMemb</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$mem</span> = <span class="keyword">new</span> <span class="title class_">Memcache</span>();</span><br><span class="line">    <span class="variable">$mem</span>-&gt;<span class="title function_ invoke__">connect</span>(<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="number">11211</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_REQUEST</span>[<span class="string">&#x27;sid&#x27;</span>]))&#123;</span><br><span class="line">            <span class="variable">$value</span> = <span class="variable">$mem</span>-&gt;<span class="title function_ invoke__">getstats</span>();</span><br><span class="line"><span class="comment">//                var_dump($value);</span></span><br><span class="line">            <span class="variable">$sess_value</span> = <span class="variable">$mem</span>-&gt;<span class="title function_ invoke__">get</span>(<span class="variable">$_REQUEST</span>[<span class="string">&#x27;sid&#x27;</span>]);</span><br><span class="line">            <span class="title function_ invoke__">var_dump</span>(<span class="variable">$sess_value</span>);</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable">$sess_value</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;error args&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>结果他的表现就是</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2013</span><span class="number">-07</span><span class="number">-20</span> <span class="number">18</span>:<span class="number">18</span>:<span class="number">03.165</span> 寻艺[<span class="number">90532</span>:c07] 我比你大</span><br><span class="line"><span class="number">2013</span><span class="number">-07</span><span class="number">-20</span> <span class="number">18</span>:<span class="number">18</span>:<span class="number">03.168</span> 寻艺[<span class="number">90532</span>:c07] 我是我昨天</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br></pre></td></tr></table></figure>
 
-<p>这里需要注意的就是</p>
-<p>NSOrderedAscending</p>
-<p>我们在Xcode定位的话</p>
-<p>会找到这样的代码</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">NS_ENUM</span>(<span class="built_in">NSInteger</span>, <span class="built_in">NSComparisonResult</span>) &#123;<span class="built_in">NSOrderedAscending</span> = <span class="number">-1</span>L, <span class="built_in">NSOrderedSame</span>, <span class="built_in">NSOrderedDescending</span>&#125;;</span><br></pre></td></tr></table></figure>
+<p>这句话是应该放在myapp.php这个文件中的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 打开 session</span></span><br><span class="line"><span class="keyword">if</span> (Q::<span class="title function_ invoke__">ini</span>(<span class="string">&#x27;runtime_session_start&#x27;</span>))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line">	<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br><span class="line">	<span class="title function_ invoke__">session_start</span>();</span><br><span class="line">	            </span><br><span class="line">	<span class="comment">// #IFDEF DEBUG</span></span><br><span class="line">	<span class="title class_">QLog</span>::<span class="title function_ invoke__">log</span>(<span class="string">&#x27;session_start()&#x27;</span>, <span class="title class_">QLog</span>::<span class="variable constant_">DEBUG</span>);</span><br><span class="line">	<span class="title class_">QLog</span>::<span class="title function_ invoke__">log</span>(<span class="string">&#x27;session_id: &#x27;</span> . <span class="title function_ invoke__">session_id</span>(), <span class="title class_">QLog</span>::<span class="variable constant_">DEBUG</span>);</span><br><span class="line">	<span class="comment">// #ENDIF</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>结果 跟 -1 0 1应该是一样的。</p>
+<p>如果你的输出结果是类似下面这样的话</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string(2044) <span class="string">&quot;test0|s:8:&quot;</span>my value<span class="string">&quot;;test1|s:9:&quot;</span>Thisvalue<span class="string">&quot;;</span></span><br></pre></td></tr></table></figure>
+
+<p>说明你的安装就成功了，以上是在非命令行模式下测试的。如果你是cli命令行的话，我不能保证。</p>
 
       
     </div>
@@ -840,7 +892,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/iOS-%E6%A0%B9%E6%8D%AE%E5%86%85%E5%AE%B9%E8%AE%A1%E7%AE%97%E9%AB%98%E5%BA%A6.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/CentOS%E4%B8%8B%E5%AE%89%E8%A3%85uWSGI.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -858,94 +910,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/iOS-%E6%A0%B9%E6%8D%AE%E5%86%85%E5%AE%B9%E8%AE%A1%E7%AE%97%E9%AB%98%E5%BA%A6.html" class="post-title-link" itemprop="url">iOS 根据内容计算高度</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-19 10:29:01 / 修改时间：10:30:11" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:01+08:00">2025-06-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>iOS 根据内容计算高度,网络上搜索到的，自己记录下，看到的就看到了</p>
-<p>第一步属性声明</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSString</span> *personProfile</span><br></pre></td></tr></table></figure>
-
-<p>第二步属性赋值</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.personProfile = <span class="string">@&quot;xxxxxxxxxxxxxxxx x x x  x x xx x &quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>第三步求出高度</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//根据内容计算高度</span></span><br><span class="line"><span class="built_in">CGSize</span> lineSize = [<span class="keyword">self</span>.personProfile sizeWithFont:[<span class="built_in">UIFont</span> systemFontOfSize:<span class="number">14</span>]</span><br><span class="line">                         constrainedToSize:<span class="built_in">CGSizeMake</span>(<span class="number">240</span>, <span class="number">2000</span>)</span><br><span class="line">                             lineBreakMode:<span class="built_in">UILineBreakModeWordWrap</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot; lineSize.height = %f&quot;</span>, lineSize.height);</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/XCode%E4%B8%8B%E7%9A%84iOS%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-GHUnit.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/XCode%E4%B8%8B%E7%9A%84iOS%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-GHUnit.html" class="post-title-link" itemprop="url">XCode下的iOS单元测试 GHUnit</a>
+          <a href="/2025/06/19/CentOS%E4%B8%8B%E5%AE%89%E8%A3%85uWSGI.html" class="post-title-link" itemprop="url">CentOS下安装uWSGI</a>
         </h2>
 
         <div class="post-meta-container">
@@ -956,14 +921,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2025-06-19 10:24:13" itemprop="dateCreated datePublished" datetime="2025-06-19T10:24:13+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-19 13:55:10" itemprop="dateCreated datePublished" datetime="2025-06-19T13:55:10+08:00">2025-06-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-20 15:15:37" itemprop="dateModified" datetime="2025-06-20T15:15:37+08:00">2025-06-20</time>
+      <time title="修改时间：2025-06-20 10:07:31" itemprop="dateModified" datetime="2025-06-20T10:07:31+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -985,41 +950,24 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于GHUnit的使用，我是摘自一篇比较不错的文章，里面即讲到了Xcode本身自带的测试工具OCUnit，同时也介绍了GHUnit，看完后很是受益呀。</p>
-<p>XCode 内置了 OCUnit 单元测试框架，但目前最好用的测试框架应该是 GHUnit。通过 GHUnit + OCMock 组合，我们可以在 iOS 下进行较强大的单元测试功能。本文将演示如何在 XCode 4.2 下使用 OCUnit， GHUnit 和 OCMock 进行单元测试。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="OCUnit"></a><a href="#1">OCUnit</a></h3><p>在 XCode 下新建一个 OCUnitProject 工程，选中 Include Unit Tests 选择框，  </p>
-<p>OCUnit 框架则会为我们自动添加 Unit Test 框架代码：  </p>
-<p>XCode 在 OCUnitProjectTests.m 中为我们自动生成了一个 Fail 的测试：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)testExample</span><br><span class="line">&#123;</span><br><span class="line">    STFail(<span class="string">@&quot;Unit tests are not implemented yet in OCUnitProjectTests&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>第一步：首先是下载文件：</p>
+<p>下载地址</p>
+<p><span class="exturl" data-url="aHR0cDovL3Byb2plY3RzLnVuYml0Lml0L2Rvd25sb2Fkcy8=">http://projects.unbit.it/downloads/<i class="fa fa-external-link-alt"></i></span></p>
+<p>这里面有你自己想要的文件版本</p>
+<p>第二步：执行两条命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum update</span><br><span class="line">yum install python python-devel libxml2 libxml2-devel python-setuptools zlib-devel wget openssl-devel pcre pcre-devel <span class="built_in">sudo</span> gcc make autoconf automake</span><br></pre></td></tr></table></figure>
 
-<p>让我们来运行 Test，看看效果：  </p>
-<p>从图中的红色下划线部分可以看出，测试没有通过，符合预期。我们只要像类 OCUnitProjectTests 一样编写继承自 SenTestCase 类的子类，在其中添加形式如：- (void) testXXX(); 的测试函数既可，注意必须是一个无参无返回类型且名称是以 test 为前缀的函数。  </p>
-<p>OCUnit 的有点是官方支持，于 XCode 集成的比较好。</p>
-<h3 id="2"><a href="#2" class="headerlink" title="GHUnit"></a><a href="#2">GHUnit</a></h3><p>GHUnit 是一个开源的单元测试框架，具有可视化界面，功能亦相当强大。Mark 写了一篇 OCUnit vs GHUnit 的文章，有兴趣的童鞋可以看一看。OCMock 是由 Mulle Kybernetik 为 OS X 和 iOS 平台编写的遵循 mock object 理念的单元测试框架。  </p>
-<p>下面来介绍如何配置 GHUnit 和 OCMock  </p>
-<p>1，首先，创建一个名为 GHUnitProject 的单视图应用程序，注意：不要选中 Include Unit Tests 选择框。然后运行，应该出现白屏。</p>
-<p>2，添加新的 test target，选中左边的工程名，点击右侧的 Add Target，新增一个名为 Tests 的 Empty Application 应用程序，让其附属于 GHUnitProject注意：不要选中 Include Unit Tests 选择框。</p>
-<p>3，向 Tests 工程中（注意是 Tests 工程）添加 GHUnitIOS Framework。首先下载与 XCode 版本对应的 GHUnitIOS Framework。英文好的可以直接查看官方 iOS 版的安装文档：点此查看，跳过此第 3 节；否则请接着看。</p>
-<p>3.1，解压 GHUnitIOS 框架到 GHUnitProject 下，让 GHUnitIOS.framework 与 Tests 在同一目录下。</p>
-<p>3.2，回到 XCode，右击工程中的 Frameworks group，选中 Add Files to…菜单，选取 GHUnitIOS.framework ，注意 targets 要选择 Tests。</p>
-<p>3.3，设置 Tests 的 Build Settings：在 Other Linker Flags 中增加两个 flag： -ObjC 和 -all_load。</p>
-<p>3.4，删除 Tests 工程中的 UTSAppDelegate.h 和  UTSAppDelegate.m 两个文件；</p>
-<p>3.5，修改 Tests 工程中的 main.m 为:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line"></span><br><span class="line">#import &lt;GHUnitIOS/GHUnitIOSAppDelegate.h&gt;</span><br><span class="line"></span><br><span class="line">int main(int argc, char *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        return UIApplicationMain(argc, argv, nil, NSStringFromClass([GHUnitIOSAppDelegate class]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第三步：解压安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf uwsgi-0.9.6.5.tar.gz</span><br><span class="line"><span class="built_in">mv</span> uwsgi-0.9.6.5/ uwsgi/</span><br><span class="line"><span class="built_in">cd</span> uwsgi/</span><br><span class="line"><span class="built_in">sudo</span> python setup.py build</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
 
-<p>3.6，选择编译目标 Tests&gt;iPhone 5.0 Simulator，编译运行，应该能得到如下效果。目前我们还没有编写任何实际测试，所以列表为空。  </p>
-<p>4，编写 GHUnit 测试。向 Tests 工程中添加名为 GHUnitSampleTest 的 Objective C class。其内容如下：  </p>
-<figure class="highlight objectivec"><figcaption><span>GHUnitSampleTest.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;GHUnitIOS/GHUnit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">GHUnitSampleTest</span>: <span class="title">GHTestCase</span></span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>第四步：将安装成功的uwsgi文件copy一份到自己使用bin目录下，我的是copy到了&#x2F;usr&#x2F;local&#x2F;bin目录</p>
+<p>第五步：测试是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uwsgi --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
 
+<p>会打印出类似下面的信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Usage: /usr/local/bin/uwsgi [options...]</span><br><span class="line">    -s|--socket                            <span class="built_in">bind</span> to the specified UNIX/TCP socket using default protocol</span><br><span class="line">    -s|--uwsgi-socket                      <span class="built_in">bind</span> to the specified UNIX/TCP socket using uwsgi protocol</span><br><span class="line">    --http-socket                          <span class="built_in">bind</span> to the specified UNIX/TCP socket using HTTP protocol</span><br><span class="line">    --http-socket-modifier1                force the specified modifier1 when using HTTP protocol</span><br><span class="line">    --http-socket-modifier2                force the specified modifier2 when using HTTP protocol</span><br><span class="line">    --fastcgi-socket                       <span class="built_in">bind</span> to the specified UNIX/TCP socket using FastCGI protocol</span><br><span class="line">    --fastcgi-nph-socket                   <span class="built_in">bind</span> to the specified UNIX/TCP socket using FastCGI protocol (nph mode)</span><br><span class="line">    --fastcgi-modifier1                    force the specified modifier1 when using FastCGI protocol</span><br><span class="line">    --fastcgi-modifier2                    force the specified modifier2 when using FastCGI protocol</span><br><span class="line">    --scgi-socket                          <span class="built_in">bind</span> to the specified UNIX/TCP socket using SCGI protocol</span><br><span class="line">    --scgi-nph-socket                      <span class="built_in">bind</span> to the specified UNIX/TCP socket using SCGI protocol (nph mode)</span><br><span class="line">    --scgi-modifier1                       force the specified modifier1 when using SCGI protocol</span><br><span class="line">    --scgi-modifier2                       force the specified modifier2 when using SCGI protocol</span><br><span class="line">    --protocol                             force the specified protocol <span class="keyword">for</span> default sockets</span><br><span class="line">    --socket-protocol                      force the specified protocol <span class="keyword">for</span> default sockets</span><br><span class="line">    --shared-socket                        create a shared sacket <span class="keyword">for</span> advanced jailing or ipc</span><br><span class="line">    --undeferred-shared-socket             create a shared sacket <span class="keyword">for</span> advanced jailing or ipc (undeferred mode)</span><br><span class="line">    -p|--processes                         spawn the specified number of workers/processes</span><br><span class="line">    -p|--workers                           spawn the specified number of workers/processes</span><br><span class="line">--More--</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight objectivec"><figcaption><span>GHUnitSampleTest.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;GHUnitSampleTest.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">GHUnitSampleTest</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)testStrings</span><br><span class="line"></span><br><span class="line">&#123;       </span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *string1 = <span class="string">@&quot;a string&quot;</span>;</span><br><span class="line"></span><br><span class="line">    GHTestLog(<span class="string">@&quot;I can log to the GHUnit test console: %@&quot;</span>, string1);</span><br><span class="line"></span><br><span class="line">     <span class="comment">// Assert string1 is not NULL, with no custom error description</span></span><br><span class="line"></span><br><span class="line">    GHAssertNotNULL(string1, <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line">     <span class="comment">// Assert equal objects, add custom error description</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *string2 = <span class="string">@&quot;a string&quot;</span>;</span><br><span class="line"></span><br><span class="line">    GHAssertEqualObjects(string1, string2, <span class="string">@&quot;A custom error message. string1 should be equal to: %@.&quot;</span>, string2);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-<p>然后编译运行，点击 Run，效果如下：</p>
-<p>图中的 All 栏显示所以的测试，Failed 栏显示没有通过的测试。强大吧，GHUnit。你可以向 GHUnitSampleTest 添加新的测试，比如：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)testSimpleFail</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    GHAssertTrue(<span class="literal">NO</span>, <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们可以向 Tests 添加更多测试类，只要该类是继承自 GHTestCase，且其中的测试方法都是无参无返回值且方法名字是以 test 为前缀即可</p>
-<p>是不是有种感觉就是，以后再多的bug都不怕啦。哦也</p>
+<p>安装成功</p>
 
       
     </div>
@@ -1046,7 +994,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/iOS%E5%90%AF%E5%8A%A8-%E5%88%A4%E6%96%AD%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%9A%84-storyboard.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/CFRunLoop-%E5%88%9D%E6%AC%A1%E7%9B%B8%E8%AF%86.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1064,7 +1012,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/iOS%E5%90%AF%E5%8A%A8-%E5%88%A4%E6%96%AD%E4%BD%BF%E7%94%A8%E4%B8%8D%E5%90%8C%E7%9A%84-storyboard.html" class="post-title-link" itemprop="url">iOS启动 判断使用不同的 storyboard</a>
+          <a href="/2025/06/19/CFRunLoop-%E5%88%9D%E6%AC%A1%E7%9B%B8%E8%AF%86.html" class="post-title-link" itemprop="url">CFRunLoop 初次相识</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1076,7 +1024,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 09:58:40 / 修改时间：10:10:18" itemprop="dateCreated datePublished" datetime="2025-06-19T09:58:40+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-19 13:55:06 / 修改时间：13:58:45" itemprop="dateCreated datePublished" datetime="2025-06-19T13:55:06+08:00">2025-06-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1098,10 +1046,122 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于这个问题，也是一直困扰我很久的问题了，一直记恨于心啊，终于今天让我知道了，如何解决这个问题啦，哈哈，大笑江湖呀。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application didFinishLaunchingWithOptions:(<span class="built_in">NSDictionary</span> *)launchOptions</span><br><span class="line">&#123;</span><br><span class="line">     <span class="built_in">UIViewController</span> *rootVC;</span><br><span class="line">    <span class="keyword">self</span>.window = [[<span class="built_in">UIWindow</span> alloc] initWithFrame:[[<span class="built_in">UIScreen</span> mainScreen] bounds]];</span><br><span class="line">    <span class="keyword">self</span>.window.backgroundColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">    <span class="keyword">if</span>(![[<span class="built_in">NSUserDefaults</span> standardUserDefaults] boolForKey:<span class="string">@&quot;logged_in&quot;</span>]) &#123;</span><br><span class="line">           rootVC=[<span class="keyword">self</span>.storyboard instantiateViewControllerWithIdentifier: <span class="string">@&quot;vc1&quot;</span>];</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">           rootVC=[<span class="keyword">self</span>.storyboard instantiateViewControllerWithIdentifier: <span class="string">@&quot;vc2&quot;</span>];</span><br><span class="line">     &#125;</span><br><span class="line">    window.rootViewConroller=rootVC;</span><br><span class="line">    [<span class="keyword">self</span>.window makeKeyAndVisible];</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>CFRunLoop的初次相识,不了解他，也不认识她。</p>
+<p>我参考的文章中，有一处是这么说的</p>
+<blockquote>
+<p>Run loops是线程的基础架构部分。一个run loop就是一个事件处理循环，用来不停的调配工作以及处理输入事件。使用run loop的目的是使你的线程在有工作的时候工作，没有的时候休眠。</p>
+<p>Run loop的管理并不完全是自动的。你仍必须设计你的线程代码以在适当的时候启动run loop并正确响应输入事件。Cocoa和CoreFundation都提供了run loop对象方便配置和管理线程的run loop。你创建的程序不需要显示的创建run loop；每个线程，包括程序的主线程（main thread）都有与之相应的run loop对象。但是，自己创建的次线程是需要手动运行run loop的。在carbon和cocoa程序中，程序启动时，主线程会自行创建并运行run loop。</p>
+<p>接下来的部分将会详细介绍run loop以及如何为你的程序管理run loop。关于run loop对象可以参阅sdk文档。</p>
+<p>解析Run Loop</p>
+<p>run loop，顾名思义，就是一个循环，你的线程在这里开始，并运行事件处理程序来响应输入事件。你的代码要有实现循环部分的控制语句，换言之就是要有while或for语句。在run loop中，使用run loop对象来运行事件处理代码：响应接收到的事件，启动已经安装的处理程序。</p>
+<p>Run loop处理的输入事件有两种不同的来源：输入源（input source）和定时源（timer source）。输入源传递异步消息，通常来自于其他线程或者程序。定时源则传递同步消息，在特定时间或者一定的时间间隔发生。两种源的处理都使用程序的某一特定处理路径。</p>
+</blockquote>
+<p>在苹果官方是这样解释的。</p>
+<blockquote>
+<p>A CFRunLoop object monitors sources of input to a task and dispatches control when they become ready for processing. Examples of input sources might include user input devices, network connections, periodic or time-delayed events, and asynchronous callbacks.</p>
+</blockquote>
+<p>无奈，找到了一个例子：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//    used by thread2 to force thread exit</span></span><br><span class="line">- (<span class="type">void</span>)forceExit:(ThreadObj*)obj &#123;</span><br><span class="line">    obj.nExitFlag = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;The current forceExit id = %@&quot;</span>, <span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// for thread1</span></span><br><span class="line">- (<span class="type">void</span>)func1 &#123;</span><br><span class="line">    nExitFlag = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;The current func1 id = %@&quot;</span>, <span class="keyword">self</span>);</span><br><span class="line">    <span class="built_in">NSAutoreleasePool</span> *pool = [[<span class="built_in">NSAutoreleasePool</span> alloc] init];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//A runloop with no sources returns immediately from runMode:beforeDate:</span></span><br><span class="line">    <span class="comment">//That will wake up the loop and chew CPU. Add a dummy source to prevent</span></span><br><span class="line">    <span class="comment">//it.</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSRunLoop</span> *runLoop = [<span class="built_in">NSRunLoop</span> currentRunLoop];    </span><br><span class="line">    <span class="built_in">NSMachPort</span> *dummyPort = [[<span class="built_in">NSMachPort</span> alloc] init];    </span><br><span class="line">    [runLoop addPort:dummyPort forMode:<span class="built_in">NSDefaultRunLoopMode</span>];</span><br><span class="line">    [dummyPort release];</span><br><span class="line">    [pool release];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (!nExitFlag)&#123;</span><br><span class="line">        <span class="built_in">NSAutoreleasePool</span> *loopPool = [[<span class="built_in">NSAutoreleasePool</span> alloc] init];        </span><br><span class="line">        [runLoop runMode:<span class="built_in">NSDefaultRunLoopMode</span> beforeDate:[<span class="built_in">NSDate</span> distantFuture]];</span><br><span class="line">        [loopPool drain];</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// for thread2</span></span><br><span class="line">- (<span class="type">void</span>)func2:(<span class="built_in">NSArray</span> *)args &#123;</span><br><span class="line">    nExitFlag = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;The current func2 id = %@&quot;</span>, <span class="keyword">self</span>);</span><br><span class="line">    <span class="built_in">NSThread</span>* thread1 = [args objectAtIndex:<span class="number">1</span>];</span><br><span class="line">    <span class="type">id</span> id1 = [args objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//    force thread1 to exit</span></span><br><span class="line">    [<span class="keyword">self</span> performSelector:<span class="keyword">@selector</span>(forceExit:) onThread:thread1 withObject:id1 waitUntilDone:<span class="literal">YES</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这里面的“vc1”和“vc2”，其实就是storyboard的表示符，自己在创建storyboard的时候一般都会看到的，如果自己还不知道的话，多创建几个自己就知道了。</p>
+<p>里面就是这样调用了一下，输出的结果是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2013-07-30 10:06:04.714 MyRunLoop[55395:1803] The current func1 <span class="built_in">id</span> = &lt;ThreadObj: 0x7132590&gt;</span><br><span class="line">2013-07-30 10:06:04.716 MyRunLoop[55395:2003] The current func2 <span class="built_in">id</span> = &lt;ThreadObj: 0x7132600&gt;</span><br><span class="line">2013-07-30 10:06:04.720 MyRunLoop[55395:1803] The current forceExit <span class="built_in">id</span> = &lt;ThreadObj: 0x7132600&gt;</span><br><span class="line">2013-07-30 10:06:05.135 MyRunLoop[55395:c07] Application windows are expected to have a root view controller at the end of application launch</span><br></pre></td></tr></table></figure>
+
+<p>是这样子的，你如果自己运行的话，估计会跟我有些区别的。</p>
+<p>具体干嘛用，有时间继续 研究，对了还有一个知识点就是：NSMachPort</p>
+<p>这个看起来也有大用处，好像跟传递文件有关系</p>
+<blockquote>
+<p>NSMachPort is a subclass of NSPort that can be used as an endpoint for distributed object connections (or raw messaging). NSMachPort is an object wrapper for a Mach port, the fundamental communication port in OS X. NSMachPort allows for local (on the same machine) communication only. A companion class, NSSocketPort, allows for both local and remote distributed object communication, but may be more expensive than NSMachPort for the local case.</p>
+</blockquote>
+<p>好像越来越强大啦，呵呵</p>
+<p>参考的文章地址：</p>
+<p><span class="exturl" data-url="aHR0cDovL2RldmVsb3Blci5hcHBsZS5jb20vbGlicmFyeS9pb3MvI0RPQ1VNRU5UQVRJT04vQ29yZUZvdW5kYXRpb24vUmVmZXJlbmNlL0NGUnVuTG9vcFJlZi9SZWZlcmVuY2UvcmVmZXJlbmNlLmh0bWw=">参考链接1<i class="fa fa-external-link-alt"></i></span> <span class="exturl" data-url="aHR0cDovL2RldmVsb3Blci5hcHBsZS5jb20vbGlicmFyeS9tYWMvI2RvY3VtZW50YXRpb24vQ29jb2EvUmVmZXJlbmNlL0ZvdW5kYXRpb24vQ2xhc3Nlcy9OU01hY2hQb3J0X0NsYXNzL1JlZmVyZW5jZS9SZWZlcmVuY2UuaHRtbA==">参考链接2<i class="fa fa-external-link-alt"></i></span> <span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9zY29ycGlvemovYXJjaGl2ZS8yMDExLzA1LzI2LzIwNTgxNjcuaHRtbA==">参考链接3<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E8%BE%93%E5%87%BA-json%E6%A0%BC%E5%BC%8F%E7%9A%84%E5%A4%B4.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/19/%E8%BE%93%E5%87%BA-json%E6%A0%BC%E5%BC%8F%E7%9A%84%E5%A4%B4.html" class="post-title-link" itemprop="url">输出 json格式的头</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-19 13:55:02 / 修改时间：14:00:47" itemprop="dateCreated datePublished" datetime="2025-06-19T13:55:02+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>标准写法的 application&#x2F;json，人们有时候也习惯text&#x2F;json，但是text&#x2F;json不兼容的，建议你用标准application&#x2F;json  </p>
+<p>服务端 向 客户端 发送 JSON数据 时:  </p>
+<p>Content-Type &#x3D; ‘application&#x2F;json;charset&#x3D;UTF-8’  </p>
+<p>服务端 向 客户端 发送 JS 代码 时:  </p>
+<p>Content-Type &#x3D; ‘text&#x2F;javascript;charset&#x3D;UTF-8’  </p>
+<p>服务端 判断 客户端 提交的是否是 JSON数据 时 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Content-Type = <span class="string">&#x27;application/json;charset=UTF-8&#x27;</span></span><br><span class="line">Content-Type = <span class="string">&#x27;text/json;charset=UTF-8&#x27;</span></span><br><span class="line">Content-Type = <span class="string">&#x27;text/javascript;charset=UTF-8&#x27;</span></span><br><span class="line">Content-Type = <span class="string">&#x27;application/javascript;charset=UTF-8&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>只要 Content-Type 满足上面4个条件中的 任意一个时,就可以认为提交的数据是 JSON数据</p>
 
       
     </div>
@@ -1121,7 +1181,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/56/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/56/">56</a><span class="page-number current">57</span><a class="page-number" href="/page/58/">58</a><span class="space">&hellip;</span><a class="page-number" href="/page/84/">84</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/58/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/56/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/56/">56</a><span class="page-number current">57</span><a class="page-number" href="/page/58/">58</a><span class="space">&hellip;</span><a class="page-number" href="/page/87/">87</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/58/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

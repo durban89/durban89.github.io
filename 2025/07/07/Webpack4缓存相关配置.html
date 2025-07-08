@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/black/pace-theme-flat-top.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.gowhich.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js" defer></script>
+
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+    <meta name="description" content="关于webpack的缓存相关配置，我用我之前文章的项目来做下实践 12git clone https:&#x2F;&#x2F;github.com&#x2F;durban89&#x2F;webpack4-react16-reactrouter-demo.git react-webpack-demo &amp;&amp; cd react-webpack-demonpm install  提取模板(Extracting Boilerpl">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Webpack4缓存相关配置">
+<meta property="og:url" content="https://blog.gowhich.com/2025/07/07/Webpack4%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE.html">
+<meta property="og:site_name" content="Gowhich">
+<meta property="og:description" content="关于webpack的缓存相关配置，我用我之前文章的项目来做下实践 12git clone https:&#x2F;&#x2F;github.com&#x2F;durban89&#x2F;webpack4-react16-reactrouter-demo.git react-webpack-demo &amp;&amp; cd react-webpack-demonpm install  提取模板(Extracting Boilerpl">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529507174/gowhich/16080123386116.jpg">
+<meta property="article:published_time" content="2025-07-07T07:54:12.000Z">
+<meta property="article:modified_time" content="2025-07-07T07:58:05.211Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="Webpack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529507174/gowhich/16080123386116.jpg">
+
+
+<link rel="canonical" href="https://blog.gowhich.com/2025/07/07/Webpack4%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.gowhich.com/2025/07/07/Webpack4%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE.html","path":"2025/07/07/Webpack4缓存相关配置.html","title":"Webpack4缓存相关配置"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Webpack4缓存相关配置 | Gowhich</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BZ00EJSZ9"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-3BZ00EJSZ9","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js" defer></script>
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js","integrity":"sha256-2obLuIPcceEhkE3G09G33hBdmE55ivVcZUlcKcGNHjU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+  <script src="/js/third-party/addtoany.js" defer></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":true,"archive":true,"delay":true,"timeout":3000,"priority":true,"url":"https://blog.gowhich.com/2025/07/07/Webpack4%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE.html"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Gowhich" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Gowhich</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Durban's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="durban"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">durban</p>
+  <div class="site-description" itemprop="description">人最大的烦恼，就是记性太好</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">869</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">154</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2R1cmJhbjg5" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;durban89"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmR1cmJhbi56aGFuZ0BnbWFpbC5jb20=" title="E-Mail → mailto:durban.zhang@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly94LmNvbS9kdXJiYW5femhhbmc=" title="Twitter → https:&#x2F;&#x2F;x.com&#x2F;durban_zhang"><i class="fab fa-twitter fa-fw"></i>Twitter</span>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/07/Webpack4%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Webpack4缓存相关配置 | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Webpack4缓存相关配置
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-07 15:54:12 / 修改时间：15:58:05" itemprop="dateCreated datePublished" datetime="2025-07-07T15:54:12+08:00">2025-07-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1529507174/gowhich/16080123386116.jpg"></p>
+<p>关于webpack的缓存相关配置，我用我之前文章的项目来做下实践</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/durban89/webpack4-react16-reactrouter-demo.git react-webpack-demo &amp;&amp; <span class="built_in">cd</span> react-webpack-demo</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<p><strong>提取模板(Extracting Boilerplate)</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev webpack-manifest-plugin</span><br></pre></td></tr></table></figure>
+
+<p>添加如下代码<br>引入</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">ManifestPlugin</span> = <span class="built_in">require</span>(<span class="string">&#x27;webpack-manifest-plugin&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在plugins中加入</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">ManifestPlugin</span>(),</span><br></pre></td></tr></table></figure>
+
+<p>plugins中结果如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">plugins</span>: [</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">CleanWebpackPlugin</span>([<span class="string">&#x27;dist&#x27;</span>]),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">HtmlWebpackPlugin</span>(&#123;</span><br><span class="line">    <span class="attr">title</span>: <span class="string">&#x27;React + ReactRouter Demo&#x27;</span>,</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;./index.html&#x27;</span>, <span class="comment">// 调用的文件</span></span><br><span class="line">    <span class="attr">template</span>: <span class="string">&#x27;./index.html&#x27;</span>, <span class="comment">// 模板文件</span></span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="keyword">new</span> webpack.<span class="title class_">DefinePlugin</span>(&#123;</span><br><span class="line">    <span class="string">&#x27;process.env.NODE_ENV&#x27;</span>: <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(<span class="string">&#x27;development&#x27;</span>),</span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">ExtractTextPlugin</span>(&#123;</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].[hash].bundle.css&#x27;</span>,</span><br><span class="line">  &#125;),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">ManifestPlugin</span>(),</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
+<p>将</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">ExtractTextPlugin</span>(&#123;</span><br><span class="line">  <span class="attr">filename</span>: <span class="string">&#x27;[name].bundle.css&#x27;</span>,</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure>
+
+<p>改为</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">ExtractTextPlugin</span>(&#123;</span><br><span class="line">  <span class="attr">filename</span>: <span class="string">&#x27;[name].[hash].bundle.css&#x27;</span>,</span><br><span class="line">&#125;),</span><br></pre></td></tr></table></figure>
+
+<p>再将</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">output</span>: &#123;</span><br><span class="line">  <span class="attr">filename</span>: <span class="string">&#x27;[name].bundle.js&#x27;</span>,</span><br><span class="line">  <span class="attr">chunkFilename</span>: <span class="string">&#x27;[name].bundle.js&#x27;</span>,</span><br><span class="line">  <span class="attr">path</span>: path.<span class="title function_">resolve</span>(__dirname, <span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">  <span class="attr">publicPath</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>改为</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">output</span>: &#123;</span><br><span class="line">  <span class="attr">filename</span>: <span class="string">&#x27;[name].[hash].bundle.js&#x27;</span>,</span><br><span class="line">  <span class="attr">chunkFilename</span>: <span class="string">&#x27;[name].[hash].bundle.js&#x27;</span>,</span><br><span class="line">  <span class="attr">path</span>: path.<span class="title function_">resolve</span>(__dirname, <span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">  <span class="attr">publicPath</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>这次我们执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx webpack --config webpack.dev.js</span><br></pre></td></tr></table></figure>
+
+<p>然后看下打包效果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Hash: 88fb183afd5b8cdbb10b</span><br><span class="line">Version: webpack 4.12.0</span><br><span class="line">Time: 2748ms</span><br><span class="line">Built at: 2018-06-14 17:43:46</span><br><span class="line">                              Asset       Size  Chunks             Chunk Names</span><br><span class="line"> app.88fb183afd5b8cdbb10b.bundle.js   1.17 MiB     app  [emitted]  app</span><br><span class="line">   0.88fb183afd5b8cdbb10b.bundle.js   10.9 KiB       0  [emitted]</span><br><span class="line">   1.88fb183afd5b8cdbb10b.bundle.js     11 KiB       1  [emitted]</span><br><span class="line">   2.88fb183afd5b8cdbb10b.bundle.js   10.1 KiB       2  [emitted]</span><br><span class="line">app.88fb183afd5b8cdbb10b.bundle.css  233 bytes     app  [emitted]  app</span><br><span class="line">                       ./index.html  439 bytes          [emitted]</span><br><span class="line">                      manifest.json  366 bytes          [emitted]</span><br></pre></td></tr></table></figure>
+
+<p>多了一个manifest.json<br>在项目目录下面查看下这个文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> ./dist/manifest.json</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;app.js&quot;</span>: <span class="string">&quot;/app.88fb183afd5b8cdbb10b.bundle.js&quot;</span>,</span><br><span class="line">  <span class="string">&quot;app.css&quot;</span>: <span class="string">&quot;/app.88fb183afd5b8cdbb10b.bundle.css&quot;</span>,</span><br><span class="line">  <span class="string">&quot;0.88fb183afd5b8cdbb10b.bundle.js&quot;</span>: <span class="string">&quot;/0.88fb183afd5b8cdbb10b.bundle.js&quot;</span>,</span><br><span class="line">  <span class="string">&quot;1.88fb183afd5b8cdbb10b.bundle.js&quot;</span>: <span class="string">&quot;/1.88fb183afd5b8cdbb10b.bundle.js&quot;</span>,</span><br><span class="line">  <span class="string">&quot;2.88fb183afd5b8cdbb10b.bundle.js&quot;</span>: <span class="string">&quot;/2.88fb183afd5b8cdbb10b.bundle.js&quot;</span>,</span><br><span class="line">  <span class="string">&quot;./index.html&quot;</span>: <span class="string">&quot;/./index.html&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个文件干嘛用，后面说</p>
+<p>根据官方的说法</p>
+<blockquote>
+<p>将第三方库(library)（例如 lodash 或 react）提取到单独的 vendor chunk 文件中，是比较推荐的做法，这是因为，它们很少像本地的源代码那样频繁修改。因此通过实现以上步骤，利用客户端的长效缓存机制，可以通过命中缓存来消除请求，并减少向服务器获取资源，同时还能保证客户端代码和服务器端代码版本一致。</p>
+</blockquote>
+<p>但是目前官网的实例不起作用了，经过我的实践当前webpack的版本已经使用了新的逻辑，具体操作如下<br>我们先配置webpack.dev.js<br>添加如下配置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">optimization</span>: &#123;</span><br><span class="line">  <span class="attr">splitChunks</span>: &#123;</span><br><span class="line">    <span class="attr">chunks</span>: <span class="string">&#x27;initial&#x27;</span>, <span class="comment">// 必须三选一： &quot;initial&quot; | &quot;all&quot;(默认就是all) | &quot;async&quot;</span></span><br><span class="line">    <span class="attr">minSize</span>: <span class="number">0</span>, <span class="comment">// 最小尺寸，默认0</span></span><br><span class="line">    <span class="attr">minChunks</span>: <span class="number">1</span>, <span class="comment">// 最小 chunk ，默认1</span></span><br><span class="line">    <span class="attr">maxAsyncRequests</span>: <span class="number">1</span>, <span class="comment">// 最大异步请求数， 默认1</span></span><br><span class="line">    <span class="attr">maxInitialRequests</span>: <span class="number">1</span>, <span class="comment">// 最大初始化请求书，默认1</span></span><br><span class="line">    <span class="attr">name</span>: <span class="function">() =&gt;</span> &#123;&#125;, <span class="comment">// 名称，此选项可接收 function</span></span><br><span class="line">    <span class="attr">cacheGroups</span>: &#123; <span class="comment">// 这里开始设置缓存的 chunks</span></span><br><span class="line">      <span class="attr">priority</span>: <span class="string">&#x27;0&#x27;</span>, <span class="comment">// 缓存组优先级 false | object |</span></span><br><span class="line">      <span class="attr">vendor</span>: &#123; <span class="comment">// key 为entry中定义的 入口名称</span></span><br><span class="line">        <span class="attr">chunks</span>: <span class="string">&#x27;initial&#x27;</span>, <span class="comment">// 必须三选一： &quot;initial&quot; | &quot;all&quot; | &quot;async&quot;(默认就是异步)</span></span><br><span class="line">        <span class="attr">test</span>: <span class="regexp">/react|lodash/</span>, <span class="comment">// 正则规则验证，如果符合就提取 chunk</span></span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;vendor&#x27;</span>, <span class="comment">// 要缓存的 分隔出来的 chunk 名称</span></span><br><span class="line">        <span class="attr">minSize</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="attr">minChunks</span>: <span class="number">1</span>,</span><br><span class="line">        <span class="attr">enforce</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">maxAsyncRequests</span>: <span class="number">1</span>, <span class="comment">// 最大异步请求数， 默认1</span></span><br><span class="line">        <span class="attr">maxInitialRequests</span>: <span class="number">1</span>, <span class="comment">// 最大初始化请求书，默认1</span></span><br><span class="line">        <span class="attr">reuseExistingChunk</span>: <span class="literal">true</span>, <span class="comment">// 可设置是否重用该chunk（查看源码没有发现默认值）</span></span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>entry中加入</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">vendor</span>: [</span><br><span class="line">  <span class="string">&#x27;react&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;react-dom&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;redux&#x27;</span>,</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
+<p>然后执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx webpack --config webpack.dev.js</span><br></pre></td></tr></table></figure>
+
+<p>得到类似如下输出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Hash: 29ff4803e0ac98b32c1c</span><br><span class="line">Version: webpack 4.12.0</span><br><span class="line">Time: 2641ms</span><br><span class="line">Built at: 2018-06-14 17:51:36</span><br><span class="line">                                Asset       Size  Chunks             Chunk Names</span><br><span class="line">   app.29ff4803e0ac98b32c1c.bundle.js   1.17 MiB     app  [emitted]  app</span><br><span class="line">vendor.29ff4803e0ac98b32c1c.bundle.js    735 KiB  vendor  [emitted]  vendor</span><br><span class="line">     0.29ff4803e0ac98b32c1c.bundle.js   10.9 KiB       0  [emitted]</span><br><span class="line">     1.29ff4803e0ac98b32c1c.bundle.js     11 KiB       1  [emitted]</span><br><span class="line">     2.29ff4803e0ac98b32c1c.bundle.js   10.1 KiB       2  [emitted]</span><br><span class="line">  app.29ff4803e0ac98b32c1c.bundle.css  233 bytes     app  [emitted]  app</span><br><span class="line">                         ./index.html  524 bytes          [emitted]</span><br><span class="line">                        manifest.json  423 bytes          [emitted]</span><br></pre></td></tr></table></figure>
+
+<p>多了一个vendor.29ff4803e0ac98b32c1c.bundle.js这个文件 同时app.29ff4803e0ac98b32c1c.bundle.js的大小也减小了</p>
+<p><strong>模块标识符(Module Identifiers)</strong></p>
+<blockquote>
+<p>从上面的实践中我们发现我们其实是没有更改代码的但是文件中hash的值却变化了<br>根据官网的描述  </p>
+<p>这是因为每个 module.id 会基于默认的解析顺序(resolve order)进行增量。也就是说，当解析顺序发生变化，ID 也会随之改变。因此，简要概括：</p>
+<p>main bundle 会随着自身的新增内容的修改，而发生变化。<br>vendor bundle 会随着自身的 module.id 的修改，而发生变化。<br>manifest bundle 会因为当前包含一个新模块的引用，而发生变化。<br>第一个和最后一个都是符合预期的行为 – 而 vendor 的 hash 发生变化是我们要修复的。幸运的是，可以使用两个插件来解决这个问题。第一个插件是 NamedModulesPlugin，将使用模块的路径，而不是数字标识符。虽然此插件有助于在开发过程中输出结果的可读性，然而执行时间会长一些。第二个选择是使用 HashedModuleIdsPlugin，推荐用于生产环境构建：</p>
+</blockquote>
+<p>由于我们现在改的是webpack.dev.js，我们用来实践下<br>在plugins中添加如下代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> webpack.<span class="title class_">NamedModulesPlugin</span>(),</span><br></pre></td></tr></table></figure>
+
+<p>然后</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx webpack --config webpack.dev.js</span><br></pre></td></tr></table></figure>
+
+<p>看下打包效果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Hash: 29ff4803e0ac98b32c1c</span><br><span class="line">Version: webpack 4.12.0</span><br><span class="line">Time: 2813ms</span><br><span class="line">Built at: 2018-06-14 17:57:59</span><br><span class="line">                                Asset       Size  Chunks             Chunk Names</span><br><span class="line">   app.29ff4803e0ac98b32c1c.bundle.js   1.17 MiB     app  [emitted]  app</span><br><span class="line">vendor.29ff4803e0ac98b32c1c.bundle.js    735 KiB  vendor  [emitted]  vendor</span><br><span class="line">     0.29ff4803e0ac98b32c1c.bundle.js   10.9 KiB       0  [emitted]</span><br><span class="line">     1.29ff4803e0ac98b32c1c.bundle.js     11 KiB       1  [emitted]</span><br><span class="line">     2.29ff4803e0ac98b32c1c.bundle.js   10.1 KiB       2  [emitted]</span><br><span class="line">  app.29ff4803e0ac98b32c1c.bundle.css  233 bytes     app  [emitted]  app</span><br><span class="line">                         ./index.html  524 bytes          [emitted]</span><br><span class="line">                        manifest.json  423 bytes          [emitted]</span><br></pre></td></tr></table></figure>
+
+<p>可以修改下CounterComponet.jsx后在执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx webpack --config webpack.dev.js</span><br></pre></td></tr></table></figure>
+
+<p>再看下打包效果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Hash: 3cf568e90b38c1c3c339</span><br><span class="line">Version: webpack 4.12.0</span><br><span class="line">Time: 2709ms</span><br><span class="line">Built at: 2018-06-14 17:59:00</span><br><span class="line">                                Asset       Size  Chunks             Chunk Names</span><br><span class="line">   app.3cf568e90b38c1c3c339.bundle.js   1.17 MiB     app  [emitted]  app</span><br><span class="line">vendor.3cf568e90b38c1c3c339.bundle.js    735 KiB  vendor  [emitted]  vendor</span><br><span class="line">     0.3cf568e90b38c1c3c339.bundle.js   10.9 KiB       0  [emitted]</span><br><span class="line">     1.3cf568e90b38c1c3c339.bundle.js     11 KiB       1  [emitted]</span><br><span class="line">     2.3cf568e90b38c1c3c339.bundle.js   10.1 KiB       2  [emitted]</span><br><span class="line">  app.3cf568e90b38c1c3c339.bundle.css  233 bytes     app  [emitted]  app</span><br><span class="line">                         ./index.html  524 bytes          [emitted]</span><br><span class="line">                        manifest.json  423 bytes          [emitted]</span><br></pre></td></tr></table></figure>
+
+<p>结果还是都变化了，奇怪，我们试下生产环境的方式<br>将webpack.dev.js的相关的改动我们在webpack.prod.js中也做下修改，然后再试下【注意生产环境我们用new webpack.HashedModuleIdsPlugin()】<br>分别执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p>第一次输出类似如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Hash: e0b25a1605f0da8569c1</span><br><span class="line">Version: webpack 4.12.0</span><br><span class="line">Time: 9622ms</span><br><span class="line">Built at: 2018-06-14 18:14:57</span><br><span class="line">                                    Asset       Size  Chunks             Chunk Names</span><br><span class="line">     1.62c80f16d58866af39d9.bundle.js.map      5 KiB       1  [emitted]</span><br><span class="line">         0.a81f2d5fe8a554f19db1.bundle.js   5.32 KiB       0  [emitted]</span><br><span class="line">         2.4bb6ea90727a9917c466.bundle.js   6.23 KiB       2  [emitted]</span><br><span class="line">    vendor.153d0cc454d09104782f.bundle.js    106 KiB       3  [emitted]  vendor</span><br><span class="line">       app.e7d2f7719c957e5c378e.bundle.js    217 KiB       4  [emitted]  app</span><br><span class="line">            main.e7d2f7719c957e5c378e.css  290 bytes       4  [emitted]  app</span><br><span class="line">     0.a81f2d5fe8a554f19db1.bundle.js.map   4.13 KiB       0  [emitted]</span><br><span class="line">         1.62c80f16d58866af39d9.bundle.js   6.34 KiB       1  [emitted]</span><br><span class="line">     2.4bb6ea90727a9917c466.bundle.js.map   5.08 KiB       2  [emitted]</span><br><span class="line">vendor.153d0cc454d09104782f.bundle.js.map    271 KiB       3  [emitted]  vendor</span><br><span class="line">   app.e7d2f7719c957e5c378e.bundle.js.map    644 KiB       4  [emitted]  app</span><br><span class="line">        main.e7d2f7719c957e5c378e.css.map  106 bytes       4  [emitted]  app</span><br><span class="line">                             ./index.html  518 bytes          [emitted]</span><br><span class="line">                            manifest.json  845 bytes          [emitted]</span><br></pre></td></tr></table></figure>
+
+<p>第二次我们修改CounterComponent.jsx,然后再试下结果输出类似如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Hash: 3102790f92604ffd6406</span><br><span class="line">Version: webpack 4.12.0</span><br><span class="line">Time: 13758ms</span><br><span class="line">Built at: 2018-06-14 18:17:58</span><br><span class="line">                                    Asset       Size  Chunks             Chunk Names</span><br><span class="line">     1.62c80f16d58866af39d9.bundle.js.map      5 KiB       1  [emitted]</span><br><span class="line">         0.44264f48cf81d76c34f3.bundle.js   5.32 KiB       0  [emitted]</span><br><span class="line">         2.4bb6ea90727a9917c466.bundle.js   6.23 KiB       2  [emitted]</span><br><span class="line">    vendor.153d0cc454d09104782f.bundle.js    106 KiB       3  [emitted]  vendor</span><br><span class="line">       app.2d7ccb1930e41d2c5c9b.bundle.js    217 KiB       4  [emitted]  app</span><br><span class="line">            main.2d7ccb1930e41d2c5c9b.css  290 bytes       4  [emitted]  app</span><br><span class="line">     0.44264f48cf81d76c34f3.bundle.js.map   4.13 KiB       0  [emitted]</span><br><span class="line">         1.62c80f16d58866af39d9.bundle.js   6.34 KiB       1  [emitted]</span><br><span class="line">     2.4bb6ea90727a9917c466.bundle.js.map   5.08 KiB       2  [emitted]</span><br><span class="line">vendor.153d0cc454d09104782f.bundle.js.map    271 KiB       3  [emitted]  vendor</span><br><span class="line">   app.2d7ccb1930e41d2c5c9b.bundle.js.map    644 KiB       4  [emitted]  app</span><br><span class="line">        main.2d7ccb1930e41d2c5c9b.css.map  106 bytes       4  [emitted]  app</span><br><span class="line">                             ./index.html  518 bytes          [emitted]</span><br><span class="line">                            manifest.json  845 bytes          [emitted]</span><br></pre></td></tr></table></figure>
+
+<p>可以看出来变动的之后<br>0.xxxx.bundle.js这个文件<br>看来这个hash的变化针对的只是生产环境，不过这个也可以了，频繁改动只对生产环境的影响比较大</p>
+<p>我们将生产环境的构建配置中的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> webpack.<span class="title class_">HashedModuleIdsPlugin</span>()</span><br></pre></td></tr></table></figure>
+
+<p>替换为</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> webpack.<span class="title class_">NamedModulesPlugin</span>()</span><br></pre></td></tr></table></figure>
+
+<p>可以再试下，效果跟HashedModuleIdsPlugin是一样的只不过文件大小会有些差别</p>
+<p>项目地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/durban89/webpack4-react16-reactrouter-demo.git</span><br><span class="line">tag：v_1.0.10</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechat.png" alt="durban 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="durban 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>durban
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.gowhich.com/2025/07/07/Webpack4%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE.html" title="Webpack4缓存相关配置">https://blog.gowhich.com/2025/07/07/Webpack4缓存相关配置.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Webpack/" rel="tag"><i class="fa fa-tag"></i> Webpack</a>
+          </div>
+
+        
+  <div class="social-like a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_facebook"></a>
+      <a class="a2a_button_twitter"></a>
+  </div>
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/07/Webpack4%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E6%9E%84%E5%BB%BA%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE-Split-CSS%E5%8D%B3%E5%88%86%E7%A6%BB%E6%A0%B7%E5%BC%8F.html" rel="prev" title="Webpack4生产环境构建相关配置 - Split CSS即分离样式">
+                  <i class="fa fa-angle-left"></i> Webpack4生产环境构建相关配置 - Split CSS即分离样式
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/07/Webpack4%E7%BC%93%E5%AD%98%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE-Manifest.html" rel="next" title="Webpack4缓存相关配置 - Manifest">
+                  Webpack4缓存相关配置 - Manifest <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2014 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Copyright © durban. All Rights Reserved.</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZw==">NexT.Gemini</span> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
