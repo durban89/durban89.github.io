@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">908</span>
+          <span class="site-state-item-count">928</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Objective-C-extern%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E8%AF%BB.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/layoutSubviews%E4%BD%95%E6%97%B6%E8%B0%83%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Objective-C-extern%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E8%AF%BB.html" class="post-title-link" itemprop="url">Objective-C extern关键字解读</a>
+          <a href="/2025/06/20/layoutSubviews%E4%BD%95%E6%97%B6%E8%B0%83%E7%94%A8%E7%9A%84%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">layoutSubviews何时调用的问题</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:48:27 / 修改时间：10:54:07" itemprop="dateCreated datePublished" datetime="2025-06-19T10:48:27+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:52:10 / 修改时间：09:55:46" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:10+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,18 +294,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>今天看代码的时候，遇到了一个问号，跟自己没有好好学c有关的，或者是学了不用就忘记了。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="built_in">NSString</span> *ProductTypeDevice;</span><br><span class="line"><span class="keyword">extern</span> <span class="built_in">NSString</span> *ProductTypeDesktop;</span><br><span class="line"><span class="keyword">extern</span> <span class="built_in">NSString</span> *ProductTypePortable;</span><br></pre></td></tr></table></figure>
-
-<p>关键字extern于是就有了下文。</p>
-<p><em><strong>1,基本解释</strong></em><br>　　extern可以置于变量或者函数前，以标示变量或者函数的定义在别的文件中，提示编译器遇到此变量和函数时在其他模块中寻找其定义。<br>　　另外，extern也可用来进行链接指定。</p>
-<p><em><strong>2,问题：extern 变量</strong></em><br>　　在一个源文件里定义了一个数组：char a[6];<br>　　在另外一个文件里用下列语句进行了声明：<code>extern char *a;</code><br>　　请问，这样可以吗？<br>　　答案与分析：<br>　　1)、不可以，程序运行时会告诉你非法访问。原因在于，指向类型T的指针并不等价于类型T的数组。<code>extern char *a</code>声明的是一个指针变量而不是字符数组，因此与实际的定义不同，从而造成运行时非法访问。应该将声明改为<code>extern char a[ ]</code>。<br>　　2)、例子分析如下，如果<code>a[] = &quot;abcd&quot;</code>,则外部变量<code>a=0x61626364</code> (abcd的ASCII码值)，<code>*a</code>显然没有意义<br>　　显然a指向的空间（0x61626364）没有意义，易出现非法内存访问。<br>　　3)、这提示我们，在使用extern时候要严格对应声明时的格式，在实际编程中，这样的错误屡见不鲜。<br>　　4)、extern用在变量声明中常常有这样一个作用，你在*.c文件中声明了一个全局的变量，这个全局的变量如果要被引用，就放在*.h中并用extern来声明。</p>
-<p><em><strong>4,问题：extern 函数2</strong></em><br>　　当函数提供方单方面修改函数原型时，如果使用方不知情继续沿用原来的extern申明，这样编译时编译器不会报错。但是在运行过程中，因为少了或者多了输入参数，往往会照成系统错误，这种情况应该如何解决？<br>　　答案与分析：<br>　　目前业界针对这种情况的处理没有一个很完美的方案，通常的做法是提供方在自己的xxx_pub.h中提供对外部接口的声明，然后调用方include该头文件，从而省去extern这一步。以避免这种错误。<br>　　宝剑有双锋，对extern的应用，不同的场合应该选择不同的做法。</p>
-<p><em><strong>5,问题：extern “C”</strong></em><br>　　在C++环境下使用C函数的时候，常常会出现编译器无法找到obj模块中的C函数定义，从而导致链接失败的情况，应该如何解决这种情况呢？</p>
-<p>　　答案与分析：<br>　　C++语言在编译的时候为了解决函数的多态问题，会将函数名和参数联合起来生成一个中间的函数名称，而C语言则不会，因此会造成链接时找不到对应函数的情况，此时C函数就需要用extern “C”进行链接指定，这告诉编译器，请保持我的名称，不要给我生成用于链接的中间函数名。<br>　　下面是一个标准的写法：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在.h文件的头上</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> __cplusplus</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> __cplusplus</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span>&#123;</span><br><span class="line">　<span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">　<span class="meta">#<span class="keyword">endif</span> <span class="comment">/* __cplusplus */</span> </span></span><br><span class="line">　…</span><br><span class="line">　…</span><br><span class="line">　<span class="comment">//.h文件结束的地方</span></span><br><span class="line">　<span class="meta">#<span class="keyword">ifdef</span> __cplusplus</span></span><br><span class="line">　<span class="meta">#<span class="keyword">if</span> __cplusplus</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">/* __cplusplus */</span></span></span><br></pre></td></tr></table></figure>
-
-<p><strong>6, 问题：extern 函数1</strong><br>　　常常见extern放在函数的前面成为函数声明的一部分，那么，C语言的关键字extern在函数的声明中起什么作用？<br>　　答案与分析：<br>　　如果函数的声明中带有关键字extern，仅仅是暗示这个函数可能在别的源文件里定义，没有其它作用。即下述两个函数声明没有明显的区别：<br>extern int f(); 和int f();<br>　　当然，这样的用处还是有的，就是在程序中取代include “<code>*.h</code>”来声明函数，在一些复杂的项目中，我比较习惯在所有的函数声明前添加extern修饰。</p>
+          <p>layoutSubviews何时调用的问题，这个方法是当你需要在调整subview的大小的时候需要重写（我这个翻译不严谨，以下是原文：You should override this method only if the autoresizing behaviors of the subviews do not offer the behavior you want.），但有时候经常指望它被调用的时候没被调用，不希望它被调用的时候被调用了，搞的很上火。根据国外社区一个人帖子，做了总结性翻译。</p>
+<p>layoutSubviews在以下情况下会被调用：</p>
+<p>1、init初始化不会触发layoutSubviews<br>2、addSubview会触发layoutSubviews<br>3、设置view的Frame会触发layoutSubviews，当然前提是frame的值设置前后发生了变化<br>4、滚动一个UIScrollView会触发layoutSubviews<br>5、旋转Screen会触发父UIView上的layoutSubviews事件<br>6、改变一个UIView大小的时候也会触发父UIView上的layoutSubviews事件</p>
 
       
     </div>
@@ -332,7 +323,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/iOS6-UI%E7%8A%B6%E6%80%81%E4%BF%9D%E6%8C%81%E5%92%8C%E6%81%A2%E5%A4%8D.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/%E5%85%B3%E4%BA%8Eapp-%E7%9A%84-icons%E7%9A%84%E4%BD%BF%E7%94%A8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -350,7 +341,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/iOS6-UI%E7%8A%B6%E6%80%81%E4%BF%9D%E6%8C%81%E5%92%8C%E6%81%A2%E5%A4%8D.html" class="post-title-link" itemprop="url">iOS6 UI状态保持和恢复</a>
+          <a href="/2025/06/20/%E5%85%B3%E4%BA%8Eapp-%E7%9A%84-icons%E7%9A%84%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">关于app 的 icons的使用</a>
         </h2>
 
         <div class="post-meta-container">
@@ -362,7 +353,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:48:24 / 修改时间：10:55:32" itemprop="dateCreated datePublished" datetime="2025-06-19T10:48:24+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:52:05 / 修改时间：10:18:59" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:05+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -384,23 +375,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于iOS6 UI状态保持和恢复，是最近看到几个例子，里面有这个方法<code>encodeRestorableStateWithCoder</code>和<code>decodeRestorableStateWithCoder</code>，感觉很奇怪，都怪自己知识浅薄啊</p>
-<p>其实呢使用这个是有原因的.</p>
-<p>iOS设计规范中要求，当应用退出的时候（包括被终止运行时候），画面中UI元素状态需要保持的，当再次进来的时候看状态与退出是一样的。iOS6之后苹果提供以下API使得UI状态保持和恢复变得很容易了。<br>在iOS6中我们可以在3地方实现状态保持和恢复：  </p>
-<p>1,应用程序委托对象  </p>
-<p>2,视图控制器  </p>
-<p>3,自定义视图  </p>
-<p>恢复标识是iOS6为了实现UI状态保持和恢复添加的设置项目。我们需要在应用程序委托对象AppDelegate代码部分做一些修改，添加的代码如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>) application:(<span class="built_in">UIApplication</span> *)application shouldSaveApplicationState:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">-(<span class="type">BOOL</span>) application:(<span class="built_in">UIApplication</span> *)application shouldRestoreApplicationState:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">- (<span class="type">void</span>)application:(<span class="built_in">UIApplication</span> *)application willEncodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    [coder encodeFloat:<span class="number">2.0</span> forKey:<span class="string">@&quot;Version&quot;</span>];  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">- (<span class="type">void</span>)application:(<span class="built_in">UIApplication</span> *)application didDecodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="type">float</span> lastVer = [coder decodeFloatForKey:<span class="string">@&quot;Version&quot;</span>];  </span><br><span class="line">  </span><br><span class="line">    <span class="built_in">NSLog</span>(@”lastVer = %f”,lastVer);  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中<code>application:shouldSaveApplicationState:</code>在应用退出的时候调用，负责控制是否允许保存状态，返回YES情况是可以保存，NO是不保存。  </p>
-<p><code>application:shouldRestoreApplicationState:</code>是应用启动时候调用，负责控制是否恢复上次退出的时候的状态，返回YES情况是可以恢复，NO是不恢复。  </p>
-<p><code>application:willEncodeRestorableStateWithCoder:</code>方法是保存时候调用，在这个方法中实现UI状态或数据的保存，其中<code>[coder encodeFloat:2.0 forKey:@&quot;Version&quot;]</code>是保存简单数据。  </p>
-<p><code>application:didDecodeRestorableStateWithCoder:</code>方法是恢复时候调用，在这个方法中实现UI状态或数据的恢复，其中<code>[coder decodeFloatForKey:@&quot;Version&quot;]</code>语句是恢复上次保存的数据。  </p>
-<p>要想实现具体画面中控件的保持和恢复，还需要在它视图控制器中添加一些代码，ViewController.m中添加的代码如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)encodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">    [<span class="variable language_">super</span> encodeRestorableStateWithCoder:coder];  </span><br><span class="line">    [coder encodeObject:<span class="keyword">self</span>.txtField.text forKey:kSaveKey];  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>)decodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">    [<span class="variable language_">super</span> decodeRestorableStateWithCoder:coder];  </span><br><span class="line">    <span class="keyword">self</span>.txtField.text = [coder decodeObjectForKey:kSaveKey];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在iOS6之后视图控制器都添加了两个：<code>encodeRestorableStateWithCoder:</code>和<code>decodeRestorableStateWithCoder:</code>用来实现该控制器中的控件或数据的保存和恢复。其中<code>encodeRestorableStateWithCoder:</code> 方法是在保存时候调用，<code>[coder encodeObject:self.txtField.text forKey:kSaveKey]</code>语句是按照指定的键保存文本框的内容，<code>decodeRestorableStateWithCoder:</code>方法是在恢复时候调用，<code>[coder decodeObjectForKey:kSaveKey]</code>是恢复文本框内容时候调用，保存和恢复事实上就是向一个归档文件中编码和解码的过程。</p>
+          <p>最近在官方中有一份关于，app icons的说明。简单 说了一些不同尺寸的app icons的使用</p>
+<p>尺寸的类型有</p>
+<p>57：这种型号的尺寸的图片主要用于（Homescreen icon on iPhone&#x2F;iPod touch），在iPhone&#x2F;iPod touch的主屏幕上</p>
+<p>72：这种型号的尺寸的图片主要用于（Homescreen icon on iPad），在iPad的主屏幕上</p>
+<p>114：上面的一倍，这种尺寸的图片用于（Homescreen icon on iPhone Retina），在iPhone Retina的主屏幕上</p>
+<p>65：这种型号的图片主要用于（Icon in Spotlight and Settings app on iPhone&#x2F;iPod touch and icon in Settings app on iPad），说到Spotlight这个，大家都知道的，没错就是搜索时，出现的，如果不知道，说明你安装的应用还不够多，哈哈</p>
+<p>50：这个大小的图片，（Icon in Spotlight on iPad），是存在于iPad上的，说的跟上面那个型号差不多，就是小了点，但是这个很重要，尤其是在ios开发中</p>
+<p>58：这个尺寸的图片，用过iPhone5的或者有Retina屏都知道（Icon in Spotlight and Settings app on iPhone Retina），没错，就是在那里使用的。</p>
+<p>114：这个尺寸的介绍是这样的（Icon in iTunes for Ad Hoc distribution builds），估计是跟开发有关点的，但是事实上在iPunes里面也能看得到的，</p>
+<p>基于以上尺寸的图片，在自己项目开发中，显的很重要，不同尺寸出来的效果是不一样，尤其是对已苹果这个追求完美的产品，不容小视</p>
 
       
     </div>
@@ -427,7 +411,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/PHP-%E6%B1%89%E5%AD%97%E8%BD%AC%E6%8B%BC%E9%9F%B3.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA-UIScrollView--%E8%83%BD%E5%A4%9F%E5%AE%9E%E7%8E%B0%E6%A8%AA%E5%90%91%E6%BB%9A%E5%8A%A8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -445,7 +429,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/PHP-%E6%B1%89%E5%AD%97%E8%BD%AC%E6%8B%BC%E9%9F%B3.html" class="post-title-link" itemprop="url">PHP 汉字转拼音</a>
+          <a href="/2025/06/20/%E8%87%AA%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA-UIScrollView--%E8%83%BD%E5%A4%9F%E5%AE%9E%E7%8E%B0%E6%A8%AA%E5%90%91%E6%BB%9A%E5%8A%A8.html" class="post-title-link" itemprop="url">自定义一个 UIScrollView ，能够实现横向滚动</a>
         </h2>
 
         <div class="post-meta-container">
@@ -457,7 +441,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:48:20 / 修改时间：10:56:06" itemprop="dateCreated datePublished" datetime="2025-06-19T10:48:20+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:52:02 / 修改时间：09:56:42" itemprop="dateCreated datePublished" datetime="2025-06-20T09:52:02+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -479,8 +463,35 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>找了个觉得很稀奇的东西，不错，就是汉字转拼音的类库</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 汉字转拼音函数类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Helper_Pinyin</span></span>&#123;</span><br><span class="line">    <span class="built_in">static</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">Pinyin</span>(<span class="params"><span class="variable">$_String</span>, <span class="variable">$_Code</span>=<span class="string">&#x27;UTF8&#x27;</span></span>)</span>&#123; <span class="comment">//GBK页面可改为gb2312，其他随意填写为UTF8</span></span><br><span class="line">            <span class="variable">$_DataKey</span> = <span class="string">&quot;a|ai|an|ang|ao|ba|bai|ban|bang|bao|bei|ben|beng|bi|bian|biao|bie|bin|bing|bo|bu|ca|cai|can|cang|cao|ce|ceng|cha&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|chai|chan|chang|chao|che|chen|cheng|chi|chong|chou|chu|chuai|chuan|chuang|chui|chun|chuo|ci|cong|cou|cu|&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;cuan|cui|cun|cuo|da|dai|dan|dang|dao|de|deng|di|dian|diao|die|ding|diu|dong|dou|du|duan|dui|dun|duo|e|en|er&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|fa|fan|fang|fei|fen|feng|fo|fou|fu|ga|gai|gan|gang|gao|ge|gei|gen|geng|gong|gou|gu|gua|guai|guan|guang|gui&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|gun|guo|ha|hai|han|hang|hao|he|hei|hen|heng|hong|hou|hu|hua|huai|huan|huang|hui|hun|huo|ji|jia|jian|jiang&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|jiao|jie|jin|jing|jiong|jiu|ju|juan|jue|jun|ka|kai|kan|kang|kao|ke|ken|keng|kong|kou|ku|kua|kuai|kuan|kuang&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|kui|kun|kuo|la|lai|lan|lang|lao|le|lei|leng|li|lia|lian|liang|liao|lie|lin|ling|liu|long|lou|lu|lv|luan|lue&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|lun|luo|ma|mai|man|mang|mao|me|mei|men|meng|mi|mian|miao|mie|min|ming|miu|mo|mou|mu|na|nai|nan|nang|nao|ne&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|nei|nen|neng|ni|nian|niang|niao|nie|nin|ning|niu|nong|nu|nv|nuan|nue|nuo|o|ou|pa|pai|pan|pang|pao|pei|pen&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|peng|pi|pian|piao|pie|pin|ping|po|pu|qi|qia|qian|qiang|qiao|qie|qin|qing|qiong|qiu|qu|quan|que|qun|ran|rang&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|rao|re|ren|reng|ri|rong|rou|ru|ruan|rui|run|ruo|sa|sai|san|sang|sao|se|sen|seng|sha|shai|shan|shang|shao|&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;she|shen|sheng|shi|shou|shu|shua|shuai|shuan|shuang|shui|shun|shuo|si|song|sou|su|suan|sui|sun|suo|ta|tai|&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;tan|tang|tao|te|teng|ti|tian|tiao|tie|ting|tong|tou|tu|tuan|tui|tun|tuo|wa|wai|wan|wang|wei|wen|weng|wo|wu&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|xi|xia|xian|xiang|xiao|xie|xin|xing|xiong|xiu|xu|xuan|xue|xun|ya|yan|yang|yao|ye|yi|yin|ying|yo|yong|you&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|yu|yuan|yue|yun|za|zai|zan|zang|zao|ze|zei|zen|zeng|zha|zhai|zhan|zhang|zhao|zhe|zhen|zheng|zhi|zhong|&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;zhou|zhu|zhua|zhuai|zhuan|zhuang|zhui|zhun|zhuo|zi|zong|zou|zu|zuan|zui|zun|zuo&quot;</span>; </span><br><span class="line">            <span class="variable">$_DataValue</span> = <span class="string">&quot;-20319|-20317|-20304|-20295|-20292|-20283|-20265|-20257|-20242|-20230|-20051|-20036|-20032|-20026|-20002|-19990&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-19986|-19982|-19976|-19805|-19784|-19775|-19774|-19763|-19756|-19751|-19746|-19741|-19739|-19728|-19725&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-19715|-19540|-19531|-19525|-19515|-19500|-19484|-19479|-19467|-19289|-19288|-19281|-19275|-19270|-19263&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-19261|-19249|-19243|-19242|-19238|-19235|-19227|-19224|-19218|-19212|-19038|-19023|-19018|-19006|-19003&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-18996|-18977|-18961|-18952|-18783|-18774|-18773|-18763|-18756|-18741|-18735|-18731|-18722|-18710|-18697&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-18696|-18526|-18518|-18501|-18490|-18478|-18463|-18448|-18447|-18446|-18239|-18237|-18231|-18220|-18211&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-18201|-18184|-18183|-18181|-18012|-17997|-17988|-17970|-17964|-17961|-17950|-17947|-17931|-17928|-17922&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-17759|-17752|-17733|-17730|-17721|-17703|-17701|-17697|-17692|-17683|-17676|-17496|-17487|-17482|-17468&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-17454|-17433|-17427|-17417|-17202|-17185|-16983|-16970|-16942|-16915|-16733|-16708|-16706|-16689|-16664&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-16657|-16647|-16474|-16470|-16465|-16459|-16452|-16448|-16433|-16429|-16427|-16423|-16419|-16412|-16407&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-16403|-16401|-16393|-16220|-16216|-16212|-16205|-16202|-16187|-16180|-16171|-16169|-16158|-16155|-15959&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-15958|-15944|-15933|-15920|-15915|-15903|-15889|-15878|-15707|-15701|-15681|-15667|-15661|-15659|-15652&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-15640|-15631|-15625|-15454|-15448|-15436|-15435|-15419|-15416|-15408|-15394|-15385|-15377|-15375|-15369&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-15363|-15362|-15183|-15180|-15165|-15158|-15153|-15150|-15149|-15144|-15143|-15141|-15140|-15139|-15128&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-15121|-15119|-15117|-15110|-15109|-14941|-14937|-14933|-14930|-14929|-14928|-14926|-14922|-14921|-14914&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-14908|-14902|-14894|-14889|-14882|-14873|-14871|-14857|-14678|-14674|-14670|-14668|-14663|-14654|-14645&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-14630|-14594|-14429|-14407|-14399|-14384|-14379|-14368|-14355|-14353|-14345|-14170|-14159|-14151|-14149&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-14145|-14140|-14137|-14135|-14125|-14123|-14122|-14112|-14109|-14099|-14097|-14094|-14092|-14090|-14087&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-14083|-13917|-13914|-13910|-13907|-13906|-13905|-13896|-13894|-13878|-13870|-13859|-13847|-13831|-13658&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-13611|-13601|-13406|-13404|-13400|-13398|-13395|-13391|-13387|-13383|-13367|-13359|-13356|-13343|-13340&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-13329|-13326|-13318|-13147|-13138|-13120|-13107|-13096|-13095|-13091|-13076|-13068|-13063|-13060|-12888&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-12875|-12871|-12860|-12858|-12852|-12849|-12838|-12831|-12829|-12812|-12802|-12607|-12597|-12594|-12585&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-12556|-12359|-12346|-12320|-12300|-12120|-12099|-12089|-12074|-12067|-12058|-12039|-11867|-11861|-11847&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-11831|-11798|-11781|-11604|-11589|-11536|-11358|-11340|-11339|-11324|-11303|-11097|-11077|-11067|-11055&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-11052|-11045|-11041|-11038|-11024|-11020|-11019|-11018|-11014|-10838|-10832|-10815|-10800|-10790|-10780&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-10764|-10587|-10544|-10533|-10519|-10331|-10329|-10328|-10322|-10315|-10309|-10307|-10296|-10281|-10274&quot;</span>. </span><br><span class="line">                            <span class="string">&quot;|-10270|-10262|-10260|-10256|-10254&quot;</span>; </span><br><span class="line">            <span class="variable">$_TDataKey</span>   = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;|&#x27;</span>, <span class="variable">$_DataKey</span>); </span><br><span class="line">            <span class="variable">$_TDataValue</span> = <span class="title function_ invoke__">explode</span>(<span class="string">&#x27;|&#x27;</span>, <span class="variable">$_DataValue</span>);</span><br><span class="line">            <span class="variable">$_Data</span> = <span class="title function_ invoke__">array_combine</span>(<span class="variable">$_TDataKey</span>, <span class="variable">$_TDataValue</span>);</span><br><span class="line">            <span class="title function_ invoke__">arsort</span>(<span class="variable">$_Data</span>); </span><br><span class="line">            <span class="title function_ invoke__">reset</span>(<span class="variable">$_Data</span>);</span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$_Code</span>!= <span class="string">&#x27;gb2312&#x27;</span>) <span class="variable">$_String</span> = <span class="built_in">self</span>::<span class="title function_ invoke__">_U2_Utf8_Gb</span>(<span class="variable">$_String</span>); </span><br><span class="line">            <span class="variable">$_Res</span> = <span class="string">&#x27;&#x27;</span>; </span><br><span class="line">            <span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>; <span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$_String</span>); <span class="variable">$i</span>++) &#123; </span><br><span class="line">                    <span class="variable">$_P</span> = <span class="title function_ invoke__">ord</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$_String</span>, <span class="variable">$i</span>, <span class="number">1</span>)); </span><br><span class="line">                    <span class="keyword">if</span>(<span class="variable">$_P</span>&gt;<span class="number">160</span>) &#123; </span><br><span class="line">                            <span class="variable">$_Q</span> = <span class="title function_ invoke__">ord</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$_String</span>, ++<span class="variable">$i</span>, <span class="number">1</span>)); <span class="variable">$_P</span> = <span class="variable">$_P</span>*<span class="number">256</span> + <span class="variable">$_Q</span> - <span class="number">65536</span>;</span><br><span class="line">                    &#125; </span><br><span class="line">                    <span class="variable">$_Res</span> .= <span class="built_in">self</span>::<span class="title function_ invoke__">_Pinyin</span>(<span class="variable">$_P</span>, <span class="variable">$_Data</span>); </span><br><span class="line">            &#125; </span><br><span class="line">            <span class="keyword">return</span> <span class="title function_ invoke__">preg_replace</span>(<span class="string">&quot;/[^a-z0-9]*/&quot;</span>, <span class="string">&#x27;&#x27;</span>, <span class="variable">$_Res</span>); </span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">static</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">_Pinyin</span>(<span class="params"><span class="variable">$_Num</span>, <span class="variable">$_Data</span></span>)</span>&#123; </span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$_Num</span>&gt;<span class="number">0</span> &amp;&amp; <span class="variable">$_Num</span>&lt;<span class="number">160</span> )&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="title function_ invoke__">chr</span>(<span class="variable">$_Num</span>);</span><br><span class="line">            &#125;<span class="keyword">elseif</span>(<span class="variable">$_Num</span>&lt;-<span class="number">20319</span> || <span class="variable">$_Num</span>&gt;-<span class="number">10247</span>)&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123; </span><br><span class="line">                    <span class="keyword">foreach</span>(<span class="variable">$_Data</span> <span class="keyword">as</span> <span class="variable">$k</span>=&gt;<span class="variable">$v</span>)&#123; <span class="keyword">if</span>(<span class="variable">$v</span>&lt;=<span class="variable">$_Num</span>) <span class="keyword">break</span>; &#125; </span><br><span class="line">                    <span class="keyword">return</span> <span class="variable">$k</span>; </span><br><span class="line">            &#125; </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">static</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">_U2_Utf8_Gb</span>(<span class="params"><span class="variable">$_C</span></span>)</span>&#123; </span><br><span class="line">            <span class="variable">$_String</span> = <span class="string">&#x27;&#x27;</span>; </span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$_C</span> &lt; <span class="number">0x80</span>)&#123;</span><br><span class="line">                    <span class="variable">$_String</span> .= <span class="variable">$_C</span>;</span><br><span class="line">            &#125;<span class="keyword">elseif</span>(<span class="variable">$_C</span> &lt; <span class="number">0x800</span>) &#123; </span><br><span class="line">                    <span class="variable">$_String</span> .= <span class="title function_ invoke__">chr</span>(<span class="number">0xC0</span> | <span class="variable">$_C</span>&gt;&gt;<span class="number">6</span>); </span><br><span class="line">                    <span class="variable">$_String</span> .= <span class="title function_ invoke__">chr</span>(<span class="number">0x80</span> | <span class="variable">$_C</span> &amp; <span class="number">0x3F</span>); </span><br><span class="line">            &#125;<span class="keyword">elseif</span>(<span class="variable">$_C</span> &lt; <span class="number">0x10000</span>)&#123; </span><br><span class="line">                    <span class="variable">$_String</span> .= <span class="title function_ invoke__">chr</span>(<span class="number">0xE0</span> | <span class="variable">$_C</span>&gt;&gt;<span class="number">12</span>); </span><br><span class="line">                    <span class="variable">$_String</span> .= <span class="title function_ invoke__">chr</span>(<span class="number">0x80</span> | <span class="variable">$_C</span>&gt;&gt;<span class="number">6</span> &amp; <span class="number">0x3F</span>); </span><br><span class="line">                    <span class="variable">$_String</span> .= <span class="title function_ invoke__">chr</span>(<span class="number">0x80</span> | <span class="variable">$_C</span> &amp; <span class="number">0x3F</span>); </span><br><span class="line">            &#125;<span class="keyword">elseif</span>(<span class="variable">$_C</span> &lt; <span class="number">0x200000</span>) &#123; </span><br><span class="line">                    <span class="variable">$_String</span> .= <span class="title function_ invoke__">chr</span>(<span class="number">0xF0</span> | <span class="variable">$_C</span>&gt;&gt;<span class="number">18</span>); </span><br><span class="line">                    <span class="variable">$_String</span> .= <span class="title function_ invoke__">chr</span>(<span class="number">0x80</span> | <span class="variable">$_C</span>&gt;&gt;<span class="number">12</span> &amp; <span class="number">0x3F</span>); </span><br><span class="line">                    <span class="variable">$_String</span> .= <span class="title function_ invoke__">chr</span>(<span class="number">0x80</span> | <span class="variable">$_C</span>&gt;&gt;<span class="number">6</span> &amp; <span class="number">0x3F</span>); </span><br><span class="line">                    <span class="variable">$_String</span> .= <span class="title function_ invoke__">chr</span>(<span class="number">0x80</span> | <span class="variable">$_C</span> &amp; <span class="number">0x3F</span>); </span><br><span class="line">            &#125; </span><br><span class="line">            <span class="keyword">return</span> <span class="title function_ invoke__">iconv</span>(<span class="string">&#x27;UTF-8&#x27;</span>, <span class="string">&#x27;GB2312&#x27;</span>, <span class="variable">$_String</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+          <p>关于自定义UIScrollview的方式，其实很简单，但是如何做到横向滚动，我自己是第一次使用，</p>
+<p>先来定义一个类吧:customScrollView.h</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">customScrollView</span> : <span class="title">UIScrollView</span> &lt;<span class="title">UIScrollViewDelegate</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<p>下面看customScrollView.m的定义</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSMutableArray</span> *visibleLabels;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UIView</span> *labelContainerView;</span><br></pre></td></tr></table></figure>
+
+<p>定义两个属性，第一个是label数组，第二个是一个UIView</p>
+<p>然后实现一下初始化的代码操作</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">id</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ((<span class="keyword">self</span> = [<span class="variable language_">super</span> initWithCoder:aDecoder]))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">self</span>.contentSize = <span class="built_in">CGSizeMake</span>(<span class="number">5000</span>, <span class="keyword">self</span>.frame.size.height);</span><br><span class="line">        </span><br><span class="line">        _visibleLabels = [[<span class="built_in">NSMutableArray</span> alloc] init];</span><br><span class="line">        </span><br><span class="line">        _labelContainerView = [[<span class="built_in">UIView</span> alloc] init];</span><br><span class="line">        <span class="keyword">self</span>.labelContainerView.frame = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="keyword">self</span>.contentSize.width, <span class="keyword">self</span>.contentSize.height/<span class="number">2</span>);</span><br><span class="line">        [<span class="keyword">self</span> addSubview:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line"></span><br><span class="line">        [<span class="keyword">self</span>.labelContainerView setUserInteractionEnabled:<span class="literal">NO</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// hide horizontal scroll indicator so our recentering trick is not revealed</span></span><br><span class="line">        [<span class="keyword">self</span> setShowsHorizontalScrollIndicator:<span class="literal">NO</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>都是一些基本的初始化的操作</p>
+<p>下面看一下这个方法，这个方法，是在UIScrollView在滚动的时候进行调用的</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)layoutSubviews</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> layoutSubviews];</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> recenterIfNecessary];</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// tile content in visible bounds</span></span><br><span class="line">    <span class="built_in">CGRect</span> visibleBounds = [<span class="keyword">self</span> convertRect:[<span class="keyword">self</span> bounds] toView:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line">    <span class="built_in">CGFloat</span> minimumVisibleX = <span class="built_in">CGRectGetMinX</span>(visibleBounds);</span><br><span class="line">    <span class="built_in">CGFloat</span> maximumVisibleX = <span class="built_in">CGRectGetMaxX</span>(visibleBounds);</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> tileLabelsFromMinX:minimumVisibleX toMaxX:maximumVisibleX];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>里面有一个方法，我写下下面</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)recenterIfNecessary</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGPoint</span> currentOffset = [<span class="keyword">self</span> contentOffset];</span><br><span class="line">    <span class="built_in">CGFloat</span> contentWidth = [<span class="keyword">self</span> contentSize].width;</span><br><span class="line">    <span class="built_in">CGFloat</span> centerOffsetX = (contentWidth - [<span class="keyword">self</span> bounds].size.width) / <span class="number">2.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> distanceFromCenter = fabs(currentOffset.x - centerOffsetX);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (distanceFromCenter &gt; (contentWidth / <span class="number">4.0</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">self</span>.contentOffset = <span class="built_in">CGPointMake</span>(centerOffsetX, currentOffset.y);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// move content by the same amount so it appears to stay still</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">UILabel</span> *label <span class="keyword">in</span> <span class="keyword">self</span>.visibleLabels) &#123;</span><br><span class="line">            <span class="built_in">CGPoint</span> center = [<span class="keyword">self</span>.labelContainerView convertPoint:label.center toView:<span class="keyword">self</span>];</span><br><span class="line">            center.x += (centerOffsetX - currentOffset.x);</span><br><span class="line">            label.center = [<span class="keyword">self</span> convertPoint:center toView:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法是用来控制label的位置的。</p>
+<p>当UIScrollview在滚动的时候，我们需要做一些操作</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UILabel</span> *)insertLabel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>, <span class="number">80</span>)];</span><br><span class="line">    [label setNumberOfLines:<span class="number">3</span>];</span><br><span class="line">    [label setText:<span class="string">@&quot;1024 Block Street\nShaffer, CA\n95014&quot;</span>];</span><br><span class="line">    [<span class="keyword">self</span>.labelContainerView addSubview:label];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> label;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)placeNewLabelOnRight:(<span class="built_in">CGFloat</span>)rightEdge</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [<span class="keyword">self</span> insertLabel];</span><br><span class="line">    [<span class="keyword">self</span>.visibleLabels addObject:label]; <span class="comment">// add rightmost label at the end of the array</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGRect</span> frame = [label frame];</span><br><span class="line">    frame.origin.x = rightEdge;</span><br><span class="line">    frame.origin.y = [<span class="keyword">self</span>.labelContainerView bounds].size.height - frame.size.height;</span><br><span class="line">    [label setFrame:frame];</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CGRectGetMaxX</span>(frame);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)placeNewLabelOnLeft:(<span class="built_in">CGFloat</span>)leftEdge</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [<span class="keyword">self</span> insertLabel];</span><br><span class="line">    [<span class="keyword">self</span>.visibleLabels insertObject:label atIndex:<span class="number">0</span>]; <span class="comment">// add leftmost label at the beginning of the array</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGRect</span> frame = [label frame];</span><br><span class="line">    frame.origin.x = leftEdge - frame.size.width;</span><br><span class="line">    frame.origin.y = [<span class="keyword">self</span>.labelContainerView bounds].size.height - frame.size.height;</span><br><span class="line">    [label setFrame:frame];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CGRectGetMinX</span>(frame);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)tileLabelsFromMinX:(<span class="built_in">CGFloat</span>)minimumVisibleX toMaxX:(<span class="built_in">CGFloat</span>)maximumVisibleX</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// the upcoming tiling logic depends on there already being at least one label in the visibleLabels array, so</span></span><br><span class="line">    <span class="comment">// to kick off the tiling we need to make sure there&#x27;s at least one label</span></span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span>.visibleLabels count] == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        [<span class="keyword">self</span> placeNewLabelOnRight:minimumVisibleX];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// add labels that are missing on right side</span></span><br><span class="line">    <span class="built_in">UILabel</span> *lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    <span class="built_in">CGFloat</span> rightEdge = <span class="built_in">CGRectGetMaxX</span>([lastLabel frame]);</span><br><span class="line">    <span class="keyword">while</span> (rightEdge &lt; maximumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        rightEdge = [<span class="keyword">self</span> placeNewLabelOnRight:rightEdge];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// add labels that are missing on left side</span></span><br><span class="line">    <span class="built_in">UILabel</span> *firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">CGFloat</span> leftEdge = <span class="built_in">CGRectGetMinX</span>([firstLabel frame]);</span><br><span class="line">    <span class="keyword">while</span> (leftEdge &gt; minimumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        leftEdge = [<span class="keyword">self</span> placeNewLabelOnLeft:leftEdge];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// remove labels that have fallen off right edge</span></span><br><span class="line">    lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    <span class="keyword">while</span> ([lastLabel frame].origin.x &gt; maximumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        [lastLabel removeFromSuperview];</span><br><span class="line">        [<span class="keyword">self</span>.visibleLabels removeLastObject];</span><br><span class="line">        lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// remove labels that have fallen off left edge</span></span><br><span class="line">    firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">CGRectGetMaxX</span>([firstLabel frame]) &lt; minimumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        [firstLabel removeFromSuperview];</span><br><span class="line">        [<span class="keyword">self</span>.visibleLabels removeObjectAtIndex:<span class="number">0</span>];</span><br><span class="line">        firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个是插入label的方法</p>
+<p>一个是从左侧到右侧滑动的操作</p>
+<p>一个是从右侧到左侧滑动的操作</p>
+<p>还有一个方法是用来控制label的</p>
+<p>好了。一些基本的操作就在这里面了，打击可以自己复制一份自己看看</p>
+<p>我来个完整版的,当然我这个调用的时候，是在自己的xib文件中调用的。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&quot;customScrollView.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">InfiniteScrollView</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSMutableArray</span> *visibleLabels;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UIView</span> *labelContainerView;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">InfiniteScrollView</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="type">id</span>)initWithCoder:(<span class="built_in">NSCoder</span> *)aDecoder</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ((<span class="keyword">self</span> = [<span class="variable language_">super</span> initWithCoder:aDecoder]))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">self</span>.contentSize = <span class="built_in">CGSizeMake</span>(<span class="number">5000</span>, <span class="keyword">self</span>.frame.size.height);</span><br><span class="line">        </span><br><span class="line">        _visibleLabels = [[<span class="built_in">NSMutableArray</span> alloc] init];</span><br><span class="line">        </span><br><span class="line">        _labelContainerView = [[<span class="built_in">UIView</span> alloc] init];</span><br><span class="line">        <span class="keyword">self</span>.labelContainerView.frame = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="keyword">self</span>.contentSize.width, <span class="keyword">self</span>.contentSize.height/<span class="number">2</span>);</span><br><span class="line">        [<span class="keyword">self</span> addSubview:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line"></span><br><span class="line">        [<span class="keyword">self</span>.labelContainerView setUserInteractionEnabled:<span class="literal">NO</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// hide horizontal scroll indicator so our recentering trick is not revealed</span></span><br><span class="line">        [<span class="keyword">self</span> setShowsHorizontalScrollIndicator:<span class="literal">NO</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - Layout</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// recenter content periodically to achieve impression of infinite scrolling</span></span><br><span class="line">- (<span class="type">void</span>)recenterIfNecessary</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGPoint</span> currentOffset = [<span class="keyword">self</span> contentOffset];</span><br><span class="line">    <span class="built_in">CGFloat</span> contentWidth = [<span class="keyword">self</span> contentSize].width;</span><br><span class="line">    <span class="built_in">CGFloat</span> centerOffsetX = (contentWidth - [<span class="keyword">self</span> bounds].size.width) / <span class="number">2.0</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> distanceFromCenter = fabs(currentOffset.x - centerOffsetX);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (distanceFromCenter &gt; (contentWidth / <span class="number">4.0</span>))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">self</span>.contentOffset = <span class="built_in">CGPointMake</span>(centerOffsetX, currentOffset.y);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// move content by the same amount so it appears to stay still</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">UILabel</span> *label <span class="keyword">in</span> <span class="keyword">self</span>.visibleLabels) &#123;</span><br><span class="line">            <span class="built_in">CGPoint</span> center = [<span class="keyword">self</span>.labelContainerView convertPoint:label.center toView:<span class="keyword">self</span>];</span><br><span class="line">            center.x += (centerOffsetX - currentOffset.x);</span><br><span class="line">            label.center = [<span class="keyword">self</span> convertPoint:center toView:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)layoutSubviews</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> layoutSubviews];</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> recenterIfNecessary];</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// tile content in visible bounds</span></span><br><span class="line">    <span class="built_in">CGRect</span> visibleBounds = [<span class="keyword">self</span> convertRect:[<span class="keyword">self</span> bounds] toView:<span class="keyword">self</span>.labelContainerView];</span><br><span class="line">    <span class="built_in">CGFloat</span> minimumVisibleX = <span class="built_in">CGRectGetMinX</span>(visibleBounds);</span><br><span class="line">    <span class="built_in">CGFloat</span> maximumVisibleX = <span class="built_in">CGRectGetMaxX</span>(visibleBounds);</span><br><span class="line">    </span><br><span class="line">    [<span class="keyword">self</span> tileLabelsFromMinX:minimumVisibleX toMaxX:maximumVisibleX];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - Label Tiling</span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">UILabel</span> *)insertLabel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">500</span>, <span class="number">80</span>)];</span><br><span class="line">    [label setNumberOfLines:<span class="number">3</span>];</span><br><span class="line">    [label setText:<span class="string">@&quot;1024 Block Street\nShaffer, CA\n95014&quot;</span>];</span><br><span class="line">    [<span class="keyword">self</span>.labelContainerView addSubview:label];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> label;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)placeNewLabelOnRight:(<span class="built_in">CGFloat</span>)rightEdge</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [<span class="keyword">self</span> insertLabel];</span><br><span class="line">    [<span class="keyword">self</span>.visibleLabels addObject:label]; <span class="comment">// add rightmost label at the end of the array</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGRect</span> frame = [label frame];</span><br><span class="line">    frame.origin.x = rightEdge;</span><br><span class="line">    frame.origin.y = [<span class="keyword">self</span>.labelContainerView bounds].size.height - frame.size.height;</span><br><span class="line">    [label setFrame:frame];</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CGRectGetMaxX</span>(frame);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">CGFloat</span>)placeNewLabelOnLeft:(<span class="built_in">CGFloat</span>)leftEdge</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UILabel</span> *label = [<span class="keyword">self</span> insertLabel];</span><br><span class="line">    [<span class="keyword">self</span>.visibleLabels insertObject:label atIndex:<span class="number">0</span>]; <span class="comment">// add leftmost label at the beginning of the array</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGRect</span> frame = [label frame];</span><br><span class="line">    frame.origin.x = leftEdge - frame.size.width;</span><br><span class="line">    frame.origin.y = [<span class="keyword">self</span>.labelContainerView bounds].size.height - frame.size.height;</span><br><span class="line">    [label setFrame:frame];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">CGRectGetMinX</span>(frame);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)tileLabelsFromMinX:(<span class="built_in">CGFloat</span>)minimumVisibleX toMaxX:(<span class="built_in">CGFloat</span>)maximumVisibleX</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// the upcoming tiling logic depends on there already being at least one label in the visibleLabels array, so</span></span><br><span class="line">    <span class="comment">// to kick off the tiling we need to make sure there&#x27;s at least one label</span></span><br><span class="line">    <span class="keyword">if</span> ([<span class="keyword">self</span>.visibleLabels count] == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        [<span class="keyword">self</span> placeNewLabelOnRight:minimumVisibleX];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// add labels that are missing on right side</span></span><br><span class="line">    <span class="built_in">UILabel</span> *lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    <span class="built_in">CGFloat</span> rightEdge = <span class="built_in">CGRectGetMaxX</span>([lastLabel frame]);</span><br><span class="line">    <span class="keyword">while</span> (rightEdge &lt; maximumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        rightEdge = [<span class="keyword">self</span> placeNewLabelOnRight:rightEdge];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// add labels that are missing on left side</span></span><br><span class="line">    <span class="built_in">UILabel</span> *firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">CGFloat</span> leftEdge = <span class="built_in">CGRectGetMinX</span>([firstLabel frame]);</span><br><span class="line">    <span class="keyword">while</span> (leftEdge &gt; minimumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        leftEdge = [<span class="keyword">self</span> placeNewLabelOnLeft:leftEdge];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// remove labels that have fallen off right edge</span></span><br><span class="line">    lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    <span class="keyword">while</span> ([lastLabel frame].origin.x &gt; maximumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        [lastLabel removeFromSuperview];</span><br><span class="line">        [<span class="keyword">self</span>.visibleLabels removeLastObject];</span><br><span class="line">        lastLabel = [<span class="keyword">self</span>.visibleLabels lastObject];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// remove labels that have fallen off left edge</span></span><br><span class="line">    firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">CGRectGetMaxX</span>([firstLabel frame]) &lt; minimumVisibleX)</span><br><span class="line">    &#123;</span><br><span class="line">        [firstLabel removeFromSuperview];</span><br><span class="line">        [<span class="keyword">self</span>.visibleLabels removeObjectAtIndex:<span class="number">0</span>];</span><br><span class="line">        firstLabel = <span class="keyword">self</span>.visibleLabels[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -507,7 +518,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Axure-RP-Pro-6%E6%B3%A8%E5%86%8C%E7%A0%81.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/CentOS%E4%B8%8Biptables%E5%BF%85%E9%A1%BB%E6%87%82%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -525,7 +536,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Axure-RP-Pro-6%E6%B3%A8%E5%86%8C%E7%A0%81.html" class="post-title-link" itemprop="url">Axure RP Pro 6注册码</a>
+          <a href="/2025/06/20/CentOS%E4%B8%8Biptables%E5%BF%85%E9%A1%BB%E6%87%82%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9.html" class="post-title-link" itemprop="url">CentOS下iptables必须懂的知识点</a>
         </h2>
 
         <div class="post-meta-container">
@@ -537,7 +548,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:48:17 / 修改时间：10:56:22" itemprop="dateCreated datePublished" datetime="2025-06-19T10:48:17+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:51:58 / 修改时间：09:57:43" itemprop="dateCreated datePublished" datetime="2025-06-20T09:51:58+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -559,330 +570,25 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>axure rp pro 5.6 以上  </p>
-<p>用户名：IloveyouAxure<br>注册码：UChpuxwbDW6eAIaAf9UujEFSBwN3vpEz9snHvlCQVJGQy4p7WrCyKLLvV5QLvqva</p>
-<p>我的是Axure RP Pro 6版本，key网上找的是5.6的，也能用</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Django-%E6%A8%A1%E6%9D%BF%E9%87%8C%E9%9D%A2for%E5%BE%AA%E7%8E%AF%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Django-%E6%A8%A1%E6%9D%BF%E9%87%8C%E9%9D%A2for%E5%BE%AA%E7%8E%AF%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">Django 模板里面for循环常用的方法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-19 10:48:14 / 修改时间：11:30:47" itemprop="dateCreated datePublished" datetime="2025-06-19T10:48:14+08:00">2025-06-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><code>{% for %}</code> 允许我们在一个序列上迭代。与Python的for 语句的情形类似，循环语法是 for X in Y ，Y是要迭代的序列<br>而X是在每一个特定的循环中使用的变量名称。每一次循环中，模板系统会渲染在{% for %} and {% endfor %}  中的所有内<br>容。<br>例如，给定一个运动员列表athlete_list 变量，我们可以使用下面的代码来显示这个列表：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">&#123;% for athlete in athlete_list %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;&#123; athlete.name &#125;&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>给标签增加一个reversed 使得该列表被反向迭代：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for athlete in athlete_list reversed %&#125;</span><br><span class="line">...</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以嵌套使用 <code>{% for %}</code> 标签：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for country in countries %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123; country.name &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line"></span><br><span class="line">&#123;% for city in country.city_list %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;&#123; city &#125;&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Django不支持退出循环操作。如果我们想退出循环，可以改变正在迭代的变量，让其仅仅包含需要迭代的项目。同<br>理，Django也不支持continue语句，我们无法让当前迭代操作跳回到循环头部。<br><code>{% for %}</code> 标签在循环中设置了一个特殊的 <code>forloop</code> 模板变量。这个变量能提供一些当前循环进展的信息：<br>forloop.counter 总是一个表示当前循环的执行次数的整数计数器。这个计数器是从1开始的，<br>所以在第一次循环时<code>forloop.counter</code> 将会被设置为1。例子如下：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for item in todo_list %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; forloop.counter &#125;&#125;: &#123;&#123; item &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>forloop.counter0</code> 类似于 <code>forloop.counter</code> ，但是它是从0计数的。第一次执行循环时这个变量会被设置为0。<br><code>forloop.revcounter</code> 是表示循环中剩余项的整型变量。在循环初次执行时 <code>forloop.revcounter</code> 将被设置为序列中项的总<br>数。最后一次循环执行中，这个变量将被置1。<br><code>forloop.revcounter0</code> 类似于 <code>forloop.revcounter</code> ，但它以0做为结束索引。在第一次执行循环时，该变量会被置为序<br>列的项的个数减1。在最后一次迭代时，该变量为0。<br><code>forloop.first</code> 是一个布尔值。在第一次执行循环时该变量为True，在下面的情形中这个变量是很有用的。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for object in objects %&#125;</span><br><span class="line">&#123;% if forloop.first %&#125;<span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">&quot;first&quot;</span>&gt;</span>&#123;% else %&#125;<span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;% endif %&#125;</span><br><span class="line">&#123;&#123; object &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>forloop.last</code> 是一个布尔值；在最后一次执行循环时被置为True。一个常见的用法是在一系列的链接之间放置管道符<code>（|）</code></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for link in links %&#125;&#123;&#123; link &#125;&#125;&#123;% if not forloop.last %&#125; | &#123;% endif %&#125;&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-
-<p>The above template code might output something like this::<br><code>Link1 | Link2 | Link3 | Link4 </code> </p>
-<p><code>forloop.parentloop</code> 是一个指向当前循环的上一级循环的 forloop 对象的引用（在嵌套循环的情况下）。例子在此：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for country in countries %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">&#123;% for city in country.city_list %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span>Country #&#123;&#123; forloop.parentloop.counter &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span>City #&#123;&#123; forloop.counter &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123; city &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-
-<p>forloop 变量仅仅能够在循环中使用，在模板解析器碰到 <code>&#123;% endfor %&#125;</code> 标签时， forloop 就不可访问了。<br>Context和forloop变量<br>在一个<code>{% for %}</code> 块中，已存在的变量会被移除，以避免 forloop 变量被覆盖。Django会把这个变量移动到<br><code>forloop.parentloop</code> 中。通常我们不用担心这个问题，但是一旦我们在模板中定义了 forloop 这个变量（当然我们反对这<br>样做），在<code>{% for %}</code> 块中它会在 <code>forloop.parentloop</code> 被重新命名。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E7%BB%99-Django-%E7%AB%99%E7%82%B9%E6%B7%BB%E5%8A%A0-favicon-ico.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/%E7%BB%99-Django-%E7%AB%99%E7%82%B9%E6%B7%BB%E5%8A%A0-favicon-ico.html" class="post-title-link" itemprop="url">给 Django 站点添加 favicon.ico</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-19 10:48:10 / 修改时间：11:16:23" itemprop="dateCreated datePublished" datetime="2025-06-19T10:48:10+08:00">2025-06-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>如何给 Django 开发的网站添加 favicon.ico 功能</p>
-<p>三步：</p>
-<ol>
-<li>创建一个 favicon.ico 文件</li>
-<li>修改 urls.py ， 添加 “&#x2F;favicon.ico” 路径。</li>
-<li>修改 html 模版</li>
+          <ol>
+<li>基本操作：启用防火墙<br>这里的指令都是从 Linux 控制终端（命令行）直接输入的。<br>输入下面的两条指令来启用防火墙：</li>
 </ol>
-<p>下面看实现步骤</p>
-<p>第一步：创建一个 favicon.ico 文件</p>
-<p>创建了一个 16x16 像素的透明画布，在添加一个text图层（写上“Y”），保存为 png 格式文件 favicon.png ， 重命名为 favicon.ico 即可: “ “<br>第二步：修改 urls.py<br>在 URL 里添加：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">r&#x27;^favicon\.ico$&#x27;</span>, <span class="string">&#x27;django.views.generic.simple.redirect_to&#x27;</span>, &#123;<span class="string">&#x27;url&#x27;</span>: settings.MEDIA_URL+<span class="string">&#x27;images/favicon.ico&#x27;</span>&#125;),</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chkconfig iptables on</span><br><span class="line">service iptables start</span><br></pre></td></tr></table></figure>
 
-<p>第三步：修改 html 模版</p>
-<p>在 html 模版的 head 部分添加：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">REL</span>=<span class="string">&quot;SHORTCUT ICON&quot;</span> <span class="attr">HREF</span>=<span class="string">&quot;&#123;&#123; MEDIA_URL &#125;&#125;images/favicon.ico&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其中上一条是将 iptables 加入到系统服务，随系统启动而启动；下一条是直接启动 iptables 服务。<br>重起防火墙：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service iptables restart</span><br></pre></td></tr></table></figure>
 
-      
-    </div>
+<p>停止防火墙：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service iptables stop</span><br></pre></td></tr></table></figure>
 
-    
-    
-    
+<p>2,配置 &#x2F;etc&#x2F;sysconfig&#x2F;iptables 文件<br>虽然可以通过 iptables 指令来编辑防火墙规则，可是对于大量的规则来说一条一条的输入总是很麻烦，实际上可以直接按照正确格式编辑 iptables 的配置文件，然后重新加载 iptables 即可使之生效。<br>要编辑 &#x2F;etc&#x2F;sysconfig&#x2F;iptables，输入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/sysconfig/iptables</span></span><br></pre></td></tr></table></figure>
 
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+<p>可以看到文件中存储的前述默认规则显示如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">*filter</span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line">:FORWARD ACCEPT [0:0]</span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line">:RH-Firewall-1-INPUT - [0:0]</span><br><span class="line">-A INPUT -j RH-Firewall-1-INPUT</span><br><span class="line">-A FORWARD -j RH-Firewall-1-INPUT</span><br><span class="line">-A RH-Firewall-1-INPUT -i lo -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -p icmp --icmp-type any -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -p udp --dport 5353 -d 1.2.3.4 -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -p udp -m udp --dport 53 -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 53 -j ACCEPT</span><br><span class="line">-A RH-Firewall-1-INPUT -j REJECT --reject-with icmp-host-prohibited</span><br><span class="line">COMMIT</span><br></pre></td></tr></table></figure>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/NGINX-%E4%B9%8B-Location%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE-%E5%8F%8A-Location%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/NGINX-%E4%B9%8B-Location%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE-%E5%8F%8A-Location%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5.html" class="post-title-link" itemprop="url">NGINX 之 Location基础配置 及 Location最佳实践</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-19 10:29:35 / 修改时间：10:40:42" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:35+08:00">2025-06-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><strong>语法规则： location [&#x3D;|<del>|</del>*|^~] &#x2F;uri&#x2F; { … }</strong>  </p>
-<p><code>=</code> 开头表示精确匹配  </p>
-<p><code>^~</code> 开头表示uri以某个常规字符串开头，理解为匹配 url路径即可。nginx不对url做编码，因此请求为&#x2F;static&#x2F;20%&#x2F;aa，可以被规则^~ &#x2F;static&#x2F; &#x2F;aa匹配到（注意是空格）。  </p>
-<p><code>~</code> 开头表示区分大小写的正则匹配  </p>
-<p><code>~\*</code>  开头表示不区分大小写的正则匹配  </p>
-<p><code>!~</code>和<code>!~\*</code>分别为区分大小写不匹配及不区分大小写不匹配 的正则  </p>
-<p><code>/</code> 通用匹配，任何请求都会匹配到。  </p>
-<p>多个location配置的情况下匹配顺序为（参考资料而来，还未实际验证，试试就知道了，不必拘泥，仅供参考）：  </p>
-<p>首先匹配 &#x3D;，其次匹配^~, 其次是按文件中顺序的正则匹配，最后是交给 &#x2F; 通用匹配。当有匹配成功时候，停止匹配，按当前匹配规则处理请求。  </p>
-<p>例子，有如下匹配规则：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">location = / &#123;</span><br><span class="line">    <span class="comment">#规则A</span></span><br><span class="line">&#125;</span><br><span class="line">location = /login &#123;</span><br><span class="line">    <span class="comment">#规则B</span></span><br><span class="line">&#125;</span><br><span class="line">location ^~ /static/ &#123;</span><br><span class="line">    <span class="comment">#规则C</span></span><br><span class="line">&#125;</span><br><span class="line">location ~ \.(gif|jpg|png|js|css)$ &#123;</span><br><span class="line">    <span class="comment">#规则D</span></span><br><span class="line">&#125;</span><br><span class="line">location ~* \.png$ &#123;</span><br><span class="line">    <span class="comment">#规则E</span></span><br><span class="line">&#125;</span><br><span class="line">location !~ \.xhtml$ &#123;</span><br><span class="line">    <span class="comment">#规则F</span></span><br><span class="line">&#125;</span><br><span class="line">location !~* \.xhtml$ &#123;</span><br><span class="line">    <span class="comment">#规则G</span></span><br><span class="line">&#125;</span><br><span class="line">location / &#123;</span><br><span class="line">    <span class="comment">#规则H</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>那么产生的效果如下：  </p>
-<p>访问根目录&#x2F;， 比如<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC8=">http://localhost/<i class="fa fa-external-link-alt"></i></span> 将匹配规则A  </p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9sb2dpbg==">http://localhost/login<i class="fa fa-external-link-alt"></i></span> 将匹配规则B，<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9yZWdpc3Rlcg==">http://localhost/register<i class="fa fa-external-link-alt"></i></span> 则匹配规则H  </p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9zdGF0aWMvYS5odG1s">http://localhost/static/a.html<i class="fa fa-external-link-alt"></i></span> 将匹配规则C  </p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLmdpZg==">http://localhost/a.gif<i class="fa fa-external-link-alt"></i></span>, <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9iLmpwZw==">http://localhost/b.jpg<i class="fa fa-external-link-alt"></i></span> 将匹配规则D和规则E，但是规则D顺序优先，规则E不起作用， 而 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9zdGF0aWMvYy5wbmc=">http://localhost/static/c.png<i class="fa fa-external-link-alt"></i></span> 则优先匹配到 规则C  </p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLlBORw==">http://localhost/a.PNG<i class="fa fa-external-link-alt"></i></span> 则匹配规则E， 而不会匹配规则D，因为规则E不区分大小写。  </p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLnhodG1s">http://localhost/a.xhtml<i class="fa fa-external-link-alt"></i></span> 不会匹配规则F和规则G，<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLlhIVE1M">http://localhost/a.XHTML<i class="fa fa-external-link-alt"></i></span> 不会匹配规则G，因为不区分大小写。规则F，规则G属于排除法，符合匹配规则但是不会匹配到，所以想想看实际应用中哪里会用到。  </p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9jYXRlZ29yeS9pZC8xMTEx">http://localhost/category/id/1111<i class="fa fa-external-link-alt"></i></span> 则最终匹配到规则H，因为以上规则都不匹配，这个时候应该是nginx转发请求给后端应用服务器，比如FastCGI（php），tomcat（jsp），nginx作为方向代理服务器存在。  </p>
-<p><strong>实际应用中常用的几个规则，如下：</strong></p>
-<p>直接匹配网站根，通过域名访问网站首页比较频繁，使用这个会加速处理，官网如是说。 这里是直接转发给后端应用服务器了，也可以是一个静态首页 第一个必选规则</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location = / &#123;</span><br><span class="line">    proxy_pass http://tomcat:8080/index</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二个必选规则是处理静态文件请求，这是nginx作为http服务器的强项 有两种配置模式，目录匹配或后缀匹配,任选其一或搭配使用</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">location ^~ /static/ &#123;</span><br><span class="line">    <span class="comment"># 请求/static/a.txt 将被映射到实际目录文件: /webroot/res/static/a.txt</span></span><br><span class="line">    root /webroot/res/;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location ~* \.(gif|jpg|jpeg|png|css|js|ico)$ &#123;</span><br><span class="line">    root /webroot/res/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第三个规则就是通用规则，用来转发动态请求到后端应用服务器 非静态文件请求就默认是动态请求，自己根据实际把握 毕竟目前的一些框架的流行，带.php,.jsp后缀的情况很少了</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    proxy_pass http://tomcat:8080/</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对于以上基础推荐配置，有一个补充，就是关于转发有一点需要注意。例如下面配置，对一个目录转发：  </p>
-<p>关键在于最后的&#x2F;，访问localhost&#x2F;outer&#x2F;in.html，其中case A 会转发到tomcat:8080&#x2F;in.html， 而case B 会转发到 tomcat:8080&#x2F;outer&#x2F;in.html，所以务必注意了。  </p>
-<p><strong>未试验过的其他信息：</strong>  </p>
-<p>三、ReWrite语法<br>last – 基本上都用这个Flag。<br>break – 中止Rewirte，不在继续匹配<br>redirect – 返回临时重定向的HTTP状态302<br>permanent – 返回永久重定向的HTTP状态301<br>1、下面是可以用来判断的表达式：<br>-f和!-f用来判断是否存在文件<br>-d和!-d用来判断是否存在目录<br>-e和!-e用来判断是否存在文件或目录<br>-x和!-x用来判断文件是否可执行<br>2、下面是可以用作判断的全局变量<br>例：<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4OC90ZXN0MS90ZXN0Mi90ZXN0LnBocA==">http://localhost:88/test1/test2/test.php<i class="fa fa-external-link-alt"></i></span><br>$host：localhost<br>$server_port：88<br>$request_uri：<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4OC90ZXN0MS90ZXN0Mi90ZXN0LnBocA==">http://localhost:88/test1/test2/test.php<i class="fa fa-external-link-alt"></i></span><br>$document_uri：&#x2F;test1&#x2F;test2&#x2F;test.php<br>$document_root：D:\nginx&#x2F;html<br>$request_filename：D:\nginx&#x2F;html&#x2F;test1&#x2F;test2&#x2F;test.php<br>四、Redirect语法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line">  server_name www.gowhich.com;</span><br><span class="line">  index index.html index.php;</span><br><span class="line">  root html;</span><br><span class="line">  <span class="keyword">if</span> (<span class="variable">$http_host</span> !~ <span class="string">&quot;^www\.gowhich\.com$&quot;</span> &#123;</span><br><span class="line">    rewrite ^(.*) http://gowhich.com<span class="variable">$1</span> redirect;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>五、防盗链</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location ~* \.(gif|jpg|swf)$ &#123;</span><br><span class="line">  valid_referers none blocked gowhich.com www.gowhich.com;</span><br><span class="line">  <span class="keyword">if</span> (<span class="variable">$invalid_referer</span>) &#123;</span><br><span class="line">    rewrite ^/ http://<span class="variable">$host</span>/logo.png;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>六、根据文件类型设置过期时间</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location ~* \.(js|css|jpg|jpeg|gif|png|swf)$ &#123;</span><br><span class="line">  <span class="keyword">if</span> (-f <span class="variable">$request_filename</span>) &#123;</span><br><span class="line">    expires 1h;</span><br><span class="line">    <span class="built_in">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>七、禁止访问某个目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location ~* \.(txt|doc)<span class="variable">$&#123;</span></span><br><span class="line"><span class="variable">  root /data/www/wwwroot/test;</span></span><br><span class="line"><span class="variable">  deny all;</span></span><br><span class="line"><span class="variable">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>八、直接访问某个指定文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location = ads.txt &#123;</span><br><span class="line">  <span class="comment"># /data/www/wwwroot/目录下要有ads.txt文件</span></span><br><span class="line">  root /data/www/wwwroot/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>一些可用的全局变量</strong><br>$args<br>$content_length<br>$content_type<br>$document_root<br>$document_uri<br>$host<br>$http_user_agent<br>$http_cookie<br>$limit_rate<br>$request_body_file<br>$request_method<br>$remote_addr<br>$remote_port<br>$remote_user<br>$request_filename<br>$request_uri<br>$query_string<br>$scheme<br>$server_protocol<br>$server_addr<br>$server_name<br>$server_port<br>$uri</p>
+<p>其中 -j 参数表示 jump 跳转到。  </p>
+<p>可以看到其中的规则形式与我们通过命令行来输入的规则是一样的，因为启用 iptables 的时候就是将此文件中的指令一行一行的自动加载的，就像批处理一样。</p>
 
       
     </div>
@@ -909,7 +615,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E9%85%8D%E7%BD%AEDjango%E7%9A%84Static%E6%96%87%E4%BB%B6.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/QeePHP-memcache%E7%9A%84session%E5%AD%98%E5%82%A8%E8%AE%BE%E7%BD%AE.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -927,7 +633,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/%E9%85%8D%E7%BD%AEDjango%E7%9A%84Static%E6%96%87%E4%BB%B6.html" class="post-title-link" itemprop="url">配置Django的Static文件</a>
+          <a href="/2025/06/20/QeePHP-memcache%E7%9A%84session%E5%AD%98%E5%82%A8%E8%AE%BE%E7%BD%AE.html" class="post-title-link" itemprop="url">QeePHP memcache的session存储设置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -939,7 +645,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:31 / 修改时间：10:43:33" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:31+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:51:54 / 修改时间：09:58:36" itemprop="dateCreated datePublished" datetime="2025-06-20T09:51:54+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -961,17 +667,17 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>第一步：介绍我的文件目录结构</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">walkerfree  </span><br><span class="line">----walkerfree</span><br><span class="line">--------__init__.py  </span><br><span class="line">--------settings.py  </span><br><span class="line">--------urls.py  </span><br><span class="line">--------wsgi.py  </span><br><span class="line">----blog  </span><br><span class="line">--------__init__.py  </span><br><span class="line">--------models.py  </span><br><span class="line">--------views.py  </span><br><span class="line">--------test.py  </span><br><span class="line">----static  </span><br><span class="line">--------css  </span><br><span class="line">------------style.css  </span><br><span class="line">--------js  </span><br><span class="line">------------jquery.js  </span><br><span class="line">--------images  </span><br><span class="line">------------me.jpg</span><br><span class="line">----media</span><br><span class="line">--------upload</span><br><span class="line">----manage.py</span><br></pre></td></tr></table></figure>
+          <p>关于session的memcache的存储，原因为什么要使用它。要看你的项目的需求，网站访问量大的话，默认使用session的文件存储，会导致一个问题就是用户登录不了，原始是，session文件的大量生成，导致读取文件出现问题，就是IO的问题，这时候我们可以考虑使用memcache，还有另外一种是mysql的使用方式。但是目前对于我的这个项目还打不到这种需求，so，还是使用memcache吧。</p>
+<p>目前又因为我的项目是使用Qeephp，哈哈，估计现在使用的人少了，不过这里还是说一下，使用他如何进行配置吧。</p>
+<p>用过qee的都知道，qee有个文件叫做myapp的文件，ok，解决的问题的办法就在这里。</p>
+<p>代码如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 打开 session</span></span><br><span class="line"><span class="keyword">if</span> (Q::<span class="title function_ invoke__">ini</span>(<span class="string">&#x27;runtime_session_start&#x27;</span>))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line">	<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br><span class="line">	<span class="title function_ invoke__">session_start</span>();</span><br><span class="line">	            </span><br><span class="line">	<span class="comment">// #IFDEF DEBUG</span></span><br><span class="line">	<span class="title class_">QLog</span>::<span class="title function_ invoke__">log</span>(<span class="string">&#x27;session_start()&#x27;</span>, <span class="title class_">QLog</span>::<span class="variable constant_">DEBUG</span>);</span><br><span class="line">	<span class="title class_">QLog</span>::<span class="title function_ invoke__">log</span>(<span class="string">&#x27;session_id: &#x27;</span> . <span class="title function_ invoke__">session_id</span>(), <span class="title class_">QLog</span>::<span class="variable constant_">DEBUG</span>);</span><br><span class="line">	<span class="comment">// #ENDIF</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>第二步：settings文件的配置的简介</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># Django settings for walkerfree project.</span></span><br><span class="line"></span><br><span class="line">DEBUG = <span class="literal">True</span></span><br><span class="line">TEMPLATE_DEBUG = DEBUG</span><br><span class="line"></span><br><span class="line">ADMINS = (</span><br><span class="line">    (<span class="string">&#x27;漫步者Feeling&#x27;</span>, <span class="string">&#x27;[email protected]&#x27;</span>),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">MANAGERS = ADMINS</span><br><span class="line"></span><br><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>, <span class="comment"># Add &#x27;postgresql_psycopg2&#x27;, &#x27;mysql&#x27;, &#x27;sqlite3&#x27; or &#x27;oracle&#x27;.</span></span><br><span class="line">        <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;walkerfree&#x27;</span>,                      <span class="comment"># Or path to database file if using sqlite3.</span></span><br><span class="line">        <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;root&#x27;</span>,                      <span class="comment"># Not used with sqlite3.</span></span><br><span class="line">        <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;zhangda890126;;&#x27;</span>,                  <span class="comment"># Not used with sqlite3.</span></span><br><span class="line">        <span class="string">&#x27;HOST&#x27;</span>: <span class="string">&#x27;localhost&#x27;</span>,                      <span class="comment"># Set to empty string for localhost. Not used with sqlite3.</span></span><br><span class="line">        <span class="string">&#x27;PORT&#x27;</span>: <span class="string">&#x27;3306&#x27;</span>,                      <span class="comment"># Set to empty string for default. Not used with sqlite3.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Local time zone for this installation. Choices can be found here:</span></span><br><span class="line"><span class="comment"># http://en.wikipedia.org/wiki/List_of_tz_zones_by_name</span></span><br><span class="line"><span class="comment"># although not all choices may be available on all operating systems.</span></span><br><span class="line"><span class="comment"># In a Windows environment this must be set to your system time zone.</span></span><br><span class="line">TIME_ZONE = <span class="string">&#x27;Asia/Chongqing&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Language code for this installation. All choices can be found here:</span></span><br><span class="line"><span class="comment"># http://www.i18nguy.com/unicode/language-identifiers.html</span></span><br><span class="line">LANGUAGE_CODE = <span class="string">&#x27;en-us&#x27;</span></span><br><span class="line"></span><br><span class="line">SITE_ID = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If you set this to False, Django will make some optimizations so as not</span></span><br><span class="line"><span class="comment"># to load the internationalization machinery.</span></span><br><span class="line">USE_I18N = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If you set this to False, Django will not format dates, numbers and</span></span><br><span class="line"><span class="comment"># calendars according to the current locale.</span></span><br><span class="line">USE_L10N = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If you set this to False, Django will not use timezone-aware datetimes.</span></span><br><span class="line">USE_TZ = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Absolute filesystem path to the directory that will hold user-uploaded files.</span></span><br><span class="line"><span class="comment"># Example: &quot;/home/media/media.lawrence.com/media/&quot;</span></span><br><span class="line">MEDIA_ROOT = <span class="string">&#x27;/home/davidzhang/walkerfree/media&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># URL that handles the media served from MEDIA_ROOT. Make sure to use a</span></span><br><span class="line"><span class="comment"># trailing slash.</span></span><br><span class="line"><span class="comment"># Examples: &quot;http://media.lawrence.com/media/&quot;, &quot;http://example.com/media/&quot;</span></span><br><span class="line">MEDIA_URL = <span class="string">&#x27;/media/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Absolute path to the directory static files should be collected to.</span></span><br><span class="line"><span class="comment"># Don&#x27;t put anything in this directory yourself; store your static files</span></span><br><span class="line"><span class="comment"># in apps&#x27; &quot;static/&quot; subdirectories and in STATICFILES_DIRS.</span></span><br><span class="line"><span class="comment"># Example: &quot;/home/media/media.lawrence.com/static/&quot;</span></span><br><span class="line">STATIC_ROOT =<span class="string">&#x27;/home/davidzhang/walkerfree/static/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># URL prefix for static files.</span></span><br><span class="line"><span class="comment"># Example: &quot;http://media.lawrence.com/static/&quot;</span></span><br><span class="line">STATIC_URL = <span class="string">&#x27;/static/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Additional locations of static files</span></span><br><span class="line">STATICFILES_DIRS = (</span><br><span class="line">    <span class="comment"># Put strings here, like &quot;/home/html/static&quot; or &quot;C:/www/django/static&quot;.</span></span><br><span class="line">    <span class="comment"># Always use forward slashes, even on Windows.</span></span><br><span class="line">    <span class="comment"># Don&#x27;t forget to use absolute paths, not relative paths.    </span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># List of finder classes that know how to find static files in</span></span><br><span class="line"><span class="comment"># various locations.</span></span><br><span class="line">STATICFILES_FINDERS = (</span><br><span class="line">    <span class="string">&#x27;django.contrib.staticfiles.finders.FileSystemFinder&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.staticfiles.finders.AppDirectoriesFinder&#x27;</span>,</span><br><span class="line"><span class="comment">#    &#x27;django.contrib.staticfiles.finders.DefaultStorageFinder&#x27;,</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Make this unique, and don&#x27;t share it with anybody.</span></span><br><span class="line">SECRET_KEY = <span class="string">&#x27;0h&amp;amp;*b8sw)*fu_oy+jj_%bun3*&amp;amp;3v&amp;amp;*!5#79un!do71eq4su86x&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># List of callables that know how to import templates from various sources.</span></span><br><span class="line">TEMPLATE_LOADERS = (</span><br><span class="line">    <span class="string">&#x27;django.template.loaders.filesystem.Loader&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.template.loaders.app_directories.Loader&#x27;</span>,</span><br><span class="line"><span class="comment">#     &#x27;django.template.loaders.eggs.Loader&#x27;,</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">MIDDLEWARE_CLASSES = (</span><br><span class="line">    <span class="string">&#x27;django.middleware.common.CommonMiddleware&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.sessions.middleware.SessionMiddleware&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.middleware.csrf.CsrfViewMiddleware&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.auth.middleware.AuthenticationMiddleware&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.messages.middleware.MessageMiddleware&#x27;</span>,</span><br><span class="line">    <span class="comment"># Uncomment the next line for simple clickjacking protection:</span></span><br><span class="line">    <span class="comment"># &#x27;django.middleware.clickjacking.XFrameOptionsMiddleware&#x27;,</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">ROOT_URLCONF = <span class="string">&#x27;walkerfree.urls&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Python dotted path to the WSGI application used by Django&#x27;s runserver.</span></span><br><span class="line">WSGI_APPLICATION = <span class="string">&#x27;walkerfree.wsgi.application&#x27;</span></span><br><span class="line"></span><br><span class="line">TEMPLATE_DIRS = (</span><br><span class="line">    <span class="comment"># Put strings here, like &quot;/home/html/django_templates&quot; or &quot;C:/www/django/templates&quot;.</span></span><br><span class="line">    <span class="comment"># Always use forward slashes, even on Windows.</span></span><br><span class="line">    <span class="comment"># Don&#x27;t forget to use absolute paths, not relative paths.</span></span><br><span class="line">    <span class="string">&quot;/home/davidzhang/walkerfree/templates&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">INSTALLED_APPS = (</span><br><span class="line">    <span class="string">&#x27;django.contrib.auth&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.contenttypes&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.sessions&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.sites&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.messages&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.staticfiles&#x27;</span>,</span><br><span class="line">    <span class="comment"># Uncomment the next line to enable the admin:</span></span><br><span class="line">    <span class="comment"># &#x27;django.contrib.admin&#x27;,</span></span><br><span class="line">    <span class="comment"># Uncomment the next line to enable admin documentation:</span></span><br><span class="line">    <span class="comment"># &#x27;django.contrib.admindocs&#x27;,</span></span><br><span class="line">    <span class="string">&#x27;walkerfree&#x27;</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># A sample logging configuration. The only tangible logging</span></span><br><span class="line"><span class="comment"># performed by this configuration is to send an email to</span></span><br><span class="line"><span class="comment"># the site admins on every HTTP 500 error when DEBUG=False.</span></span><br><span class="line"><span class="comment"># See http://docs.djangoproject.com/en/dev/topics/logging for</span></span><br><span class="line"><span class="comment"># more details on how to customize your logging configuration.</span></span><br><span class="line">LOGGING = &#123;</span><br><span class="line">    <span class="string">&#x27;version&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">&#x27;disable_existing_loggers&#x27;</span>: <span class="literal">False</span>,</span><br><span class="line">    <span class="string">&#x27;filters&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;require_debug_false&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;()&#x27;</span>: <span class="string">&#x27;django.utils.log.RequireDebugFalse&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&#x27;handlers&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;mail_admins&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;level&#x27;</span>: <span class="string">&#x27;ERROR&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;filters&#x27;</span>: [<span class="string">&#x27;require_debug_false&#x27;</span>],</span><br><span class="line">            <span class="string">&#x27;class&#x27;</span>: <span class="string">&#x27;django.utils.log.AdminEmailHandler&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&#x27;loggers&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;django.request&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;handlers&#x27;</span>: [<span class="string">&#x27;mail_admins&#x27;</span>],</span><br><span class="line">            <span class="string">&#x27;level&#x27;</span>: <span class="string">&#x27;ERROR&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;propagate&#x27;</span>: <span class="literal">True</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实就是在打开session的地方加上了关于session的存储设置</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br></pre></td></tr></table></figure>
 
-<p>第三步：nginx的配置</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span>   <span class="number">80</span>; <span class="comment">## listen for ipv4; this line is default and implied</span></span><br><span class="line">        <span class="attribute">root</span> /home/davidzhang/walkerfree/walkerfree;</span><br><span class="line">        <span class="attribute">index</span>   index.html index.htm;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Make site accessible from http://localhost/</span></span><br><span class="line">        <span class="attribute">server_name</span> local.ubuntu.walkerfree.com;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">access_log</span> /var/log/uwsgi/local.ubuntu.walkerfree.access.log;</span><br><span class="line">        <span class="attribute">error_log</span> /var/log/uwsgi/local.ubuntu.walkerfree.<span class="literal">error</span>.log;</span><br><span class="line"></span><br><span class="line">        <span class="section">location</span> / &#123;</span><br><span class="line">                <span class="attribute">include</span> uwsgi_params;</span><br><span class="line">                <span class="attribute">uwsgi_pass</span>      unix:///tmp/mysite.socket;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#here is important</span></span><br><span class="line">        <span class="section">location</span><span class="regexp"> ^~</span> /static/ &#123;</span><br><span class="line">                <span class="attribute">root</span>    /home/davidzhang/walkerfree/;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>ok，搞定了</p>
-<p>想要我uwsgi配置的，请期待下篇文章</p>
+<p>memcache考虑的还是蛮周到。</p>
+<p>关于memcache的安装，请使用站内搜索</p>
 
       
     </div>
@@ -998,7 +704,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Django-%E9%94%99%E8%AF%AF-Non-ASCII-character.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/Ubuntu%E4%B8%8BMemcache%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1016,7 +722,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Django-%E9%94%99%E8%AF%AF-Non-ASCII-character.html" class="post-title-link" itemprop="url">Django 错误 Non-ASCII character '\xe6'</a>
+          <a href="/2025/06/20/Ubuntu%E4%B8%8BMemcache%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">Ubuntu下Memcache的安装与基本使用</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1028,7 +734,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-19 10:29:28 / 修改时间：10:45:14" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:28+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-20 09:51:50 / 修改时间：10:20:37" itemprop="dateCreated datePublished" datetime="2025-06-20T09:51:50+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1050,16 +756,31 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>在使用django的时候，会遇到一个问题，就是“Non-ASCII character ‘\xe6’”这个错误</p>
-<p>原因是如下，是我的配置文件中的一部分代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DEBUG = <span class="literal">True</span></span><br><span class="line">TEMPLATE_DEBUG = DEBUG</span><br><span class="line"></span><br><span class="line">ADMINS = (</span><br><span class="line">    (<span class="string">&#x27;漫步者Feeling&#x27;</span>, <span class="string">&#x27;[email protected]&#x27;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+          <p>关于Memcache与memcached</p>
+<p>Memcache是项目名，memcached是服务名。让很多初接触的人感觉很是莫名其妙。个人认为正确的应该是用前者用更为正确一点。</p>
+<p>1)安装Memcache服务端</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install memcached</span><br></pre></td></tr></table></figure>
 
-<p>提示一下，这里有中文，就是这个原因</p>
-<p>修改一下，如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># Django settings for walkerfree project.</span></span><br><span class="line"></span><br><span class="line">DEBUG = <span class="literal">True</span></span><br><span class="line">TEMPLATE_DEBUG = DEBUG</span><br><span class="line"></span><br><span class="line">ADMINS = (</span><br><span class="line">    (<span class="string">&#x27;漫步者Feeling&#x27;</span>, <span class="string">&#x27;[email protected]&#x27;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>安装完Memcache服务端以后，我们需要启动该服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">memcached -d -m 128 -p 11211 -u www</span><br></pre></td></tr></table></figure>
 
-<p>就是这句代码：<code># -*- coding: utf-8 -*-  </code></p>
-<p>解决了。</p>
+<blockquote>
+<p>memcached服务的启动参数：</p>
+<p>-p 监听的端口<br>-l 连接的IP地址, 默认是本机<br>-d start 启动memcached服务<br>-d restart 重起memcached服务<br>-d stop|shutdown 关闭正在运行的memcached服务<br>-d install 安装memcached服务<br>-d uninstall 卸载memcached服务<br>-u 以的身份运行 (仅在以root运行的时候有效)<br>-m 最大内存使用，单位MB。默认64MB<br>-M 内存耗尽时返回错误，而不是删除项<br>-c 最大同时连接数，默认是1024<br>-f 块大小增长因子，默认是1.25-n 最小分配空间，key+value+flags默认是48<br>-h 显示帮助</p>
+</blockquote>
+<p>我们使用php脚本做一个测试(这个是在qeephp里面做的测试)</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">actionTestMema</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line">    <span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br><span class="line">    <span class="title function_ invoke__">session_start</span>();</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;test0&#x27;</span>] = <span class="string">&#x27;my value&#x27;</span>;</span><br><span class="line">    <span class="variable">$_SESSION</span>[<span class="string">&#x27;test1&#x27;</span>] = <span class="string">&#x27;Thisvalue&#x27;</span>;</span><br><span class="line">    <span class="variable">$sid</span> = <span class="title function_ invoke__">session_id</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;a href=&#x27;&quot;</span>.<span class="title function_ invoke__">url</span>(<span class="string">&#x27;default/testmemb&#x27;</span>,<span class="keyword">array</span>(<span class="string">&#x27;sid&#x27;</span>=&gt;<span class="variable">$sid</span>)).<span class="string">&quot;&#x27;&gt;session&lt;/a&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">actionTestMemb</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="variable">$mem</span> = <span class="keyword">new</span> <span class="title class_">Memcache</span>();</span><br><span class="line">    <span class="variable">$mem</span>-&gt;<span class="title function_ invoke__">connect</span>(<span class="string">&#x27;127.0.0.1&#x27;</span>,<span class="number">11211</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_REQUEST</span>[<span class="string">&#x27;sid&#x27;</span>]))&#123;</span><br><span class="line">            <span class="variable">$value</span> = <span class="variable">$mem</span>-&gt;<span class="title function_ invoke__">getstats</span>();</span><br><span class="line"><span class="comment">//                var_dump($value);</span></span><br><span class="line">            <span class="variable">$sess_value</span> = <span class="variable">$mem</span>-&gt;<span class="title function_ invoke__">get</span>(<span class="variable">$_REQUEST</span>[<span class="string">&#x27;sid&#x27;</span>]);</span><br><span class="line">            <span class="title function_ invoke__">var_dump</span>(<span class="variable">$sess_value</span>);</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable">$sess_value</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;error args&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br></pre></td></tr></table></figure>
+
+<p>这句话是应该放在myapp.php这个文件中的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 打开 session</span></span><br><span class="line"><span class="keyword">if</span> (Q::<span class="title function_ invoke__">ini</span>(<span class="string">&#x27;runtime_session_start&#x27;</span>))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_handler&quot;</span>,<span class="string">&quot;memcache&quot;</span>);</span><br><span class="line">	<span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.save_path&quot;</span>,<span class="string">&quot;tcp://127.0.0.1:11211&quot;</span>);</span><br><span class="line">	<span class="title function_ invoke__">session_start</span>();</span><br><span class="line">	            </span><br><span class="line">	<span class="comment">// #IFDEF DEBUG</span></span><br><span class="line">	<span class="title class_">QLog</span>::<span class="title function_ invoke__">log</span>(<span class="string">&#x27;session_start()&#x27;</span>, <span class="title class_">QLog</span>::<span class="variable constant_">DEBUG</span>);</span><br><span class="line">	<span class="title class_">QLog</span>::<span class="title function_ invoke__">log</span>(<span class="string">&#x27;session_id: &#x27;</span> . <span class="title function_ invoke__">session_id</span>(), <span class="title class_">QLog</span>::<span class="variable constant_">DEBUG</span>);</span><br><span class="line">	<span class="comment">// #ENDIF</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果你的输出结果是类似下面这样的话</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string(2044) <span class="string">&quot;test0|s:8:&quot;</span>my value<span class="string">&quot;;test1|s:9:&quot;</span>Thisvalue<span class="string">&quot;;</span></span><br></pre></td></tr></table></figure>
+
+<p>说明你的安装就成功了，以上是在非命令行模式下测试的。如果你是cli命令行的话，我不能保证。</p>
 
       
     </div>
@@ -1086,7 +807,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E4%BD%BF%E7%94%A8NSString-%E5%8E%BB%E6%8E%89%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC%E6%88%96%E5%9B%9E%E8%BD%A6%E7%AC%A6.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/CentOS%E4%B8%8B%E5%AE%89%E8%A3%85uWSGI.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1104,7 +825,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/%E4%BD%BF%E7%94%A8NSString-%E5%8E%BB%E6%8E%89%E5%89%8D%E5%90%8E%E7%A9%BA%E6%A0%BC%E6%88%96%E5%9B%9E%E8%BD%A6%E7%AC%A6.html" class="post-title-link" itemprop="url">使用NSString 去掉前后空格或回车符</a>
+          <a href="/2025/06/19/CentOS%E4%B8%8B%E5%AE%89%E8%A3%85uWSGI.html" class="post-title-link" itemprop="url">CentOS下安装uWSGI</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1114,9 +835,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-06-19 10:29:24 / 修改时间：10:36:59" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:24+08:00">2025-06-19</time>
+      <time title="创建时间：2025-06-19 13:55:10" itemprop="dateCreated datePublished" datetime="2025-06-19T13:55:10+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-20 10:07:31" itemprop="dateModified" datetime="2025-06-20T10:07:31+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1138,8 +865,302 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>想要去掉字符串的前后空格和回车符，很简单，如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string = <span class="string">@&quot; spaces in front and at the end &quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *trimmedString = [string stringByTrimmingCharactersInSet:</span><br><span class="line">[<span class="built_in">NSCharacterSet</span> whitespaceAndNewlineCharacterSet]]; </span><br><span class="line"><span class="built_in">NSLog</span>(trimmedString);</span><br></pre></td></tr></table></figure>
+          <p>第一步：首先是下载文件：</p>
+<p>下载地址</p>
+<p><span class="exturl" data-url="aHR0cDovL3Byb2plY3RzLnVuYml0Lml0L2Rvd25sb2Fkcy8=">http://projects.unbit.it/downloads/<i class="fa fa-external-link-alt"></i></span></p>
+<p>这里面有你自己想要的文件版本</p>
+<p>第二步：执行两条命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum update</span><br><span class="line">yum install python python-devel libxml2 libxml2-devel python-setuptools zlib-devel wget openssl-devel pcre pcre-devel <span class="built_in">sudo</span> gcc make autoconf automake</span><br></pre></td></tr></table></figure>
+
+<p>第三步：解压安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf uwsgi-0.9.6.5.tar.gz</span><br><span class="line"><span class="built_in">mv</span> uwsgi-0.9.6.5/ uwsgi/</span><br><span class="line"><span class="built_in">cd</span> uwsgi/</span><br><span class="line"><span class="built_in">sudo</span> python setup.py build</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<p>第四步：将安装成功的uwsgi文件copy一份到自己使用bin目录下，我的是copy到了&#x2F;usr&#x2F;local&#x2F;bin目录</p>
+<p>第五步：测试是否安装成功</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uwsgi --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>会打印出类似下面的信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Usage: /usr/local/bin/uwsgi [options...]</span><br><span class="line">    -s|--socket                            <span class="built_in">bind</span> to the specified UNIX/TCP socket using default protocol</span><br><span class="line">    -s|--uwsgi-socket                      <span class="built_in">bind</span> to the specified UNIX/TCP socket using uwsgi protocol</span><br><span class="line">    --http-socket                          <span class="built_in">bind</span> to the specified UNIX/TCP socket using HTTP protocol</span><br><span class="line">    --http-socket-modifier1                force the specified modifier1 when using HTTP protocol</span><br><span class="line">    --http-socket-modifier2                force the specified modifier2 when using HTTP protocol</span><br><span class="line">    --fastcgi-socket                       <span class="built_in">bind</span> to the specified UNIX/TCP socket using FastCGI protocol</span><br><span class="line">    --fastcgi-nph-socket                   <span class="built_in">bind</span> to the specified UNIX/TCP socket using FastCGI protocol (nph mode)</span><br><span class="line">    --fastcgi-modifier1                    force the specified modifier1 when using FastCGI protocol</span><br><span class="line">    --fastcgi-modifier2                    force the specified modifier2 when using FastCGI protocol</span><br><span class="line">    --scgi-socket                          <span class="built_in">bind</span> to the specified UNIX/TCP socket using SCGI protocol</span><br><span class="line">    --scgi-nph-socket                      <span class="built_in">bind</span> to the specified UNIX/TCP socket using SCGI protocol (nph mode)</span><br><span class="line">    --scgi-modifier1                       force the specified modifier1 when using SCGI protocol</span><br><span class="line">    --scgi-modifier2                       force the specified modifier2 when using SCGI protocol</span><br><span class="line">    --protocol                             force the specified protocol <span class="keyword">for</span> default sockets</span><br><span class="line">    --socket-protocol                      force the specified protocol <span class="keyword">for</span> default sockets</span><br><span class="line">    --shared-socket                        create a shared sacket <span class="keyword">for</span> advanced jailing or ipc</span><br><span class="line">    --undeferred-shared-socket             create a shared sacket <span class="keyword">for</span> advanced jailing or ipc (undeferred mode)</span><br><span class="line">    -p|--processes                         spawn the specified number of workers/processes</span><br><span class="line">    -p|--workers                           spawn the specified number of workers/processes</span><br><span class="line">--More--</span><br></pre></td></tr></table></figure>
+
+<p>安装成功</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/CFRunLoop-%E5%88%9D%E6%AC%A1%E7%9B%B8%E8%AF%86.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/19/CFRunLoop-%E5%88%9D%E6%AC%A1%E7%9B%B8%E8%AF%86.html" class="post-title-link" itemprop="url">CFRunLoop 初次相识</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-19 13:55:06 / 修改时间：13:58:45" itemprop="dateCreated datePublished" datetime="2025-06-19T13:55:06+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>CFRunLoop的初次相识,不了解他，也不认识她。</p>
+<p>我参考的文章中，有一处是这么说的</p>
+<blockquote>
+<p>Run loops是线程的基础架构部分。一个run loop就是一个事件处理循环，用来不停的调配工作以及处理输入事件。使用run loop的目的是使你的线程在有工作的时候工作，没有的时候休眠。</p>
+<p>Run loop的管理并不完全是自动的。你仍必须设计你的线程代码以在适当的时候启动run loop并正确响应输入事件。Cocoa和CoreFundation都提供了run loop对象方便配置和管理线程的run loop。你创建的程序不需要显示的创建run loop；每个线程，包括程序的主线程（main thread）都有与之相应的run loop对象。但是，自己创建的次线程是需要手动运行run loop的。在carbon和cocoa程序中，程序启动时，主线程会自行创建并运行run loop。</p>
+<p>接下来的部分将会详细介绍run loop以及如何为你的程序管理run loop。关于run loop对象可以参阅sdk文档。</p>
+<p>解析Run Loop</p>
+<p>run loop，顾名思义，就是一个循环，你的线程在这里开始，并运行事件处理程序来响应输入事件。你的代码要有实现循环部分的控制语句，换言之就是要有while或for语句。在run loop中，使用run loop对象来运行事件处理代码：响应接收到的事件，启动已经安装的处理程序。</p>
+<p>Run loop处理的输入事件有两种不同的来源：输入源（input source）和定时源（timer source）。输入源传递异步消息，通常来自于其他线程或者程序。定时源则传递同步消息，在特定时间或者一定的时间间隔发生。两种源的处理都使用程序的某一特定处理路径。</p>
+</blockquote>
+<p>在苹果官方是这样解释的。</p>
+<blockquote>
+<p>A CFRunLoop object monitors sources of input to a task and dispatches control when they become ready for processing. Examples of input sources might include user input devices, network connections, periodic or time-delayed events, and asynchronous callbacks.</p>
+</blockquote>
+<p>无奈，找到了一个例子：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//    used by thread2 to force thread exit</span></span><br><span class="line">- (<span class="type">void</span>)forceExit:(ThreadObj*)obj &#123;</span><br><span class="line">    obj.nExitFlag = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;The current forceExit id = %@&quot;</span>, <span class="keyword">self</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// for thread1</span></span><br><span class="line">- (<span class="type">void</span>)func1 &#123;</span><br><span class="line">    nExitFlag = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;The current func1 id = %@&quot;</span>, <span class="keyword">self</span>);</span><br><span class="line">    <span class="built_in">NSAutoreleasePool</span> *pool = [[<span class="built_in">NSAutoreleasePool</span> alloc] init];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//A runloop with no sources returns immediately from runMode:beforeDate:</span></span><br><span class="line">    <span class="comment">//That will wake up the loop and chew CPU. Add a dummy source to prevent</span></span><br><span class="line">    <span class="comment">//it.</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSRunLoop</span> *runLoop = [<span class="built_in">NSRunLoop</span> currentRunLoop];    </span><br><span class="line">    <span class="built_in">NSMachPort</span> *dummyPort = [[<span class="built_in">NSMachPort</span> alloc] init];    </span><br><span class="line">    [runLoop addPort:dummyPort forMode:<span class="built_in">NSDefaultRunLoopMode</span>];</span><br><span class="line">    [dummyPort release];</span><br><span class="line">    [pool release];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (!nExitFlag)&#123;</span><br><span class="line">        <span class="built_in">NSAutoreleasePool</span> *loopPool = [[<span class="built_in">NSAutoreleasePool</span> alloc] init];        </span><br><span class="line">        [runLoop runMode:<span class="built_in">NSDefaultRunLoopMode</span> beforeDate:[<span class="built_in">NSDate</span> distantFuture]];</span><br><span class="line">        [loopPool drain];</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// for thread2</span></span><br><span class="line">- (<span class="type">void</span>)func2:(<span class="built_in">NSArray</span> *)args &#123;</span><br><span class="line">    nExitFlag = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;The current func2 id = %@&quot;</span>, <span class="keyword">self</span>);</span><br><span class="line">    <span class="built_in">NSThread</span>* thread1 = [args objectAtIndex:<span class="number">1</span>];</span><br><span class="line">    <span class="type">id</span> id1 = [args objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//    force thread1 to exit</span></span><br><span class="line">    [<span class="keyword">self</span> performSelector:<span class="keyword">@selector</span>(forceExit:) onThread:thread1 withObject:id1 waitUntilDone:<span class="literal">YES</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>里面就是这样调用了一下，输出的结果是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2013-07-30 10:06:04.714 MyRunLoop[55395:1803] The current func1 <span class="built_in">id</span> = &lt;ThreadObj: 0x7132590&gt;</span><br><span class="line">2013-07-30 10:06:04.716 MyRunLoop[55395:2003] The current func2 <span class="built_in">id</span> = &lt;ThreadObj: 0x7132600&gt;</span><br><span class="line">2013-07-30 10:06:04.720 MyRunLoop[55395:1803] The current forceExit <span class="built_in">id</span> = &lt;ThreadObj: 0x7132600&gt;</span><br><span class="line">2013-07-30 10:06:05.135 MyRunLoop[55395:c07] Application windows are expected to have a root view controller at the end of application launch</span><br></pre></td></tr></table></figure>
+
+<p>是这样子的，你如果自己运行的话，估计会跟我有些区别的。</p>
+<p>具体干嘛用，有时间继续 研究，对了还有一个知识点就是：NSMachPort</p>
+<p>这个看起来也有大用处，好像跟传递文件有关系</p>
+<blockquote>
+<p>NSMachPort is a subclass of NSPort that can be used as an endpoint for distributed object connections (or raw messaging). NSMachPort is an object wrapper for a Mach port, the fundamental communication port in OS X. NSMachPort allows for local (on the same machine) communication only. A companion class, NSSocketPort, allows for both local and remote distributed object communication, but may be more expensive than NSMachPort for the local case.</p>
+</blockquote>
+<p>好像越来越强大啦，呵呵</p>
+<p>参考的文章地址：</p>
+<p><span class="exturl" data-url="aHR0cDovL2RldmVsb3Blci5hcHBsZS5jb20vbGlicmFyeS9pb3MvI0RPQ1VNRU5UQVRJT04vQ29yZUZvdW5kYXRpb24vUmVmZXJlbmNlL0NGUnVuTG9vcFJlZi9SZWZlcmVuY2UvcmVmZXJlbmNlLmh0bWw=">参考链接1<i class="fa fa-external-link-alt"></i></span> <span class="exturl" data-url="aHR0cDovL2RldmVsb3Blci5hcHBsZS5jb20vbGlicmFyeS9tYWMvI2RvY3VtZW50YXRpb24vQ29jb2EvUmVmZXJlbmNlL0ZvdW5kYXRpb24vQ2xhc3Nlcy9OU01hY2hQb3J0X0NsYXNzL1JlZmVyZW5jZS9SZWZlcmVuY2UuaHRtbA==">参考链接2<i class="fa fa-external-link-alt"></i></span> <span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9zY29ycGlvemovYXJjaGl2ZS8yMDExLzA1LzI2LzIwNTgxNjcuaHRtbA==">参考链接3<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/%E8%BE%93%E5%87%BA-json%E6%A0%BC%E5%BC%8F%E7%9A%84%E5%A4%B4.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/19/%E8%BE%93%E5%87%BA-json%E6%A0%BC%E5%BC%8F%E7%9A%84%E5%A4%B4.html" class="post-title-link" itemprop="url">输出 json格式的头</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-19 13:55:02 / 修改时间：14:00:47" itemprop="dateCreated datePublished" datetime="2025-06-19T13:55:02+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>标准写法的 application&#x2F;json，人们有时候也习惯text&#x2F;json，但是text&#x2F;json不兼容的，建议你用标准application&#x2F;json  </p>
+<p>服务端 向 客户端 发送 JSON数据 时:  </p>
+<p>Content-Type &#x3D; ‘application&#x2F;json;charset&#x3D;UTF-8’  </p>
+<p>服务端 向 客户端 发送 JS 代码 时:  </p>
+<p>Content-Type &#x3D; ‘text&#x2F;javascript;charset&#x3D;UTF-8’  </p>
+<p>服务端 判断 客户端 提交的是否是 JSON数据 时 :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Content-Type = <span class="string">&#x27;application/json;charset=UTF-8&#x27;</span></span><br><span class="line">Content-Type = <span class="string">&#x27;text/json;charset=UTF-8&#x27;</span></span><br><span class="line">Content-Type = <span class="string">&#x27;text/javascript;charset=UTF-8&#x27;</span></span><br><span class="line">Content-Type = <span class="string">&#x27;application/javascript;charset=UTF-8&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>只要 Content-Type 满足上面4个条件中的 任意一个时,就可以认为提交的数据是 JSON数据</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/JavaScript-%E6%95%B0%E7%BB%84%E7%9A%84%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8%E7%94%A8%E6%B3%95.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/19/JavaScript-%E6%95%B0%E7%BB%84%E7%9A%84%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8%E7%94%A8%E6%B3%95.html" class="post-title-link" itemprop="url">JavaScript 数组的数据字典用法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-19 13:54:55 / 修改时间：14:01:12" itemprop="dateCreated datePublished" datetime="2025-06-19T13:54:55+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>javascript 中的数组 可以当做数据字典用，还可以当栈用，等很多用法。普通的数组用法只是数据字典用法的一个特例。</p>
+<p>比如：arr[1]&#x3D;”gao”;</p>
+<p>只是key是int类型，value是字符串类型。其实数组的key和value都是object类型。相当于c# 中的hashtable.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">var</span> dict=<span class="keyword">new</span> <span class="title class_">Array</span>;</span><br><span class="line">dict[<span class="string">&quot;省&quot;</span>]=<span class="string">&quot;山东&quot;</span>;</span><br><span class="line">dict[<span class="string">&quot;市&quot;</span>]=<span class="string">&quot;济南&quot;</span>;</span><br><span class="line">dict[<span class="string">&quot;县&quot;</span>]=<span class="string">&quot;市中心&quot;</span>;</span><br><span class="line"><span class="title function_">alert</span>(dict[<span class="string">&quot;省&quot;</span>]); </span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> k <span class="keyword">in</span> dict)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="title function_">alert</span>(k);  <span class="comment">//结果是key的值，也就是  &quot;省&quot;，&quot;市&quot;，&quot;县&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> k <span class="keyword">in</span> dict)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="title function_">alert</span>(dict[k]);  <span class="comment">//结果是value的值，也就是  &quot;山东&quot;，&quot;济南&quot;，&quot;市中心&quot;</span></span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>复制到自己的html页面去吧，运行一下，效果不是吹的，呵呵</p>
 
       
     </div>
@@ -1159,7 +1180,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/62/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/62/">62</a><span class="page-number current">63</span><a class="page-number" href="/page/64/">64</a><span class="space">&hellip;</span><a class="page-number" href="/page/91/">91</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/64/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/62/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/62/">62</a><span class="page-number current">63</span><a class="page-number" href="/page/64/">64</a><span class="space">&hellip;</span><a class="page-number" href="/page/93/">93</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/64/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
