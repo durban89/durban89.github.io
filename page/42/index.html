@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">928</span>
+          <span class="site-state-item-count">948</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">156</span>
+        <span class="site-state-item-count">157</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Linux%E7%B4%A2%E5%BC%95%E8%8A%82%E7%82%B9-inode-%E7%94%A8%E6%BB%A1%E5%AF%BC%E8%87%B4%E7%9A%84%E4%B8%80%E6%AC%A1%E6%95%85%E9%9A%9C.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS7-UIActionSheet%E4%B8%AD%E7%9A%84UIActionSheetDelegate%E4%B8%8EUIImagePickerController%E7%9A%84%E5%8D%8F%E4%BD%9C.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Linux%E7%B4%A2%E5%BC%95%E8%8A%82%E7%82%B9-inode-%E7%94%A8%E6%BB%A1%E5%AF%BC%E8%87%B4%E7%9A%84%E4%B8%80%E6%AC%A1%E6%95%85%E9%9A%9C.html" class="post-title-link" itemprop="url">Linux索引节点(inode)用满导致的一次故障</a>
+          <a href="/2025/06/27/iOS7-UIActionSheet%E4%B8%AD%E7%9A%84UIActionSheetDelegate%E4%B8%8EUIImagePickerController%E7%9A%84%E5%8D%8F%E4%BD%9C.html" class="post-title-link" itemprop="url">iOS7 UIActionSheet中的UIActionSheetDelegate与UIImagePickerController的协作</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:39:03 / 修改时间：11:56:31" itemprop="dateCreated datePublished" datetime="2025-06-26T11:39:03+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 09:45:23 / 修改时间：09:57:17" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:23+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,21 +294,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>之所以看到这篇文章也是自己出于好奇“inodes”,自己毕竟并非专业计算机出身，对这个不是很理解，但是知道这个东西也是需要空间，也是在容量满地时候，会倒是系统出现问题的。根据google的搜索，得到了张宴同志的一篇文章，如下：</p>
-<p>一、发现问题：<br>　　在一台配置较低的Linux服务器（内存、硬盘比较小）的&#x2F;data分区内创建文件时，系统提示磁盘空间不足，用df -h命令查看了一下磁盘使用情况，发现&#x2F;data分区只使用了66%，还有12G的剩余空间，按理说不会出现这种问题。<br>二、分析问题：<br>　　后来用df -i查看了一下&#x2F;data分区的索引节点(inode)，发现已经用满(IUsed&#x3D;100%)，导致系统无法创建新目录和文件。inode译成中文就是索引节点，每个存储设备（例如硬盘）或存储设备的分区被格式化为文件系统后，应该有两部份，一部份是inode，另一部份是Block，Block是用来存储数据用的。</p>
-<p>而inode呢，就是用来存储这些数据的信息，这些信息包括文件大小、属主、归属的用户组、读写权限等。inode为每个文件进行信息索引，所以就有了inode的数值。</p>
-<p>操作系统根据指令，能通过inode值最快的找到相对应的文件。而这台服务器的Block虽然还有剩余，但inode已经用满，因此在创建新目录或文件时，系统提示磁盘空间不足。</p>
-<p>三、查找原因：</p>
-<p><code>/data/cache</code>目录中存在数量非常多的小字节缓存文件，占用的Block不多，但是占用了大量的inode。</p>
-<p>四、解决方案：</p>
-<blockquote>
-<p>　　1、删除<code>/data/cache</code>目录中的部分文件，释放出&#x2F;data分区的一部分inode。  </p>
-<p>　　2、用软连接将空闲分区&#x2F;opt中的newcache目录连接到&#x2F;data&#x2F;cache，使用&#x2F;opt分区的inode来缓解&#x2F;data分区inode不足的问题：<br>　　<code>ln -s /opt/newcache /data/cache</code></p>
-<p>　　3、更换服务器，用高配置的服务器替换低配置的服务器。很多时候用钱去解决问题比用技术更有效，堆在我办公桌上5台全新的 DELL PowerEdge 1950 服务器即将运往IDC机房。</p>
-</blockquote>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuczEzNS5jb20vcG9zdC8yOTUv">http://blog.s135.com/post/295/<i class="fa fa-external-link-alt"></i></span></p>
+          <p>UIActionSheet中的UIActionSheetDelegate与UIImagePickerController的协作，实现图片来源的选择，代码如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) actionSheet:(<span class="built_in">UIActionSheet</span> *)actionSheet clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex&#123;</span><br><span class="line">    <span class="built_in">UIImagePickerController</span> *picker=[[<span class="built_in">UIImagePickerController</span> alloc]init];</span><br><span class="line">    picker.delegate=<span class="keyword">self</span>;</span><br><span class="line">    picker.allowsEditing=<span class="literal">YES</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">switch</span> (buttonIndex)&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//拍照</span></span><br><span class="line">            <span class="keyword">if</span> ([<span class="built_in">UIImagePickerController</span> isSourceTypeAvailable: <span class="built_in">UIImagePickerControllerSourceTypeCamera</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                picker.sourceType=<span class="built_in">UIImagePickerControllerSourceTypeCamera</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//相册</span></span><br><span class="line">            <span class="keyword">if</span> ([<span class="built_in">UIImagePickerController</span> isSourceTypeAvailable: <span class="built_in">UIImagePickerControllerSourceTypePhotoLibrary</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                picker.sourceType=<span class="built_in">UIImagePickerControllerSourceTypePhotoLibrary</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//图片库</span></span><br><span class="line">            <span class="keyword">if</span> ([<span class="built_in">UIImagePickerController</span> isSourceTypeAvailable: <span class="built_in">UIImagePickerControllerSourceTypeSavedPhotosAlbum</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                picker.sourceType=<span class="built_in">UIImagePickerControllerSourceTypeSavedPhotosAlbum</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>([[<span class="built_in">UIDevice</span> currentDevice] userInterfaceIdiom] == <span class="built_in">UIUserInterfaceIdiomPhone</span>)&#123;</span><br><span class="line">        [<span class="keyword">self</span> presentViewController:picker animated:<span class="literal">YES</span> completion:<span class="literal">nil</span>];</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">UIPopoverController</span> * popOver = [[<span class="built_in">UIPopoverController</span> alloc] initWithContentViewController: picker];</span><br><span class="line">        popOver.delegate = <span class="keyword">self</span>;</span><br><span class="line">        _popOverController = popOver;</span><br><span class="line">        [_popOverController presentPopoverFromRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>,<span class="number">100</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">                                            inView:<span class="keyword">self</span>.view</span><br><span class="line">                              permittedArrowDirections:<span class="built_in">UIPopoverArrowDirectionUp</span></span><br><span class="line">                                          animated:<span class="literal">YES</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里加了一个UIPopoverController，但是UIPopoverController只能在ipad设备上面使用。</p>
 
       
     </div>
@@ -335,7 +324,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-UITextField-%E9%9A%90%E8%97%8F%E8%87%AA%E8%BA%AB%E8%BD%AF%E9%94%AE%E7%9B%98-%E7%82%B9%E5%87%BBReturn%E8%87%AA%E5%8A%A8%E8%BD%AC%E5%88%B0%E4%B8%8B%E4%B8%AA%E6%96%87%E6%9C%AC%E6%A1%86-%E8%BD%BB%E8%A7%A6%E8%83%8C%E6%99%AF%E9%9A%90%E8%97%8F%E8%BD%AF%E9%94%AE%E7%9B%98.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS7-%E4%B8%AD-UIActionSheet%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -353,7 +342,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-UITextField-%E9%9A%90%E8%97%8F%E8%87%AA%E8%BA%AB%E8%BD%AF%E9%94%AE%E7%9B%98-%E7%82%B9%E5%87%BBReturn%E8%87%AA%E5%8A%A8%E8%BD%AC%E5%88%B0%E4%B8%8B%E4%B8%AA%E6%96%87%E6%9C%AC%E6%A1%86-%E8%BD%BB%E8%A7%A6%E8%83%8C%E6%99%AF%E9%9A%90%E8%97%8F%E8%BD%AF%E9%94%AE%E7%9B%98.html" class="post-title-link" itemprop="url">iOS7 UITextField 隐藏自身软键盘、点击Return自动转到下个文本框、轻触背景隐藏软键盘</a>
+          <a href="/2025/06/27/iOS7-%E4%B8%AD-UIActionSheet%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8.html" class="post-title-link" itemprop="url">iOS7 中 UIActionSheet的简单应用</a>
         </h2>
 
         <div class="post-meta-container">
@@ -365,7 +354,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:37:49 / 修改时间：12:00:00" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:49+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 09:45:21 / 修改时间：09:57:46" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:21+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -387,42 +376,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于UITextField的几种常用的方法，隐藏自身软键盘、点击Return自动转到下个文本框、轻触背景隐藏软键盘，经过google的查找，现在总结如下：</p>
-<h4 id="1"><a href="#1" class="headerlink" title="一、隐藏自身软键盘"></a><a href="#1">一、隐藏自身软键盘</a></h4><p>　　当对于有多个UITextField控件都想通过点击“Return”来隐藏自身软键盘的情况，这时的最好办法是使用Did End on Exit事件。在点击软键盘右下角的“Return”按钮后，会触发该事件。</p>
-<p>　　该事件有一个sender参数表示当前文本框，这样便可以编写一个通用的事件处理方法（.m文件）——</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)TextField_DidEndOnExit:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 隐藏键盘.</span></span><br><span class="line">    [sender resignFirstResponder];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>UIActionSheet简单的应用</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIActionSheet</span> *actionSheet = [[<span class="built_in">UIActionSheet</span> alloc] initWithTitle:<span class="string">@&quot;请选择背景图片的来源&quot;</span></span><br><span class="line">                                                         delegate:<span class="keyword">self</span></span><br><span class="line">                                                cancelButtonTitle:<span class="string">@&quot;取消&quot;</span></span><br><span class="line">                                           destructiveButtonTitle:<span class="literal">nil</span></span><br><span class="line">                                                otherButtonTitles:<span class="string">@&quot;拍照&quot;</span>,<span class="string">@&quot;相册&quot;</span>,<span class="string">@&quot;图片库&quot;</span>,<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">actionSheet.actionSheetStyle = <span class="built_in">UIActionSheetStyleDefault</span>;</span><br><span class="line">[actionSheet showInView: <span class="keyword">self</span>.view];</span><br></pre></td></tr></table></figure>
 
-<p>　　然后在.h文件中填写该方法的声明——</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)TextField_DidEndOnExit:(<span class="type">id</span>)sender;</span><br></pre></td></tr></table></figure>
-
-<p>　　回到storyboard，并按command+option+enter打开辅助窗口，使辅助窗口显示.h文件。</p>
-<p>　　选中一个UITextField控件，点击鼠标右键弹出面板，鼠标左键按住Did End on Exit事件旁边的圆圈，然后拖曳到右侧.h文件的TextField_DidEndOnExit方法上，便会建立好事件连接。</p>
-<p>　　随后按照同样的做法，将其他UITextField控件的Did End on Exit事件也连接到TextField_DidEndOnExit方法。</p>
-<p>　　运行一下，可发现每个文本框的软键盘都可以通过点击“Return”来隐藏了。</p>
-<h4 id="2"><a href="#2" class="headerlink" title="二、点击Return自动转到下个文本框"></a><a href="#2">二、点击Return自动转到下个文本框</a></h4><p>　　当页面中有很多个文本框时，如果每次都需要点文本框激活软键盘、输入后点击Return隐藏软键盘、再点击下一个文本框……这样操作起来太繁琐了。</p>
-<p>　　于是我们希望能够实现点击Return时能够自动转到下一个文本框。尤其是对于最后一个文本框，希望能够在点击Return时执行下一步操作。</p>
-<p>　　例如对于登录页面。它上面有 账号文本框（nameTextField）、密码文本框（passTextField）、登录按钮（loginButton）。</p>
-<p>　　我们希望——点击账号文本框软键盘的Return时跳转到密码文本框，点击密码文本框软键盘的Return时执行登录。</p>
-<p>　　因为这两个文本框的功能不同，不能像上一节那样写一个TextField_DidEndOnExit做统一处理，而应该分别建立各自的事件处理方法。</p>
-<p>　　回到storyboard，右击账号文本框（nameTextField）弹出面板，按住Did End on Exit事件旁边的圆圈，然后拖曳到右侧.h文件的空白地方，此时会弹出一个对话框给方法命名。输入名称（nameTextField_DidEndOnExit）后回车确定，便自动生成了该事件方法。</p>
-<p>　　随后按照同样的做法，为密码文本框（passTextField）的Did End on Exit事件连接方法（passTextField_DidEndOnExit）。</p>
-<p>　　来到.m文件，填写具体代码——</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)nameTextField_DidEndOnExit:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 将焦点移至下一个文本框.</span></span><br><span class="line">    [_passTextField becomeFirstResponder];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>　　对于账号文本框转密码文本框，不需要隐藏软键盘，只需要调用becomeFirstResponder激活新的文本框就行了。</p>
-<p>　　对于密码文本框Return后执行登录。因为不再需要显示软键盘，所以还是得调用resignFirstResponder隐藏软键盘，然后触发登录按钮（loginButton）的UIControlEventTouchUpInside事件进行登录。</p>
-<p>　　运行一下，可发现已经达到我们希望的效果了。点击账号文本框软键盘的Return时跳转到密码文本框，点击密码文本框软键盘的Return时执行登录。</p>
-<p>　　怎么都是“Return”，转换文本框与执行登录明明是不同的功能？</p>
-<p>　　于是将账号文本框的Return Key属性设为“Next”，将密码文本框的Return Key属性设为“Done”，使界面与功能一致。</p>
-<h4 id="3"><a href="#3" class="headerlink" title="三、轻触背景隐藏软键盘"></a><a href="#3">三、轻触背景隐藏软键盘</a></h4><p>　　只能通过Return关闭软键盘太不灵活了，应该提供轻触背景隐藏软键盘的功能。</p>
-<p>　　在storyboard，点击背景View，将它的Custom Class设置为UIControl，这样才会出现Touch Down事件。</p>
-<p>　　右击背景View弹出面板，按住Touch Down事件旁边的圆圈，然后拖曳到右侧.h文件的空白地方建立该事件的处理方法。</p>
-<p>　　来到.m文件，填写具体代码——</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)View_TouchDown:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 发送resignFirstResponder.</span></span><br><span class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] sendAction:<span class="keyword">@selector</span>(resignFirstResponder) to:<span class="literal">nil</span> from:<span class="literal">nil</span> forEvent:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS96eWw5MTAvYXJjaGl2ZS8yMDEzLzAzLzI5L2lvc190ZXh0ZmllbGRfa2V5Ym9hcmQuaHRtbA==">http://www.cnblogs.com/zyl910/archive/2013/03/29/ios_textfield_keyboard.html<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -449,7 +405,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E4%B8%ADNSPredicate%E7%9A%84%E7%94%A8%E6%B3%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/jQuery-hash%E8%A7%A3%E6%9E%90url-hash-%E7%9B%91%E5%90%AChashchange.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -467,7 +423,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E4%B8%ADNSPredicate%E7%9A%84%E7%94%A8%E6%B3%95.html" class="post-title-link" itemprop="url">iOS7 中NSPredicate的用法</a>
+          <a href="/2025/06/27/jQuery-hash%E8%A7%A3%E6%9E%90url-hash-%E7%9B%91%E5%90%AChashchange.html" class="post-title-link" itemprop="url">jQuery.hash解析url hash，监听hashchange</a>
         </h2>
 
         <div class="post-meta-container">
@@ -479,7 +435,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:37:41 / 修改时间：12:01:15" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:41+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 09:45:18 / 修改时间：10:06:01" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:18+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -501,50 +457,526 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>在其他的语言项目开发中，都会经常使用到正则，在ios中关于正则的话，就要考虑一下NSPredicate，关于NSPredicate的使用方法，一般来说这种情况还是蛮多的，比如你从文件中读入了一个array1，然后想把程序中的一个array2中符合array1中内容的元素过滤出来。</p>
-<p>正常傻瓜一点就是两个for循环，一个一个进行比较，这样效率不高，而且代码也不好看。</p>
-<p>其实一个循环或者无需循环就可以搞定了，那就需要用搞 NSPredicate这个类了</p>
-<p><em><strong>1）例子一，一个循环</strong></em></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *arrayFilter = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;pict&quot;</span>, <span class="string">@&quot;blackrain&quot;</span>, <span class="string">@&quot;ip&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *arrayContents = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;I am a picture.&quot;</span>, <span class="string">@&quot;I am a guy&quot;</span>, <span class="string">@&quot;I am gagaga&quot;</span>, <span class="string">@&quot;ipad&quot;</span>, <span class="string">@&quot;iphone&quot;</span>, <span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+          <h4 id="1"><a href="#1" class="headerlink" title="什么是hashsearch、hashpath"></a><a href="#1">什么是hashsearch、hashpath</a></h4><p>其实那，hashsearch、hashpath这两个词是我自造的。在javascript语言里称url改变该部分不会影响页面重新加载的部分为hash，在后台语言里称之为fragment（碎片）。在这里，我们统称为hash。</p>
+<p>在js里获取hash部分，可以使用如下语句获取：</p>
+<p>&#x2F;&#x2F; 获取当前浏览器的hash部分</p>
+<p>&#x2F;&#x2F; 如浏览器的url为：<span class="exturl" data-url="aHR0cDovL3FpYW5kdWFuYmxvZy5jb20vI2hlbGxvd29ybGQ=">http://qianduanblog.com/#helloworld<i class="fa fa-external-link-alt"></i></span></p>
+<p>var hash&#x3D;location.hash;&#x2F;&#x2F;&#x3D;&gt;”#helloworld”</p>
+<p>在html发展的历史中，以前使用hash的作用很简单，就是做锚点使用。hash的“#”和CSS里的“#”是相同的意思，表示id。url的hash部分为#123，那么就会在页面打开的时候直接定位到id&#x3D;123的元素位置。这个特性，已经被所有浏览器所接受并支持。通常这一功能用作于文章的目录部分，表示索引作用。</p>
+<p>如下示例：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>指向id=123的内容<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">	<span class="selector-tag">div</span></span></span><br><span class="line"><span class="language-css">	&#123;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">margin-bottom</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">background</span>: <span class="number">#eee</span>;</span></span><br><span class="line"><span class="language-css">	&#125;</span></span><br><span class="line"><span class="language-css">	</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#123&quot;</span>&gt;</span>点击这里立即跳转到id=123的元素位置<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;121&quot;</span>&gt;</span>id=121<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;122&quot;</span>&gt;</span>id=122<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;123&quot;</span>&gt;</span>id=123<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;124&quot;</span>&gt;</span>id=124<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;125&quot;</span>&gt;</span>id=125<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>我想过滤arrayContents的话只要循环 arrayFilter就好了</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> i = <span class="number">0</span>, count = [arrayFilter count];</span><br><span class="line"><span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; count; i ++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *arrayItem = (<span class="built_in">NSString</span> *)[arrayFilter objectAtIndex:i];</span><br><span class="line">    <span class="built_in">NSPredicate</span> *filterPredicate = [[<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF CONTAINS %@&quot;</span>, arrayItem];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Filtered array with filter %@, %@&quot;</span>, arrayItem, [arrayContents filteredArrayUsingPredicate:filterPredicate]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上例子，点击a链接就改变了当前url的hash，指向了hash指向的位置。当前了，如果为hash的id的元素不存在的话，那么各个浏览器的反应是各不相同的，部分高级浏览器不会改变页面滚动条的位置，部分低级浏览器会直接跳转到页面顶部。</p>
+<p>说到这里，要解释下什么是hashsearch、hashpath了。从字面可以理解，<code>hashsearch=hash+search</code>，<code>hashpath=hash+path</code>。可能在专业术语里已经有这两个字了，但都与这篇文章无关，因为这俩个词是自造的。什么是hash，我们已经知道了。</p>
+<p>那什么是search呢？</p>
+<p>在url中有一部分是search部分，如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/?name=aaa&amp;age=100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/?name=bbb&amp;age=10</span></span><br></pre></td></tr></table></figure>
 
-<p>当然以上代码中arrayContent最好用mutable 的，这样就可以直接filter了，NSArray是不可修改的。</p>
-<p><em><strong>2）例子二，无需循环</strong></em></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *arrayFilter = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;abc1&quot;</span>, <span class="string">@&quot;abc2&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *arrayContent = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;a1&quot;</span>, <span class="string">@&quot;abc1&quot;</span>, <span class="string">@&quot;abc4&quot;</span>, <span class="string">@&quot;abc2&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSPredicate</span> *thePredicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;NOT (SELF in %@)&quot;</span>, arrayFilter];</span><br><span class="line">[arrayContent filterUsingPredicate:thePredicate];</span><br></pre></td></tr></table></figure>
+<p>url的“?”后面的部分称之为search值，是被后台程序所接收的。</p>
+<p>path又是什么呢？</p>
+<p>如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/name/aaa/age/100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/name/bbb/age/10</span></span><br></pre></td></tr></table></figure>
 
-<p>这样arrayContent过滤出来的就是不包含 arrayFilter中的所有item了。</p>
-<p><em><strong>3）生成文件路径下文件集合列表</strong></em></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSFileManager</span> *fileManager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"><span class="built_in">NSString</span> *defaultPath = [[<span class="built_in">NSBundle</span> mainBundle] resourcePath];</span><br><span class="line"><span class="built_in">NSError</span> *error;</span><br><span class="line"><span class="built_in">NSArray</span> *directoryContents = [fileManager contentsOfDirectoryAtPath:defaultPath error:&amp;error]</span><br></pre></td></tr></table></figure>
+<p>一眼就看出来了，search和path的不同点，通常我们都把search的url重定向成path类型的。</p>
+<p>所以，由上可知，hashsearch、hashpath分别指的是：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#?name=aaa&amp;age=100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!name/aaa/age/100</span></span><br></pre></td></tr></table></figure>
 
-<p><em><strong>4）match的用法</strong></em></p>
+<p>规范1：hashsearch的开头部分为“#?”，而hashpath的开头部分为“#!”，多个“#”会被忽略，多个“?”或“!”会被最后一个“?”或“!”所覆盖，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!name/aaa/age/100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#####!!!!!!name/aaa/age/100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#####????!name/aaa/age/100</span></span><br></pre></td></tr></table></figure>
+
+<p>以上3个url的hash会被解析成相同的结果。</p>
+<p>规范2：hash部分的解析以开头的协议规定（“?”表示search类型，“!”表示path类型），与后面的内容无关，不符合规范的部分会被抛弃解析。</p>
+<h4 id="2"><a href="#2" class="headerlink" title="哪些地方可以用hashsearch、hashpath"></a><a href="#2">哪些地方可以用hashsearch、hashpath</a></h4><p>也许我们都认为url的hash是个小角色，它的作用微乎其微，就像当初我们认为ajax很渺小一样可笑。值得回味的是，把ajax发扬光大的谷歌同样在把url的hash也再次推向时代的前言，它是随着ajax的出现，诞生的一种新型url结构。</p>
+<p>先看看如下几个url：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/aaa</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/bbb</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/ccc</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/ddd</span></span><br></pre></td></tr></table></figure>
+
+<p>从url的结构，很明显的看出来，这四个url的目的肯定是不同的，分别表示aaa、bbb、ccc、ddd四个用户所见的页面，但是有一点相同的是，这四个url是同一个页面，在浏览器打开的时候，只请求一次，不会分别请求。这是hash在url中发挥的重要特性。</p>
+<p>有这样一个疑问了，既然页面相同的，那么四个用户的页面又如何区分呢？这里必须用到ajax，在页面载入之后，ajax载入四个用户独特的内容。</p>
+<p>在当今，hash部分通常应用于单页面应用的丰富表现里，国外很多网站（twitter、谷歌等）已经这样做了，同样国内的如网易邮箱也这样做了。这样做的好处是：</p>
 <ol>
-<li>简单比较</li>
+<li>页面只需要一次加载。</li>
+<li>页面体验流畅，反应速度快。</li>
+<li>页面内容按需加载，减轻服务器压力。</li>
+<li>页面可以适配搜索引擎。</li>
 </ol>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz-999.png&quot;</span>;</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF == %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
+<p>前3条的意思很明显，第4条的详细内容，我在这里就不说了，大家有兴趣可以去查看谷歌的介绍文字：jquery插件2：jquery.hash解析url hash，监听hashchange <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vd2VibWFzdGVycy9hamF4LWNyYXdsaW5nL2RvY3MvZ2V0dGluZy1zdGFydGVkJUUzJTgwJTgyJUU1JUE0JUE3JUU2JUE2JTgyJUU3JTlBJTg0JUU2JTg0JThGJUU2JTgwJTlEJUU2JTk4JUFGaGFzaHBhdGglRTYlOTglQUYlRTUlOEYlQUYlRTQlQkIlQTUlRTglQTIlQUIlRTYlOTAlOUMlRTclQjQlQTIlRTUlQkMlOTUlRTYlOTMlOEUlRTglQUUlQTQlRTglQUYlODYlRTclOUElODQlRUYlQkMlOEMlRTglODAlOENoYXNoc2VhcmNoJUU1JTg4JTk5JUU0JUI4JThEJUU1JThGJUFGJUU0JUJCJUE1JUVGJUJDJTg4JUU3JTlCJUFFJUU1JTg5JThEJUVGJUJDJTg5JUUzJTgwJTgyJUU2JTg5JTgwJUU0JUJCJUE1JUVGJUJDJThDJUU2JTg4JTkxJUU0JUJCJUFDJUU1JThGJUFGJUU0JUJCJUE1JUU2JUEwJUI5JUU2JThEJUFFJUU1JTg2JTg1JUU1JUFFJUI5JUU3JTlBJTg0JUU0JUI4JThEJUU1JTkwJThDJUU2JTlEJUE1JUU5JTgwJTg5JUU2JThCJUE5JUU0JUI4JThEJUU1JTkwJThDJUU3JTlBJTg0aGFzaCVFNyVCMSVCQiVFNSU5RSU4QiVFMyU4MCU4Mg==">https://developers.google.com/webmasters/ajax-crawling/docs/getting-started。大概的意思是hashpath是可以被搜索引擎认识的，而hashsearch则不可以（目前）。所以，我们可以根据内容的不同来选择不同的hash类型。<i class="fa fa-external-link-alt"></i></span></p>
+<h4 id="3"><a href="#3" class="headerlink" title="jquery.hash及hashchange"></a><a href="#3">jquery.hash及hashchange</a></h4><p>说明：jquery.hash.js默认的hashType为hashpath，其标示符为”!“，而hashsearch的标示符为”?”。</p>
+<p>3.1、解析hash</p>
+<p>按照以上的hash规则，我们可以把hash解析成键值对，$.hash();就可以直接解析，例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://qianduanblog.com/#!a/1/b/2/c/3</span></span><br><span class="line"><span class="comment">// http://qianduanblog.com/#?a=1&amp;b=2&amp;c=3</span></span><br><span class="line"><span class="comment">// $.hash();</span></span><br><span class="line"><span class="comment">// =&gt;&#123;a:&quot;1&quot;,b:&quot;2&quot;,c:&quot;3&quot;&#125;</span></span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>match里like的用法（类似Sql中的用法）</li>
+<p> 3.2、读取hash</p>
+<p>把hash解析成了键值对（json对象），读取它就很好办了，例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://qianduanblog.com/#!a/1/b/2/c/3</span></span><br><span class="line"><span class="comment">// http://qianduanblog.com/#?a=1&amp;b=2&amp;c=3</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;&quot;1&quot;</span></span><br><span class="line">$.<span class="title function_">hash</span>([<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>]);</span><br><span class="line"><span class="comment">// =&gt;&#123;a:&quot;1&quot;,b:&quot;2&quot;&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>3.3、设置hash</p>
+<p>设置hash的值也很简单，如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 单个设置</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;11&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!a/11/b/2/c/3</span></span><br><span class="line"><span class="comment">// 单个设置的时候同时修改hash类型</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;11&quot;</span>,<span class="string">&quot;?&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#?a=11&amp;b=2&amp;c=3</span></span><br><span class="line"><span class="comment">// 多个设置</span></span><br><span class="line">$.<span class="title function_">hash</span>(&#123;<span class="attr">a</span>:<span class="number">111</span>,<span class="attr">b</span>:<span class="number">222</span>&#125;);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#?a=111&amp;b=222&amp;c=3</span></span><br><span class="line"><span class="comment">// 多个设置的时候同时修改hash类型</span></span><br><span class="line">$.<span class="title function_">hash</span>(&#123;<span class="attr">a</span>:<span class="number">111</span>,<span class="attr">b</span>:<span class="number">222</span>&#125;,<span class="string">&quot;!&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!a/111/b/222/c/3</span></span><br></pre></td></tr></table></figure>
+
+<p>3.4、删除hash</p>
+<p>删除hash操作也很简单，例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 删除单个</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>,<span class="literal">null</span>)</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!b/222/c/3</span></span><br><span class="line"><span class="comment">// 删除多个</span></span><br><span class="line">$.<span class="title function_">hash</span>([<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>],<span class="literal">null</span>)</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!c/3</span></span><br></pre></td></tr></table></figure>
+
+<p>3.5、清空hash</p>
+<p>清空操作一如既往的方便，例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">hash</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#</span></span><br></pre></td></tr></table></figure>
+
+<p>3.6、监听hashchange</p>
+<p>监听的使用方法也很便捷，例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 单监听，当监听的变量发生变化时触发</span></span><br><span class="line"><span class="comment">// 假设a值由1变化为2</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;listen&quot;</span>,<span class="string">&quot;a&quot;</span>,<span class="keyword">function</span>(<span class="params">oldObj,newObj</span>)&#123;</span><br><span class="line"><span class="comment">// 当hash中的a值发生变化就会触发监听事件</span></span><br><span class="line"><span class="comment">// 回调函数有2个参数</span></span><br><span class="line"><span class="comment">// 参数1：旧值的对象，如这里监听的是a，那么其为&#123;a:1&#125;</span></span><br><span class="line"><span class="comment">// 参数2：现值的对象，如这里监听的是a，那么其为&#123;a:2&#125;</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 并监听，当监听的变量都同时发生变化时才触发</span></span><br><span class="line"><span class="comment">// 假设b由2=&gt;3</span></span><br><span class="line"><span class="comment">// 假设c由3=&gt;4</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;listenAnd&quot;</span>,[<span class="string">&quot;b&quot;</span>,<span class="string">&quot;c&quot;</span>],<span class="keyword">function</span>(<span class="params">oldObj,newObj</span>)&#123;</span><br><span class="line"><span class="comment">// 参数1：旧值的对象，如这里监听的是b、c，那么其为&#123;b:2,c:3&#125;</span></span><br><span class="line"><span class="comment">// 参数2：现值的对象，如这里监听的是b、c，那么其为&#123;b:3,c:4&#125;</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 或监听，当监听的变量任何一个发生变化时都触发</span></span><br><span class="line"><span class="comment">// 假设d由4=&gt;5</span></span><br><span class="line"><span class="comment">// 假设e没变5=&gt;5</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;listenOr&quot;</span>,[<span class="string">&quot;d&quot;</span>,<span class="string">&quot;e&quot;</span>],<span class="keyword">function</span>(<span class="params">oldObj,newObj</span>)&#123;</span><br><span class="line"><span class="comment">// 参数1：旧值的对象，如这里监听的是d、e，那么其为&#123;d:4,e:5&#125;</span></span><br><span class="line"><span class="comment">// 参数2：现值的对象，如这里监听的是d、e，那么其为&#123;b:5,e:5&#125;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="4"><a href="#4" class="headerlink" title="插件下载及演示"></a><a href="#4">插件下载及演示</a></h4><p>下载地址：</p>
+<p><span class="exturl" data-url="aHR0cDovL2Zlc3RhdGljLmFsaWFwcC5jb20vI2pxdWVyeS5oYXNo">http://festatic.aliapp.com/#jquery.hash<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL2Zlc3RhdGljLmFsaWFwcC5jb20vanMvanF1ZXJ5Lmhhc2gvIyFhLzEvYi8yL2MvMw==">http://festatic.aliapp.com/js/jquery.hash/#!a/1/b/2/c/3<i class="fa fa-external-link-alt"></i></span></p>
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3FpYW5kdWFuYmxvZy5jb20vMjAwMy5odG1s">http://qianduanblog.com/2003.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/window.location.hash%E5%B1%9E%E6%80%A7%E4%BB%8B%E7%BB%8D.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/window.location.hash%E5%B1%9E%E6%80%A7%E4%BB%8B%E7%BB%8D.html" class="post-title-link" itemprop="url">window.location.hash属性介绍</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 09:45:15 / 修改时间：10:02:16" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:15+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>来了解一下hash，javascript中的hash是啥。</p>
+<p>location是javascript里边管理地址栏的内置对象，比如location.href就管理页面的url，用location.href&#x3D;url就可以直接将页面重定向url。而location.hash则可以用来获取或设置页面的标签值。比如<span class="exturl" data-url="aHR0cDovL2RvbWFpbi8jYWRtaW4lRTclOUElODRsb2NhdGlvbi5oYXNoPSUyMiNhZG1pbg==">http://domain/#admin的location.hash=&quot;#admin<i class="fa fa-external-link-alt"></i></span>“ 。利用这个属性值可以做一个非常有意义的事情。</p>
+<p>很多人都喜欢收藏网页，以便于以后的浏览。不过对于Ajax页面来说的话，一般用一个页面来处理所有的事务，也就是说，如果你浏览到一个Ajax页面里边有意思的内容，想将它收藏起来，可是地址只有一个呀，下次你打开这个地址，还是得像以往一样不断地去点击网页，找到你钟情的那个页面。另外的话，浏览器上的“前进”“后退”按钮也会失效，这于很多习惯了传统页面的用户来说，是一个很大的使用障碍。</p>
+<p>那么，怎么用location.hash来解决这两个问题呢？其实一点也不神秘。</p>
+<p>比如，某人的管理系统，主要功能有三个：普通搜索、高级搜索、后台管理，我分别给它们分配一个hash值：#search、#advsearch、#admin，在页面初始化的时候，通过window.location.hash来判断用户需要访问的页面，然后通过javascript来调整显示页面</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> hash; </span><br><span class="line">hash=(!<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">hash</span>)?<span class="string">&quot;#search&quot;</span>:<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">hash</span>; </span><br><span class="line"><span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">hash</span>=hash; </span><br><span class="line"><span class="comment">//调整地址栏地址，使前进、后退按钮能使用 </span></span><br><span class="line"><span class="keyword">switch</span>(hash)&#123;   </span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;#search&quot;</span>:  </span><br><span class="line">        <span class="title function_">selectPanel</span>(<span class="string">&quot;pnlSearch&quot;</span>);   <span class="comment">//显示普通搜索面板  </span></span><br><span class="line">        <span class="keyword">break</span>;    </span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;#advsearch&quot;</span>:    </span><br><span class="line">        <span class="title function_">selectPanel</span>(<span class="string">&quot;adSearch&quot;</span>);    <span class="comment">//显示高级搜索面板</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;#admin&quot;</span>:  </span><br><span class="line">        <span class="title function_">selectPanel</span>(<span class="string">&quot;adminSearch&quot;</span>); <span class="comment">//显示后台搜索面板</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>window.location.hash=hash</code>这个语句来调整地址栏的地址，使得浏览器里边的“前进”、“后退”按钮能正常使用（实质上欺骗了浏览器）。然后再根据hash值的不同来显示不同的面板（用户可以收藏对应的面板了），这就使得Ajax页面的浏览趋于传统化了。</p>
+<p>不过现在有一个比较简单的解决方式。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">history.<span class="title function_">pushState</span>()</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9jaGluYS1hc3B4L2FyY2hpdmUvMjAwOC8wNC8yMC8xMTYyNTk3Lmh0bWw=">http://www.cnblogs.com/china-aspx/archive/2008/04/20/1162597.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/%E9%BB%84%E6%B8%A4.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/%E9%BB%84%E6%B8%A4.html" class="post-title-link" itemprop="url">黄渤</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 17:53:09 / 修改时间：17:53:37" itemprop="dateCreated datePublished" datetime="2025-06-26T17:53:09+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%9D%82%E8%B0%88/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>黄渤 28 岁时，考上了北影成人学院，但学费不够，女同学小欧给了 2.4 万元，后来黄渤成名了，他娶了小欧为妻，但他妻子长相平平，因此有人问他：你有没有想过要换老婆？谁知黄渤却说：“糟糠之妻，不可抛弃，给我 100 亿都不会换老婆！”<br>别看黄渤颜值并不出众，但他非常受女明星欢迎，特别是林志玲，从不掩饰对他的喜欢，更是多次主动向黄渤表白说：“黄渤是我的理想伴侣，如果他单身，我一定会把他追到手，然后嫁给他。”<br>但就算林志玲貌美如花，黄渤也看不上她，因为他心中只有一个人，那就是他的初恋女友小欧。<br>小欧是黄渤的高中同学，那时的小欧很喜欢跳舞，而黄渤则是唱歌跳舞都喜欢，因为志同道合，两人经常一起练习舞蹈，久而久之，他们也从同学变成了无话不谈的好朋友。<br>高中毕业后，黄渤选择去追梦，因为他的梦想是成为一名歌手，于是他和朋友组建了一个乐队，开始四处表演，但中途其中一名队员因为一些事情离开了，这时黄渤想让小欧加入，没想到她二话不说就答应了。<br>就这样小欧跟着黄渤开始到各个歌舞厅卖唱，只为了完成他的梦想。<br>但卖唱多年，黄渤还是默默无闻，并不是他唱的不行，而是他的长相太一般了，因此一直没有遇到伯乐。<br>但他也不是没有收获，因为他和小欧成为了恋人。<br>后来，黄渤的父亲得知儿子有了女朋友后，便让他带回家看看，没想到黄渤的父亲看到小欧的长相后，顿时非常满意，也把她当成了准儿媳，于是他让儿子别出去折腾了，在家乡给他开间工厂，让他们两人去管理。<br>可没想到，工厂做不到一年，就倒闭了，这让黄渤非常自责，对什么都不提起兴趣，小欧便想让他出去走走，放松下心情。<br>刚好这时，黄渤认识的演员好朋友得知了他的情况，于是推荐黄渤来北京跟他一起拍戏，但黄渤对演戏一窍不通，本想拒绝，但小欧却觉得这是个机会，就当是散散心也好。<br>谁料，拍完这部戏后，黄渤就爱上了表演，觉得当演员也挺好的，于是好朋友建议他说，如果你真想当演员，那么可以去报考北影的表演系，这样有个正式的文凭，以后接戏也方便。<br>对此，小欧也觉得很有道理，她也非常支持黄渤去考北影，更是决定跟他一起留在北京，陪他一起奋斗。<br>可黄渤报考两次，都考不上，因为北影的表演系还是很有难度的，而这时的黄渤也已经 28 岁了，没有那么多时间去浪费，于是他改变思路，报考了播音系，因为这个相对表演系来说，简单点，没想到一考就通过了，这让他非常高興。<br>然而，付了一万多学费后，黄渤身上就再也没有多余的钱了，那么接下来几个学期的生活费该怎么办，想到这他就非常发愁。<br>这时，小欧拿出了 6000 块给他当生活费，并且对他说：你好好学，生活费我会帮你解决。<br>这让黄渤非常感动，他对小欧说：等我几年，我一定娶你。<br>在接下来的日子里，小欧在外打工，省吃俭用，住的是地下室，吃得也是最简单，只为了省下更多的钱，两年里，她一共资助了黄渤 2.4 万，也是有了她的支持，黄渤才能够顺利拿到文凭。<br>果然，有了文凭后，找黄渤拍戏的人也变多了，没多久他就凭借《疯狂的石头》一炮而红。<br>成名后，黄渤做得第一件事，就是与小欧结束多年的恋爱长跑，正式娶她为妻。<br>婚后，小欧负责家庭，而黄渤则是在外打拼，因为家里有小欧照顾，所以黄渤没有后顾之忧，可以专心于事业，最终凭借《心花路放》《一出好戏》等影片，成为百亿票房里的一员，更是稳居一线演员多年，事业可谓顺风顺水。<br>也是这个时候，有很多女明星主动向黄渤示好，其中就包括林志玲，但黄渤却是非常直接地对她们说：我是已婚男人。<br>一句话，就和她们保持了距离。<br>但黄渤虽然说自己结婚了，可却很少有人见过他的妻子，因为黄渤不喜欢带妻子出席活动，可见过他妻子后，很多人都表示，他的妻子长相平平，可能是这个原因，所以黄渤才不愿带她一起。<br>于是，有次主持人问黄渤说：你跟那么多女明星合作过，其中很多人对你有好感，那你有没有想过要换老婆？<br>没想到，黄渤笑着说：“想是想过，身边扑上来的也有，但换老婆这种事情咱们干不出来，就算给我一百万我也不换，因为在我一穷二白的时候，妻子就已经陪在我身边了，我们同甘共苦，让我抛弃糟糠之妻，我做不来！”<br>如今，黄渤和妻子小欧已经结婚 16 年，依旧恩爱如初，他们夫妻白手起家，同甘共苦，彼此互相扶持，互相信任，互相理解，都希望对方能够过得更好，因此他们夫妻的感情一直很好，这才是爱情最好的模样。<br>不得不说，小欧嫁对了人，其实，一个成功男人的背后都有一个默默付出的女人，而小欧就是黄渤背后的女人，黄渤的成功离不开她的付出，好男人是懂得感恩的，绝不会抛弃糟糠之妻，而黄渤成名后，没有抛弃糟糠之妻，而是对妻子一直那么专一，是个好男人，而他妻子也是好妻子，两人非常般配，也非常有夫妻相，对此你怎么看？</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/%E4%BF%AE%E6%94%B9navigationItem%E4%B8%8A%E7%9A%84title-%E9%A2%9C%E8%89%B2%E5%92%8C%E6%A0%B7%E5%BC%8F.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/%E4%BF%AE%E6%94%B9navigationItem%E4%B8%8A%E7%9A%84title-%E9%A2%9C%E8%89%B2%E5%92%8C%E6%A0%B7%E5%BC%8F.html" class="post-title-link" itemprop="url">修改navigationItem上的title 颜色和样式</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:30 / 修改时间：16:26:08" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:30+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>今天正好做到这里，以为之前的设计是通过view的跳转，然后直接传递title过来，然后在viewDidLoad里面直接赋值，但是有遇到了一个比较傻眼的情况，接口只给我id，木有title，于是我就只有获取完title在赋值啦，于是找到了一个策略，就是在获取完数据后，直接使用下面的代码就好了，既可以修改样式还可以修改标题</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] initWithFrame:<span class="built_in">CGRectZero</span>];</span><br><span class="line">label.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br><span class="line">label.font = [<span class="built_in">UIFont</span> boldSystemFontOfSize:<span class="number">18.0</span>];</span><br><span class="line">label.textAlignment = <span class="built_in">NSTextAlignmentCenter</span>;</span><br><span class="line">label.textColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line"><span class="keyword">self</span>.navigationItem.titleView = label;</span><br><span class="line">label.text = _personName;</span><br><span class="line">[label sizeToFit];</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>文章参考：</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdG9uZ3poaXRhby9hcnRpY2xlL2RldGFpbHMvOTg1MjYzMw==">http://blog.csdn.net/tongzhitao/article/details/9852633<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-UIViewController%E4%B8%AD%E4%BD%BF%E7%94%A8UIRefreshControl-%E5%AE%9E%E7%8E%B0-UITableView%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS7-UIViewController%E4%B8%AD%E4%BD%BF%E7%94%A8UIRefreshControl-%E5%AE%9E%E7%8E%B0-UITableView%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0.html" class="post-title-link" itemprop="url">iOS7 UIViewController中使用UIRefreshControl  实现 UITableView下拉刷新</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:28 / 修改时间：16:27:25" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:28+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>之前做了一个使用UITableViewController中实现刷新的方法，这里实现一个使用UIViewController实现下拉刷新，当果然要使用到UIRefreshControl。</p>
+<p>创建啥的我就不记录了，文件列一下</p>
+<p>MeCelebrityViewController.m</p>
+<p>MeCelebrityViewController.h</p>
+<p>MeCelebrityViewController.xib</p>
+<p>下面列出主要的实现过程</p>
+<p>第一步：组件的添加</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UIRefreshControl</span>* refreshControl;</span><br></pre></td></tr></table></figure>
+
+<p>viewDidLoad的初始化</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//添加刷新</span></span><br><span class="line">_refreshControl = [[<span class="built_in">UIRefreshControl</span> alloc] init];</span><br><span class="line">[_refreshControl addTarget:<span class="keyword">self</span></span><br><span class="line">                  action:<span class="keyword">@selector</span>(refreshView:)</span><br><span class="line">        forControlEvents:<span class="built_in">UIControlEventValueChanged</span>];</span><br><span class="line">[_refreshControl setAttributedTitle:[[<span class="built_in">NSAttributedString</span> alloc] initWithString:<span class="string">@&quot;松手更新数据&quot;</span>]];</span><br><span class="line">[_dataTableView addSubview:_refreshControl];</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>_dataTableView</code>是要自己添加的</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> tableViewX = <span class="number">0.0</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> tableViewY = <span class="number">0.0</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> tableWidth = <span class="keyword">self</span>.navigationController.navigationBar.frame.size.width;</span><br><span class="line"><span class="built_in">CGFloat</span> tableHeight = [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height;</span><br><span class="line">_dataTableView = [[<span class="built_in">UITableView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(tableViewX,</span><br><span class="line">                                                               tableViewY,</span><br><span class="line">                                                               tableWidth,</span><br><span class="line">                                                               tableHeight)</span><br><span class="line">                                              style:<span class="built_in">UITableViewStylePlain</span>];</span><br><span class="line"></span><br><span class="line">_cellHeight = <span class="number">70.0</span>;</span><br><span class="line">_dataTableView.delegate = <span class="keyword">self</span>;</span><br><span class="line">_dataTableView.dataSource = <span class="keyword">self</span>;</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:_dataTableView];</span><br></pre></td></tr></table></figure>
+
+<p>第二步：实现下拉刷新的动作</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) refreshView:(<span class="built_in">UIRefreshControl</span> *)refresh</span><br><span class="line">&#123;</span><br><span class="line">    refresh.attributedTitle = [[<span class="built_in">NSAttributedString</span> alloc] initWithString:<span class="string">@&quot;更新数据中...&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSDateFormatter</span> *formatter = [[<span class="built_in">NSDateFormatter</span> alloc] init];</span><br><span class="line">    [formatter setDateFormat:<span class="string">@&quot;MMM d, h:mm a&quot;</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *lastUpdated = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;上次更新日期 %@&quot;</span>,</span><br><span class="line">                             [formatter stringFromDate:[<span class="built_in">NSDate</span> date]]];</span><br><span class="line">    refresh.attributedTitle = [[<span class="built_in">NSAttributedString</span> alloc] initWithString:lastUpdated];</span><br><span class="line">    [<span class="keyword">self</span> initData];</span><br><span class="line">    [_dataTableView reloadData];</span><br><span class="line">    [refresh endRefreshing];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果不是很完美，因为有遮挡的现象，不过流程走通了，下面开始自己的制作吧，如果有需要的帮助的话，请看下面的QQ群，加群交流</p>
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy55b3VyZGV2ZWxvcGVyLm5ldC9pdGVtL3Byb2dyYW0tYS11aXRhYmxldmlldy13aXRoLXB1bGxkb3duLXRvLXJlZnJlc2gv">http://www.yourdeveloper.net/item/program-a-uitableview-with-pulldown-to-refresh/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy50ZWNocmVwdWJsaWMuY29tL2Jsb2cvc29mdHdhcmUtZW5naW5lZXIvaW9zLTYtYmVzdC1wcmFjdGljZXMtaW50cm9kdWNpbmctdGhlLXVpcmVmcmVzaGNvbnRyb2wv">http://www.techrepublic.com/blog/software-engineer/ios-6-best-practices-introducing-the-uirefreshcontrol/<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3iOS%E7%80%91%E5%B8%83%E6%B5%81-UIScrollView%E6%88%96UITableView-%E8%BF%90%E8%A1%8C%E4%B8%8D%E6%B5%81%E7%95%85.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS7-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3iOS%E7%80%91%E5%B8%83%E6%B5%81-UIScrollView%E6%88%96UITableView-%E8%BF%90%E8%A1%8C%E4%B8%8D%E6%B5%81%E7%95%85.html" class="post-title-link" itemprop="url">iOS7 如何解决iOS瀑布流(UIScrollView或UITableView)运行不流畅</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:24 / 修改时间：16:28:07" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:24+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>如果UITableView滑动太快，可能同时就发出了比如10个图片请求。这些请求虽然都在后台运行，但是它们可能在同一个时间点返回UI线程。这个时候如果加载图片到UIImageView太频繁，就会造成UI卡得严重。（虽然在new iPad和iPhone4s上看不出来）</p>
+<p>在找到这个问题的同时，也发现performSelectorAfterDelay这个方法，会堆积到UI线程空闲的时候执行。而dispatch_after或者dispatch_async都会直接插入UI线程当场执行。所以这个问题其实可以用performSelectorAfterDelay来解决，测试也是非常流畅，感觉不出一点点的卡。但会出现新的问题，那就是在滑动过程中，不会加载任何图片。知道scrollView停止的时候，图片才会出来。当然这不是理想的解决方法了。这个方法也没有解决异步过程集中到达UI线程的问题。然后采用了NSOperationQueue来解决这个问题。</p>
+<p>问题本身和UITableView加载不流畅是一样的。</p>
+<h4 id="1"><a href="#1" class="headerlink" title="解决办法"></a><a href="#1">解决办法</a></h4><p>主要要做到一下几个方面：</p>
+<ol>
+<li>除了UI部分，所有的加载操作都在后台完成。<br>这一点可以通过dispatch或者performSelectorInBackground或者NSOperationQueue来实现。见：<br>在iOS开发中利用GCD进行多线程编程<br>iOS开发中使用NSOperationQueue进行多线程操作</li>
+<li>避免后台加载完成多个资源之后集中到达占用UI线程的处理时间太长。<br>这一点可以通过NSOperationQueue来实现，将资源到UI的展现过程放在队列中逐个执行，且在每个操作完成之后进行强制等待，可以用usleep(int microSeconds)来解决。</li>
+<li>重用cell。<br>创建cell一般是很慢的，一定要重用，甚至为了performance，可以在view创建之初就创建足够多的cell在重用队列中。</li>
 </ol>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz*.png&quot;</span>;</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF like %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>大小写比较</li>
-</ol>
-<p>[c]表示忽略大小写，[d]表示忽略重音，可以在一起使用，如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz*.png&quot;</span>;</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF like[cd] %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
-<p>4.使用正则</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz-\\d&#123;3&#125;\\.png&quot;</span>;  <span class="comment">//imagexyz－123.png</span></span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF matches %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
 <hr>
-<p><em>总结：</em></p>
-<blockquote>
-<p>1） 当使用聚合类的操作符时是可以不需要循环的</p>
-<p>2）当使用单个比较类的操作符时可以一个循环来搞定</p>
-<p>PS，例子 一中尝试使用[@”SELF CONTAINS %@”, arrayFilter] 来过滤会挂调，因为CONTAINS时字符串比较操作符，不是集合操作。</p>
-</blockquote>
+<p>参考文章</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cudW5pZWFnbGUubmV0LzIwMTIvMDgvMzEvJUU1JUE2JTgyJUU0JUJEJTk1JUU4JUE3JUEzJUU1JTg2JUIzaW9zJUU3JTgwJTkxJUU1JUI4JTgzJUU2JUI1JTgxdWlzY3JvbGx2aWV3JUU2JTg4JTk2dWl0YWJsZXZpZXclRTglQkYlOTAlRTglQTElOEMlRTQlQjglOEQlRTYlQjUlODElRTclOTUlODUv">http://blog.unieagle.net/2012/08/31/如何解决ios瀑布流uiscrollview或uitableview运行不流畅/<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -571,7 +1003,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E9%AA%8C%E8%AF%81%E9%82%AE%E7%AE%B1%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E5%9C%A8Appdelegate.m%E4%B8%AD%E5%A4%84%E7%90%86%E5%A4%9A%E4%B8%AAhandleopenURL.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -589,7 +1021,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E9%AA%8C%E8%AF%81%E9%82%AE%E7%AE%B1%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7.html" class="post-title-link" itemprop="url">iOS7 验证邮箱的合法性</a>
+          <a href="/2025/06/26/iOS7-%E5%9C%A8Appdelegate.m%E4%B8%AD%E5%A4%84%E7%90%86%E5%A4%9A%E4%B8%AAhandleopenURL.html" class="post-title-link" itemprop="url">iOS7 在Appdelegate.m中处理多个handleopenURL</a>
         </h2>
 
         <div class="post-meta-container">
@@ -601,7 +1033,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:37:36 / 修改时间：12:10:52" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:36+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-26 14:55:22 / 修改时间：16:28:53" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:22+08:00">2025-06-26</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -623,18 +1055,14 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于用于输入的邮箱地址的内容的合法性，在IOS7中的做法与之前的是一样的。</p>
-<p>第一种方法：最简单的就是利用系统的NSPredicate</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//利用正则表达式验证</span></span><br><span class="line">-(<span class="type">BOOL</span>)isValidateEmail:(<span class="built_in">NSString</span> *)email &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *emailRegex = <span class="string">@&quot;[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]&#123;2,4&#125;&quot;</span>; </span><br><span class="line">    <span class="built_in">NSPredicate</span> *emailTest = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF MATCHES %@&quot;</span>, emailRegex]; </span><br><span class="line">    <span class="keyword">return</span> [emailTest evaluateWithObject:email];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>类似的情况如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span>  [WeiboSDK handleOpenURL:url delegate:<span class="keyword">self</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> [FBAppCall handleOpenURL:url</span><br><span class="line">              sourceApplication:sourceApplication</span><br><span class="line">                fallbackHandler:^(FBAppCall *call) &#123;</span><br><span class="line">                    </span><br><span class="line">                    <span class="built_in">NSLog</span>(<span class="string">@&quot;In fallback handler&quot;</span>);</span><br><span class="line">                    </span><br><span class="line">                &#125;];</span><br></pre></td></tr></table></figure>
 
-<p>第二种方法：通过区分字符串</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>)validateEmail:(<span class="built_in">NSString</span>*)email</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>((<span class="number">0</span> != [email rangeOfString:<span class="string">@&quot;@&quot;</span>].length) &amp;&amp;</span><br><span class="line">       (<span class="number">0</span> != [email rangeOfString:<span class="string">@&quot;.&quot;</span>].length))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSCharacterSet</span>* tmpInvalidCharSet = [[<span class="built_in">NSCharacterSet</span> alphanumericCharacterSet] invertedSet];</span><br><span class="line">        <span class="built_in">NSMutableCharacterSet</span>* tmpInvalidMutableCharSet = [[tmpInvalidCharSet mutableCopy] autorelease];</span><br><span class="line">        [tmpInvalidMutableCharSet removeCharactersInString:<span class="string">@&quot;_-&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         *使用compare option 来设定比较规则，如</span></span><br><span class="line"><span class="comment">         *NSCaseInsensitiveSearch是不区分大小写</span></span><br><span class="line"><span class="comment">         *NSLiteralSearch 进行完全比较,区分大小写</span></span><br><span class="line"><span class="comment">         *NSNumericSearch 只比较定符串的个数，而不比较字符串的字面值</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="built_in">NSRange</span> range1 = [email rangeOfString:<span class="string">@&quot;@&quot;</span></span><br><span class="line">                                      options:<span class="built_in">NSCaseInsensitiveSearch</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//取得用户名部分</span></span><br><span class="line">        <span class="built_in">NSString</span>* userNameString = [email substringToIndex:range1.location];</span><br><span class="line">        <span class="built_in">NSArray</span>* userNameArray   = [userNameString componentsSeparatedByString:<span class="string">@&quot;.&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">NSString</span>* string <span class="keyword">in</span> userNameArray)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">NSRange</span> rangeOfInavlidChars = [string rangeOfCharacterFromSet: tmpInvalidMutableCharSet];</span><br><span class="line">            <span class="keyword">if</span>(rangeOfInavlidChars.length != <span class="number">0</span> || [string isEqualToString:<span class="string">@&quot;&quot;</span>])</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//取得域名部分</span></span><br><span class="line">        <span class="built_in">NSString</span> *domainString = [email substringFromIndex:range1.location+<span class="number">1</span>];</span><br><span class="line">        <span class="built_in">NSArray</span> *domainArray   = [domainString componentsSeparatedByString:<span class="string">@&quot;.&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">NSString</span> *string <span class="keyword">in</span> domainArray)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">NSRange</span> rangeOfInavlidChars=[string rangeOfCharacterFromSet:tmpInvalidMutableCharSet];</span><br><span class="line">            <span class="keyword">if</span>(rangeOfInavlidChars.length !=<span class="number">0</span> || [string isEqualToString:<span class="string">@&quot;&quot;</span>])</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>facebook要调用我的handleOpenUrl，但是Sina Weibo也要调用,导致的结果是如何进行区分，然后进行不同的url调用。</p>
+<p>其实很简单，对于这样的接口其实在ios中有过scheme的设置，完全可以判断url的前缀是否含有你自己设置的前缀，可以如下</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string =[url absoluteString];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ([string hasPrefix:<span class="string">@&quot;微博url的前缀&quot;</span>])</span><br><span class="line">&#123;</span><br><span class="line">     <span class="keyword">return</span> [WeiboSDK handleOpenURL:url delegate:<span class="keyword">self</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ([string hasPrefix:<span class="string">@&quot;Facebook的url的前缀&quot;</span>])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> [WXApi handleOpenURL:url delegate:<span class="keyword">self</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<hr>
-<p>经过测试第一种方法好用。第二种方法尚未测试。</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanVzdGluamluZzA2MTIvYXJ0aWNsZS9kZXRhaWxzLzczMTAyMzc=">http://blog.csdn.net/justinjing0612/article/details/7310237<i class="fa fa-external-link-alt"></i></span></p>
+<p>嗯，记录下</p>
 
       
     </div>
@@ -661,7 +1089,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-UITextView-%E5%92%8C-UITextField%E4%B8%AD%E9%94%AE%E7%9B%98%E8%BE%93%E5%85%A5%E7%9A%84%E5%86%85%E5%AE%B9%E7%9A%84%E8%8E%B7%E5%8F%96.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Java-%E4%BD%BF%E7%94%A8%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -679,7 +1107,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-UITextView-%E5%92%8C-UITextField%E4%B8%AD%E9%94%AE%E7%9B%98%E8%BE%93%E5%85%A5%E7%9A%84%E5%86%85%E5%AE%B9%E7%9A%84%E8%8E%B7%E5%8F%96.html" class="post-title-link" itemprop="url">iOS7 UITextView 和 UITextField中键盘输入的内容的获取</a>
+          <a href="/2025/06/26/Java-%E4%BD%BF%E7%94%A8%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F.html" class="post-title-link" itemprop="url">Java 使用数组进行 选择排序</a>
         </h2>
 
         <div class="post-meta-container">
@@ -691,7 +1119,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:37:31 / 修改时间：12:11:39" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:31+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-26 14:55:19 / 修改时间：16:32:25" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:19+08:00">2025-06-26</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -713,515 +1141,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>UITextField中的内容的获取方式：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) textFieldDidEndEditing:(<span class="built_in">UITextField</span> *)textField</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//获取输入的内容</span></span><br><span class="line">    <span class="built_in">NSString</span> *content = [textField text];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>UITextView中的内容的获取方式：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>)textView:(<span class="built_in">UITextView</span> *)textView shouldChangeTextInRange:(<span class="built_in">NSRange</span>)range replacementText:(<span class="built_in">NSString</span> *)text      </span><br><span class="line">&#123;      </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ([text isEqualToString:<span class="string">@&quot;\n&quot;</span>]) &#123;      </span><br><span class="line">        </span><br><span class="line">        [textView resignFirstResponder];</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NO</span>;      </span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(range.location &gt;= <span class="number">500</span>)<span class="comment">//如果输入超过规定的字数20，就不再让输入  </span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>  <span class="literal">NO</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">NSString</span> *content = text;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Objective-C-KVC%E7%9A%84%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0%E5%92%8C%E7%A4%BA%E4%BE%8B.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Objective-C-KVC%E7%9A%84%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0%E5%92%8C%E7%A4%BA%E4%BE%8B.html" class="post-title-link" itemprop="url">Objective-C KVC的简单概述和示例</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:16:08 / 修改时间：11:19:26" itemprop="dateCreated datePublished" datetime="2025-06-26T11:16:08+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>KVC的简单概述和示例</p>
-<p>1 、概述</p>
-<p>KVC是KeyValue Coding的简称，它是一种可以直接通过字符串的名字(key)来访问类属性的机制。而不是通过调用Setter、Getter方法访问。</p>
-<p>当使用KVO、Core Data、CocoaBindings、AppleScript(Mac支持)时，KVC是关键技术。</p>
-<p>2、如何使用KVC</p>
-<p>关键方法定义在：NSKeyValueCodingprotocol</p>
-<p>KVC支持类对象和内建基本数据类型。</p>
-<p><em><strong>获取值</strong></em></p>
-<p>valueForKey:，传入NSString属性的名字。</p>
-<p>valueForKeyPath:，传入NSString属性的路径，xx.xx形式。</p>
-<p>valueForUndefinedKey它的默认实现是抛出异常，可以重写这个函数做错误处理。</p>
-<p><em><strong>修改值</strong></em></p>
-<p>setValue:forKey:</p>
-<p>setValue:forKeyPath:</p>
-<p>setValue:forUndefinedKey:</p>
-<p>setNilValueForKey: 当对非类对象属性设置nil时，调用，默认抛出异常。</p>
-<p><em><strong>一对多关系成员的情况</strong></em></p>
-<p>mutableArrayValueForKey：有序一对多关系成员  NSArray</p>
-<p>mutableSetValueForKey：无序一对多关系成员  NSSet</p>
-<hr>
-<p>示例操作：</p>
-<p>创建Person和AppleDevice类</p>
-<figure class="highlight objectivec"><figcaption><span>Person.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Person.h</span></span><br><span class="line"><span class="comment">//  KVCDemoa</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@private</span></span><br><span class="line">    <span class="built_in">NSString</span> *_name;</span><br><span class="line">    <span class="built_in">NSArray</span> *_apples;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight objectivec"><figcaption><span>Person.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Person.m</span></span><br><span class="line"><span class="comment">//  KVCDemoa</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;Person.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight objectivec"><figcaption><span>AppleDevice.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  AppleDevice.h</span></span><br><span class="line"><span class="comment">//  KVCDemoa</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">AppleDevice</span> : <span class="title">NSObject</span></span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@private</span></span><br><span class="line">    <span class="built_in">NSString</span> *_name;</span><br><span class="line">    <span class="built_in">NSArray</span> *_price;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight objectivec"><figcaption><span>AppleDevice.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  AppleDevice.m</span></span><br><span class="line"><span class="comment">//  KVCDemoa</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;AppleDevice.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">AppleDevice</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-<p>实现操作过程代码：</p>
-<figure class="highlight objectivec"><figcaption><span>main.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  </span></span><br><span class="line"><span class="comment">//  KVCDemoa</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;AppleDevice.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;Person.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> main(<span class="type">int</span> argc, <span class="keyword">const</span> <span class="type">char</span> * argv[])</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        Person *person = [[Person alloc] init];</span><br><span class="line">        [person setValue:<span class="string">@&quot;Durban&quot;</span></span><br><span class="line">                  forKey:<span class="string">@&quot;_name&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        AppleDevice *mac = [[AppleDevice alloc] init];</span><br><span class="line">        [mac setValue:<span class="string">@&quot;mac&quot;</span></span><br><span class="line">               forKey:<span class="string">@&quot;_name&quot;</span>];</span><br><span class="line">        [mac setValue:@<span class="number">10000</span></span><br><span class="line">               forKey:<span class="string">@&quot;_price&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        AppleDevice *iphone = [[AppleDevice alloc] init];</span><br><span class="line">        [iphone setValue:<span class="string">@&quot;iphone&quot;</span></span><br><span class="line">               forKey:<span class="string">@&quot;_name&quot;</span>];</span><br><span class="line">        [iphone setValue:@<span class="number">10000</span></span><br><span class="line">               forKey:<span class="string">@&quot;_price&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        AppleDevice *ipad = [[AppleDevice alloc] init];</span><br><span class="line">        [ipad setValue:<span class="string">@&quot;ipad&quot;</span></span><br><span class="line">               forKey:<span class="string">@&quot;_name&quot;</span>];</span><br><span class="line">        [ipad setValue:@<span class="number">3800</span></span><br><span class="line">               forKey:<span class="string">@&quot;_price&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">NSArray</span> *apples = @[mac,ipad,iphone];</span><br><span class="line">        </span><br><span class="line">        [person setValue:apples forKey:<span class="string">@&quot;_apples&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">NSNumber</span> *num = [person valueForKeyPath:<span class="string">@&quot;_apples.@sum._price&quot;</span>];</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;num = %@&quot;</span>,num);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// insert code here...</span></span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Hello, World!&quot;</span>);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>得到的结果是：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2013-12-19 08:39:49.754 KVCDemoa[27764:303] num = 23800</span><br><span class="line">2013-12-19 08:39:49.783 KVCDemoa[27764:303] Hello, World!</span><br><span class="line">Program ended with <span class="built_in">exit</span> code: 0</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/SVN-%E6%8F%90%E4%BA%A4%E7%9A%84%E6%97%B6%E5%80%99%E6%8F%90%E7%A4%BA-No-space-left-on-device.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/SVN-%E6%8F%90%E4%BA%A4%E7%9A%84%E6%97%B6%E5%80%99%E6%8F%90%E7%A4%BA-No-space-left-on-device.html" class="post-title-link" itemprop="url">SVN 提交的时候提示'No space left on device'</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:16:04 / 修改时间：11:24:03" itemprop="dateCreated datePublished" datetime="2025-06-26T11:16:04+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>第一次遇到一个比较奇怪的问题就是svn报了一个错误“No space left on device”，这个错误第一次遇到。看到这个错误，第一个反应是磁盘空间满了；但 df 一看，每个分区的空间都还富余的很。从 munin 的监控图表上看 Filesystem usage 也很平稳，但下面的 Inode usage 就有问题了，其中一个分区的 usage 已经到了100%。赶紧跑到服务器上 <code>df -i</code> 检查，果然是 Inode 耗尽。原来这个分区是用来扔各种日志和临时文件的，其中有某个程序产生的临时文件又小又多，又没有进行定时回滚，造成在磁盘空间耗尽之前文件系统的 Inode 就被用光了。超出系统中同时运行的最大 message queue 个数限制 ： 在 root 下用 <code>sysctl kernel.msgmni</code> 检查该参数，<code>sysctl -w kernel.msgmni=XXX</code> 重新设定即可。</p>
-<p>我这边正在尝试，大家也可以尝试一下。</p>
-<p>如果不起作用，可以重启一下svn。</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS94aWFvZmFuMjEvYXJjaGl2ZS8yMDEzLzA1LzIxLzMwOTA0NDcuaHRtbA==">http://www.cnblogs.com/xiaofan21/archive/2013/05/21/3090447.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Apache-%E4%B9%8B-Ubuntu%E4%B8%8B%E5%90%AF%E5%8A%A8-%E9%87%8D%E5%90%AF-%E5%81%9C%E6%AD%A2apache%E6%9C%8D%E5%8A%A1%E5%99%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Apache-%E4%B9%8B-Ubuntu%E4%B8%8B%E5%90%AF%E5%8A%A8-%E9%87%8D%E5%90%AF-%E5%81%9C%E6%AD%A2apache%E6%9C%8D%E5%8A%A1%E5%99%A8.html" class="post-title-link" itemprop="url">Apache 之 Ubuntu下启动/重启/停止apache服务器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:16:00 / 修改时间：11:23:12" itemprop="dateCreated datePublished" datetime="2025-06-26T11:16:00+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>一直不想使用Apache，因为我周边的人觉得不好，我也觉得既然别人说的不好，也就没有尝试的必要，但是由于其普遍性，在帮别人做项目的时候，还是需要使用一下的Apache的，这里简单的记录一下，Apache的启动和停止的命令操作。</p>
-<p>Task: Start Apache 2 Server &#x2F;启动apache服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/init.d/apache2 start</span></span><br></pre></td></tr></table></figure>
-
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> /etc/init.d/apache2 start</span><br></pre></td></tr></table></figure>
-
-<p>Task: Restart Apache 2 Server &#x2F;重启apache服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/init.d/apache2 restart</span></span><br></pre></td></tr></table></figure>
-
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> /etc/init.d/apache2 restart</span><br></pre></td></tr></table></figure>
-
-<p>Task: Stop Apache 2 Server &#x2F;停止apache服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/init.d/apache2 stop</span></span><br></pre></td></tr></table></figure>
-
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> /etc/init.d/apache2 stop</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>参考文章:</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jicy5waHBjaGluYS5jb20vaG9tZS5waHA/bW9kPXNwYWNlJnVpZD0zOTUwJmRvPWJsb2cmaWQ9NDg5MzQ=">http://bbs.phpchina.com/home.php?mod=space&amp;uid=3950&amp;do=blog&amp;id=48934<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E6%80%8E%E6%A0%B7%E5%88%A4%E6%96%ADios-app-%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%90%AF%E5%8A%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E6%80%8E%E6%A0%B7%E5%88%A4%E6%96%ADios-app-%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%90%AF%E5%8A%A8.html" class="post-title-link" itemprop="url">iOS7 怎样判断ios app 第一次启动</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:15:56 / 修改时间：11:25:06" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:56+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于第一次启动iOS APP的宣传画面的制作中的判断，判断第一次启动，判断是否是第一次启动。关于这个我查找了相关资料，进行了google资料搜索。</p>
-<hr>
-<p>一个有用的例子是发送一个分析实例。这可能是一个很好的方法来确定有多少人下载实用应用程序。有人会说：“但是，嘿，苹果AppStore已经告诉我，应用程序的下载量了”。</p>
-<p>流行的解决方案是在大多数地方是用[NSUserDefaults standardUserDefaults的一个关键，如果它不存在，这意味着这是应用程序启动，否则，它不是第一次。</p>
-<p>你可以搜索的关键，如果它未设置运行 first-time-code，并设置它，但在app的其余部分你将无法知道它是不是第一次运行（除非你使用一个全局变量）</p>
-<p>因此，我建议我的解决方案：</p>
-<p>在appdelegate.m中找到 “<code>application:didFinishLaunchingWithOptions:</code>”方法, 添加以下代码:</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (![[<span class="built_in">NSUserDefaults</span> standardUserDefaults] boolForKey:<span class="string">@&quot;everLaunched&quot;</span>]) </span><br><span class="line">&#123;  </span><br><span class="line">    [[<span class="built_in">NSUserDefaults</span> standardUserDefaults] setBool:<span class="literal">YES</span> forKey:<span class="string">@&quot;everLaunched&quot;</span>];  </span><br><span class="line">    [[<span class="built_in">NSUserDefaults</span> standardUserDefaults] setBool:<span class="literal">YES</span> forKey:<span class="string">@&quot;firstLaunch&quot;</span>];  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;  </span><br><span class="line">    [[<span class="built_in">NSUserDefaults</span> standardUserDefaults] setBool:<span class="literal">NO</span> forKey:<span class="string">@&quot;firstLaunch&quot;</span>];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>总的解决办法是 2 个key: @”everLaunched”判断用户以前是否登录,</p>
-<p>@”firstLaunch” 用来开发者在程序的其他部分判断.</p>
-<p>在第一次启动的时候 key @”everLaunched” 不会被赋址的, 并且设置为YES. @”firstLaunch”被设置为 YES.</p>
-<p>在程序的其他部分用以下代码判断:</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([[<span class="built_in">NSUserDefaults</span> standardUserDefaults] boolForKey:<span class="string">@&quot;firstLaunch&quot;</span>]) </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="comment">// 这里判断是否第一次  </span></span><br><span class="line">    <span class="built_in">UIAlertView</span> *alert=[[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@&quot;第一次&quot;</span>   </span><br><span class="line">                                                  message:<span class="string">@&quot;进入App&quot;</span>  </span><br><span class="line">                                                 delegate:<span class="keyword">self</span>   </span><br><span class="line">                                        cancelButtonTitle:<span class="string">@&quot;我知道了&quot;</span>   </span><br><span class="line">                                        otherButtonTitles:<span class="literal">nil</span>];  </span><br><span class="line">    [alert show];  </span><br><span class="line">    [alert release];  </span><br><span class="line">      </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQva3lsaW5ibC9hcnRpY2xlL2RldGFpbHMvODYzODk4OA==">http://blog.csdn.net/kylinbl/article/details/8638988<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-NSNotificationCenter%E7%9A%84%E4%BD%9C%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-NSNotificationCenter%E7%9A%84%E4%BD%9C%E7%94%A8.html" class="post-title-link" itemprop="url">iOS7 NSNotificationCenter的作用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:15:52 / 修改时间：11:26:04" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:52+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于NSNotificationCenter的使用，之前一直想使用一下，结果今天就真的使用上了。</p>
-<blockquote>
-<p>NSNotificationCenter有什么作用，简单说之，就是两个不相干的对象之间可以通过他来传递消息，只要你把相关发送的消息和处理的事件在他那里注册就行了。</p>
-<p>我们可以这样理解：NSNotificationCenter就是一个信息中心，有很多用户已经声明他们需要这些信息。当有信息更新的时候，通过这个NSNotificationCenter就可以以广播的形式，将信息更新的消息在整个应用程序中间广播，对于那些注册消息侦听的用户就可以受到该消息，没有注册的用户就无法接收该消息。</p>
-</blockquote>
-<p>使用方法如下：</p>
-<p>第一步：定义一个方法，当注册信息侦听的对象，接受到消息后就调用该函数作为消息相应的函数</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)update:(<span class="built_in">NSNotificationCenter</span>*)notification</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> addHeadImage];</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span></span><br><span class="line">                                                    name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                  object:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二步：对象注册，并关连消息。实质上也就是注册事件的侦听，可以单独调用，也可以放在自己的函数内部进行调用。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                             selector:<span class="keyword">@selector</span>(update:)</span><br><span class="line">                                                 name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                               object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
-
-<p>在函数中进行调用</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) sinaLogin:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                             selector:<span class="keyword">@selector</span>(update:)</span><br><span class="line">                                                 name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                               object:<span class="literal">nil</span>];</span><br><span class="line">    </span><br><span class="line">    WBAuthorizeRequest *request = [WBAuthorizeRequest request];</span><br><span class="line">    request.redirectURI = kRedirectURI;</span><br><span class="line">    request.scope = <span class="string">@&quot;all&quot;</span>;</span><br><span class="line">    [WeiboSDK sendRequest:request];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第三步：在要发出通知消息的地方调用。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] postNotificationName:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                            object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
-
-<p>第四步：使用完后，别忘了注销掉该消息的侦听函数</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span></span><br><span class="line">                                                    name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                  object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
-
-<p>其实这里我是放在了我的调用函数里面，如果你觉的你的函数在调用完之后不去注销，也可以去掉的，然后在其他的地方进行注销。</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2p6c3AvYXJ0aWNsZS9kZXRhaWxzLzY3Nzc3MDA=">http://blog.csdn.net/sjzsp/article/details/6777700<i class="fa fa-external-link-alt"></i></span></p>
+          <p>Java 使用数组进行 选择排序，简单的实现过程是这样子的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SelectionSort</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span> <span class="params">(String[] args)</span>&#123;</span><br><span class="line">		<span class="type">int</span>[] intArray = &#123;<span class="number">12</span>,<span class="number">11</span>,<span class="number">45</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">43</span>,<span class="number">40</span>,<span class="number">57</span>,<span class="number">3</span>,<span class="number">20</span>&#125;;</span><br><span class="line">		<span class="type">int</span> keyValue;</span><br><span class="line">		<span class="type">int</span> index;</span><br><span class="line">		<span class="type">int</span> temp;</span><br><span class="line">		System.out.println(<span class="string">&quot;排序前的数组&quot;</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;intArray.length;i++)&#123;</span><br><span class="line">			System.out.print(intArray[i]+<span class="string">&quot; &quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println();</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i &lt; intArray.length; i++)&#123;</span><br><span class="line">			index = i;</span><br><span class="line">			keyValue = intArray[i];</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j=i;j&lt;intArray.length;j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(intArray[j] &lt; keyValue)&#123;</span><br><span class="line">					index = j;</span><br><span class="line">					keyValue = intArray[j];</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			temp = intArray[i];</span><br><span class="line">			intArray[i] = intArray[index];</span><br><span class="line">			intArray[index] = temp;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">&quot;排序后的数组&quot;</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;intArray.length;i++)&#123;</span><br><span class="line">			System.out.print(intArray[i]+<span class="string">&quot; &quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>得到的结果是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">排序前的数组</span><br><span class="line">12 11 45 6 8 43 40 57 3 20 </span><br><span class="line">排序后的数组</span><br><span class="line">3 6 8 11 12 20 40 43 45 57</span><br></pre></td></tr></table></figure>
+
+<p>嗯，是这个样子的，</p>
+<p>选择排序的特点就是：</p>
+<p>效率低，但是实现很简单。</p>
 
       
     </div>
@@ -1241,7 +1169,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/41/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><span class="page-number current">42</span><a class="page-number" href="/page/43/">43</a><span class="space">&hellip;</span><a class="page-number" href="/page/93/">93</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/43/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/41/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><span class="page-number current">42</span><a class="page-number" href="/page/43/">43</a><span class="space">&hellip;</span><a class="page-number" href="/page/95/">95</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/43/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
