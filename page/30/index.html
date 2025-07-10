@@ -191,18 +191,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">948</span>
+          <span class="site-state-item-count">1008</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">157</span>
+        <span class="site-state-item-count">165</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/iframe-%E8%A7%A3%E7%A6%81-%E6%96%B9%E6%A1%88.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Webpack+gulp-%E5%AE%9E%E7%8E%B0-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%B9%B6%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%88%B0%E4%B8%83%E7%89%9B%E5%AE%8C%E7%BE%8E%E7%A4%BA%E4%BE%8B.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/iframe-%E8%A7%A3%E7%A6%81-%E6%96%B9%E6%A1%88.html" class="post-title-link" itemprop="url">iframe 解禁 方案</a>
+          <a href="/2025/07/02/Webpack+gulp-%E5%AE%9E%E7%8E%B0-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%B9%B6%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%88%B0%E4%B8%83%E7%89%9B%E5%AE%8C%E7%BE%8E%E7%A4%BA%E4%BE%8B.html" class="post-title-link" itemprop="url">Webpack+Gulp 实现 静态文件打包并自动上传到七牛完美示例</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 15:57:25 / 修改时间：16:04:52" itemprop="dateCreated datePublished" datetime="2025-06-30T15:57:25+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-02 15:40:19 / 修改时间：15:53:12" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:19+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,9 +294,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>iframe 解禁 方案，应该是没有的，但是也不可能没有的，想要解禁iframe其实网上的方案可多的，大家都可以去试试，不过我这里你们可以试试这个属性：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sandbox=<span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+          <p>经过几天的努力终于实现了一个完美的作品，webpack可以与gulp完美结合的进行打包静态文件，并将静态文件上传到七牛云存储，当然也可以传到你想传的云存储了，这里只分享一个七牛的云存储方案。</p>
+<p>关于如何使用webpack打包静态代码，这个可以参考我之前的一些文章和方案，不行的话可以进群交流。</p>
+<p>这里只分享一下gulp这边的操作，然后给一个例子实现如何一条命令打包静态文件并更新cdn文件的方法。</p>
+<p>先展示一下gulpfile.js文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> gulp = <span class="built_in">require</span>(<span class="string">&#x27;gulp&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> uglify = <span class="built_in">require</span>(<span class="string">&#x27;gulp-uglify&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> concat = <span class="built_in">require</span>(<span class="string">&#x27;gulp-concat&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> shrink = <span class="built_in">require</span>(<span class="string">&#x27;gulp-cssshrink&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;gulp-webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> qn = <span class="built_in">require</span>(<span class="string">&#x27;gulp-qn&#x27;</span>);</span><br><span class="line"><span class="comment">// MD5戳</span></span><br><span class="line"><span class="keyword">const</span> rev = <span class="built_in">require</span>(<span class="string">&#x27;gulp-rev-qn&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> revCollector = <span class="built_in">require</span>(<span class="string">&#x27;gulp-rev-collector&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> runSequence = <span class="built_in">require</span>(<span class="string">&#x27;run-sequence&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> qiniu_options = &#123;</span><br><span class="line">  <span class="attr">accessKey</span>: <span class="string">&#x27;xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">secretKey</span>: <span class="string">&#x27;xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">bucket</span>: <span class="string">&#x27;xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">domain</span>: <span class="string">&#x27;http://xxx.com&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-js&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/js/*.js&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">uglify</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">rev</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/js&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">qn</span>(&#123;</span><br><span class="line">      <span class="attr">qiniu</span>: qiniu_options,</span><br><span class="line">      <span class="attr">prefix</span>: <span class="string">&#x27;js&#x27;</span></span><br><span class="line">    &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(rev.<span class="title function_">manifest</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/rev/js&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-font-img&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/js/*.svg&#x27;</span>,<span class="string">&#x27;./build/js/*.gif&#x27;</span>,<span class="string">&#x27;./build/js/*.woff2&#x27;</span>,<span class="string">&#x27;./build/js/*.ttf&#x27;</span>,<span class="string">&#x27;./build/js/*.eot&#x27;</span>,<span class="string">&#x27;./build/js/*.woff&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">qn</span>(&#123;</span><br><span class="line">      <span class="attr">qiniu</span>: qiniu_options,</span><br><span class="line">      <span class="attr">prefix</span>: <span class="string">&#x27;js&#x27;</span></span><br><span class="line">    &#125;));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-css&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/js/*.css&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">rev</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/js&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">qn</span>(&#123;</span><br><span class="line">      <span class="attr">qiniu</span>: qiniu_options,</span><br><span class="line">      <span class="attr">prefix</span>: <span class="string">&#x27;css&#x27;</span></span><br><span class="line">    &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(rev.<span class="title function_">manifest</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/rev/css&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-html&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/rev/**/*.json&#x27;</span>, <span class="string">&#x27;./build/views/*.html&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">revCollector</span>(&#123;</span><br><span class="line">      <span class="attr">dirReplacements</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;/js/&#x27;</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/views&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;default&#x27;</span>,<span class="keyword">function</span>(<span class="params">callback</span>)&#123;</span><br><span class="line">  <span class="title function_">runSequence</span>(</span><br><span class="line">    [<span class="string">&#x27;publish-css&#x27;</span>,<span class="string">&#x27;publish-js&#x27;</span>,<span class="string">&#x27;publish-font-img&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;publish-html&#x27;</span>,</span><br><span class="line">    callback);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
+<p>publish-js部分是将我的js文件进行版本更新并上传到七牛。</p>
+<p>publish-font-img部分是将我的字体文件、图片文件上传到七牛</p>
+<p>publish-css部分是将我的css文件进行版本更新并上传到七牛</p>
+<p>publish-html将我html文件中对应的js路径进行替换，好了，可以直接发布这个build文件夹下的文件了。</p>
 
       
     </div>
@@ -323,7 +330,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Git%E6%8F%90%E4%BA%A4%E5%88%B0%E5%A4%9A%E4%B8%AA%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E6%BF%80%E6%B4%BB%E5%90%8E%E5%8F%AF%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8200M%E6%B5%81%E9%87%8FVPN.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -341,7 +348,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Git%E6%8F%90%E4%BA%A4%E5%88%B0%E5%A4%9A%E4%B8%AA%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93.html" class="post-title-link" itemprop="url">Git提交到多个远程仓库</a>
+          <a href="/2025/07/02/%E6%BF%80%E6%B4%BB%E5%90%8E%E5%8F%AF%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8200M%E6%B5%81%E9%87%8FVPN.html" class="post-title-link" itemprop="url">激活后可免费使用200M流量VPN</a>
         </h2>
 
         <div class="post-meta-container">
@@ -353,7 +360,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 15:57:23 / 修改时间：16:05:38" itemprop="dateCreated datePublished" datetime="2025-06-30T15:57:23+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-02 15:40:07 / 修改时间：15:53:40" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:07+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -375,119 +382,91 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>第一步:添加远程仓库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin 第一个仓库地址 //origin只是个别名哦</span><br><span class="line">git remote add osc 第二个仓库地址 //osc也是个别名哦</span><br></pre></td></tr></table></figure>
-
-<p>第二步：</p>
-<p>创建分支</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b master</span><br><span class="line">git checkout -b osc</span><br></pre></td></tr></table></figure>
-
-<p>第三步：</p>
-<p>提交代码：</p>
-<p>分别切换分支提交</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git chekcout master</span><br><span class="line">git push origin master</span><br><span class="line">//=========================</span><br><span class="line">git checkout osc</span><br><span class="line">git push osc master</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E5%9C%A8Linux-MacOS%E7%BB%88%E7%AB%AF%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%8B%E6%92%AD%E6%94%BE%E9%9F%B3%E4%B9%90%E7%9A%84%E5%91%BD%E4%BB%A4.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/%E5%9C%A8Linux-MacOS%E7%BB%88%E7%AB%AF%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%8B%E6%92%AD%E6%94%BE%E9%9F%B3%E4%B9%90%E7%9A%84%E5%91%BD%E4%BB%A4.html" class="post-title-link" itemprop="url">在Linux/MacOS终端命令行下播放音乐的命令</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-30 15:57:18 / 修改时间：16:18:28" itemprop="dateCreated datePublished" datetime="2025-06-30T15:57:18+08:00">2025-06-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>linux或者macosx 中可以按住那个sox这个库，可以使用play xxx.mp3来进行播放音乐</p>
-<p>自己去找这个对应的源来按照那个就好了。</p>
-<p>这里是用MacOS安装的。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install sox</span><br></pre></td></tr></table></figure>
-
-<p>Ubuntu的话 可以试试这个命令：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install sox</span><br></pre></td></tr></table></figure>
-
-<p>这样就ok了</p>
-<p>我自己下载了mp3音乐，直接执行下面的命令就可以播放音乐了。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">play xxxx.mp3</span><br></pre></td></tr></table></figure>
-
-<p>突发奇想如何把他用nodejs实现呢，child_proccess.exec这个方法就可以实现了。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> child_process = <span class="built_in">require</span>(<span class="string">&#x27;child_process&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> mp3 = <span class="string">&#x27;/xxx/xxx/Downloads/small_apple.mp3&#x27;</span>;</span><br><span class="line">child_process.<span class="title function_">exec</span>(<span class="string">&#x27;play &#x27;</span>+mp3,<span class="keyword">function</span>(<span class="params">err,stdout,stderr</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err.<span class="property">message</span>.<span class="property">yellow</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(stdout.<span class="property">blue</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(stdout.<span class="property">red</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>把此代码保存为playmusic.js就好了。</p>
-<p>然后执行node命令就好了</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node playmusic.js</span><br></pre></td></tr></table></figure>
-
+          <p>激活后可免费使用200M流量VPN：</p>
+<p>点击如下链接可免费获取：<span class="exturl" data-url="aHR0cDovL2dqc3EubWUvMTE1NDQ0NDI=" title="免费VPN">免费VPN<i class="fa fa-external-link-alt"></i></span></p>
 <hr>
-<p>我又发现一个奇葩，我呆住了，nodejs有个库叫做player，可以直接进行播放的，其实原理是一样的，来吧，代码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Player</span> = <span class="built_in">require</span>(<span class="string">&#x27;player&#x27;</span>);</span><br><span class="line"><span class="comment">// create player instance </span></span><br><span class="line"><span class="keyword">var</span> player = <span class="keyword">new</span> <span class="title class_">Player</span>(<span class="string">&#x27;/xxx/xxx/Downloads/small_apple.mp3&#x27;</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// play now and callback when playend </span></span><br><span class="line">player.<span class="title function_">play</span>(<span class="keyword">function</span>(<span class="params">err, player</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;playend!&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// event: on playend </span></span><br><span class="line">player.<span class="title function_">on</span>(<span class="string">&#x27;playend&#x27;</span>,<span class="keyword">function</span>(<span class="params">item</span>)&#123;</span><br><span class="line">  <span class="comment">// return a playend item </span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;src:&#x27;</span> + item + <span class="string">&#x27; play done, switching to next one ...&#x27;</span>);</span><br><span class="line">  player.<span class="title function_">play</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>以上已不再免费，稳定的VPN可<span class="exturl" data-url="aHR0cHM6Ly9wb3J0YWwuc2hhZG93c29ja3MuYXUvYWZmLnBocD9hZmY9MzAwMzk=">点击这里<i class="fa fa-external-link-alt"></i></span>进行购买</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Git%E6%8B%89%E5%8F%96%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%88%B0%E6%9C%AC%E5%9C%B0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/02/Git%E6%8B%89%E5%8F%96%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%88%B0%E6%9C%AC%E5%9C%B0.html" class="post-title-link" itemprop="url">Git拉取远程分支到本地</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-02 15:39:59 / 修改时间：15:54:28" itemprop="dateCreated datePublished" datetime="2025-07-02T15:39:59+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>前提是远程仓库已经存在某个分支，本地并没有对应的分支【这是情景描述前提】</p>
+<p>对应的标题操作很简单，方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch origin remote_branch:local_branch</span><br></pre></td></tr></table></figure>
 
 
 
@@ -516,7 +495,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/JavaScript%E7%9A%84%E4%B8%AD%E7%9A%84test%E5%92%8Cmatch-%E7%BB%93%E6%9E%9C%E4%BD%A0%E4%B8%8D%E6%95%A2%E7%9B%B8%E4%BF%A1.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-0-0-webpack-%E7%BB%93%E5%90%88-%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E4%BB%A3%E7%A0%81.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -534,7 +513,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/JavaScript%E7%9A%84%E4%B8%AD%E7%9A%84test%E5%92%8Cmatch-%E7%BB%93%E6%9E%9C%E4%BD%A0%E4%B8%8D%E6%95%A2%E7%9B%B8%E4%BF%A1.html" class="post-title-link" itemprop="url">JavaScript的中的test和match，结果你不敢相信</a>
+          <a href="/2025/07/02/KoaJS-2-0-0-webpack-%E7%BB%93%E5%90%88-%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E4%BB%A3%E7%A0%81.html" class="post-title-link" itemprop="url">KoaJS 2.0.0 webpack 结合 动态调试代码</a>
         </h2>
 
         <div class="post-meta-container">
@@ -546,7 +525,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 15:57:08 / 修改时间：16:20:06" itemprop="dateCreated datePublished" datetime="2025-06-30T15:57:08+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-02 15:39:52 / 修改时间：15:55:20" itemprop="dateCreated datePublished" datetime="2025-07-02T15:39:52+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -568,26 +547,19 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>大家看下代码，这个test和match还是晕了我很久的。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> __parsers = [];</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*one.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*two.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*three.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*four.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*five.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*six.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*seven.*/g</span>&#125;);</span><br><span class="line">__parsers.<span class="title function_">push</span>(&#123;<span class="string">&#x27;regExp&#x27;</span>:<span class="regexp">/.*eight.*/g</span>&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> matchParser = <span class="keyword">function</span>(<span class="params">subject</span>)&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; __parsers.<span class="property">length</span>; i++) &#123;</span><br><span class="line">	    <span class="comment">// console.log(&#x27;RegExp:&#x27;,__parsers[i].regExp);</span></span><br><span class="line">		<span class="keyword">if</span>(subject.<span class="title function_">match</span>(__parsers[i].<span class="property">regExp</span>))&#123;</span><br><span class="line">		  <span class="keyword">return</span> __parsers[i];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;No Match&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> testParser = <span class="keyword">function</span>(<span class="params">subject</span>)&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; __parsers.<span class="property">length</span>; i++) &#123;</span><br><span class="line">	    <span class="comment">// console.log(&#x27;RegExp:&#x27;,__parsers[i].regExp);</span></span><br><span class="line">		<span class="keyword">if</span> (__parsers[i].<span class="property">regExp</span>.<span class="title function_">test</span>(subject)) &#123;</span><br><span class="line">			<span class="keyword">return</span> __parsers[i];</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;No Match&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>koa2.0.0 的路由和视图渲染完之后的一个问题就是，如何高效的开发前端代码。</p>
+<p>因为我之前的前端代码是用webpack进行打包，然后打包过程中，使用babel实现了，ES6语法的转换，这行我就不能太干脆的丢弃webpack，然后里面使用了react+react-router+reflux,整个开发体系还是比较可以的。为了整合之前的代码，需要将之前的connect框架改为koa2.0.0，毕竟koa的实现方式还有与express，connect等这样的框架，实现方式不太一样，所以，稍微还有有点小困难，不过我这里记录下，也就不困难了。</p>
+<p>从webpack-dev-server说起，我们使用webpack-dev-server是为了能够时时监控我们的代码改变，然后用它自己的socket-io去刷新我们的页面，实现了代码修改即页面重载，当然只是在开发环境。</p>
+<p>webpack-dev-server并没有多大的改变，只是将原来的一个proxy的操作去掉了，然后整合到koa的启动文件里面了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">WebpackDevServer</span> = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-server&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.development&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> debug = <span class="built_in">require</span>(<span class="string">&#x27;debug&#x27;</span>);</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">WebpackDevServer</span>(<span class="title function_">webpack</span>(config), &#123;</span><br><span class="line">  <span class="attr">publicPath</span>: config.<span class="property">output</span>.<span class="property">publicPath</span>,</span><br><span class="line">  <span class="attr">hot</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">noInfo</span>: <span class="literal">false</span>,</span><br><span class="line">  <span class="attr">historyApiFallback</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">stats</span>: &#123; <span class="attr">colors</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">  <span class="attr">headers</span>: &#123; <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>: <span class="string">&#x27;*&#x27;</span> &#125;</span><br><span class="line">&#125;).<span class="title function_">listen</span>(<span class="number">8080</span>, <span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="keyword">function</span>(<span class="params">err,result</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Webpack Listening at 127.0.0.1:8080&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>简单的测试代码就这些。我们用一个循环来执行。</p>
-<p><strong>&#x2F;&#x2F;第一种测试</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">	<span class="keyword">var</span> subject = <span class="string">&#x27;two&#x27;</span>;</span><br><span class="line">	<span class="keyword">try</span>&#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">testParser</span>(subject));</span><br><span class="line">	&#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(err.<span class="property">message</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关于webpack的config文件的代码是不需要改变的，继续使用。</p>
+<p>下面就是在koa的启动文件里面加入启动需要的proxy处理。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//解析 开发环境 development</span></span><br><span class="line">app.<span class="title function_">use</span>(<span class="title function_">convert</span>(<span class="title function_">proxy</span>(&#123;</span><br><span class="line">  <span class="attr">host</span>:<span class="string">&#x27;http://127.0.0.1:8080/js&#x27;</span>,</span><br><span class="line">  <span class="attr">match</span>: <span class="regexp">/^\/js\//</span></span><br><span class="line">&#125;)));</span><br></pre></td></tr></table></figure>
 
-<p>&#x2F;&#x2F;结果</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">No Match</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">No Match</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br></pre></td></tr></table></figure>
-
-<p>看吧，还是有没有匹配到的吧。罪过啊。</p>
-<p><strong>&#x2F;&#x2F;第二种测试</strong></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)&#123;</span><br><span class="line">	<span class="keyword">var</span> subject = <span class="string">&#x27;two&#x27;</span>;</span><br><span class="line">	<span class="keyword">try</span>&#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">matchParser</span>(subject));</span><br><span class="line">	&#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(err.<span class="property">message</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>&#x2F;&#x2F;结果</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br><span class="line">&#123; regExp: /.*two.*/g &#125;</span><br></pre></td></tr></table></figure>
-
-<p>你们看，是不是瞬间很开心啊。</p>
-<p>可以使用nodejs执行整理执行一下。被坑了的感觉有木有啊！</p>
-<p>可以看出来，使用match的全部匹配出来了，为什么，给你一个可想的空间吧。match完胜啊。</p>
+<p>就这么简单，这里使用了两个中间件：</p>
+<p>koa-proxy，koa-convert。</p>
+<p>解释一下好了，就是将访问的path中有带&#x2F;js&#x2F;部分的路径，进行重新proxy一下就好，这样就将文件转向到了webpack-dev-server这边的对应的文件了。相关的其他的问题可以参考我之前的几篇文章.</p>
 
       
     </div>
@@ -614,7 +586,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAforEach%E4%B8%8D%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84break%E7%AD%96%E7%95%A5.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-0-0-%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -632,7 +604,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAforEach%E4%B8%8D%E8%83%BD%E5%AE%9E%E7%8E%B0%E7%9A%84break%E7%AD%96%E7%95%A5.html" class="post-title-link" itemprop="url">简单实现一个forEach不能实现的break策略</a>
+          <a href="/2025/07/02/KoaJS-2-0-0-%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4.html" class="post-title-link" itemprop="url">KoaJS 2.0.0 表单提交</a>
         </h2>
 
         <div class="post-meta-container">
@@ -644,7 +616,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 15:15:59 / 修改时间：15:16:35" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:59+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-02 11:31:55 / 修改时间：14:28:14" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:55+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -666,14 +638,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>简单实现一个forEach不能实现的break策略：<br>这个策略也是很多人都遇到过的。</p>
-<p>代码如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = [</span><br><span class="line">  &#123;<span class="string">&#x27;id&#x27;</span>:<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;title&#x27;</span>:<span class="string">&#x27;你好&#x27;</span>,<span class="string">&#x27;regExp&#x27;</span>:<span class="string">&#x27;/你好/i&#x27;</span>&#125;,</span><br><span class="line">  &#123;<span class="string">&#x27;id&#x27;</span>:<span class="string">&#x27;2&#x27;</span>,<span class="string">&#x27;title&#x27;</span>:<span class="string">&#x27;我好&#x27;</span>,<span class="string">&#x27;regExp&#x27;</span>:<span class="string">&#x27;/我好/i&#x27;</span>&#125;,</span><br><span class="line">  &#123;<span class="string">&#x27;id&#x27;</span>:<span class="string">&#x27;3&#x27;</span>,<span class="string">&#x27;title&#x27;</span>:<span class="string">&#x27;大家好&#x27;</span>,<span class="string">&#x27;regExp&#x27;</span>:<span class="string">&#x27;/大家好/i&#x27;</span>&#125;</span><br><span class="line">  ];</span><br><span class="line"><span class="keyword">var</span> match_id;</span><br><span class="line"><span class="keyword">var</span> match_string = <span class="string">&#x27;我好&#x27;</span>;</span><br><span class="line">list.<span class="title function_">some</span>(<span class="keyword">function</span>(<span class="params">i</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(i);</span><br><span class="line">  <span class="keyword">if</span>(match_string.<span class="title function_">match</span>(<span class="built_in">eval</span>(i.<span class="property">regExp</span>)))&#123;</span><br><span class="line">    match_id = i.<span class="property">id</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;match_id&#x27;</span>,match_id);</span><br></pre></td></tr></table></figure>
+          <p>对于koa2.0.0的表单提交如何处理，也是费了我很久的时间，在多次尝试与研究之下，可以这样来处理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">proxy.post(<span class="string">&#x27;/admin/:path&#x27;</span>, (ctx, next) =&gt; &#123;</span><br><span class="line">  const url = ctx.config.hostDomain + <span class="string">&#x27;/admin/&#x27;</span> +ctx.params.path;</span><br><span class="line">  const options = &#123;</span><br><span class="line">    <span class="built_in">timeout</span>: ctx.config.httpTimeout,</span><br><span class="line">    method: ctx.request.method,</span><br><span class="line">    headers: ctx.request.headers,</span><br><span class="line">    data: ctx.request.body</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">return</span> next().<span class="keyword">then</span>(() =&gt; &#123;</span><br><span class="line">    const request = urllib.request(url, options);</span><br><span class="line">    return request.then( (data) =&gt; &#123;</span><br><span class="line">      ctx.body = data.data.toString()</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;).catch((err) =&gt; &#123;</span><br><span class="line">    console.log(err);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>运行一下试试：结果如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123; id: &#x27;1&#x27;, title: &#x27;你好&#x27;, regExp: &#x27;/你好/i&#x27; &#125;</span><br><span class="line">&#123; id: &#x27;2&#x27;, title: &#x27;我好&#x27;, regExp: &#x27;/我好/i&#x27; &#125;</span><br><span class="line">match_id 2</span><br></pre></td></tr></table></figure>
+<p>我这里只是做了一个接口的调用，其实最重要的是在获得request后如何去进行对应的promise的操作和获取结果，这里其实很简单的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> request = urllib.<span class="title function_">request</span>(url, options);</span><br><span class="line">  <span class="keyword">return</span> request.<span class="title function_">then</span>( <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">    ctx.<span class="property">body</span> = data.<span class="property">data</span>.<span class="title function_">toString</span>()</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-
+<p>注意这里的两个return操作，做完request的操作后，直接在开头进行一个return操作就可以了，这样body的值也回调过去了。</p>
 
       
     </div>
@@ -700,7 +671,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E5%9C%A8Ubuntu-14-04-LTS%E4%B8%AD%E5%AE%89%E8%A3%85Java%E7%8E%AF%E5%A2%83.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-0-0%E7%9A%84%E6%B5%8B%E8%AF%95%E7%89%88%E6%9C%AC-%E8%A7%86%E5%9B%BE%E6%B8%B2%E6%9F%93-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E8%B0%83%E7%94%A8%E7%9A%84%E9%85%8D%E7%BD%AE.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -718,7 +689,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/%E5%9C%A8Ubuntu-14-04-LTS%E4%B8%AD%E5%AE%89%E8%A3%85Java%E7%8E%AF%E5%A2%83.html" class="post-title-link" itemprop="url">在Ubuntu 14.04 LTS中安装Java环境</a>
+          <a href="/2025/07/02/KoaJS-2-0-0%E7%9A%84%E6%B5%8B%E8%AF%95%E7%89%88%E6%9C%AC-%E8%A7%86%E5%9B%BE%E6%B8%B2%E6%9F%93-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E8%B0%83%E7%94%A8%E7%9A%84%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">KoaJS 2.0.0的测试版本-视图渲染、静态文件调用的配置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -730,7 +701,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 15:15:56 / 修改时间：15:17:14" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:56+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-02 11:31:52 / 修改时间：14:28:58" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:52+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -752,15 +723,30 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>对于开发Android应用，jSP开发的同学，福利来了，这里有如何安装Oracle的JDK了。</p>
-<p>方法很简单，不需要自己去下载源码进行安装，这样就确保了各个方面的安全。</p>
-<p>安装过程如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> add-apt-repository ppa:webupd8team/java</span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get install oracle-java8-installer</span><br><span class="line"><span class="built_in">sudo</span> apt-get install oracle-java8-set-default</span><br></pre></td></tr></table></figure>
+          <p>针对koa2.0.0的测试版本，在使用的过程中遇到了很多的问题，这篇文章讲解一下如何进行操作html的调用和静态文件的调用</p>
+<p>因为koa2.0.0版本的升级，很多的中间件都没有跟随着一起调整，所以有些中间件就出现了很多问题，这里说的就是针对试图文件的调用渲染和静态文件的调用</p>
+<p>视图文件的调用使用的是如下的中间件：koa-swig</p>
+<p>安装koa-swig:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa-swig --save</span><br></pre></td></tr></table></figure>
 
-<p>如果想安装7的话将java8改为java7。安装完之后，执行命令看下吧。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java --version</span><br></pre></td></tr></table></figure>
+<p>配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.context.render = co.wrap(render(&#123;</span><br><span class="line">  root: path.join(__dirname, <span class="string">&#x27;dest&#x27;</span>),</span><br><span class="line">  autoescape: <span class="literal">true</span>,</span><br><span class="line">  cache: <span class="string">&#x27;memory&#x27;</span>, // <span class="built_in">disable</span>, <span class="built_in">set</span> to <span class="literal">false</span> </span><br><span class="line">  ext: <span class="string">&#x27;html&#x27;</span></span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
 
+<p>路由中调用的方式如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">router.get(<span class="string">&#x27;/home&#x27;</span>, (ctx, next) =&gt; &#123;</span><br><span class="line">  <span class="built_in">return</span> next().<span class="keyword">then</span>(() =&gt; &#123;</span><br><span class="line">    ctx.render(&#x27;index.html&#x27;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
+<p>这里到这里就解决了视图调用的问题，访问的时候如果页面中调用的是本地的js或者css的话，会包404的错误，就是找不到对应的路由，OK，下面记录下。</p>
+<p>这里调用得了两个中间件:koa-convert,koa-static</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const convert = require(<span class="string">&#x27;koa-convert&#x27;</span>);</span><br><span class="line">const serve = require(<span class="string">&#x27;koa-static&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>安装这两个中间件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa-static koa-convert --save</span><br></pre></td></tr></table></figure>
+
+<p>对应的配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(convert(serve(__dirname + <span class="string">&#x27;/dest&#x27;</span>)));</span><br></pre></td></tr></table></figure>
+
+<p>这里就是很简单了，刚开始的时候是无效的，后来在github上问了一下，就找打了解决办法。可以到这里看下：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2tvYWpzL3N0YXRpYy9pc3N1ZXMvNTk=">https://github.com/koajs/static/issues/59<i class="fa fa-external-link-alt"></i></span></p>
+<p>好了，到这里两个部分的操作就完成了。</p>
 
       
     </div>
@@ -787,7 +773,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Nodejs%E7%AE%80%E6%98%93%E8%81%8A%E5%A4%A9%E5%AE%A4socket-io.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E8%96%AA%E8%B5%84%E6%B0%B4%E5%B9%B3%E6%9F%A5%E8%AF%A2-%E5%B0%8F%E4%BC%99%E4%BC%B4%E4%BB%AC-%E4%BD%A0%E4%BB%AC%E8%BF%98%E6%8B%85%E5%BF%83%E4%B8%AA%E5%95%A5%E5%91%A2.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -805,7 +791,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Nodejs%E7%AE%80%E6%98%93%E8%81%8A%E5%A4%A9%E5%AE%A4socket-io.html" class="post-title-link" itemprop="url">Nodejs简易聊天室socket.io</a>
+          <a href="/2025/07/02/%E8%96%AA%E8%B5%84%E6%B0%B4%E5%B9%B3%E6%9F%A5%E8%AF%A2-%E5%B0%8F%E4%BC%99%E4%BC%B4%E4%BB%AC-%E4%BD%A0%E4%BB%AC%E8%BF%98%E6%8B%85%E5%BF%83%E4%B8%AA%E5%95%A5%E5%91%A2.html" class="post-title-link" itemprop="url">薪资水平查询，小伙伴们，你们还担心个啥呢</a>
         </h2>
 
         <div class="post-meta-container">
@@ -815,15 +801,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2025-06-30 15:15:52" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:52+08:00">2025-06-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-08 09:40:43" itemprop="dateModified" datetime="2025-07-08T09:40:43+08:00">2025-07-08</time>
+      <time title="创建时间：2025-07-02 11:31:49 / 修改时间：14:30:06" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:49+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -845,15 +825,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>初步的了解了一下Socket.io这个感觉还是很好用的，</p>
-<p>几步简单的connect，以前觉得聊天室是一个很复杂而又很复杂的东西今天，就一天的时间，不，是一个下午的时间，就出来一个聊天室。</p>
-<p>感觉这个可以批量生产了，so happy，借此分享给大家享受一下。</p>
-<p>代码放到git上了，给个简单的安装使用步骤：</p>
-<p>下载后在项目目录下执行：</p>
-<p><code>npm install</code></p>
-<p>执行完之后，执行如下的命令：</p>
-<p><code>npm start</code></p>
-<p>然后试着打开浏览器，访问<span class="exturl" data-url="aHR0cDovLzEyNy4wLjAuMTozMDAwLw==">http://127.0.0.1:3000<i class="fa fa-external-link-alt"></i></span> </p>
+          <p>薪资水平查询，不同地区的薪资水平查询地址:</p>
+<p><span class="exturl" data-url="aHR0cDovL2JlaWppbmcuYmFpY2FpLmNvbS9zYWxhcnktSU9TJUU1JUJDJTgwJUU1JThGJTkxJUU1JUI3JUE1JUU3JUE4JThCJUU1JUI4JTg4Lw==">http://beijing.baicai.com/salary-IOS%E5%BC%80%E5%8F%91%E5%B7%A5%E7%A8%8B%E5%B8%88/<i class="fa fa-external-link-alt"></i></span></p>
+<p>下面我来分析一下这个地址如何使用【对于程序员】</p>
+<p>http:&#x2F;&#x2F;{address}.baicai.com&#x2F;salary-{position}&#x2F;</p>
+<p>address:对应地区的拼音【shanghai,beijing】</p>
+<p>position:对应职位【IOS工程师，Android工程师】</p>
+<p>就这些自己去对应查吧，我就不提供接口了</p>
 
       
     </div>
@@ -880,7 +858,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/RequireJS%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E4%B8%BA%E5%95%A5npm%E5%AE%89%E8%A3%85%E7%9A%84%E6%97%B6%E5%80%99devDependencies%E8%BF%99%E9%87%8C%E9%9D%A2%E7%9A%84%E4%BB%A3%E7%A0%81%E4%B9%9F%E5%AE%89%E8%A3%85%E4%BA%86.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -898,7 +876,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/RequireJS%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E.html" class="post-title-link" itemprop="url">RequireJS基础使用配置说明</a>
+          <a href="/2025/07/02/%E4%B8%BA%E5%95%A5npm%E5%AE%89%E8%A3%85%E7%9A%84%E6%97%B6%E5%80%99devDependencies%E8%BF%99%E9%87%8C%E9%9D%A2%E7%9A%84%E4%BB%A3%E7%A0%81%E4%B9%9F%E5%AE%89%E8%A3%85%E4%BA%86.html" class="post-title-link" itemprop="url">为啥npm安装的时候devDependencies这里面的代码也安装了</a>
         </h2>
 
         <div class="post-meta-container">
@@ -910,7 +888,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 15:15:49 / 修改时间：15:54:33" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:49+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-02 11:31:46 / 修改时间：14:30:44" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:46+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -932,12 +910,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>之前用过一次，后来想起来用，感觉好麻烦，还需要配置，但是感觉从大局考虑还是没必要偷懒的，那就记录一下吧。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">requirejs.<span class="title function_">config</span>(&#123;</span><br><span class="line">  <span class="attr">baseUrl</span>: <span class="string">&#x27;../components&#x27;</span>,<span class="comment">//相对于此配置文件的库路径</span></span><br><span class="line">  <span class="attr">paths</span>:&#123;<span class="comment">//路径是相对于上面的baseUrl</span></span><br><span class="line">    <span class="string">&#x27;Bootstrap&#x27;</span>:<span class="string">&#x27;bootstrap/dist/js/bootstrap.min&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;jquery&#x27;</span>:<span class="string">&#x27;jquery/dist/jquery.min&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;chat&#x27;</span>:<span class="string">&#x27;../javascripts/chat&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">//exports值，表明这个模块外部调用时的名称</span></span><br><span class="line">  <span class="attr">shim</span>:&#123;<span class="comment">//包含了如何加载库和插件</span></span><br><span class="line">    <span class="title class_">Bootstrap</span>:&#123;</span><br><span class="line">      <span class="attr">deps</span>:[<span class="comment">//deps数组，表明该模块的依赖性，</span></span><br><span class="line">        <span class="string">&#x27;jquery&#x27;</span>,</span><br><span class="line">        <span class="string">&quot;css!bootstrap/dist/css/bootstrap.min&quot;</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">jquery</span>:&#123;</span><br><span class="line">      <span class="attr">deps</span>:[</span><br><span class="line">        <span class="string">&#x27;css!../stylesheets/style.css&#x27;</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">map</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;*&#x27;</span>: &#123;</span><br><span class="line">      <span class="string">&#x27;css&#x27;</span>: <span class="string">&#x27;require-css/css&#x27;</span> <span class="comment">// or whatever the path to require-css is</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="built_in">require</span>([<span class="string">&#x27;jquery&#x27;</span>,<span class="string">&#x27;Bootstrap&#x27;</span>,<span class="string">&#x27;chat&#x27;</span>],<span class="keyword">function</span>(<span class="params">$,bootstrap,Chat</span>)&#123;</span><br><span class="line">  <span class="keyword">var</span> chat = <span class="keyword">new</span> <span class="title class_">Chat</span>();</span><br><span class="line">  chat.<span class="title function_">init</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+          <p>为啥npm安装的时候devDependencies这里面的代码也安装了，琢磨了好久，也搜索了很久，终于找到了答案，哈哈。其实觉得npm还是蛮智能的，只是自己比较低能了，没看npm的源码，测试结果是让我觉得，npm会根据<code>NODE_ENV</code>的环境变量值，来判断你当前的环境是开发环境和生产环境，然后根据环境来安装对应的依赖包。</p>
+<p>解决方式就是：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NODE_ENV=production</span><br><span class="line">npm install --save</span><br></pre></td></tr></table></figure>
 
-<p>几点提示paths的里面的名称不能在shim出现，不然就会变成了变量直接用paths里面的值替换了。</p>
-<p>这里的map是为了引入require-css插件，以便可以引入自己需要的css文件。</p>
-<p>可以说使用shim非常方便了控制了文件的加载顺序。嘿嘿，对了如果你想处理压缩的话可以参考我的另外一篇文件，搜索Requirejs就可以找到。</p>
+<p>这样就会很快的将dependencies里面的包安装了，就会自动忽略掉devDependencies里面的依赖包了，就这么简单。</p>
 
       
     </div>
@@ -964,7 +941,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Socket-io-1-3-5-and-express-js4-12-2-%E7%BB%93%E5%90%88%E6%90%AD%E5%BB%BA.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-0-0-%E4%B8%8E-Router%E6%95%B4%E5%90%88.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -982,7 +959,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Socket-io-1-3-5-and-express-js4-12-2-%E7%BB%93%E5%90%88%E6%90%AD%E5%BB%BA.html" class="post-title-link" itemprop="url">Socket.io 1.3.5 and express.js 4.12.2 结合搭建</a>
+          <a href="/2025/07/02/KoaJS-2-0-0-%E4%B8%8E-Router%E6%95%B4%E5%90%88.html" class="post-title-link" itemprop="url">KoaJS 2.0.0 与 Router整合</a>
         </h2>
 
         <div class="post-meta-container">
@@ -994,7 +971,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 15:15:45 / 修改时间：15:31:35" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:45+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-02 11:31:43 / 修改时间：15:29:29" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:43+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1016,17 +993,21 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>可以在app.js同目录下建立一个文件，如io.js</p>
-<p>里面的代码如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> io = <span class="built_in">require</span>(<span class="string">&#x27;socket.io&#x27;</span>)();</span><br><span class="line"><span class="comment">//这段代码可以随意自己修改，根据业务需求来定</span></span><br><span class="line">io.<span class="title function_">on</span>(<span class="string">&#x27;connection&#x27;</span>, <span class="keyword">function</span> (<span class="params">socket</span>) &#123;</span><br><span class="line">  socket.<span class="title function_">emit</span>(<span class="string">&#x27;news&#x27;</span>, &#123; <span class="attr">hello</span>: <span class="string">&#x27;world&#x27;</span> &#125;);</span><br><span class="line">  socket.<span class="title function_">on</span>(<span class="string">&#x27;my other event&#x27;</span>, <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = io;</span><br></pre></td></tr></table></figure>
+          <p>最近koajs更新了一个很重要的版本，就是2.0.0,虽然这个版本是一个还在开发中的版本，但是已经可以下载使用了，当然，我用来下，唉，遗憾的是，虽然koa更新了，但是对应的中间插件并没有更新，这个是为什么呢，其他中间件的人不积极呗，只能试用了下，最重要的一个就是，Router这个中间件，既然也没有更新，不兼容最新版本的koa，好吧，还有在issue中发现了两点，已经有人根据koa-router，自己写了一个koa-66,使用完还不错，下面正式记录一下：</p>
+<p>安装 <span class="exturl" data-url="bWFpbHRvOiYjMTA3OyYjeDZmOyYjOTc7JiN4NDA7JiM1MDsmI3gyZTsmIzQ4OyYjeDJlOyYjeDMwOyYjeDJkOyYjOTc7JiMxMDg7JiMxMTI7JiN4Njg7JiM5NzsmI3gyZTsmIzUwOw==">koa@2.0.0-alpha.2<i class="fa fa-external-link-alt"></i></span></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa@<span class="number">2.0</span><span class="number">.0</span>-alpha<span class="number">.2</span> --save</span><br></pre></td></tr></table></figure>
 
-<p>下一步就是修改bin&#x2F;www这个文件（省略号代表还有其他的代码）</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> app = <span class="built_in">require</span>(<span class="string">&#x27;../app&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> io = <span class="built_in">require</span>(<span class="string">&#x27;../io&#x27;</span>);<span class="comment">//这里引入刚才加的文件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> server = <span class="built_in">require</span>(<span class="string">&#x27;http&#x27;</span>).<span class="title class_">Server</span>(app);</span><br><span class="line"></span><br><span class="line">io.<span class="title function_">attach</span>(server);<span class="comment">//加入这段代码</span></span><br><span class="line">server.<span class="title function_">listen</span>(<span class="number">8080</span>);</span><br></pre></td></tr></table></figure>
+<p>安装koa-66</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa-66 --save</span><br></pre></td></tr></table></figure>
 
-<p>前端的代码需要这样写：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;/socket.io/socket.io.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">$(<span class="variable language_">document</span>).<span class="title function_">ready</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> socket = <span class="title function_">io</span>();<span class="comment">//这里是注意点</span></span></span><br><span class="line"><span class="language-javascript">socket.<span class="title function_">on</span>(<span class="string">&#x27;news&#x27;</span>, <span class="keyword">function</span> (<span class="params">data</span>) &#123;</span></span><br><span class="line"><span class="language-javascript"><span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span></span><br><span class="line"><span class="language-javascript">&#125;);</span></span><br><span class="line"><span class="language-javascript">&#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>安装完了看个示例吧,app.js代码如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Koa</span> = <span class="built_in">require</span>(<span class="string">&#x27;koa&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> <span class="title class_">Koa</span>();</span><br><span class="line"><span class="keyword">const</span> co = <span class="built_in">require</span>(<span class="string">&#x27;co&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Router</span> = <span class="built_in">require</span>(<span class="string">&#x27;koa-66&#x27;</span>);</span><br><span class="line"><span class="comment">// const router = new Router();</span></span><br><span class="line"><span class="keyword">const</span> mountRouter = <span class="keyword">new</span> <span class="title class_">Router</span>();</span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Controller</span> = <span class="built_in">require</span>(<span class="string">&#x27;./router&#x27;</span>);</span><br><span class="line">app.<span class="title function_">use</span>(<span class="function">(<span class="params">ctx, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> start = <span class="keyword">new</span> <span class="title class_">Date</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> ms = <span class="keyword">new</span> <span class="title class_">Date</span> - start;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">`<span class="subst">$&#123;ctx.method&#125;</span> <span class="subst">$&#123;ctx.url&#125;</span> - <span class="subst">$&#123;ms&#125;</span>`</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// app.use((ctx) =&gt; &#123;</span></span><br><span class="line"><span class="comment">//   ctx.body = &#x27;Hello World!&#x27;;</span></span><br><span class="line"><span class="comment">// &#125;);</span></span><br><span class="line">mountRouter.<span class="title function_">mount</span>(<span class="string">&#x27;/blog&#x27;</span>, <span class="title class_">Controller</span>.<span class="property">router</span>);</span><br><span class="line">app.<span class="title function_">use</span>(mountRouter.<span class="title function_">routes</span>());</span><br><span class="line">app.<span class="title function_">listen</span>(<span class="number">3002</span>);</span><br></pre></td></tr></table></figure>
 
-<p>好了大功告成！</p>
+<p>router.js代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by durban on 15/10/17.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> <span class="title class_">Router</span> = <span class="built_in">require</span>(<span class="string">&#x27;koa-66&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> <span class="title class_">Router</span>();</span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/home&#x27;</span>, <span class="function">(<span class="params">ctx, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(ctx);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(ctx.<span class="property">req</span>);</span><br><span class="line">    ctx.<span class="property">body</span> = <span class="string">&#x27;Router Hello World!&#x27;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/views/:id&#x27;</span>, <span class="function">(<span class="params">ctx,next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(ctx.<span class="property">params</span>);</span><br><span class="line">    ctx.<span class="property">body</span> = <span class="string">&#x27;views&#x27;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/about&#x27;</span>, <span class="function">(<span class="params">ctx, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    ctx.<span class="property">body</span> = <span class="string">&#x27;about&#x27;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">router</span> = router;</span><br></pre></td></tr></table></figure>
+
+<p>好了，运行app.js,开始测试吧，终于搞定了router的代码不用跟app.js写在一起了。</p>
+<p>当然这里的node版本是最新的版本v4.2.1。</p>
 
       
     </div>
@@ -1053,7 +1034,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Ubuntu-14-04-Panel-%E4%B8%8A%E7%9C%8B%E4%B8%8D%E5%88%B0network-icon-%E7%BD%91%E7%BB%9C%E6%A0%87%E8%AF%86.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Bootstrap%E5%9B%BA%E5%AE%9A%E8%A1%A8%E6%A0%BC%E5%AE%BD%E5%BA%A6%E6%88%96%E8%80%85%E8%87%AA%E9%80%82%E5%BA%94%E5%86%85%E5%AE%B9%E7%9A%84%E5%AE%BD%E5%BA%A6.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1071,7 +1052,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Ubuntu-14-04-Panel-%E4%B8%8A%E7%9C%8B%E4%B8%8D%E5%88%B0network-icon-%E7%BD%91%E7%BB%9C%E6%A0%87%E8%AF%86.html" class="post-title-link" itemprop="url">Ubuntu 14.04  Panel 上看不到network icon[网络标识]</a>
+          <a href="/2025/07/02/Bootstrap%E5%9B%BA%E5%AE%9A%E8%A1%A8%E6%A0%BC%E5%AE%BD%E5%BA%A6%E6%88%96%E8%80%85%E8%87%AA%E9%80%82%E5%BA%94%E5%86%85%E5%AE%B9%E7%9A%84%E5%AE%BD%E5%BA%A6.html" class="post-title-link" itemprop="url">Bootstrap固定表格宽度或者自适应内容的宽度</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1083,7 +1064,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 15:15:42 / 修改时间：15:32:09" itemprop="dateCreated datePublished" datetime="2025-06-30T15:15:42+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-02 11:31:40 / 修改时间：15:32:57" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:40+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1105,8 +1086,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>之前有写过一篇类似的文章，但是如果你安装了google的话，会依然有这种问题出现，主要问题是,在安装google的时候他卸载了<strong>indicator-application</strong>，所以网络标识消失了，就连输入法或者其他的第三方的标识也没有了。解决的办法就是重新安装回来就好了。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install indicator-application</span><br></pre></td></tr></table></figure>
+          <p>这个可以通过colgroup来控制单元格的宽度，如果只定义部分宽度，其他的单元格会自适应的调整。  </p>
+<p>实例代码如下</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">thead</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">colgroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span> <span class="attr">width</span>=<span class="string">&#x27;20%&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">colgroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>用户名称<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>登录方式<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>联系方式<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>内容<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>客户端<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>备注<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>最后记账时间<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">th</span>&gt;</span>操作<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">thead</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 
 
@@ -1128,7 +1110,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/29/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><span class="page-number current">30</span><a class="page-number" href="/page/31/">31</a><span class="space">&hellip;</span><a class="page-number" href="/page/95/">95</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/31/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/29/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><span class="page-number current">30</span><a class="page-number" href="/page/31/">31</a><span class="space">&hellip;</span><a class="page-number" href="/page/101/">101</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/31/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

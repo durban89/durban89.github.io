@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="mask-icon" href="/images/favicon.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/black/pace-theme-flat-top.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.gowhich.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.23.1","exturl":true,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"flat"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":true,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":true,"preload":true}}</script><script src="/js/config.js" defer></script>
+
+<!-- Google AdSense start -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2785609193103098"
+     crossorigin="anonymous"></script>
+<!-- Google AdSense end -->
+
+    <meta name="description" content="如果你使用React很长时间，Redux应该听说过。Redux是非常酷的，它是一种获取单独组件来改变和从主应用程序store中提取数据的方法，但是它不是非常容易入手的，尤其是新手。 有很多概念性的东西，比如reducers, actions, action creators，并且有一些方法，比如mapDispatchToProps和mapStateToProps，以及需要根据常规原因创建的一堆文件">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="抛弃Redux，迎接React的hooks和context（一）">
+<meta property="og:url" content="https://blog.gowhich.com/2025/07/10/%E6%8A%9B%E5%BC%83Redux-%E8%BF%8E%E6%8E%A5React%E7%9A%84hooks%E5%92%8Ccontext-%E4%B8%80.html">
+<meta property="og:site_name" content="Gowhich">
+<meta property="og:description" content="如果你使用React很长时间，Redux应该听说过。Redux是非常酷的，它是一种获取单独组件来改变和从主应用程序store中提取数据的方法，但是它不是非常容易入手的，尤其是新手。 有很多概念性的东西，比如reducers, actions, action creators，并且有一些方法，比如mapDispatchToProps和mapStateToProps，以及需要根据常规原因创建的一堆文件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*iHxFtQPjIY8sYaNYvbG0ZQ.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*OLdS7KqIA_4f1RHu0-YtsQ.jpeg">
+<meta property="og:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1560505341/gowhich/gw_182_1.png">
+<meta property="og:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1560505587/gowhich/gw_182_2.png">
+<meta property="og:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1560507182/gowhich/gw_182_3.png">
+<meta property="og:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1560507846/gowhich/gw_182_4.png">
+<meta property="og:image" content="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1560508362/gowhich/QQ20190614-182830-HD-1.gif">
+<meta property="article:published_time" content="2025-07-10T02:57:52.000Z">
+<meta property="article:modified_time" content="2025-07-10T03:07:01.926Z">
+<meta property="article:author" content="durban">
+<meta property="article:tag" content="RequireJS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn-images-1.medium.com/max/1600/1*iHxFtQPjIY8sYaNYvbG0ZQ.png">
+
+
+<link rel="canonical" href="https://blog.gowhich.com/2025/07/10/%E6%8A%9B%E5%BC%83Redux-%E8%BF%8E%E6%8E%A5React%E7%9A%84hooks%E5%92%8Ccontext-%E4%B8%80.html">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.gowhich.com/2025/07/10/%E6%8A%9B%E5%BC%83Redux-%E8%BF%8E%E6%8E%A5React%E7%9A%84hooks%E5%92%8Ccontext-%E4%B8%80.html","path":"2025/07/10/抛弃Redux-迎接React的hooks和context-一.html","title":"抛弃Redux，迎接React的hooks和context（一）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>抛弃Redux，迎接React的hooks和context（一） | Gowhich</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3BZ00EJSZ9"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-3BZ00EJSZ9","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js" defer></script>
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":{"light":"default","dark":"dark"},"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.5.0/mermaid.min.js","integrity":"sha256-2obLuIPcceEhkE3G09G33hBdmE55ivVcZUlcKcGNHjU="}}</script>
+  <script src="/js/third-party/tags/mermaid.js" defer></script>
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+  <script src="/js/third-party/addtoany.js" defer></script>
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous" defer></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":true,"archive":true,"delay":true,"timeout":3000,"priority":true,"url":"https://blog.gowhich.com/2025/07/10/%E6%8A%9B%E5%BC%83Redux-%E8%BF%8E%E6%8E%A5React%E7%9A%84hooks%E5%92%8Ccontext-%E4%B8%80.html"}</script>
+  <script src="/js/third-party/quicklink.js" defer></script>
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Gowhich" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Gowhich</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Durban's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redux%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">Redux概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAStore"><span class="nav-number">3.</span> <span class="nav-text">创建Store</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAReducer"><span class="nav-number">4.</span> <span class="nav-text">创建Reducer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAAction"><span class="nav-number">5.</span> <span class="nav-text">创建Action</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="durban"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">durban</p>
+  <div class="site-description" itemprop="description">人最大的烦恼，就是记性太好</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">1008</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">165</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2R1cmJhbjg5" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;durban89"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOmR1cmJhbi56aGFuZ0BnbWFpbC5jb20=" title="E-Mail → mailto:durban.zhang@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly94LmNvbS9kdXJiYW5femhhbmc=" title="Twitter → https:&#x2F;&#x2F;x.com&#x2F;durban_zhang"><i class="fab fa-twitter fa-fw"></i>Twitter</span>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <span class="exturl cc-opacity" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/%E6%8A%9B%E5%BC%83Redux-%E8%BF%8E%E6%8E%A5React%E7%9A%84hooks%E5%92%8Ccontext-%E4%B8%80.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="抛弃Redux，迎接React的hooks和context（一） | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          抛弃Redux，迎接React的hooks和context（一）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-10 10:57:52 / 修改时间：11:07:01" itemprop="dateCreated datePublished" datetime="2025-07-10T10:57:52+08:00">2025-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>如果你使用React很长时间，Redux应该听说过。Redux是非常酷的，它是一种获取单独组件来改变和从主应用程序store中提取数据的方法，但是它不是非常容易入手的，尤其是新手。</p>
+<p>有很多概念性的东西，比如<code>reducers</code>, <code>actions</code>, <code>action creators</code>，并且有一些方法，比如<code>mapDispatchToProps</code>和<code>mapStateToProps</code>，以及需要根据常规原因创建的一堆文件和文件夹。为了分享和改编数据需要做大量的工作。</p>
+<p>随着Context API和hooks的引入，我们可以在我们的React应用程序中重新创建Redux，而无需实际安装redux和react-redux，本篇文章将演示下如何操作。</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>前提确保已经安装Nodejs(我使用的版本是v10.15.0)，然后使用<code>create-react-app</code>初始化一个app:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx create-react-app no-redux-app</span><br></pre></td></tr></table></figure>
+
+<p>这个根据具体网络情况需要花一些时间，确实真的要好长时间</p>
+<p>一旦初始化结束后，在no-redux-app这个目录下通过使用命令<code>npm start</code>来启动项目，会自动打开浏览器，并且会看到类如下图的页面</p>
+<p><a target="_blank" rel="noopener" href="https://camo.githubusercontent.com/4448c3224bc9b532246d663375afc10ce7080e0a/68747470733a2f2f63646e2d696d616765732d312e6d656469756d2e636f6d2f6d61782f313630302f312a694878467451506a4959387359614e59766247305a512e706e67"><img data-src="https://cdn-images-1.medium.com/max/1600/1*iHxFtQPjIY8sYaNYvbG0ZQ.png" alt="React hooks context"></a></p>
+<ul>
+<li><code>ctrl + c</code>停止运行</li>
+<li>打开&#96;&#96;&#96;package.json&#96;&#96;&#96;&#96;文件，查看react和react-dom的版本号，如果是在16.7.0以上则可以使用hooks，如果不是请运行下面命令安装最新版本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm i [email protected] [email protected]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>为了保证下面的操作清晰，我们把src下面除了App.js、index.js和index.css文件的其他文件</li>
+<li>修改index.js文件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ReactDOM</span> <span class="keyword">from</span> <span class="string">&#x27;react-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&#x27;./index.css&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App.jsx&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">StoreProvider</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./Store&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">StoreProvider</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    &lt; App / &gt;</span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">StoreProvider</span>&gt;</span></span></span><br><span class="line">  , <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将App.js重命名为App.jsx，并用下面的代码替换</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">React.Fragment</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Example<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>Favourite<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">React.Fragment</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">App</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Redux概念"><a href="#Redux概念" class="headerlink" title="Redux概念"></a>Redux概念</h2><p>根据它的文档介绍，Redux能够概括为三个基本概念：<strong>stores</strong>，<strong>actions</strong>和<strong>reducers</strong></p>
+<p><a target="_blank" rel="noopener" href="https://camo.githubusercontent.com/ea28b35fd541912ff0299c8fe57c8bcf6976671f/68747470733a2f2f63646e2d696d616765732d312e6d656469756d2e636f6d2f6d61782f313630302f312a4f4c6453374b7149415f346631524875302d597473512e6a706567"><img data-src="https://cdn-images-1.medium.com/max/1600/1*OLdS7KqIA_4f1RHu0-YtsQ.jpeg" alt="redux概念或者redx流程"></a></p>
+<ol>
+<li><strong>action</strong>只有一个事情就是触发<code>state</code>的改变，它通常返回一个带有<strong>type</strong>和<strong>payload</strong>的对象</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">actionFunc</span>(<span class="params">dispatch</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">dispatch</span>(&#123;<span class="attr">type</span>: <span class="string">&#x27;COMPLETE_TODO&#x27;</span>, <span class="attr">payload</span>: <span class="number">1</span>&#125;) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的dispatch参数告诉操作该对象需要影响的store是什么，因为应用程序可以有多个reducers。这将在以后有意义。</p>
+<ol>
+<li><strong>reducer</strong>指定store将受操作影响的部分。因为redux存储是不可变的，所以reducer返回一个替换当前store的新store。Reducers通常写为switch语句。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">visibilityFilter</span>(<span class="params">state, action</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.<span class="property">type</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;SET_VISIBILITY_FILTER&#x27;</span>:</span><br><span class="line">      <span class="keyword">return</span> action.<span class="property">payload</span>;</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>store</strong>将所有应用程序数据保存在对象树中。Redux有一个store，但<span class="exturl" data-url="aHR0cHM6Ly9mYWNlYm9vay5naXRodWIuaW8vZmx1eC8=">Facebook的Flux<i class="fa fa-external-link-alt"></i></span>等其他state管理器可以拥有多个store。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">visibilityFilter</span>: <span class="string">&#x27;SHOW_ALL&#x27;</span>,</span><br><span class="line">  <span class="attr">todos</span>: [</span><br><span class="line">    <span class="attr">text</span>: <span class="string">&#x27;Consider using Redux&#x27;</span>,</span><br><span class="line">    <span class="attr">completed</span>: <span class="literal">true</span>,</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>应用程序中任何组件的组件都可以访问<strong>store</strong>，并可以通过触发<strong>action</strong>来更改<strong>store</strong>。</li>
+</ol>
+<p>下面用React自带的hooks和context实现下这个概念</p>
+<h2 id="创建Store"><a href="#创建Store" class="headerlink" title="创建Store"></a>创建Store</h2><ul>
+<li>在src目录下面创建一个Store.js文件</li>
+</ul>
+<p>在这里，我们将使用react context来创建一个父组件，该组件将为其子组件访问它所拥有的数据。这里暂时不深入研究context，但基本上是有provider - consumer关系。<strong>provider</strong>拥有所有数据，<strong>consumer</strong>使用它（有意义）。</p>
+<ul>
+<li>添加下面的代码到Store.js文件中</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&quot;react&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title class_">Store</span> = <span class="title class_">React</span>.<span class="title function_">createContext</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> initialState = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">reducer</span> (<span class="params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">StoreProvider</span>(<span class="params">props</span>) &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第3行创建了一个子组件将订阅的context对象。暂时跳过初始化state对象和reducer函数，先看下<strong>StoreProvider</strong></p>
+<ul>
+<li>添加下面的代码到<strong>StoreProvider</strong>中</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">StoreProvider</span>(<span class="params">props</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Store.Provider</span> <span class="attr">value</span>=<span class="string">&#x27;data from store&#x27;</span>&gt;</span>&#123;props.children&#125;<span class="tag">&lt;/<span class="name">Store.Provider</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>现在修改index.js文件并且从.&#x2F;Store导入StoreProvider</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; StoreProvider &#125; from <span class="string">&#x27;./Store&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>将组件放入到中，添加完的代码看起来类似如下</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">StoreProvider</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">App</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">StoreProvider</span>&gt;</span></span>,</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在App.jsx中导入Store，代码如下</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Store</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./Store&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在App函数中加入如下代码</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> store = <span class="title class_">React</span>.<span class="title function_">useContext</span>(<span class="title class_">Store</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这里使用了第一个hooks，就是useContext。这将使组件可以访问context提供程序的value属性中的数据。</p>
+<ul>
+<li>在<code>&lt;React.Fragment&gt;</code>里面第一行添加<code>&#123;console.log(store)&#125;</code></li>
+<li>启动程序打开浏览器，在开发工具控制台中将会看到&#96;&#96;&#96;data from store&#96;&#96;&#96;&#96;</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://camo.githubusercontent.com/6e814b92316e83010ede3d4c94f448c434e755c9/68747470733a2f2f7265732e636c6f7564696e6172792e636f6d2f6479356476637563312f696d6167652f75706c6f61642f76313536303530353334312f676f77686963682f67775f3138325f312e706e67"><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1560505341/gowhich/gw_182_1.png" alt="hooks和context"></a></p>
+<p>如果你没有看到，请确认下你的代码是否跟我的一致</p>
+<ul>
+<li>文件结构</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://camo.githubusercontent.com/72a115fc4135fd059700101cb99c38a1f55a6188/68747470733a2f2f7265732e636c6f7564696e6172792e636f6d2f6479356476637563312f696d6167652f75706c6f61642f76313536303530353538372f676f77686963682f67775f3138325f322e706e67"><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1560505587/gowhich/gw_182_2.png" alt="hooks和context"></a></p>
+<ul>
+<li>代码结构</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">ReactDOM</span> <span class="keyword">from</span> <span class="string">&#x27;react-dom&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">App</span> <span class="keyword">from</span> <span class="string">&#x27;./App&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">StoreProvider</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./Store&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="title class_">ReactDOM</span>.<span class="title function_">render</span>(</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">StoreProvider</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">App</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">StoreProvider</span>&gt;</span></span>,</span><br><span class="line">  <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;root&#x27;</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;&#x2F; Store.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> <span class="title class_">Store</span> = <span class="title class_">React</span>.<span class="title function_">createContext</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> initialState = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">reducer</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">StoreProvider</span>(<span class="params">props</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Store.Provider</span> <span class="attr">value</span>=<span class="string">&#x27;data from store&#x27;</span>&gt;</span>&#123;props.children&#125;<span class="tag">&lt;/<span class="name">Store.Provider</span>&gt;</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;&#x2F; App.jsx</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">React</span> <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Store</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./Store&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">App</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> store = <span class="title class_">React</span>.<span class="title function_">useContext</span>(<span class="title class_">Store</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">React.Fragment</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;console.log(store)&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Example<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>Favourite<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">React.Fragment</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建Reducer"><a href="#创建Reducer" class="headerlink" title="创建Reducer"></a>创建Reducer</h2><p>如果看到这里的话，说明前面的实现是你已动手实现了下，并且是没有问题的。下面继续更新代码</p>
+<ul>
+<li>Store.js文件中，在initialState中加入下面的代码</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initialState = &#123;</span><br><span class="line">  <span class="attr">films</span>: [],</span><br><span class="line">  <span class="attr">favourites</span>: [],</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这是我们的初始<strong>store</strong>在添加任何新数据之前的样子。</p>
+<ul>
+<li>修改reducer函数看起来像这样</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">reducer</span> (<span class="params">state, action</span>) &#123;</span><br><span class="line">  <span class="keyword">switch</span>(action.<span class="property">type</span>) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&#x27;FETCH_DATA&#x27;</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, <span class="attr">films</span>: action.<span class="property">payload</span> &#125;;</span><br><span class="line">    <span class="attr">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前面看到的reducer函数有两个参数，state - 运行时store中的数据，以及action - 返回的action对象。目前，我们的reducer有一个case ‘FETCH_DATA’，它将用传回的数据替换我们的films数组。如果调用了无效操作，则需要使用<strong>default</strong>关键字返回状态。</p>
+<ul>
+<li>在StoreProvider函数中，添加下面的代码</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = <span class="title class_">React</span>.<span class="title function_">useReducer</span>(reducer, initialState);</span><br><span class="line"><span class="keyword">const</span> value = &#123; state, dispatch &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这里遇到了第二个hook，就是<span class="exturl" data-url="aHR0cHM6Ly9yZWFjdGpzLm9yZy9kb2NzL2hvb2tzLXJlZmVyZW5jZS5odG1sI3VzZXJlZHVjZXI=">useReducer<i class="fa fa-external-link-alt"></i></span>。它需要两个参数<strong>reducer</strong>和<strong>initialState</strong>。它返回一个数组，里面分别是state - store里面的数据和dispatch - 我们如何向reducer发送动作（反过来改变我们的state）。我希望这是有意义的。</p>
+<p>然后，我们将新状态转换为对象，并将其分配给名为value的变量。基本上价值是相同的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> value = &#123;</span><br><span class="line">  <span class="attr">state</span>: state,</span><br><span class="line">  <span class="attr">dispatch</span>: dispatch</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是可以在Javascript ES6及更高版本中编写更短的内容。</p>
+<ul>
+<li>在Store.Provider中用下面的代码替换<code>value=&#39;data from store&#39;</code></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">value=&#123;value&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在我们可以将state和dispatch传递给子组件。</p>
+<ul>
+<li>修改App.jsx文件，将<code>const store = React.useContext(Store)</code>替换为<code>const &#123; state, dispatch &#125; = React.useContext(Store);</code></li>
+</ul>
+<p>现在更新控制台日志中的store以查看状态并查看控制台。</p>
+<p><a target="_blank" rel="noopener" href="https://camo.githubusercontent.com/34cce5a2d723a2b6c110b3962a7b38a5ae2b6414/68747470733a2f2f7265732e636c6f7564696e6172792e636f6d2f6479356476637563312f696d6167652f75706c6f61642f76313536303530373138322f676f77686963682f67775f3138325f332e706e67"><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1560507182/gowhich/gw_182_3.png" alt="hooks和context"></a></p>
+<p>你应该看到它从Store.jsx中提取我们的initialState数据。现在让我们来处理一些数据。</p>
+<h2 id="创建Action"><a href="#创建Action" class="headerlink" title="创建Action"></a>创建Action</h2><p>我们的redux概念的最后一块。</p>
+<ul>
+<li>修改App.jsx文件，再返回组件之前添加一个匿名函数，叫fetchDataAction</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">fetchDataAction</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们将使用<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIubW96aWxsYS5vcmcvZW4tVVMvZG9jcy9XZWIvQVBJL0ZldGNoX0FQSQ==">fetch api<i class="fa fa-external-link-alt"></i></span>使用async&#x2F;await从<span class="exturl" data-url="aHR0cHM6Ly93d3cudHZtYXplLmNvbS8=">tvmaze<i class="fa fa-external-link-alt"></i></span>api获取数据。</p>
+<ul>
+<li>添加新代码到我们的新fetchDataAction函数中</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">fetchDataAction</span> = <span class="keyword">async</span> (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> data = <span class="keyword">await</span> <span class="title function_">fetch</span>(<span class="string">&#x27;https://api.tvmaze.com/singlesearch/shows?q=rick-&amp;-morty&amp;embed=episodes&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> dataJson = <span class="keyword">await</span> data.<span class="title function_">json</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">dispatch</span>(&#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="string">&#x27;FETCH_DATA&#x27;</span>,</span><br><span class="line">    <span class="attr">payload</span>: dataJson.<span class="property">_embedded</span>.<span class="property">episodes</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我建议您在浏览器中访问api url并查看数据。episodes列表在_embedded之下。</p>
+<p>我们返回dispatch方法，其type和payload的对象作为属性，以便我们的reducer将知道要执行的是什么情况。</p>
+<p>我们希望每次页面加载时都运行<strong>fetchDataAction</strong>，所以让我们将它放在返回组件的上方的<span class="exturl" data-url="aHR0cHM6Ly9yZWFjdGpzLm9yZy9kb2NzL2hvb2tzLWVmZmVjdC5odG1s">useEffect<i class="fa fa-external-link-alt"></i></span> hook中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">React</span>.<span class="title function_">useEffect</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  state.<span class="property">films</span>.<span class="property">length</span> === <span class="number">0</span> &amp;&amp; <span class="title function_">fetchDataAction</span>();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码类似于componentDidMount。基本上应用程序加载，如果state.episodes为空（默认情况下），则运行fetchDataAction。</p>
+<p>保存并刷新页面。查看开发工具控制台，您应该看到一些数据。</p>
+<p><a target="_blank" rel="noopener" href="https://camo.githubusercontent.com/0faa58e8e8e3aee0067edd24fa6b72fbc43f4145/68747470733a2f2f7265732e636c6f7564696e6172792e636f6d2f6479356476637563312f696d6167652f75706c6f61642f76313536303530373834362f676f77686963682f67775f3138325f342e706e67"><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1560507846/gowhich/gw_182_4.png" alt="hooks和context"></a></p>
+<p>简而言之，这就是redux模式。某些情况触发了一个动作（在我们的例子中它是一个页面加载），动作在reducer中运行一个case，它反过来更新了store。现在让我们使用这些数据。</p>
+<ul>
+<li>修改App.jsx，在<code>&lt;p&gt;Favourite&lt;/p&gt;</code>下面加入如下代码</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;section&gt;</span><br><span class="line">          &#123;</span><br><span class="line">            state.<span class="property">films</span>.<span class="title function_">map</span>(<span class="function"><span class="params">f</span> =&gt;</span> &#123;</span><br><span class="line">              <span class="keyword">return</span> (</span><br><span class="line">                <span class="language-xml"><span class="tag">&lt;<span class="name">section</span> <span class="attr">key</span>=<span class="string">&#123;f.id&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  <span class="tag">&lt;<span class="name">img</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">src</span>=<span class="string">&#123;f.image</span> ? <span class="attr">f.image.medium</span> <span class="attr">:</span> &#x27;&#x27;&#125; </span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                    <span class="attr">alt</span>=<span class="string">&#123;</span>`<span class="attr">Year</span> <span class="attr">and</span> <span class="attr">Date</span> $&#123;<span class="attr">f.name</span>&#125;`&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">                  /&gt;</span></span></span><br><span class="line"><span class="language-xml">                  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    &#123;f.name&#125;</span></span><br><span class="line"><span class="language-xml">                  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  <span class="tag">&lt;<span class="name">section</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                      Season: &#123;f.season&#125; Number: &#123;f.number&#125;</span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  <span class="tag">&lt;/<span class="name">section</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">section</span>&gt;</span></span></span><br><span class="line">              )</span><br><span class="line">            &#125;)</span><br><span class="line">          &#125;</span><br><span class="line">        &lt;/section&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码基本上遍历我们的剧集数组中的对象（在用api填充数据之后），并用这些数据填充dom。随意添加或删除您选择的数据点。</p>
+<p><a target="_blank" rel="noopener" href="https://camo.githubusercontent.com/44ae199708dd38fec19cc149c362f555150ddd0f/68747470733a2f2f7265732e636c6f7564696e6172792e636f6d2f6479356476637563312f696d6167652f75706c6f61642f76313536303530383336322f676f77686963682f515132303139303631342d3138323833302d48442d312e676966"><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1560508362/gowhich/QQ20190614-182830-HD-1.gif" alt="hooks和context"></a></p>
+<p>参考自:<span class="exturl" data-url="aHR0cHM6Ly9tZWRpdW0uY29tL29jdG9wdXMtbGFicy1sb25kb24vcmVwbGFjaW5nLXJlZHV4LXdpdGgtcmVhY3QtaG9va3MtYW5kLWNvbnRleHQtcGFydC0xLTExYjcyZmZkYjUzMw==">https://medium.com/octopus-labs-london/replacing-redux-with-react-hooks-and-context-part-1-11b72ffdb533<i class="fa fa-external-link-alt"></i></span></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechat.png" alt="durban 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/images/alipay.png" alt="durban 支付宝">
+        <span>支付宝</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>durban
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.gowhich.com/2025/07/10/%E6%8A%9B%E5%BC%83Redux-%E8%BF%8E%E6%8E%A5React%E7%9A%84hooks%E5%92%8Ccontext-%E4%B8%80.html" title="抛弃Redux，迎接React的hooks和context（一）">https://blog.gowhich.com/2025/07/10/抛弃Redux-迎接React的hooks和context-一.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</span> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/RequireJS/" rel="tag"><i class="fa fa-tag"></i> RequireJS</a>
+          </div>
+
+        
+  <div class="social-like a2a_kit a2a_kit_size_32 a2a_default_style">
+    <a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_facebook"></a>
+      <a class="a2a_button_twitter"></a>
+  </div>
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/07/10/tmux-%E5%85%8D%E8%B4%B9%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B.html" rel="prev" title="tmux 免费使用教程">
+                  <i class="fa fa-angle-left"></i> tmux 免费使用教程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2025/07/10/%E6%8A%9B%E5%BC%83Redux-%E8%BF%8E%E6%8E%A5React%E7%9A%84hooks%E5%92%8Ccontext-%E4%BA%8C.html" rel="next" title="抛弃Redux，迎接React的hooks和context（二）">
+                  抛弃Redux，迎接React的hooks和context（二） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2014 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Copyright © durban. All Rights Reserved.</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZw==">NexT.Gemini</span> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
