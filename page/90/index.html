@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1008</span>
+          <span class="site-state-item-count">1027</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">165</span>
+        <span class="site-state-item-count">168</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/loaded-the-BlueView-nib-but-the-view-outlet-was-not-set-%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/iPhone-%E8%87%AA%E5%AE%9A%E4%B9%89-UITableViewCell-%E8%A1%8C%E7%BC%A9%E8%BF%9B.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/loaded-the-BlueView-nib-but-the-view-outlet-was-not-set-%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html" class="post-title-link" itemprop="url">loaded the "BlueView" nib but the view outlet was not set 错误的解决办法</a>
+          <a href="/2025/06/12/iPhone-%E8%87%AA%E5%AE%9A%E4%B9%89-UITableViewCell-%E8%A1%8C%E7%BC%A9%E8%BF%9B.html" class="post-title-link" itemprop="url">iPhone 自定义 UITableViewCell 行缩进</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:56:48 / 修改时间：11:06:22" itemprop="dateCreated datePublished" datetime="2025-06-12T09:56:48+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 17:44:58 / 修改时间：17:50:37" itemprop="dateCreated datePublished" datetime="2025-06-12T17:44:58+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,16 +294,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>解决办法：</p>
-<ul>
-<li><p>创建控制器. File-&gt;New File-&gt;Iphone OS-&gt;Cocoa Touch Class-&gt;UIViewController subclass;</p>
-</li>
-<li><p>创建xib. File-&gt;New File-&gt;Iphone OS-&gt;User Interface-&gt;View XIB</p>
-</li>
-<li><p>绑定controller和view. 用Interface Builder打开xxx.xib, 点击Files’ Owner, 在Identity Inspector里面的Class Identity, 选择Step 1创建的控制器类, 接着拖拽File’s Owner到View中, 选择Outlets-&gt;view.先选中file’s owner(这个很重要)</p>
-</li>
-</ul>
-<p>来源:<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdGhlYmVzdHRvbWUvYXJ0aWNsZS9kZXRhaWxzLzc3OTk4OTM=">http://blog.csdn.net/thebesttome/article/details/7799893<i class="fa fa-external-link-alt"></i></span></p>
+          <p>网上搜索了很多，不知道是我搜索技术问题还是怎么着，就是没有找到，不过经过自己的努力，还是发现了解决的办法，因为这种情况大多数是自定的UITableviewCell,那么肯定知道如何自己的自定的cell里面如何修改cell上面的元素，其实原理很简单，就是重新设置一下元素的frame大小就好了，我讲自己的代码贴到下面希望能够给大家一个指引。如果问题，可以联系我跟我继续探讨。</p>
+<figure class="highlight objectivec"><figcaption><span>attentionListCell.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  attentionListCell.h</span></span><br><span class="line"><span class="comment">//  xunYi6</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-5-16.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 david. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">attentionListCell</span> : <span class="title">UITableViewCell</span></span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UIImageView</span> *imageViewPic;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UILabel</span> *name;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UILabel</span> *index;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UILabel</span> *rank;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>, <span class="keyword">nonatomic</span>) <span class="built_in">UIImage</span> *listImage;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSString</span> *listName;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSString</span> *listIndex;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">copy</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSString</span> *listRank;</span><br><span class="line"><span class="comment">//--------------------------</span></span><br><span class="line"><span class="comment">//编辑操作</span></span><br><span class="line"><span class="comment">//--------------------------</span></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">UIImageView</span> *checkImageView;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>) <span class="type">BOOL</span> checked;</span><br><span class="line">- (<span class="type">void</span>) setChecked:(<span class="type">BOOL</span>)checked;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight objectivec"><figcaption><span>attentionListCell.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  attentionListCell.m</span></span><br><span class="line"><span class="comment">//  xunYi6</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-5-16.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 david. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;attentionListCell.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">attentionListCell</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> listImage = _listImage;</span><br><span class="line"><span class="keyword">@synthesize</span> listName = _listName;</span><br><span class="line"><span class="keyword">@synthesize</span> listIndex = _listIndex;</span><br><span class="line"><span class="keyword">@synthesize</span> listRank = _listRank;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> checkImageView = _checkImageView;</span><br><span class="line"><span class="keyword">@synthesize</span> checked = _checked;</span><br><span class="line"></span><br><span class="line">- (<span class="type">id</span>)initWithStyle:(<span class="built_in">UITableViewCellStyle</span>)style reuseIdentifier:(<span class="built_in">NSString</span> *)reuseIdentifier</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="variable language_">super</span> initWithStyle:style reuseIdentifier:reuseIdentifier];</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">        <span class="comment">// Initialization code</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)setSelected:(<span class="type">BOOL</span>)selected animated:(<span class="type">BOOL</span>)animated</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> setSelected:selected animated:animated];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Configure the view for the selected state</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) setListImage:(<span class="built_in">UIImage</span> *)value</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(![value isEqual:_listImage])</span><br><span class="line">    &#123;</span><br><span class="line">        _listImage = [value <span class="keyword">copy</span>];</span><br><span class="line">        <span class="keyword">self</span>.imageViewPic.image = _listImage;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) setListName:(<span class="built_in">NSString</span> *)value</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(![value isEqualToString:_listName])</span><br><span class="line">    &#123;</span><br><span class="line">        _listName = [value <span class="keyword">copy</span>];</span><br><span class="line">        <span class="keyword">self</span>.name.text = _listName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) setListIndex:(<span class="built_in">NSString</span> *)value</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(![value isEqualToString:_listIndex])</span><br><span class="line">    &#123;</span><br><span class="line">        _listIndex = [value <span class="keyword">copy</span>];</span><br><span class="line">        <span class="keyword">self</span>.index.text = _listIndex;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) setListRank:(<span class="built_in">NSString</span> *)value</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(![value isEqualToString:_listRank])</span><br><span class="line">    &#123;</span><br><span class="line">        _listRank = [value <span class="keyword">copy</span>];</span><br><span class="line">        <span class="keyword">self</span>.rank.text = _listRank;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>) setCheckImageViewCenter:(<span class="built_in">CGPoint</span>)pt alpha:(<span class="built_in">CGFloat</span>)alpha animated:(<span class="type">BOOL</span>)animated</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (animated)</span><br><span class="line">	&#123;</span><br><span class="line">		[<span class="built_in">UIView</span> beginAnimations:<span class="literal">nil</span> context:<span class="literal">nil</span>];</span><br><span class="line">		[<span class="built_in">UIView</span> setAnimationBeginsFromCurrentState:<span class="literal">YES</span>];</span><br><span class="line">		[<span class="built_in">UIView</span> setAnimationCurve:<span class="built_in">UIViewAnimationCurveEaseInOut</span>];</span><br><span class="line">		[<span class="built_in">UIView</span> setAnimationDuration:<span class="number">0.3</span>];</span><br><span class="line">		</span><br><span class="line">		_checkImageView.center = pt;</span><br><span class="line">		_checkImageView.alpha = alpha;</span><br><span class="line">		</span><br><span class="line">		[<span class="built_in">UIView</span> commitAnimations];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		_checkImageView.center = pt;</span><br><span class="line">		_checkImageView.alpha = alpha;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//-------------------------------</span></span><br><span class="line"><span class="comment">// 重新定义editing的设置</span></span><br><span class="line"><span class="comment">//-------------------------------</span></span><br><span class="line">-(<span class="type">void</span>) setEditing:(<span class="type">BOOL</span>)editing animated:(<span class="type">BOOL</span>)animated&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.editing == editing)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	[<span class="variable language_">super</span> setEditing:editing animated:animated];</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">if</span> (editing)</span><br><span class="line">	&#123;</span><br><span class="line"><span class="comment">//        CGRect *imageFrame = self.imageViewPic.frame;</span></span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span>.imageViewPic setFrame:<span class="built_in">CGRectMake</span>(<span class="keyword">self</span>.imageViewPic.frame.origin.x + <span class="number">30</span>, <span class="keyword">self</span>.imageViewPic.frame.origin.y, <span class="keyword">self</span>.imageViewPic.frame.size.width, <span class="keyword">self</span>.imageViewPic.frame.size.height)];</span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span>.name setFrame:<span class="built_in">CGRectMake</span>(<span class="keyword">self</span>.name.frame.origin.x + <span class="number">30</span>, <span class="keyword">self</span>.name.frame.origin.y, <span class="keyword">self</span>.name.frame.size.width, <span class="keyword">self</span>.name.frame.size.height)];</span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span>.index setFrame:<span class="built_in">CGRectMake</span>(<span class="keyword">self</span>.index.frame.origin.x + <span class="number">30</span>, <span class="keyword">self</span>.index.frame.origin.y, <span class="keyword">self</span>.index.frame.size.width, <span class="keyword">self</span>.index.frame.size.height)];</span><br><span class="line">        </span><br><span class="line">        [<span class="keyword">self</span>.rank setFrame:<span class="built_in">CGRectMake</span>(<span class="keyword">self</span>.rank.frame.origin.x + <span class="number">30</span>, <span class="keyword">self</span>.rank.frame.origin.y, <span class="keyword">self</span>.rank.frame.size.width, <span class="keyword">self</span>.rank.frame.size.height)];</span><br><span class="line">        </span><br><span class="line"><span class="comment">//        [self.imageViewPic setFrame:CGRectMake(&lt;#CGFloat x#&gt;, &lt;#CGFloat y#&gt;, &lt;#CGFloat width#&gt;, &lt;#CGFloat height#&gt;)]</span></span><br><span class="line">        </span><br><span class="line"><span class="comment">//		self.selectionStyle = UITableViewCellSelectionStyleNone;</span></span><br><span class="line"><span class="comment">//		self.backgroundView = [[UIView alloc] init];</span></span><br><span class="line"><span class="comment">//		self.backgroundView.backgroundColor = [UIColor redColor];</span></span><br><span class="line"><span class="comment">//		self.textLabel.backgroundColor = [UIColor clearColor];</span></span><br><span class="line"><span class="comment">//		self.detailTextLabel.backgroundColor = [UIColor clearColor];</span></span><br><span class="line"><span class="comment">//		</span></span><br><span class="line"><span class="comment">//		if (_checkImageView == nil)</span></span><br><span class="line"><span class="comment">//		&#123;</span></span><br><span class="line"><span class="comment">//			_checkImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@&quot;Unselected.png&quot;]];</span></span><br><span class="line"><span class="comment">//			[self addSubview:_checkImageView];</span></span><br><span class="line"><span class="comment">//		&#125;</span></span><br><span class="line"><span class="comment">//		</span></span><br><span class="line"><span class="comment">//		[self setChecked:_checked];</span></span><br><span class="line"><span class="comment">//		_checkImageView.center = CGPointMake(-CGRectGetWidth(_checkImageView.frame) * 0.5,</span></span><br><span class="line"><span class="comment">//											  CGRectGetHeight(self.bounds) * 0.5);</span></span><br><span class="line"><span class="comment">//		_checkImageView.alpha = 0.0;</span></span><br><span class="line"><span class="comment">//		[self setCheckImageViewCenter:CGPointMake(20.5, CGRectGetHeight(self.bounds) * 0.5)</span></span><br><span class="line"><span class="comment">//								alpha:1.0 animated:animated];</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line"><span class="comment">//		_checked = NO;</span></span><br><span class="line"><span class="comment">//		self.selectionStyle = UITableViewCellSelectionStyleBlue;</span></span><br><span class="line"><span class="comment">//		self.backgroundView = nil;</span></span><br><span class="line"><span class="comment">//		</span></span><br><span class="line"><span class="comment">//		if (_checkImageView)</span></span><br><span class="line"><span class="comment">//		&#123;</span></span><br><span class="line"><span class="comment">//			[self setCheckImageViewCenter:CGPointMake(-CGRectGetWidth(_checkImageView.frame) * 0.5,</span></span><br><span class="line"><span class="comment">//													  CGRectGetHeight(self.bounds) * 0.5)</span></span><br><span class="line"><span class="comment">//									alpha:0.0</span></span><br><span class="line"><span class="comment">//								 animated:animated];</span></span><br><span class="line"><span class="comment">//		&#125;</span></span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>) setChecked:(<span class="type">BOOL</span>)checked</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (checked)</span><br><span class="line">	&#123;</span><br><span class="line">		_checkImageView.image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;Selected.png&quot;</span>];</span><br><span class="line">		<span class="keyword">self</span>.backgroundView.backgroundColor = [<span class="built_in">UIColor</span> colorWithRed:<span class="number">223.0</span>/<span class="number">255.0</span> green:<span class="number">230.0</span>/<span class="number">255.0</span> blue:<span class="number">250.0</span>/<span class="number">255.0</span> alpha:<span class="number">1.0</span>];</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		_checkImageView.image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;Unselected.png&quot;</span>];</span><br><span class="line">		<span class="keyword">self</span>.backgroundView.backgroundColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">	&#125;</span><br><span class="line">	_checked = checked;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -330,7 +325,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/CodeSign-error-code-signing-is-required-for-product-type-Application-in-SDK-iOS-5.0.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/iOS-UIProgressView-%E7%94%A8%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -348,7 +343,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/CodeSign-error-code-signing-is-required-for-product-type-Application-in-SDK-iOS-5.0.html" class="post-title-link" itemprop="url">CodeSign error: code signing is required for product type 'Application' in SDK 'iOS 5.0'</a>
+          <a href="/2025/06/12/iOS-UIProgressView-%E7%94%A8%E6%B3%95.html" class="post-title-link" itemprop="url">iOS UIProgressView 用法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -360,7 +355,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:56:44 / 修改时间：11:01:13" itemprop="dateCreated datePublished" datetime="2025-06-12T09:56:44+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 17:44:54 / 修改时间：17:49:39" itemprop="dateCreated datePublished" datetime="2025-06-12T17:44:54+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -382,8 +377,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>解决方法如下:</p>
-<p>选择工程－&gt;Build Settings -&gt; Code Signing -&gt; Code Signing Identity -&gt; Debug -&gt; Any ios SDK 将选项改为：iPhone Developer</p>
+          <p>iOS实例-UIProgressView的简单实用方法</p>
+<p>代码如下：</p>
+<figure class="highlight objectivec"><figcaption><span>ProgressViewViewController.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">ProgressViewViewController</span> : <span class="title">UIViewController</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIProgressView</span> *progressview;</span><br><span class="line">    <span class="built_in">UIProgressView</span> *barprogressview;</span><br><span class="line">    <span class="built_in">NSTimer</span> *timer;</span><br><span class="line">    <span class="keyword">IBOutlet</span> <span class="built_in">UIButton</span> *startButton;</span><br><span class="line">    <span class="keyword">IBOutlet</span> <span class="built_in">UIButton</span> *stopButton; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">retain</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UIProgressView</span> *progressview;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>,<span class="keyword">retain</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UIProgressView</span> *barprogressview;</span><br><span class="line">-(<span class="keyword">IBAction</span>) startProgress:(<span class="type">id</span>)sender;</span><br><span class="line">-(<span class="keyword">IBAction</span>) stopProgress:(<span class="type">id</span>)sender;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight objectivec"><figcaption><span>ProgressViewViewController.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">ProgressViewViewController</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> progressview;</span><br><span class="line"><span class="keyword">@synthesize</span> barprogressview;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span>.progressview=<span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">self</span>.barprogressview=<span class="literal">nil</span>;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">	<span class="comment">// Do any additional setup after loading the view, typically from a nib.</span></span><br><span class="line">    stopButton.enabled = <span class="literal">NO</span>;</span><br><span class="line">    startButton.enabled = <span class="literal">YES</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) dealloc</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span>.progressview=<span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">self</span>.barprogressview=<span class="literal">nil</span>;</span><br><span class="line">    </span><br><span class="line">    [<span class="variable language_">super</span> dealloc];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidUnload</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span>.progressview=<span class="literal">nil</span>;</span><br><span class="line">    <span class="keyword">self</span>.barprogressview=<span class="literal">nil</span>;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidUnload];</span><br><span class="line">    <span class="comment">// Release any retained subviews of the main view.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*进度条每次加0.01 */</span></span><br><span class="line">-(<span class="type">void</span>) timerChanged:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span>.progressview.progress +=<span class="number">0.01</span>f;</span><br><span class="line">    <span class="keyword">self</span>.barprogressview.progress +=<span class="number">0.01</span>f;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">IBAction</span>) startProgress:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    </span><br><span class="line">    timer=[<span class="built_in">NSTimer</span> scheduledTimerWithTimeInterval:<span class="number">0.03</span>f</span><br><span class="line">                                         target:<span class="keyword">self</span> </span><br><span class="line">                                         selector:<span class="keyword">@selector</span>(timerChanged:) </span><br><span class="line">                                         userInfo:<span class="literal">nil</span> </span><br><span class="line">                                         repeats:<span class="literal">YES</span>];</span><br><span class="line">     <span class="comment">//[timer retain];</span></span><br><span class="line">      startButton.enabled = <span class="literal">NO</span>;</span><br><span class="line">    stopButton.enabled = <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br><span class="line">-(<span class="keyword">IBAction</span>) stopProgress:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    [timer invalidate];</span><br><span class="line">    <span class="comment">//[timer release];</span></span><br><span class="line">    <span class="comment">//timer =nil;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span>.progressview.progress=<span class="number">0.0</span>f;</span><br><span class="line">    <span class="keyword">self</span>.barprogressview.progress=<span class="number">0.0</span>f;</span><br><span class="line"> </span><br><span class="line">     startButton.enabled = <span class="literal">YES</span>;</span><br><span class="line">    stopButton.enabled = <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里提示一点是progress的最大值为1，最小值为0</p>
 
       
     </div>
@@ -410,7 +410,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/CSS3-Gradient-%E5%AD%A6%E4%B9%A0.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/Objective-C%E4%B8%ADNSString%E4%B8%8Eint%E5%92%8Cfloat%E7%9A%84%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -428,7 +428,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/CSS3-Gradient-%E5%AD%A6%E4%B9%A0.html" class="post-title-link" itemprop="url">CSS3 Gradient 学习</a>
+          <a href="/2025/06/12/Objective-C%E4%B8%ADNSString%E4%B8%8Eint%E5%92%8Cfloat%E7%9A%84%E7%9B%B8%E4%BA%92%E8%BD%AC%E6%8D%A2.html" class="post-title-link" itemprop="url">Objective-C中NSString与int和float的相互转换.md</a>
         </h2>
 
         <div class="post-meta-container">
@@ -438,9 +438,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-06-12 09:56:40 / 修改时间：10:57:25" itemprop="dateCreated datePublished" datetime="2025-06-12T09:56:40+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 17:44:47" itemprop="dateCreated datePublished" datetime="2025-06-12T17:44:47+08:00">2025-06-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-20 10:09:47" itemprop="dateModified" datetime="2025-06-20T10:09:47+08:00">2025-06-20</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -462,12 +468,17 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>CSS3发布很久了，现在在国外的一些页面上常能看到他的身影，这让我羡慕已久，只可惜在国内为了兼容IE，让这一项技术受到很大的限制，很多Web前端人员都望而止步。虽然如此但还是有很多朋友在钻研CSS3在web中的应用，为了不被淘汰，我也开始向CSS3进发，争取跟上技术的前沿。从现在开始我会不断的发布一些CSS3的应用，和大家一起分享，今天我们首先要看的就是:CSS3： Gradient─CSS3渐变。  </p>
-<p>CSS3 Gradient分为linear-gradient(线性渐变)和radial-gradient(径向渐变)。而我们今天主要是针对线性渐变来剖析其具体的用法。为了更好的应用CSS3 Gradient,我们需要先了解一下目前的几种现代浏览器的内核，主流内容主要有Mozilla（熟悉的有Firefox，Flock等浏览器）、WebKit（熟悉的有Safari、Chrome等浏览器）、Opera（Opera浏览器）、Trident（讨厌的IE浏览器）。本文照常忽略IE不管，我们主要看看在Mozilla、Webkit、Opera下的应用，当然在IE下也可以实现，他需要通过IE特有的滤镜来实现，在后面会列出滤镜的使用语法，但不会具体介绍如何实用，感兴趣的可以搜索相关技术文档。那我们了解了这些，现在就开始今天的主题吧。</p>
-<p>节选如下：</p>
-<h4 id="1"><a href="#1" class="headerlink" title="CSS3的线性渐变"></a><a href="#1">CSS3的线性渐变</a></h4><p><strong>一、线性渐变在Mozilla下的应用</strong><br>语法：<br><code>-moz-linear-gradient( [&lt;point&gt; || &lt;angle&gt;,]? &lt;stop&gt;, &lt;stop&gt; [, &lt;stop&gt;]* )</code><br>参数：其共有三个参数，第一个参数表示线性渐变的方向，top是从上到下、left是从左到右，如果定义成left top，那就是从左上角到右下角。第二个和第三个参数分别是起点颜色和终点颜色。你还可以在它们之间插入更多的参数，表示多种颜色的渐变。<br>注：这个效果暂时只有在Mozilla内核的浏览器下才能正常显示。<br><strong>二、线性渐变在Webkit下的应用</strong><br>语法：<br><code>-webkit-linear-gradient( [&lt;point&gt; || &lt;angle&gt;,]? &lt;stop&gt;, &lt;stop&gt; [, &lt;stop&gt;]* )//最新发布书写语法</code><br><code>-webkit-gradient(&lt;type&gt;, &lt;point&gt; [, &lt;radius&gt;]?, &lt;point&gt; [, &lt;radius&gt;]? [, &lt;stop&gt;]*) //老式语法书写规则</code><br>参数：-webkit-gradient是webkit引擎对渐变的实现参数，一共有五个。第一个参数表示渐变类型（type），可以是linear（线性渐变）或者radial（径向渐变）。第二个参数和第三个参数，都是一对值，分别表示渐变起点和终点。这对值可以用坐标形式表示，也可以用关键值表示，比如 left top（左上角）和left bottom（左下角）。第四个和第五个参数，分别是两个color-stop函数。color-stop函数接受两个参数，第一个表示渐变的位置，0为起点，0.5为中点，1为结束点；第二个表示该点的颜色。<br><strong>三、线性渐变在Opera下的应用</strong><br>语法：<br><code>-o-linear-gradient([&lt;point&gt; || &lt;angle&gt;,]? &lt;stop&gt;, &lt;stop&gt; [, &lt;stop&gt;]); /* Opera 11.10+ */</code><br>参数：-o-linear-gradient有三个参数。第一个参数表示线性渐变的方向，top是从上到下、left是从左到右，如果定义成left top，那就是从左上角到右下角。第二个和第三个参数分别是起点颜色和终点颜色。你还可以在它们之间插入更多的参数，表示多种颜色的渐变。（注：Opera支持的版本有限，本例测试都是在Opera11.1版本下，后面不在提示）。<br><strong>四、线性渐变在Trident (IE)下的应用</strong><br>语法：<br><code>filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#1471da, endColorstr=#1C85FB);/*IE&lt;9&gt;*/   -ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient (GradientType=0, startColorstr=#1471da, endColorstr=#1C85FB)&quot;;/*IE8+*/</code><br>IE依靠滤镜实现渐变。startColorstr表示起点的颜色，endColorstr表示终点颜色。GradientType表示渐变类型，0为缺省值，表示垂直渐变，1表示水平渐变。</p>
-<p>详细的自己去参考吧。</p>
-<p>来源：<span class="exturl" data-url="aHR0cDovL3d3dy53M2NwbHVzLmNvbS9jb250ZW50L2NzczMtZ3JhZGllbnQ=">http://www.w3cplus.com/content/css3-gradient<i class="fa fa-external-link-alt"></i></span></p>
+          <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *tempA = <span class="string">@&quot;123&quot;</span>;</span><br><span class="line"><span class="built_in">NSString</span> *tempB = <span class="string">@&quot;456&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1"><a href="#1" class="headerlink" title="字符串拼接"></a><a href="#1">字符串拼接</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *newString = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@%@&quot;</span>,tempA,tempB];</span><br></pre></td></tr></table></figure>
+
+<h3 id="2"><a href="#2" class="headerlink" title="字符转int"></a><a href="#2">字符转int</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> intString = [newString intValue];</span><br></pre></td></tr></table></figure>
+
+<h3 id="3"><a href="#3" class="headerlink" title="int转字符"></a><a href="#3">int转字符</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *stringInt = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%d&quot;</span>,intString];</span><br></pre></td></tr></table></figure>
+
+<h3 id="4"><a href="#4" class="headerlink" title="字符转float"></a><a href="#4">字符转float</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">float</span> floatString = [newString floatValue];</span><br></pre></td></tr></table></figure>
+
+<h3 id="5"><a href="#5" class="headerlink" title="float转字符"></a><a href="#5">float转字符</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *stringFloat = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%f&quot;</span>,intString];</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -494,7 +505,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/UINavigationController-pop%E7%9A%84%E4%B8%89%E4%B8%AA%E6%96%B9%E6%B3%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/%E5%8E%BB%E6%8E%89UITableViewCell%E8%BE%B9%E6%A1%86%E6%A0%B7%E5%BC%8F.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -512,7 +523,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/UINavigationController-pop%E7%9A%84%E4%B8%89%E4%B8%AA%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">UINavigationController pop的三个方法</a>
+          <a href="/2025/06/12/%E5%8E%BB%E6%8E%89UITableViewCell%E8%BE%B9%E6%A1%86%E6%A0%B7%E5%BC%8F.html" class="post-title-link" itemprop="url">去掉UITableViewCell边框样式</a>
         </h2>
 
         <div class="post-meta-container">
@@ -524,7 +535,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:56:37 / 修改时间：10:55:32" itemprop="dateCreated datePublished" datetime="2025-06-12T09:56:37+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 17:19:10 / 修改时间：17:29:25" itemprop="dateCreated datePublished" datetime="2025-06-12T17:19:10+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -546,11 +557,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>当我们在视图里面调用pushViewController的时候，有时间不想要这种默认的返回方式，或者也会用，但是有时候会遇到奇怪的问题，比如我就遇到了push之后没有返回按钮，或者说返回按钮消失了，不见了，因为我在rootViewController里面将navigationBar隐藏掉了，因为我想要我自己定义的navigationBar，之后在切换的视图里面就要自己定义这个但会按钮，然后给予他一个响应事件，来调用下面的类似代码，但是往往不知道返回到哪里</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.navigationController popToRootViewControllerAnimated:&lt;#(<span class="type">BOOL</span>)#&gt;]</span><br><span class="line">[<span class="keyword">self</span>.navigationController popToViewController:&lt;#(<span class="built_in">UIViewController</span> *)#&gt; animated:&lt;#(<span class="type">BOOL</span>)#&gt;]</span><br><span class="line">[<span class="keyword">self</span>.navigationController popViewControllerAnimated:&lt;#(<span class="type">BOOL</span>)#&gt;]</span><br></pre></td></tr></table></figure>
+          <h3 id="1"><a href="#1" class="headerlink" title="方法 1:"></a><a href="#1">方法 1:</a></h3><p>如果，UITableView的类型为UITableViewStyleGrounped，发现使用<code>_tableView.backgroundColor = [UIColor clearColor]</code>后，tableView的背景色仍然是默认的色，上网查了下：<br><code>_tableView.backgroundView = nil;</code>可以搞定。<br>测试下发现确实可以，但是不知道以前的版本不确定有没有backgroundView的，所以最好加个判断吧：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mainTableView.backgroundView)</span><br><span class="line">&#123;</span><br><span class="line">    mainTableView.backgroundView =<span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>在我的代码中，我是希望返回到到rootViewController这个视图中，那就只有调用<code>[self.navigationController popToRootViewControllerAnimated:&lt;#(BOOL)#&gt;]</code></p>
-<p>这个方法最适合了。结果达到了我想要的效果</p>
+<p>如果类型为UITableViewStylePlain，[UIColor clearColor]仍然有效，怪哉！<br>正常情况下grouped样式（UITableViewStyleGrouped）UITableViewCell都是有边框的，如果要去掉边框可以用：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIView</span> *tempView = [[[<span class="built_in">UIView</span> alloc] init] autorelease];</span><br><span class="line">[cell setBackgroundView:tempView];</span><br><span class="line">[cell setBackgroundColor:[<span class="built_in">UIColor</span> clearColor]];</span><br></pre></td></tr></table></figure>
+
+<p>其实很简单，把backgroundView设置为一个空的View，然后就干净了。看了下UITableViewCell的文档，backgroundView在plain-style的TableView里面是nil，在grouped-style的TableView里面并不是空的，所以这里设置空就ok了，这是目前为止我见到的最完美的解决方案。</p>
+<h3 id="2"><a href="#2" class="headerlink" title="方法 2:"></a><a href="#2">方法 2:</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[tableView setSeparatorColor:[<span class="built_in">UIColor</span> clearColor]];</span><br></pre></td></tr></table></figure>
+
+<h3 id="3"><a href="#3" class="headerlink" title="方法 3:"></a><a href="#3">方法 3:</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cell.backgroundView = [[[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="built_in">CGRectZero</span>] autorelease];</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -577,7 +593,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/error-failed-to-attach-to-process.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/JavaScript%E4%BD%BF%E7%94%A8console.log%E8%BE%93%E5%87%BA%E5%BD%93%E5%89%8D%E7%9A%84%E8%A1%8C%E5%8F%B7.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -595,7 +611,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/error-failed-to-attach-to-process.html" class="post-title-link" itemprop="url">error: failed to attach to process</a>
+          <a href="/2025/06/12/JavaScript%E4%BD%BF%E7%94%A8console.log%E8%BE%93%E5%87%BA%E5%BD%93%E5%89%8D%E7%9A%84%E8%A1%8C%E5%8F%B7.html" class="post-title-link" itemprop="url">JavaScript使用console.log输出当前的行号</a>
         </h2>
 
         <div class="post-meta-container">
@@ -607,7 +623,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:40:52 / 修改时间：10:06:21" itemprop="dateCreated datePublished" datetime="2025-06-12T09:40:52+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 17:19:01 / 修改时间：17:28:01" itemprop="dateCreated datePublished" datetime="2025-06-12T17:19:01+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -629,8 +645,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>解决办法的流程是：</p>
-<p>Open only XCode without opening project -&gt; Go to Window -&gt; Organizer -&gt; [ProjectName] and delete it completely -&gt; Quit XCode -&gt; Open iPhone simulator and reset settings -&gt; Quit iPhone simulator -&gt; reboot Mac -&gt; reopen XCode and run application</p>
+          <p>看到一篇帖子，感觉写的很牛，摘抄在这里了：（代码如下）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title class_">Error</span>.<span class="property">captureStackTrace</span> &amp;&amp; <span class="title class_">Object</span>.<span class="property">defineProperty</span>) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> <span class="variable language_">global</span> = <span class="variable language_">window</span>;</span><br><span class="line"></span><br><span class="line">        <span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(<span class="variable language_">global</span>, <span class="string">&#x27;__STACK__&#x27;</span>, &#123;</span><br><span class="line">            <span class="attr">get</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">                <span class="keyword">var</span> old = <span class="title class_">Error</span>.<span class="property">prepareStackTrace</span>;</span><br><span class="line">                <span class="title class_">Error</span>.<span class="property">prepareStackTrace</span> = <span class="keyword">function</span> (<span class="params">error, stack</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> stack;</span><br><span class="line">                &#125;;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">var</span> err = <span class="keyword">new</span> <span class="title class_">Error</span>();</span><br><span class="line">                <span class="title class_">Error</span>.<span class="title function_">captureStackTrace</span>(err, <span class="variable language_">arguments</span>.<span class="property">callee</span>);</span><br><span class="line">                <span class="title class_">Error</span>.<span class="property">prepareStackTrace</span> = old;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">return</span> err.<span class="property">stack</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(<span class="variable language_">global</span>, <span class="string">&#x27;__LINE__&#x27;</span>, &#123;</span><br><span class="line">            <span class="attr">get</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> __STACK__[<span class="number">1</span>].<span class="title function_">getLineNumber</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="title class_">Object</span>.<span class="title function_">defineProperty</span>(<span class="variable language_">global</span>, <span class="string">&#x27;__FILE__&#x27;</span>, &#123;</span><br><span class="line">            <span class="attr">get</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> __STACK__[<span class="number">1</span>].<span class="title function_">getFileName</span>();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> test = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(__LINE__,__FILE__);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">test</span>();</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -657,7 +673,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/unbalanced-calls-to-begin-end-appearance-transitions-for-uiviewcontroller%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/%E8%87%AA%E5%AE%9A%E4%B9%89UITableViewCell.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -675,7 +691,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/unbalanced-calls-to-begin-end-appearance-transitions-for-uiviewcontroller%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">unbalanced calls to begin/end appearance transitions for uiviewcontroller的解决方法</a>
+          <a href="/2025/06/12/%E8%87%AA%E5%AE%9A%E4%B9%89UITableViewCell.html" class="post-title-link" itemprop="url">自定义UITableViewCell</a>
         </h2>
 
         <div class="post-meta-container">
@@ -687,7 +703,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:40:47 / 修改时间：09:55:17" itemprop="dateCreated datePublished" datetime="2025-06-12T09:40:47+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 17:18:57 / 修改时间：17:26:38" itemprop="dateCreated datePublished" datetime="2025-06-12T17:18:57+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -709,9 +725,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>由于上个uivewcontroller的动画没做完，导致下一个的页面无法顺利压栈，这个只需要上一个页面返回的时候不要做动画就可以了。（这是其中的一种情况），</p>
-<p>如果不想去掉这个动画，需要做动画的操作，该怎么办呢，我这里给出一篇文章的做法，基本上都是类似的，我这里贴出地址：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jZmFuei5jbi8/Yz1hcnRpY2xlJmE9cmVhZCZpZD0yMzQ0MQ==">http://www.cfanz.cn/?c=article&amp;a=read&amp;id=23441<i class="fa fa-external-link-alt"></i></span></p>
+          <p>自己的应用中需要一种非普通格式的cell，于是自己就定义了一下；基本上的代码类似如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="built_in">NSString</span> *captionCellWithIdentifier = <span class="string">@&quot;captionCell&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用自定义的cell模板</span></span><br><span class="line"><span class="keyword">static</span> <span class="type">BOOL</span> nibRegistered = <span class="literal">NO</span>;</span><br><span class="line"><span class="keyword">if</span>(!nibRegistered)&#123;</span><br><span class="line">    <span class="built_in">UINib</span> *nib = [<span class="built_in">UINib</span> nibWithNibName:<span class="string">@&quot;captionCell&quot;</span> bundle:<span class="literal">nil</span>];</span><br><span class="line">    [<span class="keyword">self</span>.personTable registerNib:nib forCellReuseIdentifier:captionCellWithIdentifier];</span><br><span class="line">    nibRegistered = <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">captionCell *cell = [<span class="keyword">self</span>.personTable dequeueReusableCellWithIdentifier:captionCellWithIdentifier];</span><br><span class="line"><span class="keyword">if</span>(cell == <span class="literal">nil</span>)&#123;</span><br><span class="line">    cell = [[captionCell alloc] initWithStyle:<span class="built_in">UITableViewCellStyleSubtitle</span> reuseIdentifier:captionCellWithIdentifier];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cell.contentView.backgroundColor = [<span class="built_in">UIColor</span> grayColor];</span><br><span class="line"></span><br><span class="line">cell.firstTitle.text = <span class="string">@&quot;3月4日 艺人新媒体指数&quot;</span>;</span><br><span class="line">cell.firstTitle.textColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">cell.secondTitle.text = <span class="string">@&quot;www.vlinkage.com&quot;</span>;</span><br><span class="line">cell.secondTitle.textColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">cell.selectionStyle=<span class="built_in">UITableViewCellSelectionStyleNone</span>;</span><br><span class="line"><span class="keyword">return</span> cell;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -738,7 +753,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/clang-error-unable-to-execute-command-posix_spawn-failed-Resource-temporarily-unavailable.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/%E8%87%AA%E5%AE%9A%E4%B9%89UIBarButtonItem.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -756,7 +771,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/clang-error-unable-to-execute-command-posix_spawn-failed-Resource-temporarily-unavailable.html" class="post-title-link" itemprop="url">clang: error: unable to execute command: posix_spawn failed: Resource temporarily unavailable</a>
+          <a href="/2025/06/12/%E8%87%AA%E5%AE%9A%E4%B9%89UIBarButtonItem.html" class="post-title-link" itemprop="url">自定义UIBarButtonItem</a>
         </h2>
 
         <div class="post-meta-container">
@@ -768,7 +783,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:40:43 / 修改时间：10:06:53" itemprop="dateCreated datePublished" datetime="2025-06-12T09:40:43+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 17:18:50 / 修改时间：17:25:37" itemprop="dateCreated datePublished" datetime="2025-06-12T17:18:50+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -790,22 +805,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Xcode下创建一个项目，但是运行的时候出现了如下的错误：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clang: error: unable to execute <span class="built_in">command</span>: posix_spawn failed: Resource temporarily unavailable</span><br><span class="line">clang: error: clang frontend <span class="built_in">command</span> failed due to signal (use -v to see invocation)</span><br></pre></td></tr></table></figure>
-
-<p>经过查找资料，有个说明是这样的，如下：</p>
-<p>you may be running into too-low limits on the number of concurrent processes allowed on the machine. Check:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sysctl kern.maxproc</span><br><span class="line">sysctl kern.maxprocperuid</span><br></pre></td></tr></table></figure>
-
-<p>You can increase them with e.g.:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> sysctl -w kern.maxproc=2500</span><br><span class="line"><span class="built_in">sudo</span> sysctl -w kern.maxprocperuid=2500</span><br></pre></td></tr></table></figure>
-
-<p>But normally this shouldn’t be necessary if you’re building on 10.7 or higher. If you see this, check if some rogue program spawned hundreds of processes and kill them first.</p>
-<p>我按照上面的流程执行了操作：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">davidzhang@davidzhang:~/command$ sysctl kern.maxproc</span><br><span class="line">kern.maxproc: 1064</span><br><span class="line">davidzhang@davidzhang:~/command$ sysctl kern.maxprocperuid</span><br><span class="line">kern.maxprocperuid: 709</span><br><span class="line">davidzhang@davidzhang:~/command$ <span class="built_in">sudo</span> sysctl -w kern.maxproc=2500</span><br><span class="line">Password:</span><br><span class="line">kern.maxproc: 1064 -&gt; 2500</span><br><span class="line">davidzhang@davidzhang:~/command$ <span class="built_in">sudo</span> sysctl -w kern.maxprocperuid=2500</span><br><span class="line">kern.maxprocperuid: 709 -&gt; 2500</span><br></pre></td></tr></table></figure>
-
-<p>最后运行我的项目的时候，问题就解决了</p>
-<p>查询参考资料:<span class="exturl" data-url="aHR0cDovL2NvZGUuZ29vZ2xlLmNvbS9wL2Nocm9taXVtL3dpa2kvTWFjQnVpbGRJbnN0cnVjdGlvbnM=">http://code.google.com/p/chromium/wiki/MacBuildInstructions<i class="fa fa-external-link-alt"></i></span></p>
+          <p>因为按钮的要求，好友导航的限制，想着自己自定义一个barbuttonitem，如下</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.leftBtn = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeCustom</span>];</span><br><span class="line">[<span class="keyword">self</span>.leftBtn setFrame:<span class="built_in">CGRectMake</span>(<span class="number">10.0</span>, <span class="number">5.0</span>, <span class="number">70.0</span>, <span class="number">30.0</span>)];</span><br><span class="line">[<span class="keyword">self</span>.leftBtn setContentHorizontalAlignment:<span class="built_in">UIControlContentHorizontalAlignmentCenter</span>];</span><br><span class="line">[<span class="keyword">self</span>.leftBtn setTitle:<span class="string">@&quot;返回&quot;</span> forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">[<span class="keyword">self</span>.leftBtn setTitleColor:[<span class="built_in">UIColor</span> whiteColor] forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">[<span class="keyword">self</span>.leftBtn setTintColor:[<span class="built_in">UIColor</span> redColor]];</span><br><span class="line"><span class="comment">//    [self.leftBtn setImage:[UIImage imageNamed:@&quot;back_60_30&quot;] forState:UIControlStateNormal];</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">self</span>.leftBtn.layer.cornerRadius = <span class="number">10.0</span>;</span><br><span class="line"><span class="keyword">self</span>.leftBtn.layer.borderWidth = <span class="number">1.0</span>;</span><br><span class="line"></span><br><span class="line">[<span class="keyword">self</span>.leftBtn addTarget:<span class="keyword">self</span></span><br><span class="line">           action:<span class="keyword">@selector</span>(returnToPrev)</span><br><span class="line"> forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line">[<span class="keyword">self</span>.leftBtn setTag:<span class="number">1</span>];</span><br><span class="line">[<span class="keyword">self</span>.navigationBar addSubview:<span class="keyword">self</span>.leftBtn];</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -832,7 +833,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/Ubuntu%E4%B8%8B%E6%B7%BB%E5%8A%A0%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E9%A1%B9.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/%E8%87%AA%E5%AE%9A%E4%B9%89NavigationBar.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -850,7 +851,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/Ubuntu%E4%B8%8B%E6%B7%BB%E5%8A%A0%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8%E9%A1%B9.html" class="post-title-link" itemprop="url">ubuntu下添加开机启动项</a>
+          <a href="/2025/06/12/%E8%87%AA%E5%AE%9A%E4%B9%89NavigationBar.html" class="post-title-link" itemprop="url">自定义NavigationBar</a>
         </h2>
 
         <div class="post-meta-container">
@@ -862,7 +863,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:40:39 / 修改时间：09:51:32" itemprop="dateCreated datePublished" datetime="2025-06-12T09:40:39+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 17:18:45 / 修改时间：17:25:19" itemprop="dateCreated datePublished" datetime="2025-06-12T17:18:45+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -884,83 +885,14 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>这里说明，Ubuntu 中系统没有了RH系统中的 chkconfig 命令 ！<br>可用一些小工具来管理 Ubuntu 的启动选项：</p>
-<p>小工具 rcconf：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">sudo</span> apt-get rcconf</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">sudo</span> apt-get install rcconf</span></span><br></pre></td></tr></table></figure>
+          <p>最近写app，在一个部分想自定义一下NavigationBar：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.navigationBar = [[<span class="built_in">UINavigationBar</span> alloc]</span><br><span class="line">                            initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, width, <span class="number">40.0</span>)];</span><br><span class="line">[<span class="keyword">self</span>.navigationBar setBackgroundColor:[<span class="built_in">UIColor</span> redColor]];</span><br><span class="line">    </span><br><span class="line"><span class="keyword">self</span>.navigationBar.tintColor = [<span class="built_in">UIColor</span> redColor];</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:<span class="keyword">self</span>.navigationBar];</span><br><span class="line">    </span><br><span class="line"><span class="built_in">UINavigationItem</span> *navigationTitle = [[<span class="built_in">UINavigationItem</span> alloc] initWithTitle:<span class="string">@&quot;艺人指数排行榜&quot;</span>];</span><br><span class="line">[<span class="keyword">self</span>.navigationBar pushNavigationItem:navigationTitle animated:<span class="literal">NO</span>];</span><br></pre></td></tr></table></figure>
 
-<p>root 下运行:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">sudo</span> rcconf</span></span><br></pre></td></tr></table></figure>
+<p>别忘记一个操作就是隐藏掉默认的navigationBar:</p>
+<p>代码如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.navigationController setNavigationBarHidden:<span class="literal">YES</span>];</span><br></pre></td></tr></table></figure>
 
-<p>功能更全的工具：</p>
-<p>sysv-rc-conf</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">sudo</span> apt-get update</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">sudo</span> apt-get install sysv-rc-conf</span></span><br></pre></td></tr></table></figure>
-
-<p>运行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">sudo</span> sysv-rc-conf</span></span><br></pre></td></tr></table></figure>
-
-<p>也可以直接加入启动程序，例如把 <code>/etc/init.d/red5</code> 加入到系统自动启动列表中：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">sudo</span> sysv-rc-conf red5 on</span></span><br></pre></td></tr></table></figure>
-
-<p>其他使用方法见: google::Ubuntu::sysv-rc-conf 命令用法<br>也可以直接修改<br>直接改 <code>/etc/rc0.d</code> <code>~/etc/rc6.d</code> 和 <code>/etc/rcS.d</code> 下的东西，S开头的表示启动，K开头的表示不启动，<br>例如：想关闭 Red5 的开机自动启动，只需 <code>#sudo mv /etc/rc2.d/S20red5 /etc/rc2.d/K20red5</code> 就可以了。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="Ubuntu自动启动程序"></a><a href="#1">Ubuntu自动启动程序</a></h3><p>首先，linux随机启动的服务程序都在&#x2F;etc&#x2F;init.d这个文件夹里，里面的文件全部都是脚本文件（脚本程序简单的说就是把要运行的程序写 到一个 文件里让系统能够按顺序执行，类似windows下的autorun.dat文件），另外在&#x2F;etc这个文件夹里还有诸如名为rc1.d, rc2.d一直到rc6.d的文件夹，这些都是linux不同的runlevel，我们一般进入的X windows多用户的运行级别是第5级，也就是rc5.d，在这个文件夹下的脚本文件就是运行第5级时要随机启动的服务程序。需要注意的是，在每个rc (1-6).d文件夹下的文件其实都是&#x2F;etc&#x2F;init.d文件夹下的文件的一个软连接（类似windows中的快捷方式），也就是说，在 &#x2F;etc&#x2F;init.d文件夹下是全部的服务程序，而每个rc(1-6).d只链接它自己启动需要的相应的服务程序！  </p>
-<p>要启动scim (某一程序)，我们首先要知道scim程序在哪里，用locate命令可以找到，scim在&#x2F;usr&#x2F;bin&#x2F;scim这里，其中usr表 示是 属于用户的，bin在linux里表示可以执行的程序。这样，我就可以编写一个脚本程序，把它放到&#x2F;etc&#x2F;init.d里，然后在rc5.d里做一个相 应的软链接就可以了。<br>这个脚本其实很简单，就两行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">/usr/bin/scim</span><br></pre></td></tr></table></figure>
-
-<p>第一行是声明用什么终端运行这个脚本，第二行就是要运行的命令。<br>还 需要注意的一点是，在rc5.d里，每个链接的名字都是以S或者K开头的，S开头的表示是系统启动是要随机启动的，K开头的是不随机启动的。这 样，你就可以知道，如果我要哪个服务随机启动，就把它名字第一个字母K改成S就可以了，当然，把S改成K后，这个服务就不能随机启动了。因此，我这个链接 还要起名为SXXX，这样系统才能让它随机启动。<br>在RH下，rc.local是默认启动的最后一个脚本文件，所以，<br>如果你想要随机启动，还有一种方法就是在rc.local的尾部加入&#x2F;usr&#x2F;bin&#x2F;scim，这样就可以了。</p>
-<h3 id="2"><a href="#2" class="headerlink" title="Linux 自动启动程序"></a><a href="#2">Linux 自动启动程序</a></h3><p>1．开机启动时自动运行程序<br>Linux 加载后, 它将初始化硬件和设备驱动, 然后运行第一个进程init。init根据配置文件继续引导过程，启动其它进程。通常情况下，修改放置在 <code>/etc/rc</code>或 <code>/etc/rc.d</code> 或 <code>/etc/rc?.d</code> 目录下的脚本文件，可以使init自动启动其它程序。例如：编辑 <code>/etc/rc.d/rc.local</code> 文件(该文件通常是系统最后启动的脚本)，在文件最末加上一行“xinit”或“startx”，可以在开机启动后直接进入X－Window。<br>2．登录时自动运行程序<br>用 户登录时，bash首先自动执行系统管理员建立的全局登录script ：<code>/ect/profile</code>。然后bash在用户起始目录下按顺序查找三个特殊文件中的一个：<code>.bash_profile</code>、<code>.bash_login</code>、 <code>.profile</code>，但只执行最先找到的一个。<br>因此，只需根据实际需要在上述文件中加入命令就可以实现用户登录时自动运行某些程序（类似于DOS下的Autoexec.bat）。<br>3．退出登录时自动运行程序<br>退出登录时，bash自动执行个人的退出登录脚本<code>.bash_logout</code>。例如，在<code>.bash_logout</code>中加入命令“<code>tar －cvzf c.source.tgz ＊.c</code>”，则在每次退出登录时自动执行 “tar” 命令备份 ＊.c 文件。<br>4．定期自动运行程序<br>Linux有一个称为crond的守护程序，主要功能是周期性地检查 <code>/var/spool/cron</code>目录下的一组命令文件的内容，并在设定的时间执行这些文件中的命令。用户可以通过crontab 命令来建立、修改、删除这些命令文件。<br>例如，建立文件crondFile，内容为“<code>00 9 23 Jan ＊ HappyBirthday</code>”，运行“<code>crontab cronFile</code>”命令后，每当元月23日上午9:00系统自动执行“HappyBirthday”的程序（“＊”表示不管当天是星期几）。<br>5．定时自动运行程序一次<br>定时执行命令at 与crond 类似（但它只执行一次）：命令在给定的时间执行，但不自动重复。at命令的一般格式为：at [ －f file ] time ，在指定的时间执行file文件中所给出的所有命令。也可直接从键盘输入命令：  </p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">＄ at 12:00  </span><br><span class="line">at&gt;mailto Roger －s ″Have a lunch″ &lt; plan.txt  </span><br><span class="line">at&gt;Ctr－D  </span><br><span class="line">Job 1 at 2000－11－09 12:00  </span><br><span class="line">2000－11－09 12:00时候自动发一标题为“Have a lunch”，内容为plan.txt文件内容的邮件给Roger。?9 12:00  </span><br><span class="line">2000－11－09 12:00时候自动发一标题为“Have a lunch”，内容为plan.txt文件内容的邮件给Roger。er。ger。er。</span><br></pre></td></tr></table></figure>
-
-<h3 id="3"><a href="#3" class="headerlink" title="Ubuntu 开机自动挂载windows分区"></a><a href="#3">Ubuntu 开机自动挂载windows分区</a></h3><p>要挂载NTFS格式分区，需要NTFS-3g这个软件。它短小精悍，而且功能强大。<br>NTFS-3g是一个开源软件，它支持在Windows下面读写NTFS格式的分区。它非常的快速，同时也很安全。它支持Windows 2000、XP和2003，并且支持所有的符合POSIX标准的磁盘操作。<br>首先要编辑sources.list</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sudo gedit /etc/apt/sources.list</span></span><br></pre></td></tr></table></figure>
-
-<p>Ubuntu Drapper添加：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">deb http://givre.cabspace.com/ubuntu/ dapper main main-all</span><br><span class="line">deb http://ntfs-3g.sitesweetsite.info/ubuntu/ dapper main main-all</span><br><span class="line">deb http://flomertens.keo.in/ubuntu/ dapper main main-all</span><br></pre></td></tr></table></figure>
-
-<p>Ubuntu Edgy添加：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">deb http://givre.cabspace.com/ubuntu/ edgy main</span><br><span class="line">deb http://ntfs-3g.sitesweetsite.info/ubuntu/ edgy main</span><br><span class="line">deb http://flomertens.keo.in/ubuntu/ edgy main</span><br></pre></td></tr></table></figure>
-
-<p>同时必须导入GPG-Key，可以这样：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#wget http://flomertens.keo.in/ubuntu/givre_key.asc -O- | sudo apt-key add -</span></span><br><span class="line"><span class="comment">#wget http://givre.cabspace.com/ubuntu/givre_key.asc -O- | sudo apt-key add -</span></span><br></pre></td></tr></table></figure>
-
-<p>现在更新一下源：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sudo aptitude update</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="3-1"><a href="#3-1" class="headerlink" title="正式安装"></a><a href="#3-1">正式安装</a></h4><p>在“终端”下面运行：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sudo apt-get install ntfs-3g</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="3-2"><a href="#3-2" class="headerlink" title="配置NTFS-3g"></a><a href="#3-2">配置NTFS-3g</a></h4><p>首先看一些硬盘分区的分区类型</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sudo fdisk -l</span></span><br></pre></td></tr></table></figure>
-
-<p>现在就可以修改 <code>/etc/fstab</code>，来让Ubuntu启动的时候自动挂载NTFS分区了。但是首先请备份一下这个文件：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sudo cp /etc/fstab /etc/fstab.bak</span></span><br></pre></td></tr></table></figure>
-
-<p>建立挂载点，譬如挂载在 <code>/media/windows</code> 下面</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sudo mkdir /media/windows</span></span><br></pre></td></tr></table></figure>
-
-<p>现在可以在 <code>/etc/fstab</code> 的后面添加</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/dev/hda1 /media/ ntfs-3g defaults,locale=zh_CN.utf8 0 0</span><br></pre></td></tr></table></figure>
-
-<p>根据自己的情况进行修改。<br>一些示例  </p>
-<h4 id="3-3"><a href="#3-3" class="headerlink" title="挂载 &#x2F;dev&#x2F;hda3"></a><a href="#3-3">挂载 &#x2F;dev&#x2F;hda3</a></h4><p>添加 &#x2F;dev&#x2F;hda3 &#x2F;media&#x2F;windows ntfs-3g ro,locale&#x3D;zh_CN.utf8,uid&#x3D;1000 0 0<br>关于自己的locale<br>可以用下面的命令查看所有的locale<br><code>#locale -a</code><br>如果不想重新启动，就可以</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sudo umount -a</span></span><br><span class="line"><span class="comment">#sudo mount -a</span></span><br></pre></td></tr></table></figure>
-
-<p>最后一个挂载FAT分区的命令</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sudo mount /dev/hda3 /media/windows/ -t vfat -o iocharset=utf8,umask=000</span></span><br></pre></td></tr></table></figure>
-
-<p>当然可以在&#x2F;etc&#x2F;fstab里面添加</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/dev/hda3 /media/windows vfat iocharset=utf8,<span class="built_in">umask</span>=000 0 0</span><br></pre></td></tr></table></figure>
-
-<h3 id="4"><a href="#4" class="headerlink" title="Openfire随着Ubuntu自动启动"></a><a href="#4">Openfire随着Ubuntu自动启动</a></h3><p>openfire缺省情况下，是不随机启动的。为了解决每次都要手工启动的麻烦，我编写了一个脚本，放在<code>/etc/init.d</code>目录里面</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#sudo vim /etc/init.d/openfire</span></span><br></pre></td></tr></table></figure>
-
-<p>内容如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="function"><span class="title">openfire_start</span></span>()&#123;</span><br><span class="line">/etc/openfire/bin/openfire start</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="title">openfire_stop</span></span>()&#123;</span><br><span class="line">/etc/openfire/bin/openfire stop</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">case</span> <span class="variable">$1</span> <span class="keyword">in</span></span><br><span class="line">start)</span><br><span class="line">openfire_start</span><br><span class="line">;;</span><br><span class="line">stop)</span><br><span class="line">openfrie_stop</span><br><span class="line">;;</span><br><span class="line">*)</span><br><span class="line"><span class="built_in">echo</span> ‘Usage:openfire start|stop’</span><br><span class="line">;;</span><br><span class="line"><span class="keyword">esac</span></span><br></pre></td></tr></table></figure>
-
-<p>我的开机启动项设置为：</p>
-<p>在&#x2F;etc&#x2F;rc.local中添加自己要执行的代码，如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh -e</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># rc.local</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># This script is executed at the end of each multiuser runlevel.</span></span><br><span class="line"><span class="comment"># Make sure that the script will &quot;exit 0&quot; on success or any other</span></span><br><span class="line"><span class="comment"># value on error.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># In order to enable or disable this script just change the execution</span></span><br><span class="line"><span class="comment"># bits.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># By default this script does nothing.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#启动redis服务</span></span><br><span class="line">/usr/local/bin/redis-server /etc/redis.conf</span><br><span class="line"><span class="comment">#启动uwsgi</span></span><br><span class="line">/usr/local/bin/uwsgi --ini /etc/uwsgi.ini</span><br><span class="line"><span class="comment">#启动tomcat</span></span><br><span class="line">/usr/tomcat/apache-tomcat-7.0.35/bin/startup.sh</span><br><span class="line"><span class="built_in">exit</span> 0</span><br></pre></td></tr></table></figure>
-
-<p>参考资料:<span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9haW5pYWEvYXJjaGl2ZS8yMDExLzEyLzA1LzIyNzY5ODkuaHRtbA==">http://www.cnblogs.com/ainiaa/archive/2011/12/05/2276989.html<i class="fa fa-external-link-alt"></i></span></p>
+<p>这行代码可以加到<code>didFinishLaunchingWithOptions</code>中，也可以加到<code>viewDidLoad</code>中</p>
 
       
     </div>
@@ -987,7 +919,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/Eclipse%E9%85%8D%E7%BD%AEPyDev%E6%8F%92%E4%BB%B6.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/%E8%8E%B7%E5%8F%96iphone%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E5%8F%B7.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1005,7 +937,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/Eclipse%E9%85%8D%E7%BD%AEPyDev%E6%8F%92%E4%BB%B6.html" class="post-title-link" itemprop="url">Eclipse配置PyDev插件</a>
+          <a href="/2025/06/12/%E8%8E%B7%E5%8F%96iphone%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E5%8F%B7.html" class="post-title-link" itemprop="url">获取iphone系统版本号</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1017,7 +949,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:40:36 / 修改时间：09:42:38" itemprop="dateCreated datePublished" datetime="2025-06-12T09:40:36+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 17:18:38 / 修改时间：17:24:13" itemprop="dateCreated datePublished" datetime="2025-06-12T17:18:38+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1039,10 +971,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="安装python解释器(略)"></a><a href="#1">安装python解释器(略)</a></h3><h3 id="2"><a href="#2" class="headerlink" title="安装PyDev"></a><a href="#2">安装PyDev</a></h3><p>首先需要去Eclipse官网下载：<span class="exturl" data-url="aHR0cDovL3d3dy5lY2xpcHNlLm9yZy8=">http://www.eclipse.org/<i class="fa fa-external-link-alt"></i></span> ，Eclipse需要JDK支持，如果Eclipse无法正常运行，请到Java官网下载JDK安装：<span class="exturl" data-url="aHR0cDovL3d3dy5vcmFjbGUuY29tL3RlY2huZXR3b3JrL2phdmEvamF2YXNlL2Rvd25sb2FkcyVFMyU4MCU4Mg==">http://www.oracle.com/technetwork/java/javase/downloads。<i class="fa fa-external-link-alt"></i></span><br>打开Eclipse，找到Help菜单栏，进入Install New Software…选项。<br>点击work with:输入框的旁边点击Add…，Name可以随便是什么，我输入的是PyDev，Location是 <span class="exturl" data-url="aHR0cDovL3B5ZGV2Lm9yZy91cGRhdGVz">http://pydev.org/updates<i class="fa fa-external-link-alt"></i></span> 点击OK。<br>等待一下，便可以在选择栏里看到各个选项。<br>选择PyDev，然后一路Next，进入安装路径选择界面，使用默认设置，然后 Finish。Eclipse将下载 PyDev，可以从 Eclipse任务栏中看到下载的进度。<br>PyDev安装好后，需要重启Eclipse。  </p>
-<h3 id="3"><a href="#3" class="headerlink" title="配置PyDev"></a><a href="#3">配置PyDev</a></h3><p>PyDev安装好之后，需要配置解释器。在 Eclipse 菜单栏中，选择Window &gt; Preferences &gt; Pydev &gt; Interpreter – Python，在此配置 Python。首先需要添加已安装的解释器。如果没有下载安装Python，请到官网下载2.x或者3.x版本：<span class="exturl" data-url="aHR0cDovL3d3dy5weXRob24ub3JnLw==">http://www.python.org/<i class="fa fa-external-link-alt"></i></span><br>我使用的是Python2.7版本。单击 New，进入对话框。Interpreter Name可以随便命名，<br>Interpreter Executable选择Python解释器&#x2F;usr&#x2F;bin&#x2F;python。<br>点击OK后跳出一个有很多复选框的窗口，选择需要加入SYSTEM pythonpath的选项，点击Ok。<br>然后在Python Interpreters的窗口，再次点击OK，即完成了Python解释器的配置。<br>到此PyDev就已经完成了配置，可以使用Eclipse开始编写Python。<br>Hola World：<br>在 Eclipse 菜单栏中，选择File &gt; New &gt; Pydev &gt; Project…，在窗口中选择PyDev Project，有三种项目可以创建，选择PyDev Project。<br>点击Next，输入项目名，选择相应的项目类型，以及所使用的Python语法版本和Python解释器。<br>创建成功后，进入透视图，右击src图标，选择New-&gt;Pydev Package，创建一个新的包。系统将自动生成__init__.py 文件，该文件不包含任何内容。再右键单击创建的包，选择 New-&gt;Pydev Module，创建你一个新的Python模块，单击Finish。  </p>
-<p>这样我们就可以开始创建第一个.py文件了。</p>
-<h3 id="4"><a href="#4" class="headerlink" title="更好的方法"></a><a href="#4">更好的方法</a></h3><p>在这个也页面 <span class="exturl" data-url="aHR0cDovL3B5ZGV2Lm9yZy9kb3dubG9hZC5odG1s">http://pydev.org/download.html<i class="fa fa-external-link-alt"></i></span> ，你会看到某个软件已经预安装了这个扩展，她就是“Aptana Studio 3”</p>
+          <p>为了使用版本号的问题，我搜了点资料，做点记录</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSLog</span>([[<span class="built_in">UIDevice</span> currentDevice] name]); <span class="comment">// Name of the phone as named by user</span></span><br><span class="line"><span class="built_in">NSLog</span>([[<span class="built_in">UIDevice</span> currentDevice] uniqueIdentifier]); <span class="comment">// A GUID like string</span></span><br><span class="line"><span class="built_in">NSLog</span>([[<span class="built_in">UIDevice</span> currentDevice] systemName]); <span class="comment">// &quot;iPhone OS&quot;</span></span><br><span class="line"><span class="built_in">NSLog</span>([[<span class="built_in">UIDevice</span> currentDevice] systemVersion]); <span class="comment">// &quot;2.2.1&quot;</span></span><br><span class="line"><span class="built_in">NSLog</span>([[<span class="built_in">UIDevice</span> currentDevice] model]); <span class="comment">// &quot;iPhone&quot; on both devices</span></span><br><span class="line"><span class="built_in">NSLog</span>([[<span class="built_in">UIDevice</span> currentDevice] localizedModel]); <span class="comment">// &quot;iPhone&quot; on both devices</span></span><br><span class="line"><span class="type">float</span> version = [[[<span class="built_in">UIDevice</span> currentDevice] systemVersion] floatValue];</span><br><span class="line"><span class="keyword">if</span> (version &gt;= <span class="number">4.0</span>)</span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">// iPhone 4.0 code here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -1069,7 +999,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/iOS-%E8%AE%BE%E7%BD%AECGColor%E9%A2%9C%E8%89%B2%E5%80%BC.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/Finishing-up-a-navigation-transition-in-an-unexpected-state.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1087,7 +1017,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/iOS-%E8%AE%BE%E7%BD%AECGColor%E9%A2%9C%E8%89%B2%E5%80%BC.html" class="post-title-link" itemprop="url">iOS 设置CGColor颜色值</a>
+          <a href="/2025/06/12/Finishing-up-a-navigation-transition-in-an-unexpected-state.html" class="post-title-link" itemprop="url">Finishing up a navigation transition in an unexpected state</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1099,7 +1029,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:35:00 / 修改时间：09:40:17" itemprop="dateCreated datePublished" datetime="2025-06-12T09:35:00+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 17:18:35 / 修改时间：17:23:29" itemprop="dateCreated datePublished" datetime="2025-06-12T17:18:35+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1121,26 +1051,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>通过Core Library的文档，我们知道创建颜色有这么几个方法：  </p>
-<ul>
-<li>CGColorCreate  </li>
-<li>CGColorCreateCopy  </li>
-<li>CGColorCreateGenericGray  </li>
-<li>CGColorCreateGenericRGB  </li>
-<li>CGColorCreateGenericCMYK  </li>
-<li>CGColorCreateCopyWithAlpha  </li>
-<li>CGColorCreateWithPattern</li>
-</ul>
-<p>再来看一下CGColorCreate：  </p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGColorRef</span> <span class="built_in">CGColorCreate</span> (  </span><br><span class="line">  <span class="built_in">CGColorSpaceRef</span> colorspace,  </span><br><span class="line">  <span class="keyword">const</span> <span class="built_in">CGFloat</span> components[]  </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+          <p>我在做我的iOS应用中，遇到了这样的情况：错误代码如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2013-05-13 21:46:47.985 xunYi4[31694:c07] nested pop animation can result in corrupted navigation bar</span><br><span class="line">2013-05-13 21:46:48.336 xunYi4[31694:c07] Finishing up a navigation transition in an unexpected state. Navigation Bar subview tree might get corrupted.</span><br><span class="line">2013-05-13 21:46:48.337 xunYi4[31694:c07] Unbalanced calls to begin/end appearance transitions for &lt;personViewController: 0x75a01b0&gt;.</span><br></pre></td></tr></table></figure>
 
-<p>我们通过CGColorCreate就可以创建颜色。既然我们要用RGB表示颜色，那么colorspace这个参数我们就可以使用CGColorSpaceCreateDeviceRGB()，而我们主要来探讨components这个参数。<br>这个参数是一个数组，带有4个数值：  </p>
-<p>float color[]&#x3D;{红色分量, 绿色分量, 蓝色分量, alpha分量};</p>
-<p>这4个数值都是0-1区间，0表示黑（不发光），数字越大这种颜色的光线越强，alpha分量表示透明度。比如{1.0, 0, 0,1.0}就是纯红色而且完全不透明。</p>
-<p>最终的使用方法，如下代码：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">UIColor</span> colorWithRed:<span class="number">55.0</span>/<span class="number">255.0</span> green:<span class="number">137.0</span>/<span class="number">255.0</span> blue:<span class="number">195.0</span>/<span class="number">255.0</span> alpha:<span class="number">1.0</span>];</span><br></pre></td></tr></table></figure>
+<p>使得我的运行的结果是，在调用pushViewConroller的时候出现了两次push，导致程序不能达到自己想要的效果，于是查找资料，最终我的解决方案是：如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">personViewController *person = [[personViewController alloc] initWithNibName:<span class="string">@&quot;personViewController&quot;</span> bundle:<span class="literal">nil</span>];</span><br><span class="line">[<span class="keyword">self</span>.navigationController popToRootViewControllerAnimated:<span class="literal">NO</span>];</span><br><span class="line">person.navigationItem.title = button.titleLabel.text;</span><br><span class="line">[<span class="keyword">self</span>.navigationController pushViewController:person animated:<span class="literal">YES</span>];</span><br></pre></td></tr></table></figure>
 
-<p>里面的值（55.0,137.0,195.0）可以自己选择,我是通过使用photoshop自己选择的，你也可以试试</p>
+<p>达到了我要的效果，但是问题是这个报错的信息还是存在，请求高手给予指点</p>
 
       
     </div>
@@ -1160,7 +1077,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/89/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/89/">89</a><span class="page-number current">90</span><a class="page-number" href="/page/91/">91</a><span class="space">&hellip;</span><a class="page-number" href="/page/101/">101</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/91/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/89/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/89/">89</a><span class="page-number current">90</span><a class="page-number" href="/page/91/">91</a><span class="space">&hellip;</span><a class="page-number" href="/page/103/">103</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/91/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
