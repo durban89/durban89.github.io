@@ -191,7 +191,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1027</span>
+          <span class="site-state-item-count">1047</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -202,7 +202,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">168</span>
+        <span class="site-state-item-count">172</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -242,7 +242,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E5%A6%82%E4%BD%95%E5%9C%A8%E4%B8%A4%E5%8F%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B9%8B%E9%97%B4%E8%BD%AC%E7%A7%BB%E6%95%B0%E6%8D%AE%E5%BA%93.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/CentOS-6-6-%E9%80%9A%E8%BF%87-yum-%E5%8D%87%E7%BA%A7gcc%E5%88%B04-7-4-8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -260,7 +260,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/%E5%A6%82%E4%BD%95%E5%9C%A8%E4%B8%A4%E5%8F%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B9%8B%E9%97%B4%E8%BD%AC%E7%A7%BB%E6%95%B0%E6%8D%AE%E5%BA%93.html" class="post-title-link" itemprop="url">如何在两台服务器之间转移数据库</a>
+          <a href="/2025/07/02/CentOS-6-6-%E9%80%9A%E8%BF%87-yum-%E5%8D%87%E7%BA%A7gcc%E5%88%B04-7-4-8.html" class="post-title-link" itemprop="url">CentOS 6.6 通过 yum 升级gcc到4.7/4.8</a>
         </h2>
 
         <div class="post-meta-container">
@@ -272,7 +272,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-02 11:31:33 / 修改时间：15:35:36" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:33+08:00">2025-07-02</time>
+      <time title="创建时间：2025-07-02 16:00:33 / 修改时间：16:21:01" itemprop="dateCreated datePublished" datetime="2025-07-02T16:00:33+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -294,21 +294,40 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>为了在两台服务器之间转移数据库，这里只需要三个步骤</p>
-<p>第一步：执行Mysql的 Dump</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -u root -p --opt [database name] &gt; [database name].sql</span><br></pre></td></tr></table></figure>
+          <p>前文：</p>
+<p>别傻了，还通过源码去安装，很费时间的，而且安装完你还要去考虑本地的gcc版本问题，这里给大家提供一个很简答的方法.</p>
+<p>第一部分：升级到4.7</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/yum.repos.d</span><br><span class="line">wget http://people.centos.org/tru/devtools-1.1/devtools-1.1.repo </span><br><span class="line">yum --enablerepo=testing-1.1-devtools-6 install devtoolset-1.1-gcc devtoolset-1.1-gcc-c++</span><br></pre></td></tr></table></figure>
 
-<p>第二步：copy数据库文件到另外一台服务器</p>
-<p>这里使用SCP命令，而且SCP有如下的使用语法</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp [database name].sql [username]@[servername]:path/to/database/</span><br></pre></td></tr></table></figure>
+<p>这个将安装的文件放在了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/centos/devtoolset-1.1</span><br></pre></td></tr></table></figure>
 
-<p>这里简单举一个例子，如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp newdatabase.sql user@example.com:~/</span><br></pre></td></tr></table></figure>
+<p>如果想要编辑器去处理的话，这样操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CC=/opt/centos/devtoolset-1.1/root/usr/bin/gcc  </span><br><span class="line"><span class="built_in">export</span> CPP=/opt/centos/devtoolset-1.1/root/usr/bin/cpp</span><br><span class="line"><span class="built_in">export</span> CXX=/opt/centos/devtoolset-1.1/root/usr/bin/c++</span><br></pre></td></tr></table></figure>
 
-<p>第三步：导入数据库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p newdatabase &lt; /path/to/newdatabase.sql</span><br></pre></td></tr></table></figure>
+<p>如果你想要gcc替换本地的，当然不是真的去替换，只要把他放在我们的&#x2F;usrlocal&#x2F;bin下面就好了，不必去管系统自带的【&#x2F;usr&#x2F;bin】。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /opt/rh/devtoolset-1.1/root/usr/bin/* /usr/local/bin/</span><br><span class="line"><span class="built_in">hash</span> -r</span><br><span class="line">gcc --version</span><br></pre></td></tr></table></figure>
 
-<p>你的数据库就通过SCP完成了转移</p>
+<p>第二部分：升级到4.8【这个应该是目前最新的啦，不过网上查的话已经到5.2啦，感觉落后一点比较稳，当然还有就是这个版本是新的里面使用最多的】</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://people.centos.org/tru/devtools-2/devtools-2.repo -O /etc/yum.repos.d/devtools-2.repo</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/yum.repos.d</span><br><span class="line">wget http://people.centos.org/tru/devtools-2/devtools-2.repo</span><br></pre></td></tr></table></figure>
+
+<p>然后</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install devtoolset-2-gcc devtoolset-2-binutils devtoolset-2-gcc-c++</span><br></pre></td></tr></table></figure>
+
+<p>这个将安装的文件放在了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/rh/devtoolset-2</span><br></pre></td></tr></table></figure>
+
+<p>如果想要编辑器去处理的话，这样操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CC=/opt/rh/devtoolset-2/root/usr/bin/gcc  </span><br><span class="line"><span class="built_in">export</span> CPP=/opt/rh/devtoolset-2/root/usr/bin/cpp</span><br><span class="line"><span class="built_in">export</span> CXX=/opt/rh/devtoolset-2/root/usr/bin/c++</span><br></pre></td></tr></table></figure>
+
+<p>如果你想要gcc替换本地的，当然不是真的去替换，只要把他放在我们的&#x2F;usrlocal&#x2F;bin下面就好了，不必去管系统自带的【&#x2F;usr&#x2F;bin】。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ln</span> -s /opt/rh/devtoolset-2/root/usr/bin/* /usr/local/bin/</span><br><span class="line"><span class="built_in">hash</span> -r</span><br><span class="line">gcc --version</span><br></pre></td></tr></table></figure>
+
+<p>这个两个部分的路径变了【请看这里】：<span class="exturl" data-url="aHR0cDovL3Blb3BsZS5jZW50b3Mub3JnL3RydS9kZXZ0b29scy0yL3JlYWRtZQ==">http://people.centos.org/tru/devtools-2/readme<i class="fa fa-external-link-alt"></i></span></p>
+<p>参考资料：<span class="exturl" data-url="aHR0cDovL3N1cGVydXNlci5jb20vcXVlc3Rpb25zLzM4MTE2MC9ob3ctdG8taW5zdGFsbC1nY2MtNC03LXgtNC04LXgtb24tY2VudG9z">http://superuser.com/questions/381160/how-to-install-gcc-4-7-x-4-8-x-on-centos<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -335,7 +354,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E5%BC%BA%E5%88%B6%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8D%E7%BC%93%E5%AD%98%E7%9A%84%E6%96%B9%E6%B3%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/ReactJS-innerHtml-%E8%B5%8B%E5%80%BC%E6%93%8D%E4%BD%9C.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -353,7 +372,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/%E5%BC%BA%E5%88%B6%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8D%E7%BC%93%E5%AD%98%E7%9A%84%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">强制浏览器不缓存的方法</a>
+          <a href="/2025/07/02/ReactJS-innerHtml-%E8%B5%8B%E5%80%BC%E6%93%8D%E4%BD%9C.html" class="post-title-link" itemprop="url">ReactJS innerHtml 赋值操作</a>
         </h2>
 
         <div class="post-meta-container">
@@ -365,7 +384,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-02 11:31:30 / 修改时间：15:36:47" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:30+08:00">2025-07-02</time>
+      <time title="创建时间：2025-07-02 16:00:30 / 修改时间：16:21:56" itemprop="dateCreated datePublished" datetime="2025-07-02T16:00:30+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -387,221 +406,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>一、对于静态页（就是通过meta标签来设置）：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--expires用于设定网页的过期时间,一旦过期就必须从服务器上重新加载.时间必须使用GMT格式--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;expires&quot;</span> <span class="attr">content</span>=<span class="string">&quot;Sunday 26 October 2008 01:00 GMT&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>或者通过pragma no-cache来设置，pragma出现在http-equiv属性中，使用content属性的no-cache值表示是否缓存网页(为了提高速度一些浏览器会缓存浏览者浏览过的页面,通过下面的定义,浏览器一般不会缓存页面,而且浏览器无法脱机浏览)。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;pragma&quot;</span> <span class="attr">content</span>=<span class="string">&quot;no-cache&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>二、对于ASP页面：</p>
-<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">Response.Buffer=<span class="literal">true</span></span><br><span class="line">Response.CacheControl=<span class="string">&quot;no-cache&quot;</span> <span class="string">&#x27;禁止代理服务器缓存本页面</span></span><br><span class="line"><span class="string">Response.Expires=-1000 &#x27;</span>让页面立即过期(这儿最好设置一个绝对值较大的负数)</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
-
-<p>三、对于JSP页面：</p>
-<figure class="highlight jsp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line"><span class="keyword">if</span>(request.getProtocol().compareTo(<span class="string">&quot;HTTP/1.0&quot;</span>)==<span class="number">0</span>)&#123;</span><br><span class="line">response.setHeader(<span class="string">&quot;Pragma&quot;</span>,<span class="string">&quot;no-cache&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(request.getProtocol().compareTo(<span class="string">&quot;HTTP/1.1&quot;</span>)==<span class="number">0</span>)&#123;</span><br><span class="line">response.setHeader(<span class="string">&quot;Cache-Control&quot;</span>,<span class="string">&quot;no-cache&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">response.setDateHeader(<span class="string">&quot;Expires&quot;</span>,<span class="number">0</span>);</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
-
-<p>四、对于PHP页面</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&#x27;Cache-Control:no-cache,must-revalidate&#x27;</span>);   </span><br><span class="line"><span class="title function_ invoke__">header</span>(<span class="string">&#x27;Pragma:no-cache&#x27;</span>);   </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>强调说明：对于动态页面，缓存的代码必须放在任何HTML标签输出之前，否则将会出错。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Webpack-hot-server-%E8%AE%BE%E7%BD%AE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/02/Webpack-hot-server-%E8%AE%BE%E7%BD%AE.html" class="post-title-link" itemprop="url">Webpack hot server 设置</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-02 11:26:34 / 修改时间：15:57:01" itemprop="dateCreated datePublished" datetime="2025-07-02T11:26:34+08:00">2025-07-02</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>使用node的express或connect作为server来启动项目的如何去设置webpack-dev-server</p>
-<p>这里举例子说明【为这里使用的是connect，express同理】，三个文件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">development.<span class="property">js</span>  <span class="comment">//启动文件</span></span><br><span class="line">webpack.<span class="property">config</span>.<span class="property">development</span>.<span class="property">js</span> <span class="comment">//开发模式的配置文件</span></span><br><span class="line">webpack.<span class="property">dev</span>.<span class="property">server</span>.<span class="property">js</span> <span class="comment">//webpack-dev-server 启动的辅助文件</span></span><br></pre></td></tr></table></figure>
-
-<p>先来看development.js文件</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">&#x27;http&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> connect = <span class="built_in">require</span>(<span class="string">&#x27;connect&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> urllib = <span class="built_in">require</span>(<span class="string">&#x27;urllib&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> staticServe = <span class="built_in">require</span>(<span class="string">&#x27;serve-static&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> finalhandler = <span class="built_in">require</span>(<span class="string">&#x27;finalhandler&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> debug = <span class="built_in">require</span>(<span class="string">&#x27;debug&#x27;</span>)(<span class="string">&#x27;proxy&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> args = <span class="built_in">require</span>(<span class="string">&quot;tinyclap&quot;</span>)(); <span class="comment">// 启动参数parser</span></span><br><span class="line"><span class="keyword">var</span> proxy = <span class="built_in">require</span>(<span class="string">&#x27;proxy-middleware&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> url = <span class="built_in">require</span>(<span class="string">&#x27;url&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> bodyParser = <span class="built_in">require</span>(<span class="string">&#x27;body-parser&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> app = <span class="title function_">connect</span>();</span><br><span class="line"><span class="comment">//=====================配置阶段</span></span><br><span class="line"><span class="keyword">var</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./config&#x27;</span>);</span><br><span class="line"><span class="keyword">if</span> (args.<span class="property">argv</span> &amp;&amp; args.<span class="property">argv</span>[<span class="string">&#x27;f&#x27;</span>]) &#123;</span><br><span class="line">  config = <span class="built_in">require</span>(args.<span class="property">argv</span>[<span class="string">&#x27;f&#x27;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> stServe = <span class="title function_">staticServe</span>(<span class="string">&#x27;./app&#x27;</span>, &#123;<span class="attr">index</span>: <span class="string">&#x27;index.html&#x27;</span>&#125;);</span><br><span class="line">app.<span class="title function_">use</span>(bodyParser.<span class="title function_">urlencoded</span>(&#123;<span class="attr">extended</span>: <span class="literal">false</span>&#125;));</span><br><span class="line"><span class="comment">//这里是主要的</span></span><br><span class="line"><span class="comment">// Any requests to localhost:3000/build is proxied</span></span><br><span class="line"><span class="comment">// to webpack-dev-server</span></span><br><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;./webpack.dev.server&#x27;</span>)(app);</span><br><span class="line"><span class="comment">//=====================启动阶段</span></span><br><span class="line">app.<span class="title function_">use</span>(<span class="keyword">function</span>(<span class="params">req, res</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> done = <span class="title function_">finalhandler</span>(req, res);</span><br><span class="line">  <span class="title function_">stServe</span>(req, res, done);</span><br><span class="line">&#125;);</span><br><span class="line">http.<span class="title function_">createServer</span>(app).<span class="title function_">listen</span>(config.<span class="property">port</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Server listen on port %d.&#x27;</span>, config.<span class="property">port</span>);</span><br></pre></td></tr></table></figure>
-
-<p>这里</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;./webpack.dev.server&#x27;</span>)(app);</span><br></pre></td></tr></table></figure>
-
-<p>是关键</p>
-<p>再来看webpack.config.development.js：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">&quot;path&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> <span class="title class_">ExtractTextPlugin</span> = <span class="built_in">require</span>(<span class="string">&quot;extract-text-webpack-plugin&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> bower_components_dir = path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;app/js/bower_components&#x27;</span>);</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">devtool</span>:<span class="string">&#x27;eval&#x27;</span>,</span><br><span class="line">  <span class="attr">entry</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;main&#x27;</span>:[</span><br><span class="line">      <span class="string">&quot;webpack/hot/dev-server&quot;</span>,</span><br><span class="line">      <span class="string">&#x27;webpack-dev-server/client?http://127.0.0.1:8080&#x27;</span>,</span><br><span class="line">      <span class="string">&#x27;./app/js/index.js&#x27;</span></span><br><span class="line">    ] <span class="comment">//演示单入口文件</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;app/js/out&#x27;</span>),  <span class="comment">//打包输出的路径</span></span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].js&#x27;</span>,              <span class="comment">//打包后的名字</span></span><br><span class="line">    <span class="attr">publicPath</span>: <span class="string">&quot;/js/out/&quot;</span>                <span class="comment">//html引用路径，在这里是本地地址。</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="keyword">new</span> webpack.<span class="property">optimize</span>.<span class="title class_">CommonsChunkPlugin</span>(<span class="string">&#x27;common.js&#x27;</span>),</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">ExtractTextPlugin</span>(<span class="string">&quot;styles.css&quot;</span>),</span><br><span class="line">    <span class="keyword">new</span> webpack.<span class="title class_">HotModuleReplacementPlugin</span>(),</span><br><span class="line">    <span class="keyword">new</span> webpack.<span class="title class_">NoErrorsPlugin</span>()</span><br><span class="line">  ],</span><br><span class="line">  <span class="comment">// 新添加的module属性</span></span><br><span class="line">  <span class="attr">module</span>: &#123;</span><br><span class="line">    <span class="attr">loaders</span>: [</span><br><span class="line">      &#123;<span class="attr">test</span>: <span class="regexp">/\.es6$/</span>, <span class="attr">exclude</span>: <span class="regexp">/bower_components/</span>, <span class="attr">loader</span>: <span class="string">&quot;babel&quot;</span>&#125;,</span><br><span class="line">      &#123;<span class="attr">test</span>: <span class="regexp">/\.jsx?$/</span>, <span class="attr">exclude</span>: <span class="regexp">/bower_components/</span>, <span class="attr">loader</span>: <span class="string">&quot;jsx-loader?insertPragma=React.DOM&amp;harmony&quot;</span>&#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>这里主要是entry部分和output部分</p>
-<p>接下来再看webpack.dev.server.js；</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&#x27;use strict&#x27;</span>;</span><br><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> <span class="title class_">WebpackDevServer</span> = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-server&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.development&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> proxy = <span class="built_in">require</span>(<span class="string">&#x27;proxy-middleware&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> url = <span class="built_in">require</span>(<span class="string">&#x27;url&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> urllib = <span class="built_in">require</span>(<span class="string">&#x27;urllib&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> debug = <span class="built_in">require</span>(<span class="string">&#x27;debug&#x27;</span>);</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="keyword">function</span>(<span class="params">app</span>) &#123;</span><br><span class="line">  <span class="comment">//异步 静态文件</span></span><br><span class="line">  app.<span class="title function_">use</span>(<span class="string">&#x27;/js/out&#x27;</span>, <span class="title function_">proxy</span>(<span class="string">&#x27;http://127.0.0.1:8080/js/out&#x27;</span>));</span><br><span class="line">  <span class="keyword">var</span> server = <span class="keyword">new</span> <span class="title class_">WebpackDevServer</span>(<span class="title function_">webpack</span>(config), &#123;</span><br><span class="line">    <span class="attr">publicPath</span>: config.<span class="property">output</span>.<span class="property">publicPath</span>,</span><br><span class="line">    <span class="attr">hot</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">noInfo</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="attr">historyApiFallback</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">stats</span>: &#123; <span class="attr">colors</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">    <span class="attr">headers</span>: &#123; <span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>: <span class="string">&#x27;*&#x27;</span> &#125;</span><br><span class="line">  &#125;).<span class="title function_">listen</span>(<span class="number">8080</span>, <span class="string">&#x27;127.0.0.1&#x27;</span>, <span class="keyword">function</span>(<span class="params">err,result</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (err) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Webpack Listening at 127.0.0.1:8080&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里主要是函数区域部分，做了一个proxy处理，将所有的js和css文件转到webpack-dev-server服务端</p>
-<p>最后index.html文件里面的js和css静态文件照常处理就好，只要能解析到&#x2F;js&#x2F;out上面就好</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Webpack%E5%88%86%E7%A6%BBcss%E5%8D%95%E7%8B%AC%E6%89%93%E5%8C%85.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Webpack%E5%88%86%E7%A6%BBcss%E5%8D%95%E7%8B%AC%E6%89%93%E5%8C%85.html" class="post-title-link" itemprop="url">webpack分离css单独打包</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-01 15:25:05 / 修改时间：15:27:31" itemprop="dateCreated datePublished" datetime="2025-07-01T15:25:05+08:00">2025-07-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>这个操作很简单的，只需要一个插件就好了，就是extract-text-webpack-plugin</p>
-<p>1，安装extract-text-webpack-plugin</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install extract-text-webpack-plugin --save-dev</span><br></pre></td></tr></table></figure>
-
-<p>2,配置文件添加对应配置</p>
-<p>首先require一下</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">ExtractTextPlugin</span> = <span class="built_in">require</span>(<span class="string">&quot;extract-text-webpack-plugin&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>plugins里面添加</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">ExtractTextPlugin</span>(<span class="string">&quot;styles.css&quot;</span>),</span><br></pre></td></tr></table></figure>
-
-<p>我这里如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">plugins</span>: [</span><br><span class="line">  <span class="keyword">new</span> webpack.<span class="property">optimize</span>.<span class="title class_">CommonsChunkPlugin</span>(<span class="string">&#x27;common.js&#x27;</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">ExtractTextPlugin</span>(<span class="string">&quot;styles.css&quot;</span>),</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
-
-<p>modules里面对css的处理修改为</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">test</span>:<span class="regexp">/\.css$/</span>, <span class="attr">loader</span>: <span class="title class_">ExtractTextPlugin</span>.<span class="title function_">extract</span>(<span class="string">&quot;style-loader&quot;</span>, <span class="string">&quot;css-loader&quot;</span>)&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>千万不要重复了，不然会不起作用的</p>
-<p>我这里如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">module</span>: &#123;</span><br><span class="line">  <span class="attr">loaders</span>: [</span><br><span class="line">    &#123;<span class="attr">test</span>:<span class="regexp">/\.css$/</span>, <span class="attr">loader</span>: <span class="title class_">ExtractTextPlugin</span>.<span class="title function_">extract</span>(<span class="string">&quot;style-loader&quot;</span>, <span class="string">&quot;css-loader&quot;</span>)&#125;,</span><br><span class="line">    &#123;<span class="attr">test</span>: <span class="regexp">/\.scss$/</span>, <span class="attr">loader</span>: <span class="string">&quot;style!css!sass&quot;</span>&#125;,</span><br><span class="line">    &#123;<span class="attr">test</span>: <span class="regexp">/\.less$/</span>, <span class="attr">loader</span>: <span class="string">&quot;style!css!less&quot;</span>&#125;,</span><br><span class="line">  ]</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>3，在引入文件里面添加需要的css，【举例如下】</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;../less/app.less&#x27;</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;./bower_components/bootstrap-select/dist/css/bootstrap-select.min.css&#x27;</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;./bower_components/fancybox/source/jquery.fancybox.css&#x27;</span>);</span><br></pre></td></tr></table></figure>
+          <p>使用react的时候，总有一些变量是html的字符串，但是我们却想要实现innerHtml的类似方法，直接用html进行渲染。</p>
+<p>这里react提供了一个dangerouslySetInnerHTML方法，可以实现此赋值操作。具体详情可以自己去google一个下，关键字：’react dangerouslySetInnerHTML’.</p>
+<p>下面是我为记录的一个示例，可以作为一个简单的demo了。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">Login</span> = <span class="title class_">React</span>.<span class="title function_">createClass</span>(&#123;</span><br><span class="line">  <span class="attr">getInitialState</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="string">&#x27;error_state&#x27;</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="string">&#x27;error_message&#x27;</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">handleClick</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">let</span> error_message = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">    error_message += <span class="string">&#x27;&lt;li&gt;错误信息一&lt;/li&gt;&#x27;</span>;</span><br><span class="line">    error_message += <span class="string">&#x27;&lt;li&gt;错误信息二&lt;/li&gt;&#x27;</span>;</span><br><span class="line">    error_message += <span class="string">&#x27;&lt;li&gt;错误信息三&lt;/li&gt;&#x27;</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">      <span class="string">&#x27;error_state&#x27;</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="string">&#x27;error_message&#x27;</span>: error_message</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">render</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">let</span> alert_class = <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">error_state</span> ? <span class="string">&#x27;alert alert-danger&#x27;</span> : <span class="string">&#x27;aler hidden&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;this.handleClick&#125;</span>&gt;</span>添加html<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#123;alert_class&#125;</span> <span class="attr">dangerouslySetInnerHTML</span>=<span class="string">&#123;&#123;__html:this.state.error_message&#125;&#125;</span> &gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
 
 
@@ -630,7 +438,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Webpack-%E6%89%93%E5%8C%85jsx%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-%E5%AE%9E%E7%8E%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E9%AA%8C%E8%AF%81.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -648,7 +456,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Webpack-%E6%89%93%E5%8C%85jsx%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">Webpack 打包jsx文件配置</a>
+          <a href="/2025/07/02/KoaJS-2-%E5%AE%9E%E7%8E%B0%E9%AA%8C%E8%AF%81%E7%A0%81%E9%AA%8C%E8%AF%81.html" class="post-title-link" itemprop="url">KoaJS-2 实现验证码验证</a>
         </h2>
 
         <div class="post-meta-container">
@@ -660,7 +468,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-01 15:25:02 / 修改时间：15:31:01" itemprop="dateCreated datePublished" datetime="2025-07-01T15:25:02+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 16:00:26 / 修改时间：16:22:53" itemprop="dateCreated datePublished" datetime="2025-07-02T16:00:26+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -682,15 +490,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>打包jsx文件，为了使得此文件可以直接被打包，并且在应用的时候不加入后缀，需要做以下几个步骤：</p>
-<p>1，安装jsx-loader</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install --save-dev jsx-loader</span><br></pre></td></tr></table></figure>
+          <p>首先安装验证码插件</p>
+<p>这里推荐使用ccap，这个插件是我在寻找过程中，觉得能跟koa搭配比较好的一个插件，其他的要不就是需要express，要不就是需要安装其他一系列比较大的类库。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install ccap --save</span><br></pre></td></tr></table></figure>
 
-<p>2，配置</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">module</span>: &#123;</span><br><span class="line">  <span class="attr">loaders</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">//tell webpack to use jsx-loader for all *.jsx files</span></span><br><span class="line">      <span class="attr">test</span>: <span class="regexp">/\.jsx$/</span>,</span><br><span class="line">      <span class="attr">loader</span>: <span class="string">&#x27;jsx-loader?insertPragma=React.DOM&amp;harmony&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>3，扩展设置</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">resolve</span>: &#123;</span><br><span class="line">  <span class="attr">extensions</span>: [<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.jsx&#x27;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如何使用？</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> ccap = <span class="built_in">require</span>(<span class="string">&#x27;ccap&#x27;</span>)();</span><br><span class="line">home.<span class="title function_">get</span>(<span class="string">&#x27;/home&#x27;</span>, <span class="function">(<span class="params">ctx, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    ctx.<span class="property">body</span> = ctx.<span class="property">session</span>.<span class="property">captcha</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line">home.<span class="title function_">get</span>(<span class="string">&#x27;/captcha&#x27;</span>, <span class="function">(<span class="params">ctx, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> ary = ccap.<span class="title function_">get</span>();</span><br><span class="line">    <span class="keyword">let</span> txt = ary[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">let</span> buf = ary[<span class="number">1</span>];</span><br><span class="line">    ctx.<span class="property">body</span> = buf;</span><br><span class="line">    ctx.<span class="property">type</span> = <span class="string">&#x27;image/png&#x27;</span>;</span><br><span class="line">    ctx.<span class="property">session</span>.<span class="property">captcha</span> = txt;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
 
 
@@ -719,7 +524,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Webpack-dev-server-%E9%85%8D%E7%BD%AE.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/ReactJS-%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -737,7 +542,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Webpack-dev-server-%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">Webpack-dev-server 配置</a>
+          <a href="/2025/07/02/ReactJS-%E5%AE%9E%E7%8E%B0%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE.html" class="post-title-link" itemprop="url">ReactJS 实现代码高亮</a>
         </h2>
 
         <div class="post-meta-container">
@@ -749,7 +554,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-01 15:24:59 / 修改时间：15:31:57" itemprop="dateCreated datePublished" datetime="2025-07-01T15:24:59+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 15:40:51 / 修改时间：15:46:26" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:51+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -771,19 +576,28 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>1，安装需要的包</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev webpack webpack-dev-server</span><br></pre></td></tr></table></figure>
+          <p>使用插件google的prettify和jquery的format 完成了一套很完美的代码高亮显示，还能自动格式化。</p>
+<p>先说jquery.format的接入【我这里开发是用的webpack】</p>
+<p>在引入文件中使用reqiure方法，把jquery.format加入到js代码中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;./jquery.format.js&#x27;</span>);</span><br></pre></td></tr></table></figure>
 
-<p>2，配置添加</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">output</span>: &#123;</span><br><span class="line">  <span class="attr">filename</span>: <span class="string">&#x27;bundle.js&#x27;</span>, <span class="comment">//this is the default name, so you can skip it</span></span><br><span class="line">  <span class="comment">//at this directory our bundle file will be available</span></span><br><span class="line">  <span class="comment">//make sure port 8090 is used when launching webpack-dev-server</span></span><br><span class="line">  <span class="attr">publicPath</span>: <span class="string">&#x27;http://localhost:8090/assets&#x27;</span> <span class="comment">//重点在这里</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>jquery.format.js 这个文件我放在了与引入文件同级的目录下</p>
+<p>就可以样就可以了。</p>
+<p>在说引入prettify到react中，这个当然是在html页面中进行的了，所以在html中引入</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.bootcss.com/prettify/r298/prettify.min.js?skin=sunburst&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdn.bootcss.com/prettify/r298/lang-sql.min.js?skin=sunburst&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>3，安装 http-server</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev http-server</span><br></pre></td></tr></table></figure>
+<p>就这样就可以了。</p>
+<p>然后把我们需要的高亮代码的css也加入进来吧</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">pre <span class="selector-class">.str</span>, <span class="selector-tag">code</span> <span class="selector-class">.str</span> &#123; <span class="attribute">color</span>: <span class="number">#65B042</span>; &#125; <span class="comment">/* string  - green */</span></span><br><span class="line">pre <span class="selector-class">.kwd</span>, <span class="selector-tag">code</span> <span class="selector-class">.kwd</span> &#123; <span class="attribute">color</span>: <span class="number">#E28964</span>; &#125; <span class="comment">/* keyword - dark pink */</span></span><br><span class="line">pre <span class="selector-class">.com</span>, <span class="selector-tag">code</span> <span class="selector-class">.com</span> &#123; <span class="attribute">color</span>: <span class="number">#AEAEAE</span>; <span class="attribute">font-style</span>: italic; &#125; <span class="comment">/* comment - gray */</span></span><br><span class="line">pre <span class="selector-class">.typ</span>, <span class="selector-tag">code</span> <span class="selector-class">.typ</span> &#123; <span class="attribute">color</span>: <span class="number">#89bdff</span>; &#125; <span class="comment">/* type - light blue */</span></span><br><span class="line">pre <span class="selector-class">.lit</span>, <span class="selector-tag">code</span> <span class="selector-class">.lit</span> &#123; <span class="attribute">color</span>: <span class="number">#3387CC</span>; &#125; <span class="comment">/* literal - blue */</span></span><br><span class="line">pre <span class="selector-class">.pun</span>, <span class="selector-tag">code</span> <span class="selector-class">.pun</span> &#123; <span class="attribute">color</span>: <span class="number">#fff</span>; &#125; <span class="comment">/* punctuation - white */</span></span><br><span class="line">pre <span class="selector-class">.pln</span>, <span class="selector-tag">code</span> <span class="selector-class">.pln</span> &#123; <span class="attribute">color</span>: <span class="number">#fff</span>; &#125; <span class="comment">/* plaintext - white */</span></span><br><span class="line">pre <span class="selector-class">.tag</span>, <span class="selector-tag">code</span> <span class="selector-class">.tag</span> &#123; <span class="attribute">color</span>: <span class="number">#89bdff</span>; &#125; <span class="comment">/* html/xml tag    - light blue */</span></span><br><span class="line">pre <span class="selector-class">.atn</span>, <span class="selector-tag">code</span> <span class="selector-class">.atn</span> &#123; <span class="attribute">color</span>: <span class="number">#bdb76b</span>; &#125; <span class="comment">/* html/xml attribute name  - khaki */</span></span><br><span class="line">pre <span class="selector-class">.atv</span>, <span class="selector-tag">code</span> <span class="selector-class">.atv</span> &#123; <span class="attribute">color</span>: <span class="number">#65B042</span>; &#125; <span class="comment">/* html/xml attribute value - green */</span></span><br><span class="line">pre <span class="selector-class">.dec</span>, <span class="selector-tag">code</span> <span class="selector-class">.dec</span> &#123; <span class="attribute">color</span>: <span class="number">#3387CC</span>; &#125; <span class="comment">/* decimal - blue */</span></span><br><span class="line">pre<span class="selector-class">.prettyprint</span>, <span class="selector-tag">code</span><span class="selector-class">.prettyprint</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#000</span>;</span><br><span class="line">  -moz-<span class="attribute">border-radius</span>: <span class="number">8px</span>;</span><br><span class="line">  -webkit-<span class="attribute">border-radius</span>: <span class="number">8px</span>;</span><br><span class="line">  -o-<span class="attribute">border-radius</span>: <span class="number">8px</span>;</span><br><span class="line">  -ms-<span class="attribute">border-radius</span>: <span class="number">8px</span>;</span><br><span class="line">  -khtml-<span class="attribute">border-radius</span>: <span class="number">8px</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">8px</span>;</span><br><span class="line">&#125;</span><br><span class="line">pre<span class="selector-class">.prettyprint</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">95%</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0.2em</span> auto;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">1em</span>;</span><br><span class="line">  <span class="attribute">white-space</span>: pre-wrap;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* Specify class=linenums on a pre to get line numbering */</span></span><br><span class="line"><span class="selector-tag">ol</span><span class="selector-class">.linenums</span> &#123; <span class="attribute">margin-top</span>: <span class="number">0</span>; <span class="attribute">margin-bottom</span>: <span class="number">0</span>; <span class="attribute">color</span>: <span class="number">#AEAEAE</span>; &#125; <span class="comment">/* IE indents via margin-left */</span></span><br><span class="line"><span class="selector-tag">li</span><span class="selector-class">.L0</span>,<span class="selector-tag">li</span><span class="selector-class">.L1</span>,<span class="selector-tag">li</span><span class="selector-class">.L2</span>,<span class="selector-tag">li</span><span class="selector-class">.L3</span>,<span class="selector-tag">li</span><span class="selector-class">.L5</span>,<span class="selector-tag">li</span><span class="selector-class">.L6</span>,<span class="selector-tag">li</span><span class="selector-class">.L7</span>,<span class="selector-tag">li</span><span class="selector-class">.L8</span> &#123; <span class="attribute">list-style-type</span>: none &#125;</span><br><span class="line"><span class="comment">/* Alternate shading for lines */</span></span><br><span class="line"><span class="selector-tag">li</span><span class="selector-class">.L1</span>,<span class="selector-tag">li</span><span class="selector-class">.L3</span>,<span class="selector-tag">li</span><span class="selector-class">.L5</span>,<span class="selector-tag">li</span><span class="selector-class">.L7</span>,<span class="selector-tag">li</span><span class="selector-class">.L9</span> &#123; &#125;</span><br><span class="line"><span class="keyword">@media</span> print &#123;</span><br><span class="line">  pre <span class="selector-class">.str</span>, <span class="selector-tag">code</span> <span class="selector-class">.str</span> &#123; <span class="attribute">color</span>: <span class="number">#060</span>; &#125;</span><br><span class="line">  pre <span class="selector-class">.kwd</span>, <span class="selector-tag">code</span> <span class="selector-class">.kwd</span> &#123; <span class="attribute">color</span>: <span class="number">#006</span>; <span class="attribute">font-weight</span>: bold; &#125;</span><br><span class="line">  pre <span class="selector-class">.com</span>, <span class="selector-tag">code</span> <span class="selector-class">.com</span> &#123; <span class="attribute">color</span>: <span class="number">#600</span>; <span class="attribute">font-style</span>: italic; &#125;</span><br><span class="line">  pre <span class="selector-class">.typ</span>, <span class="selector-tag">code</span> <span class="selector-class">.typ</span> &#123; <span class="attribute">color</span>: <span class="number">#404</span>; <span class="attribute">font-weight</span>: bold; &#125;</span><br><span class="line">  pre <span class="selector-class">.lit</span>, <span class="selector-tag">code</span> <span class="selector-class">.lit</span> &#123; <span class="attribute">color</span>: <span class="number">#044</span>; &#125;</span><br><span class="line">  pre <span class="selector-class">.pun</span>, <span class="selector-tag">code</span> <span class="selector-class">.pun</span> &#123; <span class="attribute">color</span>: <span class="number">#440</span>; &#125;</span><br><span class="line">  pre <span class="selector-class">.pln</span>, <span class="selector-tag">code</span> <span class="selector-class">.pln</span> &#123; <span class="attribute">color</span>: <span class="number">#000</span>; &#125;</span><br><span class="line">  pre <span class="selector-class">.tag</span>, <span class="selector-tag">code</span> <span class="selector-class">.tag</span> &#123; <span class="attribute">color</span>: <span class="number">#006</span>; <span class="attribute">font-weight</span>: bold; &#125;</span><br><span class="line">  pre <span class="selector-class">.atn</span>, <span class="selector-tag">code</span> <span class="selector-class">.atn</span> &#123; <span class="attribute">color</span>: <span class="number">#404</span>; &#125;</span><br><span class="line">  pre <span class="selector-class">.atv</span>, <span class="selector-tag">code</span> <span class="selector-class">.atv</span> &#123; <span class="attribute">color</span>: <span class="number">#060</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>4，页面添加启动脚本</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Basic Property Grid<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- include react --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;./node_modules/react/dist/react-with-addons.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;content&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- this is where the root react component will get rendered --&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- include the webpack-dev-server script so our scripts get reloaded when we make a change --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- we&#x27;ll run the webpack dev server on port 8090, so make sure it is correct --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;http://localhost:8090/webpack-dev-server.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- include the bundle that contains all our scripts, produced by webpack --&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- the bundle is served by the webpack-dev-server, so serve it also from localhost:8090 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;http://localhost:8090/assets/bundle.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>最后看下react里面是如何操作的</p>
+<p>在render方法里面操作，稍微有点基础知识的肯定都知道的。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">render</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="keyword">if</span>(<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">data</span>.<span class="property">length</span> &gt; <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">table</span> <span class="attr">className</span>=<span class="string">&quot;table table-striped table-bordered table-hover table-responsive&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">thead</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">colgroup</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">col</span> <span class="attr">width</span>=<span class="string">&quot;5%&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">col</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">col</span> <span class="attr">width</span>=<span class="string">&quot;20%&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">col</span> <span class="attr">width</span>=<span class="string">&quot;20%&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">col</span> <span class="attr">width</span>=<span class="string">&quot;10%&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">col</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">colgroup</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>ID号<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>SQL Template<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>参数<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>备注<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>创建日期<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">thead</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">tbody</span> <span class="attr">id</span>=<span class="string">&quot;itemContainer&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;this.props.data.map(function(i)&#123;</span></span><br><span class="line"><span class="language-xml">          let ctime = moment.unix(i.ctime).format(&#x27;YYYY-MM-DD&#x27;);</span></span><br><span class="line"><span class="language-xml">          let template = $.format(i.template, &#123;&#x27;method&#x27;:&#x27;sql&#x27;&#125;);</span></span><br><span class="line"><span class="language-xml">          let config = $.format(i.config, &#123;&#x27;method&#x27;:&#x27;json&#x27;&#125;);</span></span><br><span class="line"><span class="language-xml">          return (</span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">tr</span> <span class="attr">key</span>=<span class="string">&#123;i.autokid&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;i.autokid&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">td</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&#x27;<span class="attr">wordWrap</span>&#x27;<span class="attr">:</span>&#x27;<span class="attr">break-word</span>&#x27;,&#x27;<span class="attr">wordBreak</span>&#x27;<span class="attr">:</span>&#x27;<span class="attr">break-all</span>&#x27;,&#x27;<span class="attr">verticalAlign</span>&#x27;<span class="attr">:</span>&#x27;<span class="attr">top</span>&#x27;&#125;&#125; &gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">pre</span> <span class="attr">className</span>=<span class="string">&quot;prettyprint&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  <span class="tag">&lt;<span class="name">code</span> <span class="attr">className</span>=<span class="string">&quot;language-sql&quot;</span>&gt;</span>&#123;template&#125;<span class="tag">&lt;/<span class="name">code</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">td</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&#x27;<span class="attr">verticalAlign</span>&#x27;<span class="attr">:</span>&#x27;<span class="attr">top</span>&#x27;&#125;&#125;&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;<span class="name">pre</span> <span class="attr">className</span>=<span class="string">&quot;prettyprint&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                  <span class="tag">&lt;<span class="name">code</span> <span class="attr">className</span>=<span class="string">&quot;language-js&quot;</span>&gt;</span>&#123;config&#125;<span class="tag">&lt;/<span class="name">code</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">td</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&#x27;<span class="attr">verticalAlign</span>&#x27;<span class="attr">:</span>&#x27;<span class="attr">top</span>&#x27;&#125;&#125;&gt;</span>&#123;i.comment&#125; bezhu de qing<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">              <span class="tag">&lt;<span class="name">td</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span>&#x27;<span class="attr">verticalAlign</span>&#x27;<span class="attr">:</span>&#x27;<span class="attr">top</span>&#x27;&#125;&#125;&gt;</span>&#123;ctime&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          );</span></span><br><span class="line"><span class="language-xml">        &#125;)&#125;</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">Loading</span> <span class="attr">type</span>=<span class="string">&#x27;spinning-bubbles&#x27;</span> <span class="attr">color</span>=<span class="string">&#x27;#e3e3e3&#x27;</span>/&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>最后为了是的pretty的效果产生我们还要进行一个启动的操作</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">componentDidMount</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="title function_">prettyPrint</span>();</span><br><span class="line">&#125;,</span><br><span class="line"><span class="title function_">componentDidUpdate</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="title function_">prettyPrint</span>();</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 
+<p>可以了，就是这样的。</p>
 
       
     </div>
@@ -810,7 +624,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Webpack-highcharts-%E6%89%93%E5%8C%85%E5%A4%84%E7%90%86.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E5%9C%A8express%E4%B8%AD%E4%BD%BF%E7%94%A8co.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -828,7 +642,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Webpack-highcharts-%E6%89%93%E5%8C%85%E5%A4%84%E7%90%86.html" class="post-title-link" itemprop="url">Webpack highcharts 打包处理</a>
+          <a href="/2025/07/02/%E5%9C%A8express%E4%B8%AD%E4%BD%BF%E7%94%A8co.html" class="post-title-link" itemprop="url">在express中使用co</a>
         </h2>
 
         <div class="post-meta-container">
@@ -838,9 +652,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-07-01 15:24:56 / 修改时间：15:32:37" itemprop="dateCreated datePublished" datetime="2025-07-01T15:24:56+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 15:40:47" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:47+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-08 09:40:39" itemprop="dateModified" datetime="2025-07-08T09:40:39+08:00">2025-07-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -862,13 +682,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>&#x2F;&#x2F;模块导入 Highcharts</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">global</span>.<span class="property">HighchartsAdapter</span> = <span class="built_in">require</span>(<span class="string">&#x27;exports?HighchartsAdapter!../../bower_components/highcharts/adapters/standalone-framework.src&#x27;</span>);</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="built_in">require</span>(<span class="string">&#x27;exports?Highcharts!../../bower_components/highcharts/highcharts.src&#x27;</span>);</span><br></pre></td></tr></table></figure>
+          <p>以下支持的Nodejs版本是 &gt;&#x3D;4.2.1</p>
+<p>在express中我们都知道，我们可以在文件中定义一个方法，如下，然后可以在router中调用这个方法进行相应的处理。但是我们不想一直去写一些回调的方法，</p>
+<p>希望对于异步的处理能像写顺序编程那样一直按照逻辑顺序去执行，co就帮了我们一个大忙，试试如下这种方式吧。【前提是要安装下co】</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">addBackground</span> = <span class="keyword">function</span> (<span class="params">req, res, next</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> title = req.<span class="property">body</span>.<span class="property">title</span> || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">let</span> theme = req.<span class="property">body</span>.<span class="property">theme</span> || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">let</span> theorder = req.<span class="property">body</span>.<span class="property">theorder</span> || <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">let</span> big_url = req.<span class="property">body</span>.<span class="property">big_url</span> || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">let</span> thumb_url = req.<span class="property">body</span>.<span class="property">thumb_url</span> || <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  <span class="keyword">let</span> mtime = <span class="built_in">parseInt</span>(<span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">valueOf</span>() / <span class="number">1000</span>);</span><br><span class="line">  <span class="keyword">if</span> (!title || !theme || !big_url || !thumb_url) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;Arguments is Error.&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">co</span>(<span class="keyword">function</span> *() &#123;</span><br><span class="line">    <span class="keyword">let</span> _isAdmin = <span class="keyword">yield</span> <span class="title class_">User</span>.<span class="title function_">isAdmin</span>(req.<span class="property">user</span>.<span class="property">id</span>);</span><br><span class="line">    <span class="keyword">if</span> (!_isAdmin) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;Admin only.&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> e_sql = <span class="string">&#x27;SELECT * FROM xxxxx.app_dft_background where title = &#x27;</span> + mysql.<span class="built_in">escape</span>(title);</span><br><span class="line">    <span class="keyword">let</span> e_res = <span class="keyword">yield</span> mysql.<span class="title function_">thunkQuery</span>(e_sql);</span><br><span class="line">    <span class="keyword">if</span> (e_res.<span class="property">length</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> sql = sqlBuilder.<span class="title function_">makeInsertSql</span>(<span class="string">&#x27;xxxxx.app_dft_background&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">title</span>: title,</span><br><span class="line">      <span class="attr">theme</span>: theme,</span><br><span class="line">      <span class="attr">theorder</span>: theorder,</span><br><span class="line">      <span class="attr">big_url</span>: big_url,</span><br><span class="line">      <span class="attr">thumb_url</span>: thumb_url,</span><br><span class="line">      <span class="attr">mtime</span>: mtime</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">let</span> res = <span class="keyword">yield</span> mysql.<span class="title function_">thunkQuery</span>(sql);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;).<span class="title function_">then</span>(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!data) &#123;</span><br><span class="line">      res.<span class="title function_">json</span>(&#123;<span class="string">&#x27;success&#x27;</span>: <span class="literal">false</span>, <span class="string">&#x27;message&#x27;</span>: <span class="string">&#x27;名称已存在&#x27;</span>&#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      res.<span class="title function_">json</span>(&#123;<span class="string">&#x27;success&#x27;</span>: <span class="literal">true</span>, <span class="string">&#x27;data&#x27;</span>: data&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">next</span>(err);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<p>在entry.js文件中加入这行代码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">../../bower_components/highcharts/adapters/standalone-framework.<span class="property">src</span></span><br><span class="line">../../bower_components/highcharts/highcharts.<span class="property">src</span></span><br></pre></td></tr></table></figure>
-
-<p>这两行在上面的位置代表文件的位置</p>
+<p>如果还是没有理解清楚可以去看下co和Promise。很容易理解的</p>
 
       
     </div>
@@ -895,7 +714,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/NPM-package-Configure-Prepare-run-scripts-%E9%85%8D%E7%BD%AE%E6%89%A7%E8%A1%8C%E8%84%9A%E6%9C%AC.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Nodejs%E5%BC%80%E5%8F%91%E9%83%A8%E7%BD%B2%E7%8E%AF%E8%8A%82%E6%95%B4%E7%90%86.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -913,7 +732,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/NPM-package-Configure-Prepare-run-scripts-%E9%85%8D%E7%BD%AE%E6%89%A7%E8%A1%8C%E8%84%9A%E6%9C%AC.html" class="post-title-link" itemprop="url">NPM package Configure Prepare run scripts[配置执行脚本]</a>
+          <a href="/2025/07/02/Nodejs%E5%BC%80%E5%8F%91%E9%83%A8%E7%BD%B2%E7%8E%AF%E8%8A%82%E6%95%B4%E7%90%86.html" class="post-title-link" itemprop="url">Nodejs开发部署环节整理</a>
         </h2>
 
         <div class="post-meta-container">
@@ -923,9 +742,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2025-07-01 15:24:51 / 修改时间：15:33:39" itemprop="dateCreated datePublished" datetime="2025-07-01T15:24:51+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 15:40:44" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:44+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-08 09:40:47" itemprop="dateModified" datetime="2025-07-08T09:40:47+08:00">2025-07-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -947,178 +772,133 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>The final thing is to add three scripts entries into our package.json:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;scripts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;start&quot;</span><span class="punctuation">:</span> <span class="string">&quot;npm run serve | npm run dev&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;serve&quot;</span><span class="punctuation">:</span> <span class="string">&quot;./node_modules/.bin/http-server -p 8080&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;dev&quot;</span><span class="punctuation">:</span> <span class="string">&quot;webpack-dev-server --progress --colors --port 8090&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;basic-property-grid&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;0.1.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;main&quot;</span><span class="punctuation">:</span> <span class="string">&quot;index.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;dependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;react&quot;</span><span class="punctuation">:</span> <span class="string">&quot;~0.11.2&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;devDependencies&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;webpack&quot;</span><span class="punctuation">:</span> <span class="string">&quot;~1.4.4&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;webpack-dev-server&quot;</span><span class="punctuation">:</span> <span class="string">&quot;~1.6.5&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;jsx-loader&quot;</span><span class="punctuation">:</span> <span class="string">&quot;~0.11.2&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;http-server&quot;</span><span class="punctuation">:</span> <span class="string">&quot;~0.7.1&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+          <p>做web网站开发一般都会分为三个环节:开发阶段【开发模式】、调试阶段【调试模式】、部署阶段【部署模式】</p>
+<p>在Node的环境中：</p>
+<hr>
+<p>开发阶段我们希望能够即使响应我们的开发速度，node启动的方式大家都知道 node app.js ,如果中间有修改的话，就不能即使响应了，需要我们自己再去重新启动。</p>
+<p>所以我们的开发阶段最好是安装一下supervisor</p>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev supervisor</span><br></pre></td></tr></table></figure>
 
-<p>What we just did was to add 3 commands that can be run through npm run <cmd>.</p>
+<p>启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisor app.js or supervisor www/bin</span><br></pre></td></tr></table></figure>
+
+<p>【此种方法启动，需要作为一个全局去安装supervisor】</p>
+<p>我的实践是把package.json里的start</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;d&quot;</span>: <span class="string">&quot;node-debug app.js&quot;</span>,</span><br><span class="line">  <span class="string">&quot;start&quot;</span>: <span class="string">&quot;./node_modules/.bin/supervisor app.js&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm start</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>调试阶段，我们肯定是希望监测每个请求的响应结果，一旦出现问题可以直接更加友好的展示给我们：</p>
+<p>推荐node-inspector</p>
+<p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save node-inspector</span><br></pre></td></tr></table></figure>
+
+<p>启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node-inspector app.js or node-debug www/bin</span><br></pre></td></tr></table></figure>
+
+<p>【此种方法启动，需要作为一个全局去安装supervisor】</p>
+<p>我的实践是把package.json里的d里</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;d&quot;</span>: <span class="string">&quot;./node_modules/.bin/node-debug app.js&quot;</span>,</span><br><span class="line">  <span class="string">&quot;start&quot;</span>: <span class="string">&quot;./node_modules/.bin/supervisor app.js&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run d</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>部署阶段就是我们通常所说的生产环境或者是产品上线</p>
+<p>推荐使用pm2</p>
+<p>pm2是非常优秀工具，它提供对基于node.js的项目运行托管服务。它基于命令行界面，提供很多特性：</p>
 <blockquote>
-<p>serve - npm run serve - just starts an http-server serving files from our local dir, running on port 8080 (it serves index.html).</p>
-<p>dev - npm run dev - starts webpack-dev-server on port 8090 which serves both the webpack-dev-server.js runtime and our bundle.js file.</p>
-<p>start - npm run start - command simply executes serve first and then starts the dev server.</p>
+<p>内置的负载均衡器（使用nodecluster module）</p>
+<p>以守护进程运行</p>
+<p>0s(不间断)重启</p>
+<p>为ubuntu&#x2F; CentOS 提供启动脚本</p>
+<p>关闭不稳定的进程（避免无限死循环）</p>
+<p>基于控制台监控</p>
+<p>HTTP API</p>
+<p>远程控制以及实时监控接口</p>
 </blockquote>
-<p>Launch【运行】</p>
-<p>Now we are ready:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm run start</span><br></pre></td></tr></table></figure>
+<p>pm2使用nodecluster构建一个内置的负载均衡器。部署多个app的实例来达到分流的目的以减轻单app处理的压力。</p>
+<p>安装pm2</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g pm2</span><br></pre></td></tr></table></figure>
 
-<p>If everything is fine, you should open localhost:8080</p>
+<p>查看基本帮助文档</p>
+<blockquote>
+<p>  Basic Examples:</p>
+<pre><code>Start an app using all CPUs available + set a name :
 
-      
-    </div>
+$ pm2 start app.js -i 0 --name &quot;api&quot;
 
-    
-    
-    
+Restart the previous app launched, by name :
 
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+$ pm2 restart api
 
+Stop the app :
 
+$ pm2 stop api
 
+Restart the app that is stopped :
 
-    
+$ pm2 restart api
 
+Remove the app from the process list :
 
-<div class="post-block">
-  
-  
+$ pm2 delete api
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Webpack-%E6%89%93%E5%8C%85%E5%9F%BA%E7%A1%80%E6%B5%8B%E8%AF%95.html">
+Kill daemon pm2 :
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
+$ pm2 kill
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
+Update pm2 :
 
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Webpack-%E6%89%93%E5%8C%85%E5%9F%BA%E7%A1%80%E6%B5%8B%E8%AF%95.html" class="post-title-link" itemprop="url">Webpack 打包基础测试</a>
-        </h2>
+$ npm install pm2@latest -g ; pm2 updatePM2
 
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
+More examples in https://github.com/Unitech/pm2#usagefeatures
+</code></pre>
+<p>  Deployment help:</p>
+<pre><code>$ pm2 deploy help
+</code></pre>
+</blockquote>
+<p>上面基本是我们比较常用的</p>
+<p>我们也可以把启动信息写入到json配置文件中-&gt;ecosystem.json</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;apps&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;web.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;max_memory_restart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1024M&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;log_date_format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;YYYY-MM-DD HH:mm:ss SSS&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;script&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/www/web/bundle/main.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;out_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/app.0.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;error_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/err.0.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8080&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;CDN_PREFIX&quot;</span><span class="punctuation">:</span> <span class="string">&quot;//dbde4sd21oahf.cloudfront.net&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/web&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_OPLOG_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/local&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ROOT_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://web.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;PORT&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8080&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;web.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;max_memory_restart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1024M&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;log_date_format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;YYYY-MM-DD HH:mm:ss SSS&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;script&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/www/web/bundle/main.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;out_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/app.1.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;error_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/err.1.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8081&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;CDN_PREFIX&quot;</span><span class="punctuation">:</span> <span class="string">&quot;//dbde4sd21oahf.cloudfront.net&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/web&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_OPLOG_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/local&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ROOT_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://web.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;PORT&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8081&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;web.2&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;max_memory_restart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1024M&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;log_date_format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;YYYY-MM-DD HH:mm:ss SSS&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;script&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/www/web/bundle/main.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;out_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/app.2.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;error_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/err.2.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8082&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;CDN_PREFIX&quot;</span><span class="punctuation">:</span> <span class="string">&quot;//dbde4sd21oahf.cloudfront.net&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/web&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_OPLOG_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/local&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ROOT_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://web.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;PORT&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8082&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;web.3&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;max_memory_restart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1024M&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;log_date_format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;YYYY-MM-DD HH:mm:ss SSS&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;script&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/www/web/bundle/main.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;out_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/app.3.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;error_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/err.3.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8083&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;CDN_PREFIX&quot;</span><span class="punctuation">:</span> <span class="string">&quot;//dbde4sd21oahf.cloudfront.net&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/web&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_OPLOG_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/local&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ROOT_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://web.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;PORT&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8083&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
-      <time title="创建时间：2025-07-01 15:24:48 / 修改时间：15:41:50" itemprop="dateCreated datePublished" datetime="2025-07-01T15:24:48+08:00">2025-07-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
+<p>pm2的当然还有一些其他的用法：</p>
+<p>1、pm2远程部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 deploy ecosystem.json production setup</span><br></pre></td></tr></table></figure>
 
-  
-</div>
+<p>2、pm2 cluster启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start app.js -i 0 --name <span class="string">&quot;apps&quot;</span></span><br></pre></td></tr></table></figure>
 
-        </div>
-      </header>
+<p>3、pm2 重启实例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 reload &lt;name&gt;</span><br></pre></td></tr></table></figure>
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="1"><a href="#1" class="headerlink" title="使用webpack"></a><a href="#1">使用webpack</a></h2><p>首先新建一个app的项目,在项目下面执行如下代码：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm init // 用于初始化项目的package.json</span><br></pre></td></tr></table></figure>
+<p>4、pm2 命令行监测</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 monit</span><br></pre></td></tr></table></figure>
 
-<p>&#x2F;&#x2F;初始化文件目录：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">app</span><br><span class="line">    --- css</span><br><span class="line">        --- main.scss</span><br><span class="line">    --- js</span><br><span class="line">        --- index.js</span><br><span class="line">        --- a.js</span><br><span class="line">        --- b.js</span><br><span class="line">        --- c.js</span><br><span class="line">        --- es6_module.js</span><br><span class="line">    --- index.html</span><br><span class="line">    --- package.json</span><br><span class="line">    --- webpack.config.js</span><br></pre></td></tr></table></figure>
+<p>5、pm2 查看实例日志</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 logs 或 pm2 logs &lt;name&gt; 或 pm2 flush</span><br></pre></td></tr></table></figure>
 
-<h2 id="2"><a href="#2" class="headerlink" title="安装webpack"></a><a href="#2">安装webpack</a></h2><p>我们通过npm来将webpack安装到全局</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install webpack -g</span><br></pre></td></tr></table></figure>
+<p>6、pm2 开机启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 startup &lt;ubuntu|centos|gentoo|systemd&gt;</span><br></pre></td></tr></table></figure>
 
-<h2 id="3"><a href="#3" class="headerlink" title="webpack配置"></a><a href="#3">webpack配置</a></h2><p>webpack是需要进行配置的，我们在使用webpack的时候，会默认webpack.config.js为我们的配置文件。所以接下来，我们新建这个js文件。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="keyword">var</span> path = <span class="built_in">require</span>(<span class="string">&quot;path&quot;</span>);</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">    <span class="attr">entry</span>: <span class="string">&#x27;./js/index.js&#x27;</span>, <span class="comment">//演示单入口文件</span></span><br><span class="line">    <span class="attr">output</span>: &#123;</span><br><span class="line">        <span class="attr">path</span>: path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;js/out&#x27;</span>),  <span class="comment">//打包输出的路径</span></span><br><span class="line">        <span class="attr">filename</span>: <span class="string">&#x27;bundle.js&#x27;</span>,              <span class="comment">//打包后的名字</span></span><br><span class="line">        <span class="attr">publicPath</span>: <span class="string">&quot;/js/out/&quot;</span>              <span class="comment">//html引用路径，在这里是本地地址。</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>7、pm2 web方式监测</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 web</span><br></pre></td></tr></table></figure>
 
-<h2 id="4"><a href="#4" class="headerlink" title="编写入口文件"></a><a href="#4">编写入口文件</a></h2><p>接下来就编写我们的入口文件index.js和第一个模块文件a.js。我们一切从简，里面只用来加载一个Js模块。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="built_in">require</span>(<span class="string">&quot;./a&quot;</span>); <span class="comment">// 使用CommonJs来加载模块</span></span><br><span class="line"><span class="comment">// a.js</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello Webpack!&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="5"><a href="#5" class="headerlink" title="启动webpack"></a><a href="#5">启动webpack</a></h2><p>一切准备好后，我们仅需要在项目根目录下，用命令行webpack执行一下即可。</p>
-<p>&#x2F;&#x2F; webpack 命令行的几种基本命令</p>
-<ul>
-<li><p>$ webpack &#x2F;&#x2F; 最基本的启动webpack方法</p>
-</li>
-<li><p>$ webpack -w &#x2F;&#x2F; 提供watch方法，实时进行打包更新</p>
-</li>
-<li><p>$ webpack -p &#x2F;&#x2F; 对打包后的文件进行压缩，提供production</p>
-</li>
-<li><p>$ webpack -d &#x2F;&#x2F; 提供source map，方便调试。</p>
-</li>
-</ul>
-<p>webpack成功运行后，我们就可以看到根目录出现了out文件夹，里面有我们打包生成的bundle.js。我们最后通过在index.html里对这个文件引入就可以了。我们可以在控制台看到我们想要的结果，Hello Webpack !</p>
-<h2 id="6"><a href="#6" class="headerlink" title="多模块依赖"></a><a href="#6">多模块依赖</a></h2><p>刚才的例子，我们仅仅是跑通了webpack通过index.js入口文件进行打包的例子。下面我们就来看一下它是否真的支持CommonJs和AMD两种模块机制呢？下面我们新建多几个js文件吧！</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修改module1.js</span></span><br><span class="line"><span class="built_in">require</span>([<span class="string">&quot;./a&quot;</span>], <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello Webpack!&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// b.js，使用的是CommonJs机制导出包</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="keyword">function</span>(<span class="params">a, b</span>)&#123;</span><br><span class="line">  <span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// a.js，使用AMD模块机制</span></span><br><span class="line"><span class="title function_">define</span>([<span class="string">&#x27;./b.js&#x27;</span>], <span class="keyword">function</span>(<span class="params">sum</span>)&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;1 + 2 = &quot;</span> + <span class="title function_">sum</span>(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>其实像上面这样混用两种不同机制非常不好，这里仅仅是展示用的，在开发新项目时还是推荐CommonJs或ES2015的Module。当然我个人更倾向于ES2015的模块机制的～</p>
-<h2 id="7"><a href="#7" class="headerlink" title="loader加载器"></a><a href="#7">loader加载器</a></h2><p>到了我最喜欢也是最激动人心的功能了！我们先想想应用场景，前端社区有许多预处理器供我们使用。我们可以使用这些预处理器做一些强大的事情，大家都听过的就是CoffeeScript和Sass了。我们以前要编译这些预处理器，就是用gulp进行编译。但是我们对这些文件处理其实也挺繁琐的，webpack可以一次性解决！</p>
-<p>在这里我们用Sass和babel编译ES2015为例子，看一下loader是如何使用的。</p>
-<h3 id="7-1"><a href="#7-1" class="headerlink" title="安装loader"></a><a href="#7-1">安装loader</a></h3><p>我们第一步就是先要安装好各个必须的loader，我们直接看看需要通过npm安装什么。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install style-loader css-loader url-loader babel-loader sass-loader file-loader --save-dev</span><br></pre></td></tr></table></figure>
-
-<h3 id="7-2"><a href="#7-2" class="headerlink" title="配置loader"></a><a href="#7-2">配置loader</a></h3><p>安装完各个loader后，我们就需要配置一下我们的webpack.config.js，载入我们的loader。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">    <span class="attr">entry</span>: path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;js/index.js&#x27;</span>),</span><br><span class="line">    <span class="attr">output</span>: &#123;</span><br><span class="line">        <span class="attr">path</span>: path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;js/out&#x27;</span>),</span><br><span class="line">        <span class="attr">publicPath</span>: <span class="string">&quot;/js/out/&quot;</span>,</span><br><span class="line">        <span class="attr">filename</span>: <span class="string">&#x27;bundle.js&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 新添加的module属性</span></span><br><span class="line">    <span class="attr">module</span>: &#123;</span><br><span class="line">        <span class="attr">loaders</span>: [</span><br><span class="line">            &#123;<span class="attr">test</span>: <span class="regexp">/\.js$/</span>, <span class="attr">loader</span>: <span class="string">&quot;babel&quot;</span>&#125;,</span><br><span class="line">            &#123;<span class="attr">test</span>: <span class="regexp">/\.css$/</span>, <span class="attr">loader</span>: <span class="string">&quot;style!css&quot;</span>&#125;,</span><br><span class="line">            &#123;<span class="attr">test</span>: <span class="regexp">/\.(jpg|png)$/</span>, <span class="attr">loader</span>: <span class="string">&quot;url?limit=8192&quot;</span>&#125;,</span><br><span class="line">            &#123;<span class="attr">test</span>: <span class="regexp">/\.scss$/</span>, <span class="attr">loader</span>: <span class="string">&quot;style!css!sass&quot;</span>&#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>我们主要看看module的loaders。loaders是一个数组，里面的每一个对象都用正则表达式，对应着一种配对方案。比如匹配到js后缀名就用babel-loader，匹配到scss后缀名的就先用sass，再用css，最后用style处理，不同的处理器通过!分隔并串联起来。这里的loader是可以省略掉-loader这样的，也就是原本应该写成style-loader!css-loader!sass-loader，当然我们必须惜字如金，所以都去掉后面的东东。</p>
-<p>我们仅仅是配置一下，已经是可以直接用ES2015和SASS去写我们的前端代码了。在此之前，我们对js文件夹里再细分成js，css，image三个文件夹，处理好分层。话不多说，赶紧试试。</p>
-<h3 id="7-3"><a href="#7-3" class="headerlink" title="稍微复杂的webpack项目"></a><a href="#7-3">稍微复杂的webpack项目</a></h3><h4 id="7-3-1"><a href="#7-3-1" class="headerlink" title="babel-loader"></a><a href="#7-3-1">babel-loader</a></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// js/es6-module.js</span><br><span class="line">class People&#123;</span><br><span class="line">    constructor(name)&#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    sayHi()&#123;</span><br><span class="line">        console.log(`hi $&#123;this.name&#125; !`);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">module.exports = People;</span><br></pre></td></tr></table></figure>
-
-<p>写好模块后，我们直接在index.js入口文件中引入该模块。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// index.js</span><br><span class="line">// javascript</span><br><span class="line">require(&#x27;./a&#x27;);</span><br><span class="line">let People = require(&#x27;./es6-module&#x27;);</span><br><span class="line">let p = new People(&quot;Yika&quot;);</span><br><span class="line">p.sayHi();</span><br><span class="line">// css</span><br><span class="line">require(&#x27;./css/main.scss&#x27;);</span><br></pre></td></tr></table></figure>
-
-<p>哈哈哈，不能再爽！这下子我们可以使用很多优秀的ES6特性去构建大型的web了。</p>
-<h4 id="7-3-2"><a href="#7-3-2" class="headerlink" title="sass-loader"></a><a href="#7-3-2">sass-loader</a></h4><p>大家或许注意到了下方的css的require，那就是用来加载Sass样式的。我们通过启动style-loader会将css代码转化到<code>&lt;style&gt;</code>标签内，我们看一下里面的内容。</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// css/<span class="selector-tag">main</span><span class="selector-class">.scss</span></span><br><span class="line"><span class="selector-tag">html</span>, <span class="selector-tag">body</span>&#123;</span><br><span class="line">    <span class="attribute">background</span>: <span class="number">#dfdfdf</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最后我们打开<code>index.html</code>观察我们所有的结果，首先背景已经是淡灰色的，并且控制台也有我们想要的内容。我们通过查看DOM结构，可以发现head标签里多出了style标签，里面正是我们想要定制的样式。</p>
-<h4 id="7-3-3"><a href="#7-3-3" class="headerlink" title="关于对图片的打包"></a><a href="#7-3-3">关于对图片的打包</a></h4><p>我们之前也说，webpack对与静态资源来说，也是看作模块来加载的。CSS我们是已经看过了，那图片是怎么作为模块打包加载进来呢？这里我们可以想到，图片我们是用url-loader加载的。我们在css文件里的url属性，其实就是一种封装处理过require操作。当然我们还有一种方式就是直接对元素的src属性进行require赋值。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">div.img&#123;</span><br><span class="line">    background: url(../image/xxx.jpg)</span><br><span class="line">&#125;</span><br><span class="line">//或者</span><br><span class="line">var img = document.createElement(&quot;img&quot;);</span><br><span class="line">img.src = require(&quot;../image/xxx.jpg&quot;);</span><br><span class="line">document.body.appendChild(img);</span><br></pre></td></tr></table></figure>
-
-<p>上述两种方法都会对符合要求的图片进行处理。而要求就是在url-loader后面通过query参数的方式实现的，这里就是说只有不大于8kb的图片才会打包处理成Base64的图片。关于query，请看文档：Query parameters</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span>test<span class="punctuation">:</span> /\.(jpg|png)$/<span class="punctuation">,</span> loader<span class="punctuation">:</span> <span class="string">&quot;url?limit=8192&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="7-3-4"><a href="#7-3-4" class="headerlink" title="打包成多个资源文件"></a><a href="#7-3-4">打包成多个资源文件</a></h4><p>我们在开发多页面的站点的时候，还是需要希望能有多个资源文件的。这样我们就可以有效利用缓存提升性能，做到文件按需加载。如何写入口文件，这里就不再赘述了，我们直接看如何对webpack.config.js进行修改。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line"><span class="attr">entry</span>: &#123;</span><br><span class="line">    <span class="attr">page1</span>: <span class="string">&quot;index.js&quot;</span>,</span><br><span class="line">    <span class="attr">page2</span>: <span class="string">&quot;index2.js&quot;</span></span><br><span class="line">&#125;,</span><br><span class="line"><span class="attr">output</span>: &#123;</span><br><span class="line">    <span class="attr">path</span>: path.<span class="title function_">join</span>(__dirname, <span class="string">&#x27;js/out&#x27;</span>),</span><br><span class="line">    <span class="attr">publicPath</span>: <span class="string">&quot;/js/out/&quot;</span>,</span><br><span class="line">    <span class="attr">filename</span>: <span class="string">&#x27;[name].js&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里重点关注两个地方，entry属性可以是一个对象，而对象名也就是key会作为下面output的filename属性的[name]。当然entry也可以是一个数组，更多用法都可以去webpack的官方文档进行查看。</p>
-<p>当然webpack也考虑到公共模块的利用，我们利用插件就可以智能提取公共部分，以提供我们浏览器的缓存复用。我们只需要在webpack.config.js添加下面的代码即可。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 修改添加，webpack.config.js</span></span><br><span class="line"><span class="keyword">var</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">    <span class="comment">// ....省略各种代码</span></span><br><span class="line">    <span class="attr">plugins</span>: [</span><br><span class="line">        <span class="keyword">new</span> webpack.<span class="property">optimize</span>.<span class="title class_">CommonsChunkPlugin</span>(<span class="string">&#x27;common.js&#x27;</span>)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们做个小测试，让第二个入口文件也加载我们之前的es6-module.js。然后我们用webpack进行打包，就发现生成的common.js里是有相应代码的。我们需要手动在html上去加载common.js，并且是必须要最先加载。</p>
-<h4 id="7-3-5"><a href="#7-3-5" class="headerlink" title="独立出css样式"></a><a href="#7-3-5">独立出css样式</a></h4><p>如果我们希望样式通过<code>&lt;link&gt;</code>引入，而不是放在<code>&lt;style&gt;</code>标签内呢，即使这样做会多一个请求。这个时候我们就要配合插件一起使用啦，我们一起来看看。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install extract-text-webpack-plugin --save-dev</span><br></pre></td></tr></table></figure>
-
-<p>安装完插件就要配置<code>webpack.config.js</code>了。我们添加以下代码</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">ExtractTextPlugin</span> = <span class="built_in">require</span>(<span class="string">&quot;extract-text-webpack-plugin&quot;</span>);</span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">    <span class="comment">// ...省略各种代码</span></span><br><span class="line">    <span class="attr">module</span>: &#123;</span><br><span class="line">        <span class="attr">loaders</span>: [</span><br><span class="line">            &#123;<span class="attr">test</span>: <span class="regexp">/\.js$/</span>, <span class="attr">loader</span>: <span class="string">&quot;babel&quot;</span>&#125;,</span><br><span class="line">            &#123;<span class="attr">test</span>: <span class="regexp">/\.css$/</span>, <span class="attr">loader</span>: <span class="title class_">ExtractTextPlugin</span>.<span class="title function_">extract</span>(<span class="string">&quot;style-loader&quot;</span>, <span class="string">&quot;css-loader&quot;</span>)&#125;,</span><br><span class="line">            &#123;<span class="attr">test</span>: <span class="regexp">/\.(jpg|png|svg)$/</span>, <span class="attr">loader</span>: <span class="string">&quot;url?limit=8192&quot;</span>&#125;,</span><br><span class="line">            &#123;<span class="attr">test</span>: <span class="regexp">/\.scss$/</span>, <span class="attr">loader</span>: <span class="string">&quot;style!css!sass&quot;</span>&#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">plugins</span>: [</span><br><span class="line">        <span class="keyword">new</span> webpack.<span class="property">optimize</span>.<span class="title class_">CommonsChunkPlugin</span>(<span class="string">&#x27;common.js&#x27;</span>),</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">ExtractTextPlugin</span>(<span class="string">&quot;[name].css&quot;</span>)</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>为了区分开用<code>&lt;link&gt;</code>链接和用<code>&lt;style&gt;</code>，我们这里以CSS后缀结尾的模块用插件。我们重点关注一下使用了ExtractTextPlugin的模块，在ExtractTextPlugin的extract方法有两个参数，第一个参数是经过编译后通过style-loader单独提取出文件来，而第二个参数就是用来编译代码的loader。</p>
-<p>记得运行<code>webpack --config webpack.config.js</code>进行打包</p>
-<p>然后在index.html里面引用打包文件，如；</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;js/out/bundle.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>如果需要common.js的话，在前面也要加上这个文件，最后js的调用顺序如下：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;js/out/common.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;js/out/bundle.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
+<p>之后要考虑的就是服务器的监测以及如果给node做反向代理</p>
+<p>比如：</p>
+<blockquote>
+<p>nginx或haproxy的部署，也可以使用nginx+passenger进行部署</p>
+<p>mongodb的部署</p>
+<p>mysql的部署</p>
+<p>redis的部署</p>
+<p>还要对服务器进行压测</p>
+<p>apache ab</p>
+<p>wrk</p>
+<p>以及性能调优和监控</p>
+</blockquote>
 
       
     </div>
@@ -1145,7 +925,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Linux-%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E5%90%8E-%E5%A6%82%E4%BD%95%E9%87%8A%E6%94%BE%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/ReactJS-Prop-%E9%AA%8C%E8%AF%81.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1163,7 +943,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Linux-%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6%E5%90%8E-%E5%A6%82%E4%BD%95%E9%87%8A%E6%94%BE%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4.html" class="post-title-link" itemprop="url">Linux 删除文件后，如何释放磁盘空间</a>
+          <a href="/2025/07/02/ReactJS-Prop-%E9%AA%8C%E8%AF%81.html" class="post-title-link" itemprop="url">ReactJS Prop 验证</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1175,7 +955,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-01 15:24:44 / 修改时间：15:43:19" itemprop="dateCreated datePublished" datetime="2025-07-01T15:24:44+08:00">2025-07-01</time>
+      <time title="创建时间：2025-07-02 15:40:39 / 修改时间：15:49:21" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:39+08:00">2025-07-02</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1197,16 +977,298 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于磁盘空间会有一个问题就是磁盘空间满了，但是删除对应的文件后【你删除的没有错误】 ，通过</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">du</span> -h --max-depth=1</span><br></pre></td></tr></table></figure>
+          <p>本文主要是引入官方的使用，如果此时间较晚，可到官方查看较新使用说明：</p>
+<p><code>React.PropTypes</code> 提供很多验证器 (validator) 来验证传入数据的有效性。当向 props 传入无效数据时，JavaScript 控制台会抛出警告。注意为了性能考虑，只在开发环境验证 <code>propTypes</code>。下面用例子来说明不同验证器的区别：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">React</span>.<span class="title function_">createClass</span>(&#123;</span><br><span class="line">  <span class="attr">propTypes</span>: &#123;</span><br><span class="line">    <span class="comment">// 可以声明 prop 为指定的 JS 基本类型。默认</span></span><br><span class="line">    <span class="comment">// 情况下，这些 prop 都是可传可不传的。</span></span><br><span class="line">    <span class="attr">optionalArray</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">array</span>,</span><br><span class="line">    <span class="attr">optionalBool</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">bool</span>,</span><br><span class="line">    <span class="attr">optionalFunc</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">func</span>,</span><br><span class="line">    <span class="attr">optionalNumber</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>,</span><br><span class="line">    <span class="attr">optionalObject</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">object</span>,</span><br><span class="line">    <span class="attr">optionalString</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">string</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 所有可以被渲染的对象：数字，</span></span><br><span class="line">    <span class="comment">// 字符串，DOM 元素或包含这些类型的数组。</span></span><br><span class="line">    <span class="attr">optionalNode</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">node</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// React 元素</span></span><br><span class="line">    <span class="attr">optionalElement</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">element</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用 JS 的 instanceof 操作符声明 prop 为类的实例。</span></span><br><span class="line">    <span class="attr">optionalMessage</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="title function_">instanceOf</span>(<span class="title class_">Message</span>),</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用 enum 来限制 prop 只接受指定的值。</span></span><br><span class="line">    <span class="attr">optionalEnum</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="title function_">oneOf</span>([<span class="string">&#x27;News&#x27;</span>, <span class="string">&#x27;Photos&#x27;</span>]),</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定的多个对象类型中的一个</span></span><br><span class="line">    <span class="attr">optionalUnion</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="title function_">oneOfType</span>([</span><br><span class="line">      <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">string</span>,</span><br><span class="line">      <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>,</span><br><span class="line">      <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="title function_">instanceOf</span>(<span class="title class_">Message</span>)</span><br><span class="line">    ]),</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定类型组成的数组</span></span><br><span class="line">    <span class="attr">optionalArrayOf</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="title function_">arrayOf</span>(<span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>),</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 指定类型的属性构成的对象</span></span><br><span class="line">    <span class="attr">optionalObjectOf</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="title function_">objectOf</span>(<span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span>),</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 特定形状参数的对象</span></span><br><span class="line">    <span class="attr">optionalObjectWithShape</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="title function_">shape</span>(&#123;</span><br><span class="line">      <span class="attr">color</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">string</span>,</span><br><span class="line">      <span class="attr">fontSize</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">number</span></span><br><span class="line">    &#125;),</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以后任意类型加上 `isRequired` 来使 prop 不可空。</span></span><br><span class="line">    <span class="attr">requiredFunc</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">func</span>.<span class="property">isRequired</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 不可空的任意类型</span></span><br><span class="line">    <span class="attr">requiredAny</span>: <span class="title class_">React</span>.<span class="property">PropTypes</span>.<span class="property">any</span>.<span class="property">isRequired</span>,</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 自定义验证器。如果验证失败需要返回一个 Error 对象。不要直接</span></span><br><span class="line">    <span class="comment">// 使用 `console.warn` 或抛异常，因为这样 `oneOfType` 会失效。</span></span><br><span class="line">    <span class="attr">customProp</span>: <span class="keyword">function</span>(<span class="params">props, propName, componentName</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!<span class="regexp">/matchme/</span>.<span class="title function_">test</span>(props[propName])) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&#x27;Validation failed!&#x27;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">/* ... */</span>&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>查看后</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">16K    ./lost+found</span><br><span class="line">26M    ./test.zhidetou.net</span><br><span class="line">88K    ./spider</span><br><span class="line">62M    ./mocker.qeeniao.com</span><br><span class="line">4.6M    ./www.zhidetou.net</span><br><span class="line">12G    ./elasticsearch</span><br><span class="line">12G    .</span><br></pre></td></tr></table></figure>
 
-<p>这里显示是12G啦，总磁盘大小是20G，也应该是60%<br>发现文件是减少了，但是df -h 发现还是没有减少。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/xvda1       20G   11G  8.1G  57% /</span><br><span class="line">tmpfs           1.9G     0  1.9G   0% /dev/shm</span><br><span class="line">/dev/xvdb1       20G   15G  3.7G  81% /data</span><br></pre></td></tr></table></figure>
 
-<p>仍然是81%<br>原因就是因为某个程序还在占用此文件，文件句柄没有释放，所以即使你rm -rf磁盘空间也不会被释放。<br>解决办法就是找到使用这个文件的进程，然后重启或者是直接kill掉后，再重启对应进程。</p>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/ALTER-TABLE-LOCK-%E7%9A%84%E4%BD%BF%E7%94%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/02/ALTER-TABLE-LOCK-%E7%9A%84%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">ALTER TABLE ... LOCK ... 的使用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-02 15:40:35 / 修改时间：15:51:52" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:35+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>来个示例，网上找了很久了，没发现同时添加多个字段的例子，我英文比较差，只能靠猜了，结果还真成了。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER TABLE</span> `record` </span><br><span class="line">	<span class="keyword">ADD</span> <span class="keyword">COLUMN</span> `rate_name` <span class="type">varchar</span>(<span class="number">16</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;货币k值&#x27;</span> AFTER `money`,</span><br><span class="line">	<span class="keyword">ADD</span> <span class="keyword">COLUMN</span> `rate_money` <span class="type">decimal</span>(<span class="number">16</span>,<span class="number">4</span>)  <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;货币汇率&#x27;</span> AFTER `rate_name`,LOCK<span class="operator">=</span>SHARED;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER TABLE</span> `record_list` </span><br><span class="line">	<span class="keyword">ADD</span> <span class="keyword">COLUMN</span> `rate_name` <span class="type">varchar</span>(<span class="number">16</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;货币K值&#x27;</span> AFTER `mtime`,</span><br><span class="line">	<span class="keyword">ADD</span> <span class="keyword">COLUMN</span> `rate_list` <span class="type">varchar</span>(<span class="number">32</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;货币ID组合&#x27;</span> AFTER `rate_name`,</span><br><span class="line">	<span class="keyword">ADD</span> <span class="keyword">COLUMN</span> `list_rate_budget` <span class="type">decimal</span>(<span class="number">16</span>,<span class="number">4</span>)  <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;预算汇率金额&#x27;</span> AFTER `rate_list`,</span><br><span class="line">	<span class="keyword">ADD</span> <span class="keyword">COLUMN</span> `date_start` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;起始日&#x27;</span> AFTER `list_rate_budget`,LOCK<span class="operator">=</span>SHARED;</span><br></pre></td></tr></table></figure>
+
+<p>如下摘自原文档：<span class="exturl" data-url="aHR0cHM6Ly9kZXYubXlzcWwuY29tL2RvYy9yZWZtYW4vNS43L2VuL2FsdGVyLXRhYmxlLmh0bWw=">https://dev.mysql.com/doc/refman/5.7/en/alter-table.html<i class="fa fa-external-link-alt"></i></span></p>
+<blockquote>
+<p>LOCK &#x3D; DEFAULT</p>
+<p>Maximum level of concurrency for the given ALGORITHM clause (if any) and ALTER TABLE operation: Permit concurrent reads and writes if supported. If not, permit concurrent reads if supported. If not, enforce exclusive access.</p>
+</blockquote>
+<blockquote>
+<p>LOCK &#x3D; NONE</p>
+<p>如果MYSQL支持, 则同时发生度读操作和写操作. Otherwise, return an error message.</p>
+</blockquote>
+<blockquote>
+<p>LOCK &#x3D; SHARED</p>
+<p>如果MYSQL支持, 则允许并发读取但是阻塞写入。 Note that writes will be blocked even if concurrent writes are supported by the storage engine for the given ALGORITHM clause (if any) and ALTER TABLE operation. If concurrent reads are not supported, return an error message.</p>
+</blockquote>
+<blockquote>
+<p>LOCK &#x3D; EXCLUSIVE</p>
+<p>实施独占访问. This will be done even if concurrent reads&#x2F;writes are supported by the storage engine for the given ALGORITHM clause (if any) and ALTER TABLE operation</p>
+</blockquote>
+<p>估计会翻译有误，不过大概意思是这样的</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/%E5%BF%AB%E9%80%9F%E6%BF%80%E6%B4%BB%E6%9C%80%E6%96%B0JetBrains%E5%85%AC%E5%8F%B8%E7%B3%BB%E5%88%97%E4%BA%A7%E5%93%81.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/02/%E5%BF%AB%E9%80%9F%E6%BF%80%E6%B4%BB%E6%9C%80%E6%96%B0JetBrains%E5%85%AC%E5%8F%B8%E7%B3%BB%E5%88%97%E4%BA%A7%E5%93%81.html" class="post-title-link" itemprop="url">快速激活最新JetBrains公司系列产品</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-07-02 15:40:29" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:29+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-09 10:37:03" itemprop="dateModified" datetime="2025-07-09T10:37:03+08:00">2025-07-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>IntelliJ IDEA开源社区 提供了如下通用激活方法：</p>
+<p>注册时选择License server</p>
+<p>然后输入框填写：<span class="exturl" data-url="aHR0cDovL2lkZWEubGFueXVzLmNvbS8=">http://idea.lanyus.com/<i class="fa fa-external-link-alt"></i></span></p>
+<p>然后点击 OK，就搞定了。</p>
+<p>JetBrains注册码计算： idea.lanyus.com&#x2F;</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;截至目前为止，上面的方式已经无效了&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<p>可以进入<span class="exturl" data-url="aHR0cDovL2lkZWEubGFueXVzLmNvbS8=">http://idea.lanyus.com/<i class="fa fa-external-link-alt"></i></span> 自己去找方案</p>
+<p>我这里把我使用的过程需要注意的点说下</p>
+<p>IntelliJIDEALicenseServer 使用方法</p>
+<p>首先下载指定版本的IntelliJIDEALicenseServer，解压文件夹，进入文件夹，跟自己的系统的情况指定指定的文件，对于linux或者unix系统，最好到终端去执行。如果是win的话就请随意吧。</p>
+<p>可以指定端口 指定用户的哟。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">╰─➤  ./IntelliJIDEALicenseServer_darwin_amd64 -p 41015 -u durban                                                                                                                                                                          1 ↵</span><br><span class="line">2016/07/21 13:21:39 *************************************************************</span><br><span class="line">2016/07/21 13:21:39 ** IntelliJ IDEA License Server                            **</span><br><span class="line">2016/07/21 13:21:39 ** by: ilanyu                                              **</span><br><span class="line">2016/07/21 13:21:39 ** http://www.lanyus.com/                                  **</span><br><span class="line">2016/07/21 13:21:39 ** Alipay donation: xx@xx                **</span><br><span class="line">2016/07/21 13:21:39 ** Please support genuine!!!                               **</span><br><span class="line">2016/07/21 13:21:39 ** listen on 0.0.0.0:41015...                              **</span><br><span class="line">2016/07/21 13:21:39 ** You can use http://127.0.0.1:41015 as license server    **</span><br><span class="line">2016/07/21 13:21:39 *************************************************************</span><br></pre></td></tr></table></figure>
+
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/Webpack+gulp-%E5%AE%9E%E7%8E%B0-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%B9%B6%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%88%B0%E4%B8%83%E7%89%9B%E5%AE%8C%E7%BE%8E%E7%A4%BA%E4%BE%8B.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/02/Webpack+gulp-%E5%AE%9E%E7%8E%B0-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E6%89%93%E5%8C%85%E5%B9%B6%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%88%B0%E4%B8%83%E7%89%9B%E5%AE%8C%E7%BE%8E%E7%A4%BA%E4%BE%8B.html" class="post-title-link" itemprop="url">Webpack+Gulp 实现 静态文件打包并自动上传到七牛完美示例</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-02 15:40:19 / 修改时间：15:53:12" itemprop="dateCreated datePublished" datetime="2025-07-02T15:40:19+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>经过几天的努力终于实现了一个完美的作品，webpack可以与gulp完美结合的进行打包静态文件，并将静态文件上传到七牛云存储，当然也可以传到你想传的云存储了，这里只分享一个七牛的云存储方案。</p>
+<p>关于如何使用webpack打包静态代码，这个可以参考我之前的一些文章和方案，不行的话可以进群交流。</p>
+<p>这里只分享一下gulp这边的操作，然后给一个例子实现如何一条命令打包静态文件并更新cdn文件的方法。</p>
+<p>先展示一下gulpfile.js文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> gulp = <span class="built_in">require</span>(<span class="string">&#x27;gulp&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> uglify = <span class="built_in">require</span>(<span class="string">&#x27;gulp-uglify&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> concat = <span class="built_in">require</span>(<span class="string">&#x27;gulp-concat&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> shrink = <span class="built_in">require</span>(<span class="string">&#x27;gulp-cssshrink&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;gulp-webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> qn = <span class="built_in">require</span>(<span class="string">&#x27;gulp-qn&#x27;</span>);</span><br><span class="line"><span class="comment">// MD5戳</span></span><br><span class="line"><span class="keyword">const</span> rev = <span class="built_in">require</span>(<span class="string">&#x27;gulp-rev-qn&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> revCollector = <span class="built_in">require</span>(<span class="string">&#x27;gulp-rev-collector&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> runSequence = <span class="built_in">require</span>(<span class="string">&#x27;run-sequence&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> qiniu_options = &#123;</span><br><span class="line">  <span class="attr">accessKey</span>: <span class="string">&#x27;xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">secretKey</span>: <span class="string">&#x27;xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">bucket</span>: <span class="string">&#x27;xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">domain</span>: <span class="string">&#x27;http://xxx.com&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-js&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/js/*.js&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">uglify</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">rev</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/js&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">qn</span>(&#123;</span><br><span class="line">      <span class="attr">qiniu</span>: qiniu_options,</span><br><span class="line">      <span class="attr">prefix</span>: <span class="string">&#x27;js&#x27;</span></span><br><span class="line">    &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(rev.<span class="title function_">manifest</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/rev/js&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-font-img&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/js/*.svg&#x27;</span>,<span class="string">&#x27;./build/js/*.gif&#x27;</span>,<span class="string">&#x27;./build/js/*.woff2&#x27;</span>,<span class="string">&#x27;./build/js/*.ttf&#x27;</span>,<span class="string">&#x27;./build/js/*.eot&#x27;</span>,<span class="string">&#x27;./build/js/*.woff&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">qn</span>(&#123;</span><br><span class="line">      <span class="attr">qiniu</span>: qiniu_options,</span><br><span class="line">      <span class="attr">prefix</span>: <span class="string">&#x27;js&#x27;</span></span><br><span class="line">    &#125;));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-css&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/js/*.css&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">rev</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/js&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">qn</span>(&#123;</span><br><span class="line">      <span class="attr">qiniu</span>: qiniu_options,</span><br><span class="line">      <span class="attr">prefix</span>: <span class="string">&#x27;css&#x27;</span></span><br><span class="line">    &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(rev.<span class="title function_">manifest</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/rev/css&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;publish-html&#x27;</span>, <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>([<span class="string">&#x27;./build/rev/**/*.json&#x27;</span>, <span class="string">&#x27;./build/views/*.html&#x27;</span>])</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">revCollector</span>(&#123;</span><br><span class="line">      <span class="attr">dirReplacements</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;/js/&#x27;</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./build/views&#x27;</span>));</span><br><span class="line">&#125;);</span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;default&#x27;</span>,<span class="keyword">function</span>(<span class="params">callback</span>)&#123;</span><br><span class="line">  <span class="title function_">runSequence</span>(</span><br><span class="line">    [<span class="string">&#x27;publish-css&#x27;</span>,<span class="string">&#x27;publish-js&#x27;</span>,<span class="string">&#x27;publish-font-img&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;publish-html&#x27;</span>,</span><br><span class="line">    callback);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>publish-js部分是将我的js文件进行版本更新并上传到七牛。</p>
+<p>publish-font-img部分是将我的字体文件、图片文件上传到七牛</p>
+<p>publish-css部分是将我的css文件进行版本更新并上传到七牛</p>
+<p>publish-html将我html文件中对应的js路径进行替换，好了，可以直接发布这个build文件夹下的文件了。</p>
 
       
     </div>
@@ -1226,7 +1288,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/32/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/32/">32</a><span class="page-number current">33</span><a class="page-number" href="/page/34/">34</a><span class="space">&hellip;</span><a class="page-number" href="/page/103/">103</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/34/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/32/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/32/">32</a><span class="page-number current">33</span><a class="page-number" href="/page/34/">34</a><span class="space">&hellip;</span><a class="page-number" href="/page/105/">105</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/34/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
