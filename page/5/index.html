@@ -194,18 +194,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1048</span>
+          <span class="site-state-item-count">1098</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">174</span>
+        <span class="site-state-item-count">178</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -245,7 +245,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/Mac%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-netstat-lsof.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/Git-gc%E7%9A%84%E4%BD%9C%E7%94%A8%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%88%A0%E9%99%A4%E4%BB%93%E5%BA%93%E4%B8%AD%E9%94%99%E8%AF%AF%E7%9A%84%E5%A4%A7%E6%96%87%E4%BB%B6.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -263,7 +263,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/Mac%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%AB%AF%E5%8F%A3%E5%8D%A0%E7%94%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-netstat-lsof.html" class="post-title-link" itemprop="url">Mac系统下端口占用解决方案(netstat/lsof)</a>
+          <a href="/2025/07/14/Git-gc%E7%9A%84%E4%BD%9C%E7%94%A8%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%88%A0%E9%99%A4%E4%BB%93%E5%BA%93%E4%B8%AD%E9%94%99%E8%AF%AF%E7%9A%84%E5%A4%A7%E6%96%87%E4%BB%B6.html" class="post-title-link" itemprop="url">Git gc的作用以及如何删除仓库中错误的大文件</a>
         </h2>
 
         <div class="post-meta-container">
@@ -275,7 +275,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-10 11:52:54 / 修改时间：11:54:02" itemprop="dateCreated datePublished" datetime="2025-07-10T11:52:54+08:00">2025-07-10</time>
+      <time title="创建时间：2025-07-14 14:45:18 / 修改时间：15:26:10" itemprop="dateCreated datePublished" datetime="2025-07-14T14:45:18+08:00">2025-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -297,32 +297,18 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>最近启动nginx，总是提示我8080端口内占用了，但是我就想知道具体是哪个程序占用了这个端口，这个技术点困扰了我很久，一想我又不搞服务器部署，出问题肯定会有人处理的，怎奈我自己的服务器也遇到了这个问题，没办法，必须解决掉。本以为都是命令直接搜索一个拿来用用不就可以了嘛，但是！但是！但是！在不同系统的环境下，命令的使用方式居然不一样。</p>
-<p>先看个常用的命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ netstat -anvp |grep 8080</span><br><span class="line">netstat: option requires an argument -- p</span><br><span class="line">Usage:	netstat [-AaLlnW] [-f address_family | -p protocol]</span><br><span class="line">	netstat [-gilns] [-f address_family]</span><br><span class="line">	netstat -i | -I interface [-w <span class="built_in">wait</span>] [-abdgRtS]</span><br><span class="line">	netstat -s [-s] [-f address_family | -p protocol] [-w <span class="built_in">wait</span>]</span><br><span class="line">	netstat -i | -I interface -s [-f address_family | -p protocol]</span><br><span class="line">	netstat -m [-m]</span><br><span class="line">	netstat -r [-Aaln] [-f address_family]</span><br><span class="line">	netstat -rs [-s]</span><br></pre></td></tr></table></figure>
-
-<p>这个命令提示我<code>netstat: option requires an argument -- p</code></p>
-<p>其实是缺少协议</p>
-<p>在Mac上正确使用的方法是：即-f需要加上地址族，-p需要加上协议TCP或者UDP等</p>
-<ul>
-<li>如果要查询inet - 命令使用 <code>netstat -anvf inet</code></li>
-<li>如果要查询tcp - 命令使用 <code>netstat -anvp tcp</code></li>
-<li>如果要查询udp - 命令使用 <code>netstat -anvp udp</code></li>
-</ul>
-<p>于是将上面的命令调整为下面</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ netstat -anvp tcp |grep 8080</span><br><span class="line">tcp4       0      0  172.18.0.71.56891      180.163.32.172.8080    ESTABLISHED 262144 131920  51388      0</span><br><span class="line">tcp4       0      0  172.18.0.71.56816      114.221.144.160.8080   ESTABLISHED 262144 131072  98268      0</span><br><span class="line">tcp46      0      0  *.8080                 *.*                    LISTEN      131072 131072  45216      0</span><br></pre></td></tr></table></figure>
-
-<p>当然<code>netstat</code>只是查找占用端口命令中的一个命令而已</p>
-<p>下面看看另外一个命令<code>lsof</code></p>
-<p><strong>lsof</strong> 是一个列出当前系统打开文件的工具</p>
-<p>使用 lsof 如果不传任何参数会列出所有端口占用的列表，不过不建议直接使用lsof，太多看不过来 可以使用<code>lsof | less</code>，然后一下一下点击空格键，会一屏一屏的列出</p>
-<p>如果查询占用的端口号，可以使用如下命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsod -i:8080</span><br></pre></td></tr></table></figure>
-
-<p>比如我当前占用8080端口的程序</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ lsof -i:8080</span><br><span class="line">COMMAND     PID   USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME</span><br><span class="line">QQBrowser 51388 durban  106u  IPv4 0xeed752c692289c43      0t0  TCP 172.18.0.71:56891-&gt;180.163.32.172:http-alt (ESTABLISHED)</span><br><span class="line">QQBrowser 51388 durban  115u  IPv4 0xeed752c692289c43      0t0  TCP 172.18.0.71:56891-&gt;180.163.32.172:http-alt (ESTABLISHED)</span><br><span class="line">QQ        98268 durban   17u  IPv4 0xeed752c6923d2213      0t0  TCP 172.18.0.71:56816-&gt;114.221.144.160:http-alt (ESTABLISHED)</span><br><span class="line">QQ</span><br></pre></td></tr></table></figure>
-
-<p>这里只要拿到PID就可以进行kill或者是其他的操作了。</p>
+          <p>之前对<code>gc</code>一直不了解，这玩意是个bug吧</p>
+<p>为什么<code>git pull</code>的时候会出现一个<code>git gc</code>的命令，还提示我可以自己运行</p>
+<p>回忆下，第一次遇到这个问题的时候就是这个状态，然后就一直没理会</p>
+<p>最近测试服务器部署代码的时候，经常会遇到这个命令在执行</p>
+<p>于是搜搜了下，才发现这个命令是对大文件进行压缩的</p>
+<p>同时如果出现这个命令的执行或者提示你让你去执行这个gc的命令</p>
+<p>说明你的项目真的很大了</p>
+<p>或者说明你的项目存在非常大的文件</p>
+<p>原理就是压缩了下，创建了一个包文件和一个索引文件，方便后面更快的对文件的更改进行对比（<code>diff</code>）操作，不然文件很大的话读取再对比其实是很慢的，这样可以理解的通透了</p>
+<p>另外需要对git的原理有更多的理解</p>
+<p>就是我们每次对一个文件进行更改的时候<code>git</code>都会生成一个全新的对象来存储新的文件内容。</p>
+<p>推荐一篇文章，<span class="exturl" data-url="aHR0cHM6Ly93d3cuamlhbnNodS5jb20vcC83MjMxYjUwOWMyNzk=">点这里<i class="fa fa-external-link-alt"></i></span>，具体介绍了如何删除大文件，同时对<code>git gc</code>有更详细的了解</p>
 
       
     </div>
@@ -349,7 +335,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/CSS3-translate%E5%92%8Ctransition%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/PHP-Laravel-%E5%8F%91%E5%B8%83%E6%96%B0%E7%89%88%E6%9C%AC-8-x.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -367,7 +353,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/CSS3-translate%E5%92%8Ctransition%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">CSS3 translate和transition如何使用</a>
+          <a href="/2025/07/14/PHP-Laravel-%E5%8F%91%E5%B8%83%E6%96%B0%E7%89%88%E6%9C%AC-8-x.html" class="post-title-link" itemprop="url">PHP Laravel 发布新版本 8.x</a>
         </h2>
 
         <div class="post-meta-container">
@@ -379,7 +365,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-10 11:52:48 / 修改时间：14:48:04" itemprop="dateCreated datePublished" datetime="2025-07-10T11:52:48+08:00">2025-07-10</time>
+      <time title="创建时间：2025-07-14 14:45:15 / 修改时间：15:26:25" itemprop="dateCreated datePublished" datetime="2025-07-14T14:45:15+08:00">2025-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -401,36 +387,44 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>translate和transition一直让我觉得，很牛皮很强大，怎么也学不会，其实是自己比较抗拒去了解她，接口看了不到半个小时的文档，大概了解了下，下面是示例，可以下载下来自己运行下试试</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>translate和transition<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">  <span class="selector-tag">div</span> &#123;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">width</span>: <span class="number">100px</span>;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">height</span>: <span class="number">75px</span>;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">background-color</span>: red;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">border</span>: <span class="number">1px</span> solid black;</span></span><br><span class="line"><span class="language-css">  &#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">  <span class="selector-tag">div</span><span class="selector-id">#translate</span> &#123;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">transition</span>: all <span class="number">2s</span>;</span></span><br><span class="line"><span class="language-css">    -ms-<span class="attribute">transition</span>: all <span class="number">2s</span>;</span></span><br><span class="line"><span class="language-css">    -webkit-<span class="attribute">transition</span>: all <span class="number">2s</span>;</span></span><br><span class="line"><span class="language-css">  &#125;</span></span><br><span class="line"><span class="language-css"></span></span><br><span class="line"><span class="language-css">  <span class="selector-tag">div</span><span class="selector-id">#translate</span><span class="selector-pseudo">:hover</span>&#123;</span></span><br><span class="line"><span class="language-css">    <span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">50px</span>, <span class="number">100px</span>);</span></span><br><span class="line"><span class="language-css">    -ms-<span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">50px</span>, <span class="number">100px</span>);</span></span><br><span class="line"><span class="language-css">    -webkit-<span class="attribute">transform</span>: <span class="built_in">translate</span>(<span class="number">50px</span>, <span class="number">100px</span>);</span></span><br><span class="line"><span class="language-css">  &#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span>Hello, This is a Div element<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&#x27;translate&#x27;</span>&gt;</span>Hello, This is another Div element<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>演示demo请点 <a href="/custom_pages/css3/translate.html">这里</a></p>
-<ul>
-<li>translate(a, b)：用官方的话说叫做2D转移，其实就是平面上的x轴和y轴移动，搞那么多名词就是因为我们学识太低，不想让我们容易了解</li>
-</ul>
-<p>a - 在横向（左右方向）也就是x轴移动a单位距离，比如是10px，那么就移动10px，正值向右移动，负值向左移动 b - 在纵向（上下方向）也就是y轴移动b单位距离，比如是50px，那么就移动10px，正值向下移动，负值向上移动</p>
-<p>起点在左上角哈，但是如果元素位置开始就设置了非原点的话就另说了，就是在元素基础上做计算</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">原点(0,0)-------</span><br><span class="line">|</span><br><span class="line">|</span><br><span class="line">|</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>transition 动画过渡</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transition： property duration timing-function delay</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>property - css属性</p>
-</blockquote>
-<blockquote>
-<p>duration - 动画执行时长 如果为0 动画不执行</p>
-</blockquote>
-<blockquote>
-<p>timing-function 动画执行方式 默认ease</p>
-</blockquote>
-<blockquote>
-<p>delay - 动画延迟执行时间 默认0</p>
-</blockquote>
-<p>这四个是属性，别以为我是写了其他的属性，具体的看(文档)[<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIubW96aWxsYS5vcmcvemgtQ04vZG9jcy9XZWIvQ1NTL3RyYW5zaXRpb24=">https://developer.mozilla.org/zh-CN/docs/Web/CSS/transition<i class="fa fa-external-link-alt"></i></span>]</p>
-<p>这里不再介绍，看我示例就知道了，</p>
+          <p>PHP Laravel 发布新版本 8.x</p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Release</th>
+<th>Bug Fixes Until</th>
+<th>Security Fixes Until</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>6 (LTS)</td>
+<td>September 3rd, 2019</td>
+<td>September 3rd, 2021</td>
+<td>September 3rd, 2022</td>
+</tr>
+<tr>
+<td>7</td>
+<td>March 3rd, 2020</td>
+<td>September 10th, 2020</td>
+<td>March 3rd, 2021</td>
+</tr>
+<tr>
+<td>8</td>
+<td>September 8th, 2020</td>
+<td>March 8th, 2021</td>
+<td>September 8th, 2021</td>
+</tr>
+</tbody></table>
+<p>具体详情参考<span class="exturl" data-url="aHR0cHM6Ly9sYXJhdmVsLmNvbS9kb2NzLzgueC9yZWxlYXNlcw==">这里<i class="fa fa-external-link-alt"></i></span></p>
+<p>新版本包含新的特性</p>
+<ol>
+<li>Jetstream</li>
+<li>job batching</li>
+<li>powerful model factories</li>
+<li>migration squashing</li>
+<li>improved rate limiting</li>
+</ol>
 
       
     </div>
@@ -457,7 +451,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/Javascript%E7%9A%84base64%E5%AE%9E%E7%8E%B0%E5%8F%8A%E4%BD%BF%E7%94%A8.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/Composer%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E8%83%BD%E5%A4%9F%E6%9B%B4%E5%8A%A0%E9%A1%BA%E6%89%8B-%E6%AF%94%E5%A6%82%E5%BF%BD%E7%95%A5%E4%BE%9D%E8%B5%96.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -475,7 +469,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/Javascript%E7%9A%84base64%E5%AE%9E%E7%8E%B0%E5%8F%8A%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">Javascript的base64实现及使用</a>
+          <a href="/2025/07/14/Composer%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E8%83%BD%E5%A4%9F%E6%9B%B4%E5%8A%A0%E9%A1%BA%E6%89%8B-%E6%AF%94%E5%A6%82%E5%BF%BD%E7%95%A5%E4%BE%9D%E8%B5%96.html" class="post-title-link" itemprop="url">composer如何使用能够更加顺手（比如忽略依赖）</a>
         </h2>
 
         <div class="post-meta-container">
@@ -487,7 +481,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-10 11:52:44 / 修改时间：12:06:54" itemprop="dateCreated datePublished" datetime="2025-07-10T11:52:44+08:00">2025-07-10</time>
+      <time title="创建时间：2025-07-14 14:45:10 / 修改时间：15:26:41" itemprop="dateCreated datePublished" datetime="2025-07-14T14:45:10+08:00">2025-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -509,15 +503,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>实例及实现原理如下</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> uploadKey = <span class="string">&#x27;avatar/20191212/userid-1.png&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// key 进行base64处理</span></span><br><span class="line"><span class="comment">// 第一步使用encodeURIComponent() 函数把字符串作为 URI 组件进行编码</span></span><br><span class="line"><span class="comment">// 第二步使用unescape() 函数对通过 escape() 编码的字符串进行解码</span></span><br><span class="line"><span class="comment">// 第三步使用btoa() 方法用于创建一个 base-64 编码的字符串。该方法使用 &quot;A-Z&quot;, &quot;a-z&quot;, &quot;0-9&quot;, &quot;+&quot;, &quot;/&quot; 和 &quot;=&quot; 字符来编码字符串。base64 解码使用方法是 atob() 。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> key = <span class="title function_">btoa</span>(<span class="built_in">unescape</span>(<span class="built_in">encodeURIComponent</span>(uploadKey)));</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> url = <span class="string">&quot;http://upload.qiniup.com/putb64/12&quot;</span> + <span class="string">&#x27;/key/&#x27;</span> + key;</span><br></pre></td></tr></table></figure>
+          <p>在用laravel做开发过程中</p>
+<p>遇到一个问题，就是使用composer安装包</p>
+<p>第一个问题，composer安装了什么，我看不到，我是不放心的，或者安装了哪些库，如果慢的话又是卡在了哪里</p>
+<p>第二个问题，经常遇到，本地使用的库，在另外一个地方用不到，但是安装的时候总要依赖php的版本，但是又不想切换版本</p>
+<p>下面这个命令解决了以上两个问题，其实之所以记录，就是想知道为什么同样的问题遇到了两次，我依然还是会忘记</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer install -vvv --ignore-platform-reqs</span><br></pre></td></tr></table></figure>
 
-<p>运行上面代码结果如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; var uploadKey = <span class="string">&#x27;avatar/20191212/userid-1.png&#x27;</span>;</span><br><span class="line">&lt; undefined</span><br><span class="line">&gt; var key = btoa(unescape(encodeURIComponent(uploadKey)));</span><br><span class="line">&lt; undefined</span><br><span class="line">&gt; var url = <span class="string">&quot;http://upload.qiniup.com/putb64/12&quot;</span>+<span class="string">&#x27;/key/&#x27;</span>+key; </span><br><span class="line">&lt; undefined</span><br><span class="line">&gt; console.log(url)</span><br><span class="line">  VM7861:1 http://upload.qiniup.com/putb64/12/key/YXZhdGFyLzIwMTkxMjEyL3VzZXJpZC0xLnBuZw==</span><br><span class="line">&gt; undefined</span><br></pre></td></tr></table></figure>
-
-<p>参考如下 <span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMjQ2ODAxL2hvdy1jYW4teW91LWVuY29kZS1hLXN0cmluZy10by1iYXNlNjQtaW4tamF2YXNjcmlwdA==">https://stackoverflow.com/questions/246801/how-can-you-encode-a-string-to-base64-in-javascript<i class="fa fa-external-link-alt"></i></span></p>
-<p>我们分解执行下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt; var a = encodeURIComponent(uploadKey)</span><br><span class="line">&lt; undefined</span><br><span class="line">&gt; console.log(a)</span><br><span class="line">&lt; avatar%2F20191212%2Fuserid-1.png</span><br><span class="line">&gt; undefined</span><br><span class="line">&lt; var b = unescape(a);</span><br><span class="line">&gt; undefined</span><br><span class="line">&lt; console.log(b)</span><br><span class="line">  avatar/20191212/userid-1.png</span><br><span class="line">&gt; undefined</span><br><span class="line">&lt; var c = btoa(b)</span><br><span class="line">&gt; undefined</span><br><span class="line">&lt; console.log(c)</span><br><span class="line">  YXZhdGFyLzIwMTkxMjEyL3VzZXJpZC0xLnBuZw==</span><br><span class="line">&gt; undefined</span><br></pre></td></tr></table></figure>
+<p>经过回忆，因为每次遇到了我没记录下来，另外是使用的这几次时间上相隔太远以至于没有了记忆。（注意上面命令中install与require的区别）</p>
+<p>这里推荐一个composer的使用说明，比较详细，之前找了很多，都是写的很乱，无法详细的了解，想看的点击<span class="exturl" data-url="aHR0cHM6Ly9sZWFybmt1LmNvbS9kb2NzL2NvbXBvc2VyLzIwMTgvMDMtY2xpLzIwODQ=">这里<i class="fa fa-external-link-alt"></i></span>。</p>
 
       
     </div>
@@ -544,7 +538,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/base64%E5%9B%BE%E7%89%87%E7%9A%84%E5%A4%A7%E5%B0%8F%E8%AE%A1%E7%AE%97%E5%8F%8A%E8%8E%B7%E5%8F%96%E5%8E%9F%E5%9B%BE%E5%AD%97%E8%8A%82%E5%A4%A7%E5%B0%8F.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/Laravel-cross-domain-laravel%E8%B7%A8%E5%9F%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -562,7 +556,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/base64%E5%9B%BE%E7%89%87%E7%9A%84%E5%A4%A7%E5%B0%8F%E8%AE%A1%E7%AE%97%E5%8F%8A%E8%8E%B7%E5%8F%96%E5%8E%9F%E5%9B%BE%E5%AD%97%E8%8A%82%E5%A4%A7%E5%B0%8F.html" class="post-title-link" itemprop="url">base64图片的大小计算及获取原图字节大小</a>
+          <a href="/2025/07/14/Laravel-cross-domain-laravel%E8%B7%A8%E5%9F%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E4%BB%A5%E5%8F%8A%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82.html" class="post-title-link" itemprop="url">laravel cross domain - laravel跨域解决方案以及如何实现跨域请求</a>
         </h2>
 
         <div class="post-meta-container">
@@ -574,7 +568,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-10 11:52:40 / 修改时间：12:08:06" itemprop="dateCreated datePublished" datetime="2025-07-10T11:52:40+08:00">2025-07-10</time>
+      <time title="创建时间：2025-07-14 14:45:07 / 修改时间：15:27:20" itemprop="dateCreated datePublished" datetime="2025-07-14T14:45:07+08:00">2025-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -596,17 +590,22 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>实现原理：根据<code>base64,</code>做区分，前面部分是类型，后面部分是真实的的图片字符串</p>
-<p>比如下面的base64图片字符串</p>
-<p>&#x2F;&#x2F; 这里只是做了一个例子</p>
-<p><code>var base64DataStr = &#39;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABNoAAAigCAY ... pw52VLv8/zk3Uc3CN6sgAAAAASUVORK5CYII=&#39;;</code></p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getBase64ImgSize</span>(<span class="params">base64DataStr</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> tag = <span class="string">&quot;base64,&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> base64Data = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 截取字符串 获取&quot;base64,&quot;后面的字符串</span></span><br><span class="line">  base64DataStr = base64Data = base64DataStr.<span class="title function_">substring</span>(base64DataStr.<span class="title function_">indexOf</span>(tag) + tag.<span class="property">length</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 根据末尾等号（&#x27;=&#x27;）来再次确认真实base64图片字符串</span></span><br><span class="line">  <span class="keyword">var</span> eqTagIndex = base64DataStr.<span class="title function_">indexOf</span>(<span class="string">&quot;=&quot;</span>);</span><br><span class="line">  base64DataStr = eqTagIndex != -<span class="number">1</span> ? base64DataStr.<span class="title function_">substring</span>(<span class="number">0</span>, eqTagIndex) : base64DataStr;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算大小</span></span><br><span class="line">  <span class="keyword">var</span> strLen = base64DataStr.<span class="property">length</span>;</span><br><span class="line">  <span class="keyword">var</span> fileSize = strLen - (strLen / <span class="number">8</span>) * <span class="number">2</span>; <span class="comment">// 这里的原理可以想一下为什么要这样做</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">fileSize</span>: fileSize,</span><br><span class="line">    <span class="attr">base64Data</span>: base64Data,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>我们在用 laravel 进行开发的时候，特别是前后端完全分离的时候，由于前端项目运行在自己机器的指定端口 (也可能是其他人的机器) ， 例如 localhost:8000 , 而 laravel 程序又运行在另一个端口，这样就跨域了，而由于浏览器的同源策略，跨域请求是非法的。其实这个问题很好解决，只需要添加一个中间件就可以了。</p>
+<p>中间件代码如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">App</span>\<span class="title class_">Http</span>\<span class="title class_">Middleware</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Closure</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EnableCrossRequestMiddleware</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Handle an incoming request.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span>  \Closure  $next</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> mixed</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">handle</span>(<span class="params"><span class="variable">$request</span>, <span class="built_in">Closure</span> <span class="variable">$next</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$response</span> = <span class="variable">$next</span>(<span class="variable">$request</span>);</span><br><span class="line"></span><br><span class="line">        <span class="variable">$httpWay</span> = <span class="title function_ invoke__">config</span>(<span class="string">&#x27;app.env&#x27;</span>) == <span class="string">&#x27;local&#x27;</span> ? <span class="string">&#x27;http://&#x27;</span> : <span class="string">&#x27;https://&#x27;</span>;</span><br><span class="line">        <span class="variable">$domain</span> = <span class="title function_ invoke__">config</span>(<span class="string">&#x27;routes.H5_HOST&#x27;</span>, <span class="string">&#x27;m.xxx.com&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="variable">$response</span>-&gt;<span class="title function_ invoke__">header</span>(<span class="string">&#x27;Access-Control-Allow-Origin&#x27;</span>, <span class="variable">$httpWay</span> . <span class="variable">$domain</span>);</span><br><span class="line"></span><br><span class="line">        <span class="variable">$response</span>-&gt;<span class="title function_ invoke__">header</span>(<span class="string">&#x27;Access-Control-Allow-Headers&#x27;</span>, <span class="string">&#x27;Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN&#x27;</span>);</span><br><span class="line">        <span class="variable">$response</span>-&gt;<span class="title function_ invoke__">header</span>(<span class="string">&#x27;Access-Control-Expose-Headers&#x27;</span>, <span class="string">&#x27;Authorization, authenticated&#x27;</span>);</span><br><span class="line">        <span class="variable">$response</span>-&gt;<span class="title function_ invoke__">header</span>(<span class="string">&#x27;Access-Control-Allow-Methods&#x27;</span>, <span class="string">&#x27;GET, POST, PATCH, PUT, OPTIONS&#x27;</span>);</span><br><span class="line">        <span class="variable">$response</span>-&gt;<span class="title function_ invoke__">header</span>(<span class="string">&#x27;Access-Control-Allow-Credentials&#x27;</span>, <span class="string">&#x27;true&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$response</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>使用方式如下</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">getBase64ImgSize</span>(base64DataStr)</span><br></pre></td></tr></table></figure>
+<p>然后在App\Http\Kernel.php中添加对应的配置就可以了</p>
+<p>我的是在</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="variable">$routeMiddleware</span> = [</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="string">&#x27;cross.domain&#x27;</span> =&gt; <span class="title class_">\App\Http\Middleware\EnableCrossRequestMiddleware</span>::<span class="variable language_">class</span>,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 
-<p>运行后得到的结果</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;fileSize: 57, base64Data: <span class="string">&quot;iVBORw0KGgoAAAANSUhEUgAABNoAAAigCAY ... pw52VLv8/zk3Uc3CN6sgAAAAASUVORK5CYII=&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>这个地方加入的中间件配置</p>
+<p>使用的话在路由中直接调用就可以了</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// api</span></span><br><span class="line"><span class="title class_">Route</span>::<span class="title function_ invoke__">group</span>([<span class="string">&#x27;domain&#x27;</span> =&gt; <span class="title function_ invoke__">config</span>(<span class="string">&#x27;routes.API_HOST&#x27;</span>, <span class="string">&#x27;api.xx.com&#x27;</span>)], function () &#123;</span><br><span class="line">    <span class="title class_">Route</span>::<span class="title function_ invoke__">group</span>([</span><br><span class="line">        <span class="string">&#x27;middleware&#x27;</span> =&gt; [</span><br><span class="line">            <span class="string">&#x27;cross.domain&#x27;</span>,</span><br><span class="line">        ],</span><br><span class="line">        <span class="string">&#x27;prefix&#x27;</span> =&gt; <span class="string">&#x27;/api&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;namespace&#x27;</span> =&gt; <span class="string">&#x27;XXX&#x27;</span>,</span><br><span class="line">    ], function () &#123;</span><br><span class="line">        <span class="title class_">Route</span>::<span class="title function_ invoke__">post</span>(<span class="string">&#x27;/xxx/xx&#x27;</span>, <span class="string">&#x27;xxxController@index&#x27;</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这样就实现了给指定的接口添加跨域处理的逻辑了</p>
+<p>只是补充</p>
+<p>1，如何创建中间件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:middleware EnableCrossRequestMiddleware</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -633,7 +632,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/%E4%B8%83%E7%89%9B-Qiniu-base64%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/NGINX%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82%E9%85%8D%E7%BD%AE.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -651,7 +650,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/%E4%B8%83%E7%89%9B-Qiniu-base64%E5%9B%BE%E7%89%87%E4%B8%8A%E4%BC%A0.html" class="post-title-link" itemprop="url">七牛（Qiniu）base64图片上传</a>
+          <a href="/2025/07/14/NGINX%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">NGINX跨域请求配置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -663,7 +662,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-10 11:52:37 / 修改时间：12:08:55" itemprop="dateCreated datePublished" datetime="2025-07-10T11:52:37+08:00">2025-07-10</time>
+      <time title="创建时间：2025-07-14 14:45:04 / 修改时间：15:28:17" itemprop="dateCreated datePublished" datetime="2025-07-14T14:45:04+08:00">2025-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -685,13 +684,18 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>参考函数如下</p>
-<p>实现原理，将base64图片进行分割，取出图片真实的字符串，并获取这个真实图片串的大小，然后提交到七牛</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 上传图片token</span></span><br><span class="line"><span class="keyword">var</span> uploadToken = <span class="string">&#x27;xxxxx&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">putb64</span>(<span class="params">base64Data, uploadKey, callback</span>)&#123;</span><br><span class="line">  <span class="comment">// 原始base64图片数据处理 返回一个 真实图片数据大小值 和 真实图片数据值</span></span><br><span class="line">  <span class="keyword">var</span> imgSizeData = <span class="variable language_">this</span>.<span class="title function_">getBase64ImgSize</span>(base64Data); <span class="comment">// - 解释1</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 获取大小</span></span><br><span class="line">  <span class="keyword">var</span> len = <span class="built_in">parseInt</span>(imgSizeData.<span class="property">fileSize</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> data = imgSizeData.<span class="property">base64Data</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// key的base64处理</span></span><br><span class="line">  <span class="keyword">var</span> key = <span class="variable language_">this</span>.<span class="title function_">base64Key</span>(uploadKey); <span class="comment">// - 解释2</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 请求地址拼接 - 注意这里的http 如果网站是https的话换成https 不然在客户端尤其是iOS 端会出现异常</span></span><br><span class="line">  <span class="keyword">var</span> url = <span class="string">&quot;http://upload.qiniup.com/putb64/&quot;</span>+len+<span class="string">&#x27;/key/&#x27;</span>+key;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 七牛cdn绑定的域名</span></span><br><span class="line">  <span class="keyword">var</span> domain = <span class="string">&#x27;https://xx.com&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">  xhr.<span class="property">onreadystatechange</span>=<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">if</span> (xhr.<span class="property">readyState</span>==<span class="number">4</span>)&#123;</span><br><span class="line">      <span class="comment">// json 解析</span></span><br><span class="line">      <span class="keyword">var</span> data = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(xhr.<span class="property">responseText</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 将代码拼接后返回给程序调用</span></span><br><span class="line">      <span class="title function_">callback</span>(domain + <span class="string">&#x27;/&#x27;</span> + data.<span class="property">key</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  xhr.<span class="title function_">open</span>(<span class="string">&quot;POST&quot;</span>, url, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 请求头信息设置</span></span><br><span class="line">  xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/octet-stream&quot;</span>);</span><br><span class="line">  xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&quot;Authorization&quot;</span>, <span class="string">&quot;UpToken &quot;</span> + uploadToken + <span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 提交数据</span></span><br><span class="line">  xhr.<span class="title function_">send</span>(data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>官方参考: <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIucWluaXUuY29tL2tvZG8va2IvMTMyNi9ob3ctdG8tdXBsb2FkLXBob3Rvcy10by1zZXZlbi1uaXV5dW4tYmFzZTY0LWNvZGU=">https://developer.qiniu.com/kodo/kb/1326/how-to-upload-photos-to-seven-niuyun-base64-code<i class="fa fa-external-link-alt"></i></span></p>
-<p>解释1 - 请参考 <span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy85OTY=">base64图片的大小计算及获取原图字节大小<i class="fa fa-external-link-alt"></i></span></p>
-<p>解释2 - 请参考 <span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy85OTc=">javascript的base64实现及使用<i class="fa fa-external-link-alt"></i></span></p>
+          <p>nginx跨域请求配置</p>
+<p>同域名，如果相互访问其子域名的时候，比如h5.xx.com要访问api.xx.com，如果在h5.xx.com页面中访问api.xx.com的话，就会遇到跨域的问题</p>
+<p>解决办法，在代码端也是可以解决的</p>
+<p>通过设置</p>
+<ol>
+<li>Access-Control-Allow-Origin</li>
+<li>Access-Control-Allow-Headers</li>
+<li>Access-Control-Allow-Methods</li>
+</ol>
+<p>不过今天这里要说的是在nginx层面做处理</p>
+<p>在conf中添加如下配置</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">add_header Access-Control-Allow-Origin *<span class="comment">;</span></span><br><span class="line">add_header Access-Control-Allow-Headers X-Requested-With<span class="comment">;</span></span><br><span class="line">add_header Access-Control-Allow-Methods GET,POST,OPTIONS<span class="comment">;</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -718,7 +722,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/%E8%81%8A%E8%81%8A%E4%BA%92%E8%81%94%E7%BD%91WEB%E5%BC%80%E5%8F%91.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/axios%E7%9A%84post%E8%AF%B7%E6%B1%82%E5%8F%98%E6%88%90options%E8%AF%B7%E6%B1%82%E7%9A%84%E5%9D%91.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -736,7 +740,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/%E8%81%8A%E8%81%8A%E4%BA%92%E8%81%94%E7%BD%91WEB%E5%BC%80%E5%8F%91.html" class="post-title-link" itemprop="url">聊聊互联网WEB开发</a>
+          <a href="/2025/07/14/axios%E7%9A%84post%E8%AF%B7%E6%B1%82%E5%8F%98%E6%88%90options%E8%AF%B7%E6%B1%82%E7%9A%84%E5%9D%91.html" class="post-title-link" itemprop="url">axios的post请求变成options请求的坑</a>
         </h2>
 
         <div class="post-meta-container">
@@ -748,7 +752,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-10 11:52:34 / 修改时间：12:10:11" itemprop="dateCreated datePublished" datetime="2025-07-10T11:52:34+08:00">2025-07-10</time>
+      <time title="创建时间：2025-07-14 14:45:00 / 修改时间：15:28:39" itemprop="dateCreated datePublished" datetime="2025-07-14T14:45:00+08:00">2025-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -757,10 +761,6 @@
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
           <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/%E6%9D%82%E8%B0%88/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a>
         </span>
     </span>
 
@@ -774,26 +774,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>做过多年的互联网web开发，也做过大大小小各种类型的网站 包括购物网站，功能性网站，企业宣传网站等，对于web开发这块的架构大体上也就几种开发方式吧 我接触过的我就说记录下，没接触过的，估计也是比较另类的吧，或者是我自己见识短。</p>
-<blockquote>
-<p>第一种方式 - （php、python、java，nodejs）+html+js（jquery）+css</p>
-<p>第二种方式 - （php、python、java，nodejs）+vuejs／reactjs+webpack</p>
-</blockquote>
-<p>先说说第一种方式，也算是比较再普通不过的方式了，继续介绍之前先说说后端语言</p>
-<p>使用频率更多的后端语言的话应该是PHP，但是对于大公司来说可能还有java，这个我也没做过具体的统计，都是根据经验来的 虽然我自己在使用的过程中，也用过python、nodejs、java但是我用的比较多的还是php</p>
-<p>php的话使用过的框架有qeephp，yii2，CI，laravel python的话使用过Django、flask java的话使用过spring-boot nodejs的话使用过koajs、express</p>
-<p>php的话公司项目用的比较多，但是我比较喜欢yii2，喜欢它的代码和框架目录风格，导致我后面在学习swoole的时候，试着将swoole集成到yii2中，目前线上的几个博客项目一个是gowhich.com（swoole集成）、一个是xiaorongmao.com，都是我日常记录技术文章的博客站点</p>
-<p>python的话我，开始的时候由于跟风喜欢用Django，但是经过一段时间，发现这个有点太庞大了，折腾不起了，于是发现了flask这个优秀的框架，慢慢的边学边做，就开发了另一个博客walkerfree.com。 最近在使用flask1.0系列，改动比较大，不多还是很喜欢，于是使用flask1.0开发了baby.xiaorongmao.com，很多功能出于学习python，都是自己研究查阅各种文章开发的，比如比较明显的验证码功能</p>
-<p>java使用过spring-boot，可以说，是个比较方便好用的框架，上手很快，但是需要学的东西很多，后期搁置了。</p>
-<p>nodejs使用过connect、express、koajs，后期使用koajs比较多，主要是自己的项目，本来打算做个博客的，但是工作的原因后面就搁置了。公司使用过express、connect，connect主要用来做代理</p>
-<p>当然在这个过程中还接触过ruby，也就瞄了一眼，ruby on rails，那个大宝石不错</p>
-<p>后端的语言其实都是大同小异，差异不是很大毕竟是做web开发，还能折腾到哪里去，该有的功能都有了，可以说随便选一个自己喜欢的就可以了，当然论速度的话我比较中立的选择php的yii2和python的flask，可能是因为比较熟悉吧，也许有人会说我用spring-boot一样开发很快，这个就不细说，我也只是聊聊我自己的，其中成本之类的，可能就不好说了。php好像比java学习成本低吧，python好像也是</p>
-<p>哦，对了，最近在学一门超级快的语言Golang，公司是使用过了，以前php写的接口，耗时10000ms，该用Golang可以达到100ms甚至是10ms左右，这个对比差距还是很大的，不过公司在使用Golang之前我已经在2018年使用Golang开发wiki博客站了，后期由于公司业务多就慢慢的搁置了。当时的Golang资料少，可以直接使用扩展还少，另外，即使是有，使用起来也是各种别扭，因为跟python和php的使用方式不同。所以自己就慢慢的一边进行查询的封装，一边进行session的封装，就是一路上缺啥自己造啥。不过现在回头看下，已经有很多成型的库可以使用了，最近发现了gin这个框架，可以说是达到了我当时的想法，重写了Golang自身对路由的支持</p>
-<p>好了，说说第一种开发方式，这个前面说过了，其实很普通的一种开发方式 可以不讲究css放在哪里，我放在页面中，或者放在文件中，或者内连于元素上，都一样的能达效果，开发速度也是很快，不够这个就不要将就什么速度了，将就速度的话，那就要说另外一个问题了，有点多。正常习惯使用原生js的话，可以直接一个html页面加上css+js就可以构建一个页面了，然后各种特效效果，直接网上搜索一下，download下来改一改，弄下样式，就搞定了，可以说对页面的复杂度不是很高的话，这样就可以完整快速的出一个页面了，但是后期维护的话，是个很麻烦的事，但是从做页面开始的时候，谁会想这个问题，因为公司要的就是马上上线。这个也就是现在的速成开发法吧。</p>
-<p>下面说下第二种方式，第二种方式使用了框架，可不简单的是jquery，据说这个框架原理是虚拟dom，大概是2014年前后，刚来公司就开始搞单页面开发，当时是因为觉得如果每个页面都是在用户请求后重新去服务器请求，然后再加载的话会比较慢，于是就考虑使用单页面应用，但是也有很多的框架，使用起来是把我搞的云里雾里，最后技术leader说使用reactjs，这个也算是当时比较火的技术，于是我就开始一边学一边做，开始时是用来开发后台，我主要负责页面开发，接口有技术总监提供，当时就觉得这个reactjs很好的原因是，他这个框架是用来做组件化用的，比如一个页面，我们分为上中下三个部分的话，传统的写法就是都写在一个页面，使用reactjs的话，就是上部分封装为一个组件，中间部分封装为一个组件，下部分封装为一个组件，就这样，最后将三个部分封装起来，是不是觉得有点像是在组装小汽车，没错，就是这个作用。既然使用reactjs，当时想着能不能像使用jquery一样使用reactjs，直接在页面引用，然后写组件，但是实际情况是，这个方式不好，因为reactjs的语法默认是不被浏览器支持的，需要通过工具进行编译，编译为能够被浏览器识别的js代码，于是就又开始搞webpack，这个工具不得不说起实用的地方，基本上是解决了前端性能优化的问题，比如css的压缩、js的压缩、按需加载进行打包，将第一种方式中加载时的缺点都解决掉了，而且webpack还有一个我用的比较多的地方就是将静态文件全部发布到cdn平台，这样的话基本上就不需要一个服务器专门来存储静态文件了，而且利用cdn已经成熟的快速加载技术，完全可以不用自己搞服务器，花点钱就解决了。这个方式同时也适用于vuejs，但是我在接触vuejs后不喜欢它的原因是就是它的写法搞乱了html元素，让代码看起来很乱，虽说也能解决问题，但是我不喜欢。就像当初不喜欢angularjs时是一样的。 不过最近发现vuejs可以像使用jquery一样的使用vuejs，可以去试试，毕竟使用jquery来操作dom还是稍微比较费力的事情</p>
-<p>大体上吧就这些技术的细节就没办法聊了，太细的话，会触及我的弱点，因为我不擅长理论这些东西</p>
-<p>我能用flask做开发，写博客，那么我面试的时候人家问我一些asyncio之类的东西，我就蒙圈了，毕竟我不会没事去记一些不太使用的知识点，但是现状就是如此</p>
-<p>不然人家怎么知道这个博客是不是你搭建的，没准是你自己从哪里copy过来的，说实话，互联网开发也不过如此，有些功能就是从网上copy下来的，我们应该充分利用互联网，因为可以节省很多劳动力和脑力，那么程序开发者就是这个技术的结合者，最后再加上创新，才能达到更高的顶点，才能让人类更快乐幸福</p>
+          <p>不知道其他的类似axios库有没有这个情况，我用的也少，基本很少用，不过其他的库也确实遇到的比较少，这里遇到这个问题记录下解决办法</p>
+<p>如果你的代码是下面这个情况</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data = &#123;</span><br><span class="line">  <span class="string">&#x27;id&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">  <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;minmin&#x27;</span>,</span><br><span class="line">  <span class="string">&#x27;age&#x27;</span>: <span class="number">23</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">axios</span>(&#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">  <span class="attr">url</span>: <span class="string">&#x27;http://xx.xxx.xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">data</span>: data,</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">res</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(res);</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="keyword">function</span>(<span class="params">err</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>请换成如下的情况</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data = <span class="keyword">new</span> <span class="title class_">URLSearchParams</span>();</span><br><span class="line">data.<span class="title function_">append</span>(<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;1&#x27;</span>);</span><br><span class="line">data.<span class="title function_">append</span>(<span class="string">&#x27;name&#x27;</span>, <span class="string">&#x27;minmin&#x27;</span>);</span><br><span class="line">data.<span class="title function_">append</span>(<span class="string">&#x27;age&#x27;</span>, <span class="string">&#x27;23&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="title function_">axios</span>(&#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;POST&#x27;</span>,</span><br><span class="line">  <span class="attr">url</span>: <span class="string">&#x27;http://xx.xxx.xxx&#x27;</span>,</span><br><span class="line">  <span class="attr">data</span>: data,</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span>(<span class="params">res</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(res);</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="keyword">function</span>(<span class="params">err</span>)&#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -820,7 +806,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/CSS%E7%9C%81%E7%95%A5%E5%8F%B7%E6%80%BB%E7%BB%93.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/%E4%BD%BF%E7%94%A8MySQL%E6%97%B6%E5%A6%82%E4%BD%95%E7%B2%BE%E5%87%86%E6%9F%A5%E8%AF%A2%E6%85%A2SQL.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -838,7 +824,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/CSS%E7%9C%81%E7%95%A5%E5%8F%B7%E6%80%BB%E7%BB%93.html" class="post-title-link" itemprop="url">CSS省略号总结</a>
+          <a href="/2025/07/14/%E4%BD%BF%E7%94%A8MySQL%E6%97%B6%E5%A6%82%E4%BD%95%E7%B2%BE%E5%87%86%E6%9F%A5%E8%AF%A2%E6%85%A2SQL.html" class="post-title-link" itemprop="url">使用MySQL时如何精准查询慢SQL</a>
         </h2>
 
         <div class="post-meta-container">
@@ -850,7 +836,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-10 11:52:30 / 修改时间：12:10:37" itemprop="dateCreated datePublished" datetime="2025-07-10T11:52:30+08:00">2025-07-10</time>
+      <time title="创建时间：2025-07-14 14:44:56 / 修改时间：15:29:04" itemprop="dateCreated datePublished" datetime="2025-07-14T14:44:56+08:00">2025-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -872,17 +858,17 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>CSS省略号一直在用，而且用的比较多，这里做下总结，方便日后查用</p>
-<p>CSS省略号可以说是前端开发必不可少的。其原理就是将溢出的字符进行覆盖，并通过css的省略号样式表进行填充。</p>
-<p>另外的情况可能会用在多行之后添加省略号</p>
-<p>参考<span class="exturl" data-url="aHR0cHM6Ly9jb2RlcGVuLmlvL2pvZWxzYXVwZS9wZW4vb2ptTFdCP19fY2ZfY2hsX2pzY2hsX3RrX189YWQyMjYwZjhkNDI4MmViNjg2YmY5NGI1NjgwNDk2OTE4MjAxNTIzZS0xNTc1MjY3NjQ0LTAtQVRWNTFaejN3SG9ER2x1ZzBmS3dzSF83QWVKX2pMWHpxTUJMVnR5RU9DejBlZ1UyZXgzNUxWTUdRZFdaRzVkX0NxWFpQUC1BaGV5YlVpdnAxa1JtRVhITjlaZkJNQXVpdkJNWVhlb2NJa0pSTzBJY3JSNnNkS1d3TWtJMkE1TDV2UzlHWGk0cnV2b1oyeWlGYjdsampmc2xBMjV1M3lLelJnc2RjSVZCSjJPQU9LUnF3SVVwR0VBSlF1WUM3djNnaEd3N3BPV2swVWhiWFVHdEM3Zm9kUVQ0RjhXQk9kRFNBQUNzQXFfYjJxcEt0eDkwZ2ZyVTlJa1RHX1FXNS1taVJ2bEhrcDNlSjFvcE80TEFENnBHUlBsSVlJMFVEU1R6S2ZyRnk5OXMzTUF1VENtSXJkU2pXbGd0b3lraE4xbXlDdzBjQkMzZkJ6Y25mTjlRU3A1Nk9CeE9GVzRvaVBPdEtWcVBGQzI0WEpqbg==">这里<i class="fa fa-external-link-alt"></i></span>，我这里摘录如下，国内可能有开发者打不开</p>
-<p>单行CSS省略号</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.ellipsis</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>使用MySQL时如何精准查询慢SQL</p>
+<p>在做技术开发的过程中，当产品在访问量很大的情况下，如果发现数据库cpu或者iops飙升，那么可以看看是不是有慢sql</p>
+<p>但是慢sql如何查询，需要我们一个一个查吗，这个比较耗费人力成本</p>
+<p>不如我推荐一个命令</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> information_schema.processlist <span class="keyword">where</span> COMMAND <span class="operator">&lt;&gt;</span> <span class="string">&#x27;Sleep&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
-<p>多行CSS省略号</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.block-ellipsis</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">  <span class="attribute">display</span>: block;</span><br><span class="line">  <span class="attribute">display</span>: -webkit-box;</span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">43px</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> auto;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">1</span>;</span><br><span class="line">  -webkit-<span class="selector-tag">line</span>-clamp: <span class="number">3</span>;</span><br><span class="line">  -webkit-<span class="attribute">box-orient</span>: vertical;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>经过这样的查询就能累出所有运行中的sql，这个时候就可以看到哪个sql执行时间长了，</p>
+<p>正常情况下我们会遇到类似如下的输出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+-----+------+-----------+------+---------+------+-----------+----------------------------------------------+</span><br><span class="line">| ID  | USER | HOST      | DB   | COMMAND | TIME | STATE     | INFO                                         |</span><br><span class="line">+-----+------+-----------+------+---------+------+-----------+----------------------------------------------+</span><br><span class="line">| 106 | root | localhost | NULL | Query   |    0 | executing | <span class="keyword">select</span> * from information_schema.processlist |</span><br><span class="line">+-----+------+-----------+------+---------+------+-----------+----------------------------------------------+</span><br></pre></td></tr></table></figure>
 
-<p>这里注意下height的值和webkit-line-clamp的值</p>
+<p>我们可以通过TIME判断出哪条sql执行时间比较久</p>
 
       
     </div>
@@ -909,7 +895,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/Swoole%E4%B9%8BProcess%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95-%E5%9D%91%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/JavaScript%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E7%9B%91%E6%B5%8B.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -927,7 +913,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/Swoole%E4%B9%8BProcess%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95-%E5%9D%91%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88.html" class="post-title-link" itemprop="url">Swoole之Process使用记录-坑的解决方案</a>
+          <a href="/2025/07/14/JavaScript%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E7%9B%91%E6%B5%8B.html" class="post-title-link" itemprop="url">JavaScript全局异常监测</a>
         </h2>
 
         <div class="post-meta-container">
@@ -939,7 +925,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-10 11:52:27 / 修改时间：12:11:17" itemprop="dateCreated datePublished" datetime="2025-07-10T11:52:27+08:00">2025-07-10</time>
+      <time title="创建时间：2025-07-14 14:44:50 / 修改时间：15:29:17" itemprop="dateCreated datePublished" datetime="2025-07-14T14:44:50+08:00">2025-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -961,25 +947,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Swoole之Process使用记录，Swoole自从发布之后，公司项目一直都只是基于http的情况使用，这次在脚本中应用了下，还是踩了些坑，先分享一个简单的</p>
-<p>先看下一个简单的创建Process的流程</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SwooleProcessDemo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$mpid</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$works</span> = [];</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$max_process</span> = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$processes</span> = [];</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$new_index</span> = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$ctime</span> = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="title function_ invoke__">swoole_async_set</span>([<span class="string">&#x27;enable_coroutine&#x27;</span> =&gt; <span class="literal">false</span>]); <span class="comment">// Process中仅用协程</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 由于所有进程是共享使用一个消息队列，所以只需向一个子进程发送消息即可 - 注意队列大小限制</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/Darwin/&#x27;</span>, <span class="title function_ invoke__">php_uname</span>())) &#123;</span><br><span class="line">                <span class="title function_ invoke__">swoole_set_process_name</span>(<span class="title function_ invoke__">sprintf</span>(<span class="string">&#x27;php-ps:%s&#x27;</span>, <span class="string">&#x27;master&#x27;</span>));</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;mpid = <span class="title function_ invoke__">posix_getpid</span>();</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">run</span>();</span><br><span class="line"></span><br><span class="line">            <span class="variable">$process</span> = <span class="title function_ invoke__">current</span>(<span class="variable">$this</span>-&gt;processes);</span><br><span class="line"></span><br><span class="line">            <span class="title function_ invoke__">swoole_timer_tick</span>(<span class="number">1000</span>, function () <span class="keyword">use</span> ($<span class="title">process</span>) &#123;</span><br><span class="line">                $<span class="title">data</span> = &#x27;&#x27;;</span><br><span class="line">                <span class="comment">// $data = $this-&gt;getData(); 这里是需要自己是实现的</span></span><br><span class="line"></span><br><span class="line">                <span class="comment">// push data</span></span><br><span class="line">                <span class="variable">$process</span>-&gt;<span class="title function_ invoke__">push</span>(<span class="title function_ invoke__">implode</span>(<span class="string">&#x27;,&#x27;</span>, <span class="variable">$data</span>));</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">processWait</span>();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (\<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">            <span class="title function_ invoke__">var_dump</span>(<span class="variable">$e</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="variable language_">$this</span>-&gt;max_process; <span class="variable">$i</span>++) &#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">createProcess</span>(<span class="variable">$i</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">createProcess</span>(<span class="params"><span class="variable">$index</span> = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$process</span> = <span class="keyword">new</span> <span class="title function_ invoke__">swoole_process</span>(function (swoole_process <span class="variable">$worker</span>) <span class="keyword">use</span> ($<span class="title">index</span>) &#123;</span><br><span class="line">            <span class="title">if</span> (<span class="title">is_null</span>($<span class="title">index</span>)) &#123;</span><br><span class="line">                $<span class="title">index</span> = $<span class="title">this</span>-&gt;<span class="title">new_index</span>;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;new_index++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/Darwin/&#x27;</span>, <span class="title function_ invoke__">php_uname</span>())) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="title function_ invoke__">swoole_set_process_name</span>(<span class="title function_ invoke__">sprintf</span>(<span class="string">&#x27;php-ps:%s&#x27;</span>, <span class="variable">$index</span>));</span><br><span class="line">                &#125; <span class="keyword">catch</span> (\<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">                    <span class="title function_ invoke__">var_dump</span>(<span class="string">&#x27;ALL ERROR:&#x27;</span> . <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="variable">$data</span> = <span class="variable">$worker</span>-&gt;<span class="title function_ invoke__">pop</span>();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (!<span class="variable">$data</span>) &#123;</span><br><span class="line">                <span class="variable">$worker</span>-&gt;<span class="keyword">exit</span>(<span class="number">0</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$data</span>) &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">handleData</span>(<span class="variable">$data</span>);</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">checkMPid</span>(<span class="variable">$worker</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">unset</span>(<span class="variable">$userId</span>);</span><br><span class="line">        &#125;, <span class="literal">false</span>, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">        <span class="variable">$customMsgKey</span> = <span class="number">1</span>;</span><br><span class="line">        <span class="variable">$mod</span> = <span class="number">2</span> | swoole_process::<span class="variable constant_">IPC_NOWAIT</span>; <span class="comment">//这里设置消息队列为非阻塞模式</span></span><br><span class="line">        <span class="variable">$process</span>-&gt;<span class="title function_ invoke__">useQueue</span>(<span class="variable">$customMsgKey</span>, <span class="variable">$mod</span>);</span><br><span class="line">        <span class="variable">$pid</span> = <span class="variable">$process</span>-&gt;<span class="title function_ invoke__">start</span>();</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;works[<span class="variable">$index</span>] = <span class="variable">$pid</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;processes[<span class="variable">$pid</span>] = <span class="variable">$process</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$pid</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">checkMPid</span>(<span class="params">&amp;<span class="variable">$worker</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!swoole_process::<span class="title function_ invoke__">kill</span>(<span class="variable">$this</span>-&gt;mpid, <span class="number">0</span>)) &#123;</span><br><span class="line">            <span class="variable">$worker</span>-&gt;<span class="keyword">exit</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">rebootProcess</span>(<span class="params"><span class="variable">$ret</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$pid</span> = <span class="variable">$ret</span>[<span class="string">&#x27;pid&#x27;</span>];</span><br><span class="line">        <span class="variable">$index</span> = <span class="title function_ invoke__">array_search</span>(<span class="variable">$pid</span>, <span class="variable">$this</span>-&gt;works);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">false</span> !== <span class="variable">$index</span>) &#123;</span><br><span class="line">            <span class="variable">$index</span> = <span class="title function_ invoke__">intval</span>(<span class="variable">$index</span>);</span><br><span class="line">            <span class="variable">$new_pid</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">createProcess</span>(<span class="variable">$index</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">processWait</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="title function_ invoke__">swoole_timer_tick</span>(<span class="number">1000</span>, function () &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">count</span>(<span class="variable">$this</span>-&gt;works)) &#123;</span><br><span class="line">                <span class="variable">$ret</span> = swoole_process::<span class="title function_ invoke__">wait</span>();</span><br><span class="line">                <span class="keyword">if</span> (<span class="variable">$ret</span>) &#123;</span><br><span class="line">                    <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">rebootProcess</span>(<span class="variable">$ret</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">handleData</span>(<span class="params"><span class="variable">$data</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="comment">// 你自己的逻辑</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>首先swoole_async_set([‘enable_coroutine’ &#x3D;&gt; false]);这里我关闭了协程，原因是在进行processWait操作的时候，其swoole_timer_tick是不允许在其内部创建Process的，这个可以试着启用后看下报错信息</p>
-<p>这个例子应该是一个比较完整的例子了，实践当中都有在使用，唯一的问题是在push上，之前一个例子比如发送短信，这个要求实时性，也就push了一些用户的ID，大小的话，可以忽略，但是当我向队列中push足够打的字符串的话，就会提示内存不足，原因可以到这里查看：<span class="exturl" data-url="aHR0cHM6Ly93aWtpLnN3b29sZS5jb20vd2lraS9wYWdlLzI5MC5odG1s">https://wiki.swoole.com/wiki/page/290.html<i class="fa fa-external-link-alt"></i></span></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">swoole_timer_tick</span>(<span class="number">1000</span>, function () <span class="keyword">use</span> ($<span class="title">process</span>) &#123;</span><br><span class="line">    $<span class="title">data</span> = &#x27;&#x27;;</span><br><span class="line">    <span class="comment">// $data = $this-&gt;getData(); 这里是需要自己是实现的</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// push data</span></span><br><span class="line">    <span class="variable">$process</span>-&gt;<span class="title function_ invoke__">push</span>(<span class="title function_ invoke__">implode</span>(<span class="string">&#x27;,&#x27;</span>, <span class="variable">$data</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>解决方案如上代码，</p>
-<p>之前的逻辑是for循环，然后直接执行push操作，在你push的时候，队列大小增加，最后直接内存满了，进程退出了，但是当我用上面代码的时候，这就是一个无限循环的永动机了。当然如果pop那边的操作延迟比较久的话，导致内存满了，也是push不进去的。</p>
-<p>另外注意一点是swoole_timer_tick的函数的调用，不要使用while死循环，会导致swoole_timer_tick函数不起作用的，也就是</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">processWait</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="title function_ invoke__">swoole_timer_tick</span>(<span class="number">1000</span>, function () &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">count</span>(<span class="variable">$this</span>-&gt;works)) &#123;</span><br><span class="line">            <span class="variable">$ret</span> = swoole_process::<span class="title function_ invoke__">wait</span>();</span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$ret</span>) &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">rebootProcess</span>(<span class="variable">$ret</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个代码其实也可以用另外一个方式实现的，如下</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">processWait</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">count</span>(<span class="variable">$this</span>-&gt;works)) &#123;</span><br><span class="line">            <span class="variable">$ret</span> = swoole_process::<span class="title function_ invoke__">wait</span>();</span><br><span class="line">            <span class="keyword">if</span> (<span class="variable">$ret</span>) &#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">rebootProcess</span>(<span class="variable">$ret</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>总结如下：</p>
-<p>1、swoole_timer_tick使用时，不要使用while等类似的死循环阻塞swoole_timer_tick的执行</p>
-<p>2、Process在进行push的时候，要注意队列的大小</p>
+          <p>JavaScript全局异常监测</p>
+<p>在写代码的过程中一直遇到一个问题，就是如何来监测异常代码的处理</p>
+<p>如果在开发中，可以使用chrome dev tools来监测代码异常，并能时刻监测代码的异常部分</p>
+<p>但是在代码上线之后，如果监测代码就比较麻烦</p>
+<p>这里提供一个监测全局的代码，虽然也很多网站有关于类似代码的分享</p>
+<p>这里主要是记录下，防止忘记，找起来麻烦，关键是这个代码是我自己经过测试使用，比较完善的一个，也许别人也有其他版本</p>
+<p>但是我这个版本我保证是可以用的</p>
+<p>只需要放在<code>&lt;script&gt;&lt;/script&gt;</code>标签里面就可以了，如果需要将异常的代码信息上传到服务器，可以自己修改下，将<code>console.log</code>部分改成数据请求的代码就可以了</p>
+<p>代码如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">window</span>.<span class="property">onerror</span> = <span class="keyword">function</span>(<span class="params">msg,url,l</span>)&#123;</span><br><span class="line">  txt=<span class="string">&quot;There was an error on this page.\n\n&quot;</span></span><br><span class="line">  txt+=<span class="string">&quot;Error: &quot;</span> + msg + <span class="string">&quot;\n&quot;</span></span><br><span class="line">  txt+=<span class="string">&quot;URL: &quot;</span> + url + <span class="string">&quot;\n&quot;</span></span><br><span class="line">  txt+=<span class="string">&quot;Line: &quot;</span> + l + <span class="string">&quot;\n\n&quot;</span></span><br><span class="line">  txt+=<span class="string">&quot;Click OK to continue.\n\n&quot;</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(txt);</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -1006,7 +983,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/Python%E6%A1%86%E6%9E%B6%E6%B1%87%E6%80%BB.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/webapp%E7%AB%AF%E5%AE%8C%E7%BE%8E%E5%AE%9E%E7%8E%B0%E5%AD%97%E7%AC%A6%E6%88%AA%E5%8F%96.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1024,7 +1001,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/Python%E6%A1%86%E6%9E%B6%E6%B1%87%E6%80%BB.html" class="post-title-link" itemprop="url">Python框架汇总</a>
+          <a href="/2025/07/14/webapp%E7%AB%AF%E5%AE%8C%E7%BE%8E%E5%AE%9E%E7%8E%B0%E5%AD%97%E7%AC%A6%E6%88%AA%E5%8F%96.html" class="post-title-link" itemprop="url">webapp端完美实现字符截取</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1036,7 +1013,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-10 11:52:23 / 修改时间：12:11:31" itemprop="dateCreated datePublished" datetime="2025-07-10T11:52:23+08:00">2025-07-10</time>
+      <time title="创建时间：2025-07-14 14:44:46 / 修改时间：15:29:50" itemprop="dateCreated datePublished" datetime="2025-07-14T14:44:46+08:00">2025-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1058,11 +1035,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>新增</p>
-<p><span class="exturl" data-url="aHR0cHM6Ly92aWJvcmEuaW8v">Vibora<i class="fa fa-external-link-alt"></i></span> - Vibora was designed from scratch to be efficient.</p>
-<p>参考地址：<span class="exturl" data-url="aHR0cDovL2tsZW4uZ2l0aHViLmlvL3B5LWZyYW1ld29ya3MtYmVuY2gvI3Jlc3VsdHM=">http://klen.github.io/py-frameworks-bench/#results<i class="fa fa-external-link-alt"></i></span></p>
-<p>Aiohttp — http client&#x2F;server for Asyncio.<br>Bottle — Fast, simple and lightweight WSGI micro web-framework<br>Django — The Web framework for perfectionists with deadlines<br>Falcon — A high-performance Python framework for building cloud APIs<br>Flask — A microframework based on Werkzeug, Jinja2 and good intentions<br>Muffin — A web-framework based on Asyncio stack<br>Pyramid 1.7 — A small, fast, down-to-earth, open source Python web framework<br>Weppy — The webframework for humans<br>Wheezy Web — A lightweight, high performance, high concurrency WSGI web framework<br>Tornado 4.3 — A Python web framework and asynchronous networking library</p>
-<p>参考的地址里面还有各个框架的性能对比</p>
+          <p>webapp端如何完美实现字符截取，常用的方式我们知道有substr，但是这种方式如果用在多种语言的情况下可能会有问题</p>
+<p>比如英文字母和中文汉子混在一起的话，截取指定长度的字符串就有点困难了</p>
+<p>下面是我实战中用到的</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getByteByBinary</span>(<span class="params">binaryCode</span>) &#123;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">    二进制 Binary system,es6表示时以0b开头</span></span><br><span class="line"><span class="comment">    八进制 Octal number system,es5表示时以0开头,es6表示时以0o开头</span></span><br><span class="line"><span class="comment">    十进制 Decimal system</span></span><br><span class="line"><span class="comment">    十六进制 Hexadecimal,es5、es6表示时以0x开头</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> byteLengthDatas = [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line">  <span class="keyword">var</span> len = byteLengthDatas[<span class="title class_">Math</span>.<span class="title function_">ceil</span>(binaryCode.<span class="property">length</span> / <span class="number">8</span>)];</span><br><span class="line">  <span class="keyword">return</span> len;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getByteByHex</span>(<span class="params">hexCode</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">getByteByBinary</span>(<span class="built_in">parseInt</span>(hexCode, <span class="number">16</span>).<span class="title function_">toString</span>(<span class="number">2</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>获取字符串长度函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getByteLength</span>(<span class="params">str</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> result = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> flag = <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">var</span> len = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">var</span> length = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">var</span> length2 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; str.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> code = str.<span class="title function_">codePointAt</span>(i).<span class="title function_">toString</span>(<span class="number">16</span>);</span><br><span class="line">    <span class="keyword">if</span> (code.<span class="property">length</span> &gt; <span class="number">4</span>) &#123;</span><br><span class="line">      i++;</span><br><span class="line">      <span class="keyword">if</span> ((i + <span class="number">1</span>) &lt; str.<span class="property">length</span>) &#123;</span><br><span class="line">        flag = str.<span class="title function_">codePointAt</span>(i + <span class="number">1</span>).<span class="title function_">toString</span>(<span class="number">16</span>) == <span class="string">&quot;200d&quot;</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">      len += <span class="title function_">getByteByHex</span>(code);</span><br><span class="line">      <span class="keyword">if</span> (i == str.<span class="property">length</span> - <span class="number">1</span>) &#123;</span><br><span class="line">        length += len;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (len != <span class="number">0</span>) &#123;</span><br><span class="line">        length += len;</span><br><span class="line">        length += <span class="title function_">getByteByHex</span>(code);</span><br><span class="line">        len = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      length += <span class="title function_">getByteByHex</span>(code);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> length;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过上面几个函数的准备，下面这个函数，就完美实现了截取字符串长度的功能</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">substringByByte</span>(<span class="params">str, maxLength</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> result = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> flag = <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">var</span> len = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">var</span> length = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">var</span> length2 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; str.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> code = str.<span class="title function_">codePointAt</span>(i).<span class="title function_">toString</span>(<span class="number">16</span>);</span><br><span class="line">    <span class="keyword">if</span> (code.<span class="property">length</span> &gt; <span class="number">4</span>) &#123;</span><br><span class="line">      i++;</span><br><span class="line">      <span class="keyword">if</span> ((i + <span class="number">1</span>) &lt; str.<span class="property">length</span>) &#123;</span><br><span class="line">        flag = str.<span class="title function_">codePointAt</span>(i + <span class="number">1</span>).<span class="title function_">toString</span>(<span class="number">16</span>) == <span class="string">&quot;200d&quot;</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">      len += <span class="title function_">getByteByHex</span>(code);</span><br><span class="line">      <span class="keyword">if</span> (i == str.<span class="property">length</span> - <span class="number">1</span>) &#123;</span><br><span class="line">        length += len;</span><br><span class="line">        <span class="keyword">if</span> (length &lt;= maxLength) &#123;</span><br><span class="line">          result += str.<span class="title function_">substr</span>(length2, i - length2 + <span class="number">1</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">break</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (len != <span class="number">0</span>) &#123;</span><br><span class="line">        length += len;</span><br><span class="line">        length += <span class="title function_">getByteByHex</span>(code);</span><br><span class="line">        <span class="keyword">if</span> (length &lt;= maxLength) &#123;</span><br><span class="line">          result += str.<span class="title function_">substr</span>(length2, i - length2 + <span class="number">1</span>);</span><br><span class="line">          length2 = i + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">break</span></span><br><span class="line">        &#125;</span><br><span class="line">        len = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      length += <span class="title function_">getByteByHex</span>(code);</span><br><span class="line">      <span class="keyword">if</span> (length &lt;= maxLength) &#123;</span><br><span class="line">        <span class="keyword">if</span> (code.<span class="property">length</span> &lt;= <span class="number">4</span>) &#123;</span><br><span class="line">          result += str[i]</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          result += str[i - <span class="number">1</span>] + str[i]</span><br><span class="line">        &#125;</span><br><span class="line">        length2 = i + <span class="number">1</span>;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -1089,7 +1071,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/siege%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/CSS%E5%AE%9E%E7%8E%B0%E5%9B%BE%E7%89%87%E6%97%8B%E8%BD%AC-%E5%8E%9F%E5%9C%B0%E8%BD%AC%E5%9C%88.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1107,7 +1089,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/siege%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95.html" class="post-title-link" itemprop="url">siege使用记录</a>
+          <a href="/2025/07/14/CSS%E5%AE%9E%E7%8E%B0%E5%9B%BE%E7%89%87%E6%97%8B%E8%BD%AC-%E5%8E%9F%E5%9C%B0%E8%BD%AC%E5%9C%88.html" class="post-title-link" itemprop="url">CSS实现图片旋转（原地转圈）</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1119,7 +1101,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-10 11:52:12 / 修改时间：12:12:44" itemprop="dateCreated datePublished" datetime="2025-07-10T11:52:12+08:00">2025-07-10</time>
+      <time title="创建时间：2025-07-14 14:44:42 / 修改时间：15:30:10" itemprop="dateCreated datePublished" datetime="2025-07-14T14:44:42+08:00">2025-07-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1141,13 +1123,14 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Siege is an http load tester and benchmarking utility</p>
-<p>参数说明:</p>
-<p>-C,或-config 在屏幕上打印显示出当前的配置,配置是包括在他的配置文件$HOME&#x2F;.siegerc 中,可以编辑里面的参数,这样每次siege 都会按照它运行.<br>-v 运行时能看到详细的运行信息<br>-c n,或-concurrent&#x3D;n 模拟有n个用户在同时访问,n不要设得太大,因为越大,siege 消耗本地机器的资源越多<br>-i,-internet 随机访问urls.txt中的url列表项,以此模拟真实的访问情况(随机性),当 urls.txt存在是有效<br>-d n,-delay&#x3D;n hit每个url之间的延迟,在0-n之间<br>-r n,-reps&#x3D;n 重复运行测试n次,不能与 -t同时存在<br>-t n,-time&#x3D;n 持续运行siege ‘n’秒(如10S),分钟(10M),小时(10H)<br>-l 运行结束,将统计数据保存到日志文件中siege .log,一般位于&#x2F;usr&#x2F;local&#x2F;var&#x2F;siege  .log中,也可在.siegerc中自定义<br>-R SIEGERC,-rc&#x3D;SIEGERC 指定用特定的siege 配置文件来运行,默认的为$HOME&#x2F;.siegerc<br>-f FILE, -file&#x3D;FILE 指定用特定的urls文件运行siege ,默认为urls.txt,位于siege 安装目录下的etc&#x2F;urls.txt<br>-u URL,-url&#x3D;URL 测试指定的一个URL,对它进行”siege “,此选项会忽略有关urls文件的设定</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Transactions:		          62 hits</span><br><span class="line">Availability:		       98.41 %</span><br><span class="line">Elapsed <span class="keyword">time</span>:		       16.35 secs</span><br><span class="line">Data transferred:	        0.65 MB</span><br><span class="line">Response <span class="keyword">time</span>:		        3.72 secs</span><br><span class="line">Transaction rate:	        3.79 trans/sec</span><br><span class="line">Throughput:		        0.04 MB/sec</span><br><span class="line">Concurrency:		       14.09</span><br><span class="line">Successful transactions:          62</span><br><span class="line">Failed transactions:	           1</span><br><span class="line">Longest transaction:	       15.53</span><br><span class="line">Shortest transaction:	        0.00</span><br></pre></td></tr></table></figure>
+          <p>css能让图片转动起来，而且很简单，适用的场景包括音频是否在播放</p>
+<p>如果视频播放的时候我们就让图片转圈，而且想转的快或者慢都可以加以控制。</p>
+<p>代码示例如下</p>
+<p>css code</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@-webkit-keyframes</span> rotation&#123;</span><br><span class="line">  <span class="selector-tag">from</span> &#123;-webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">0deg</span>);&#125;</span><br><span class="line">  <span class="selector-tag">to</span> &#123;-webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">360deg</span>);&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.img-rotate</span>&#123;</span><br><span class="line">  -webkit-<span class="attribute">transform</span>: <span class="built_in">rotate</span>(<span class="number">360deg</span>);</span><br><span class="line">  <span class="attribute">animation</span>: rotation <span class="number">1.4s</span> linear infinite;</span><br><span class="line">  -moz-<span class="attribute">animation</span>: rotation <span class="number">1.4s</span> linear infinite;</span><br><span class="line">  -webkit-<span class="attribute">animation</span>: rotation <span class="number">1.4s</span> linear infinite;</span><br><span class="line">  -o-<span class="attribute">animation</span>: rotation <span class="number">1.4s</span> linear infinite;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>测试结果参数说明:</p>
-<p>Transactions:                  28759 hits         #完成28759次处理<br>Availability:                  94.97 %              #94.97 % 成功率<br>Elapsed time:                  33.58 secs         #耗时33.58秒<br>Data transferred:              46.84 MB           #传输数据46.84M<br>Response time:                  0.04 secs         #响应时间0.04秒<br>Transaction rate:             856.43 trans&#x2F;sec    #平均每秒完成856.43次处理,也就是QPS<br>Throughput:                     1.40 MB&#x2F;sec       #平均每秒传送数据<br>Concurrency:                   35.48              #实际最高并发连接数<br>Successful transactions:       28759              #成功处理次数<br>Failed transactions:            1523              #失败处理次数<br>Longest transaction:            7.05              #请求响应最长时间<br>Shortest transaction:           0.00              #请求响应最短时间</p>
+<p>html code</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&#x27;60px&#x27;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">v-if</span>=<span class="string">&#x27;audioPlayStatus==true&#x27;</span> <span class="attr">class</span>=<span class="string">&quot;img-rotate&quot;</span> <span class="attr">src</span>=<span class="string">&quot;https://xxxx.com/audio_start_play.png&quot;</span> <span class="attr">style</span>=<span class="string">&quot;width: 100%&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -1167,7 +1150,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/105/">105</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/110/">110</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

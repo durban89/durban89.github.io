@@ -194,18 +194,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1048</span>
+          <span class="site-state-item-count">1098</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">174</span>
+        <span class="site-state-item-count">178</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -245,7 +245,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Linux%E7%B4%A2%E5%BC%95%E8%8A%82%E7%82%B9-inode-%E7%94%A8%E6%BB%A1%E5%AF%BC%E8%87%B4%E7%9A%84%E4%B8%80%E6%AC%A1%E6%95%85%E9%9A%9C.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/NetBeans-%E4%B8%BB%E9%A2%98-theme.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -263,7 +263,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Linux%E7%B4%A2%E5%BC%95%E8%8A%82%E7%82%B9-inode-%E7%94%A8%E6%BB%A1%E5%AF%BC%E8%87%B4%E7%9A%84%E4%B8%80%E6%AC%A1%E6%95%85%E9%9A%9C.html" class="post-title-link" itemprop="url">Linux索引节点(inode)用满导致的一次故障</a>
+          <a href="/2025/06/27/NetBeans-%E4%B8%BB%E9%A2%98-theme.html" class="post-title-link" itemprop="url">NetBeans 主题 theme</a>
         </h2>
 
         <div class="post-meta-container">
@@ -275,7 +275,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:39:03 / 修改时间：11:56:31" itemprop="dateCreated datePublished" datetime="2025-06-26T11:39:03+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 10:59:10 / 修改时间：11:53:52" itemprop="dateCreated datePublished" datetime="2025-06-27T10:59:10+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -297,21 +297,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>之所以看到这篇文章也是自己出于好奇“inodes”,自己毕竟并非专业计算机出身，对这个不是很理解，但是知道这个东西也是需要空间，也是在容量满地时候，会倒是系统出现问题的。根据google的搜索，得到了张宴同志的一篇文章，如下：</p>
-<p>一、发现问题：<br>　　在一台配置较低的Linux服务器（内存、硬盘比较小）的&#x2F;data分区内创建文件时，系统提示磁盘空间不足，用df -h命令查看了一下磁盘使用情况，发现&#x2F;data分区只使用了66%，还有12G的剩余空间，按理说不会出现这种问题。<br>二、分析问题：<br>　　后来用df -i查看了一下&#x2F;data分区的索引节点(inode)，发现已经用满(IUsed&#x3D;100%)，导致系统无法创建新目录和文件。inode译成中文就是索引节点，每个存储设备（例如硬盘）或存储设备的分区被格式化为文件系统后，应该有两部份，一部份是inode，另一部份是Block，Block是用来存储数据用的。</p>
-<p>而inode呢，就是用来存储这些数据的信息，这些信息包括文件大小、属主、归属的用户组、读写权限等。inode为每个文件进行信息索引，所以就有了inode的数值。</p>
-<p>操作系统根据指令，能通过inode值最快的找到相对应的文件。而这台服务器的Block虽然还有剩余，但inode已经用满，因此在创建新目录或文件时，系统提示磁盘空间不足。</p>
-<p>三、查找原因：</p>
-<p><code>/data/cache</code>目录中存在数量非常多的小字节缓存文件，占用的Block不多，但是占用了大量的inode。</p>
-<p>四、解决方案：</p>
-<blockquote>
-<p>　　1、删除<code>/data/cache</code>目录中的部分文件，释放出&#x2F;data分区的一部分inode。  </p>
-<p>　　2、用软连接将空闲分区&#x2F;opt中的newcache目录连接到&#x2F;data&#x2F;cache，使用&#x2F;opt分区的inode来缓解&#x2F;data分区inode不足的问题：<br>　　<code>ln -s /opt/newcache /data/cache</code></p>
-<p>　　3、更换服务器，用高配置的服务器替换低配置的服务器。很多时候用钱去解决问题比用技术更有效，堆在我办公桌上5台全新的 DELL PowerEdge 1950 服务器即将运往IDC机房。</p>
-</blockquote>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuczEzNS5jb20vcG9zdC8yOTUv">http://blog.s135.com/post/295/<i class="fa fa-external-link-alt"></i></span></p>
+          <p>之前找了好久的NetBeans的代码主题（theme），一直找不到，今天无意间被我发现了。</p>
+<p><span class="exturl" data-url="aHR0cDovL25ldGJlYW5zdGhlbWVzLmNvbS8=">NetBeans Themes -Color Schemes of the NetBeans IDE<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3N2ZW5zcHJ1aWp0Lm5sL3RoZW1lYnVpbGRlci8=">NetBeans ThemeBuilder<i class="fa fa-external-link-alt"></i></span></p>
+<p>大家可以试试，我是找到了，正在使用。</p>
 
       
     </div>
@@ -338,7 +327,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-UITextField-%E9%9A%90%E8%97%8F%E8%87%AA%E8%BA%AB%E8%BD%AF%E9%94%AE%E7%9B%98-%E7%82%B9%E5%87%BBReturn%E8%87%AA%E5%8A%A8%E8%BD%AC%E5%88%B0%E4%B8%8B%E4%B8%AA%E6%96%87%E6%9C%AC%E6%A1%86-%E8%BD%BB%E8%A7%A6%E8%83%8C%E6%99%AF%E9%9A%90%E8%97%8F%E8%BD%AF%E9%94%AE%E7%9B%98.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E9%9D%99%E6%80%81%E5%8C%96.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -356,7 +345,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-UITextField-%E9%9A%90%E8%97%8F%E8%87%AA%E8%BA%AB%E8%BD%AF%E9%94%AE%E7%9B%98-%E7%82%B9%E5%87%BBReturn%E8%87%AA%E5%8A%A8%E8%BD%AC%E5%88%B0%E4%B8%8B%E4%B8%AA%E6%96%87%E6%9C%AC%E6%A1%86-%E8%BD%BB%E8%A7%A6%E8%83%8C%E6%99%AF%E9%9A%90%E8%97%8F%E8%BD%AF%E9%94%AE%E7%9B%98.html" class="post-title-link" itemprop="url">iOS7 UITextField 隐藏自身软键盘、点击Return自动转到下个文本框、轻触背景隐藏软键盘</a>
+          <a href="/2025/06/27/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E9%9D%99%E6%80%81%E5%8C%96.html" class="post-title-link" itemprop="url">如何实现动态页面静态化</a>
         </h2>
 
         <div class="post-meta-container">
@@ -368,7 +357,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:37:49 / 修改时间：12:00:00" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:49+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 10:59:07 / 修改时间：11:54:38" itemprop="dateCreated datePublished" datetime="2025-06-27T10:59:07+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -390,42 +379,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于UITextField的几种常用的方法，隐藏自身软键盘、点击Return自动转到下个文本框、轻触背景隐藏软键盘，经过google的查找，现在总结如下：</p>
-<h4 id="1"><a href="#1" class="headerlink" title="一、隐藏自身软键盘"></a><a href="#1">一、隐藏自身软键盘</a></h4><p>　　当对于有多个UITextField控件都想通过点击“Return”来隐藏自身软键盘的情况，这时的最好办法是使用Did End on Exit事件。在点击软键盘右下角的“Return”按钮后，会触发该事件。</p>
-<p>　　该事件有一个sender参数表示当前文本框，这样便可以编写一个通用的事件处理方法（.m文件）——</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)TextField_DidEndOnExit:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 隐藏键盘.</span></span><br><span class="line">    [sender resignFirstResponder];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>　　然后在.h文件中填写该方法的声明——</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)TextField_DidEndOnExit:(<span class="type">id</span>)sender;</span><br></pre></td></tr></table></figure>
-
-<p>　　回到storyboard，并按command+option+enter打开辅助窗口，使辅助窗口显示.h文件。</p>
-<p>　　选中一个UITextField控件，点击鼠标右键弹出面板，鼠标左键按住Did End on Exit事件旁边的圆圈，然后拖曳到右侧.h文件的TextField_DidEndOnExit方法上，便会建立好事件连接。</p>
-<p>　　随后按照同样的做法，将其他UITextField控件的Did End on Exit事件也连接到TextField_DidEndOnExit方法。</p>
-<p>　　运行一下，可发现每个文本框的软键盘都可以通过点击“Return”来隐藏了。</p>
-<h4 id="2"><a href="#2" class="headerlink" title="二、点击Return自动转到下个文本框"></a><a href="#2">二、点击Return自动转到下个文本框</a></h4><p>　　当页面中有很多个文本框时，如果每次都需要点文本框激活软键盘、输入后点击Return隐藏软键盘、再点击下一个文本框……这样操作起来太繁琐了。</p>
-<p>　　于是我们希望能够实现点击Return时能够自动转到下一个文本框。尤其是对于最后一个文本框，希望能够在点击Return时执行下一步操作。</p>
-<p>　　例如对于登录页面。它上面有 账号文本框（nameTextField）、密码文本框（passTextField）、登录按钮（loginButton）。</p>
-<p>　　我们希望——点击账号文本框软键盘的Return时跳转到密码文本框，点击密码文本框软键盘的Return时执行登录。</p>
-<p>　　因为这两个文本框的功能不同，不能像上一节那样写一个TextField_DidEndOnExit做统一处理，而应该分别建立各自的事件处理方法。</p>
-<p>　　回到storyboard，右击账号文本框（nameTextField）弹出面板，按住Did End on Exit事件旁边的圆圈，然后拖曳到右侧.h文件的空白地方，此时会弹出一个对话框给方法命名。输入名称（nameTextField_DidEndOnExit）后回车确定，便自动生成了该事件方法。</p>
-<p>　　随后按照同样的做法，为密码文本框（passTextField）的Did End on Exit事件连接方法（passTextField_DidEndOnExit）。</p>
-<p>　　来到.m文件，填写具体代码——</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)nameTextField_DidEndOnExit:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 将焦点移至下一个文本框.</span></span><br><span class="line">    [_passTextField becomeFirstResponder];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>　　对于账号文本框转密码文本框，不需要隐藏软键盘，只需要调用becomeFirstResponder激活新的文本框就行了。</p>
-<p>　　对于密码文本框Return后执行登录。因为不再需要显示软键盘，所以还是得调用resignFirstResponder隐藏软键盘，然后触发登录按钮（loginButton）的UIControlEventTouchUpInside事件进行登录。</p>
-<p>　　运行一下，可发现已经达到我们希望的效果了。点击账号文本框软键盘的Return时跳转到密码文本框，点击密码文本框软键盘的Return时执行登录。</p>
-<p>　　怎么都是“Return”，转换文本框与执行登录明明是不同的功能？</p>
-<p>　　于是将账号文本框的Return Key属性设为“Next”，将密码文本框的Return Key属性设为“Done”，使界面与功能一致。</p>
-<h4 id="3"><a href="#3" class="headerlink" title="三、轻触背景隐藏软键盘"></a><a href="#3">三、轻触背景隐藏软键盘</a></h4><p>　　只能通过Return关闭软键盘太不灵活了，应该提供轻触背景隐藏软键盘的功能。</p>
-<p>　　在storyboard，点击背景View，将它的Custom Class设置为UIControl，这样才会出现Touch Down事件。</p>
-<p>　　右击背景View弹出面板，按住Touch Down事件旁边的圆圈，然后拖曳到右侧.h文件的空白地方建立该事件的处理方法。</p>
-<p>　　来到.m文件，填写具体代码——</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)View_TouchDown:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 发送resignFirstResponder.</span></span><br><span class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] sendAction:<span class="keyword">@selector</span>(resignFirstResponder) to:<span class="literal">nil</span> from:<span class="literal">nil</span> forEvent:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS96eWw5MTAvYXJjaGl2ZS8yMDEzLzAzLzI5L2lvc190ZXh0ZmllbGRfa2V5Ym9hcmQuaHRtbA==">http://www.cnblogs.com/zyl910/archive/2013/03/29/ios_textfield_keyboard.html<i class="fa fa-external-link-alt"></i></span></p>
+          <p>动态变静态</p>
+<p><strong>方法一</strong>：使用现成的插件，比如：ISAPI_Rewrite、IIS Rewrite、Apache HTTP服务器的<code>mod_rewrite</code>等，它们都是基于正则表达式解析器开发的重写引擎。它们的使用方法查看它们自带的帮助即可。</p>
+<p><strong>方法二</strong>：自己写的代码实现动态网页静态化，方法也有好几种：</p>
+<p>1、创建FSO对象，利用此对象将所需的内容动态创建到文件中生成HTML页面；</p>
+<p>2、利用模板技术，将模板中特殊代码的值替换为从表单或是数据库字段中接受过来的值 生成HTML文件；</p>
+<p>3、使用Server.Transfer转换技术，</p>
+<p><strong>方法三</strong>：使用HttpWebRequest请求客户端的方式，获取返回资源，生成静态页面。一般这样只需要获取网页内容即可，其它资源可放置在服务器上，自动加载。(注：此方法缺点明显，需要大量更改匹配URL，建议慎用)</p>
+<p><strong>方法四</strong>：在asp中有IhttpModule接口。Ihttpmodule可以简单理解为一个可以在执行像.aspx,或者mvc中control&#x2F;action前，添加我们自定义的操作的东西。</p>
+<p>我们只需要编写这么一个HttpModule就可以了，当用户第一次请求asp处理时，我们可以在ihttpmodule中拦截到这个请求，然后获取到这次请求应该返回的html代码，然后我们返回这些html给用户，并保存刚才我们获取到的html到文件内，当用户下次请求时，我们只需要直接返回我们已经保存的html文件即可</p>
 
       
     </div>
@@ -452,7 +414,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E4%B8%ADNSPredicate%E7%9A%84%E7%94%A8%E6%B3%95.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/PHP5-3%E5%BC%80%E5%A7%8B%E5%87%BA%E7%8E%B0%E7%9A%84Function-ereg-is-deprecated-Error%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -470,7 +432,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E4%B8%ADNSPredicate%E7%9A%84%E7%94%A8%E6%B3%95.html" class="post-title-link" itemprop="url">iOS7 中NSPredicate的用法</a>
+          <a href="/2025/06/27/PHP5-3%E5%BC%80%E5%A7%8B%E5%87%BA%E7%8E%B0%E7%9A%84Function-ereg-is-deprecated-Error%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html" class="post-title-link" itemprop="url">PHP5.3开始出现的Function ereg() is deprecated Error问题解决办法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -482,7 +444,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:37:41 / 修改时间：12:01:15" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:41+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 10:59:04 / 修改时间：11:59:42" itemprop="dateCreated datePublished" datetime="2025-06-27T10:59:04+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -504,50 +466,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>在其他的语言项目开发中，都会经常使用到正则，在ios中关于正则的话，就要考虑一下NSPredicate，关于NSPredicate的使用方法，一般来说这种情况还是蛮多的，比如你从文件中读入了一个array1，然后想把程序中的一个array2中符合array1中内容的元素过滤出来。</p>
-<p>正常傻瓜一点就是两个for循环，一个一个进行比较，这样效率不高，而且代码也不好看。</p>
-<p>其实一个循环或者无需循环就可以搞定了，那就需要用搞 NSPredicate这个类了</p>
-<p><em><strong>1）例子一，一个循环</strong></em></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *arrayFilter = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;pict&quot;</span>, <span class="string">@&quot;blackrain&quot;</span>, <span class="string">@&quot;ip&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *arrayContents = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;I am a picture.&quot;</span>, <span class="string">@&quot;I am a guy&quot;</span>, <span class="string">@&quot;I am gagaga&quot;</span>, <span class="string">@&quot;ipad&quot;</span>, <span class="string">@&quot;iphone&quot;</span>, <span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
-
-<p>我想过滤arrayContents的话只要循环 arrayFilter就好了</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> i = <span class="number">0</span>, count = [arrayFilter count];</span><br><span class="line"><span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; count; i ++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *arrayItem = (<span class="built_in">NSString</span> *)[arrayFilter objectAtIndex:i];</span><br><span class="line">    <span class="built_in">NSPredicate</span> *filterPredicate = [[<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF CONTAINS %@&quot;</span>, arrayItem];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Filtered array with filter %@, %@&quot;</span>, arrayItem, [arrayContents filteredArrayUsingPredicate:filterPredicate]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当然以上代码中arrayContent最好用mutable 的，这样就可以直接filter了，NSArray是不可修改的。</p>
-<p><em><strong>2）例子二，无需循环</strong></em></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *arrayFilter = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;abc1&quot;</span>, <span class="string">@&quot;abc2&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *arrayContent = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;a1&quot;</span>, <span class="string">@&quot;abc1&quot;</span>, <span class="string">@&quot;abc4&quot;</span>, <span class="string">@&quot;abc2&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSPredicate</span> *thePredicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;NOT (SELF in %@)&quot;</span>, arrayFilter];</span><br><span class="line">[arrayContent filterUsingPredicate:thePredicate];</span><br></pre></td></tr></table></figure>
-
-<p>这样arrayContent过滤出来的就是不包含 arrayFilter中的所有item了。</p>
-<p><em><strong>3）生成文件路径下文件集合列表</strong></em></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSFileManager</span> *fileManager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"><span class="built_in">NSString</span> *defaultPath = [[<span class="built_in">NSBundle</span> mainBundle] resourcePath];</span><br><span class="line"><span class="built_in">NSError</span> *error;</span><br><span class="line"><span class="built_in">NSArray</span> *directoryContents = [fileManager contentsOfDirectoryAtPath:defaultPath error:&amp;error]</span><br></pre></td></tr></table></figure>
-
-<p><em><strong>4）match的用法</strong></em></p>
-<ol>
-<li>简单比较</li>
-</ol>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz-999.png&quot;</span>;</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF == %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>match里like的用法（类似Sql中的用法）</li>
-</ol>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz*.png&quot;</span>;</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF like %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>大小写比较</li>
-</ol>
-<p>[c]表示忽略大小写，[d]表示忽略重音，可以在一起使用，如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz*.png&quot;</span>;</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF like[cd] %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
-<p>4.使用正则</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz-\\d&#123;3&#125;\\.png&quot;</span>;  <span class="comment">//imagexyz－123.png</span></span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF matches %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
+          <p>PHP 5.3 ereg() 无法正常使用，提示“Function ereg() is deprecated Error”。<br>问题根源是php中有两种正则表示方法，一个是posix，一个是perl，php6打算废除posix的正则表示方法所以后来就加了个preg_match。<br>此问题解决办法很简单，在ereg前加个过滤提示信息符号即可：把ereg()变成@ereg()。<br>这样屏蔽了提示信息，但根本问题还是没有解决，php在5.2版本以前ereg都使用正常，<br>在5.3以后，就要用<code>preg_match</code>来代替<code>ereg</code>。<br>所以就需要变成这样，原来：<code>ereg(&quot;^[0-9]*$&quot;,$page)</code>变成：<code>preg_match(&quot;/^[0-9]*$/&quot;,$page) </code><br>特别提醒：posix与perl的很明显的表达区别就是是否加斜杠，所以与ereg相比，<br>后者在正则的前后分别增加了两个”&#x2F;“符号，不能缺少。<br>Tips:此问题在php5.2之前版本不会出现。</p>
 <hr>
-<p><em>总结：</em></p>
-<blockquote>
-<p>1） 当使用聚合类的操作符时是可以不需要循环的</p>
-<p>2）当使用单个比较类的操作符时可以一个循环来搞定</p>
-<p>PS，例子 一中尝试使用[@”SELF CONTAINS %@”, arrayFilter] 来过滤会挂调，因为CONTAINS时字符串比较操作符，不是集合操作。</p>
-</blockquote>
+<p>参考文章：<span class="exturl" data-url="aHR0cDovL3d3dy5saXVodWFkb25nLmNvbS9hcmNoaXZlcy83Mjc=">http://www.liuhuadong.com/archives/727<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -574,7 +495,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E9%AA%8C%E8%AF%81%E9%82%AE%E7%AE%B1%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/WAMP-%E4%B9%8B-PHP-MySQL-apache%E5%8D%87%E7%BA%A7%E7%9A%84%E5%8A%9E%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -592,7 +513,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E9%AA%8C%E8%AF%81%E9%82%AE%E7%AE%B1%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7.html" class="post-title-link" itemprop="url">iOS7 验证邮箱的合法性</a>
+          <a href="/2025/06/27/WAMP-%E4%B9%8B-PHP-MySQL-apache%E5%8D%87%E7%BA%A7%E7%9A%84%E5%8A%9E%E6%B3%95.html" class="post-title-link" itemprop="url">WAMP 之 PHP、MySQL、apache升级的办法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -604,7 +525,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:37:36 / 修改时间：12:10:52" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:36+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 10:52:11 / 修改时间：12:02:17" itemprop="dateCreated datePublished" datetime="2025-06-27T10:52:11+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -626,18 +547,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于用于输入的邮箱地址的内容的合法性，在IOS7中的做法与之前的是一样的。</p>
-<p>第一种方法：最简单的就是利用系统的NSPredicate</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//利用正则表达式验证</span></span><br><span class="line">-(<span class="type">BOOL</span>)isValidateEmail:(<span class="built_in">NSString</span> *)email &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *emailRegex = <span class="string">@&quot;[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]&#123;2,4&#125;&quot;</span>; </span><br><span class="line">    <span class="built_in">NSPredicate</span> *emailTest = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF MATCHES %@&quot;</span>, emailRegex]; </span><br><span class="line">    <span class="keyword">return</span> [emailTest evaluateWithObject:email];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二种方法：通过区分字符串</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>)validateEmail:(<span class="built_in">NSString</span>*)email</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>((<span class="number">0</span> != [email rangeOfString:<span class="string">@&quot;@&quot;</span>].length) &amp;&amp;</span><br><span class="line">       (<span class="number">0</span> != [email rangeOfString:<span class="string">@&quot;.&quot;</span>].length))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSCharacterSet</span>* tmpInvalidCharSet = [[<span class="built_in">NSCharacterSet</span> alphanumericCharacterSet] invertedSet];</span><br><span class="line">        <span class="built_in">NSMutableCharacterSet</span>* tmpInvalidMutableCharSet = [[tmpInvalidCharSet mutableCopy] autorelease];</span><br><span class="line">        [tmpInvalidMutableCharSet removeCharactersInString:<span class="string">@&quot;_-&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         *使用compare option 来设定比较规则，如</span></span><br><span class="line"><span class="comment">         *NSCaseInsensitiveSearch是不区分大小写</span></span><br><span class="line"><span class="comment">         *NSLiteralSearch 进行完全比较,区分大小写</span></span><br><span class="line"><span class="comment">         *NSNumericSearch 只比较定符串的个数，而不比较字符串的字面值</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="built_in">NSRange</span> range1 = [email rangeOfString:<span class="string">@&quot;@&quot;</span></span><br><span class="line">                                      options:<span class="built_in">NSCaseInsensitiveSearch</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//取得用户名部分</span></span><br><span class="line">        <span class="built_in">NSString</span>* userNameString = [email substringToIndex:range1.location];</span><br><span class="line">        <span class="built_in">NSArray</span>* userNameArray   = [userNameString componentsSeparatedByString:<span class="string">@&quot;.&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">NSString</span>* string <span class="keyword">in</span> userNameArray)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">NSRange</span> rangeOfInavlidChars = [string rangeOfCharacterFromSet: tmpInvalidMutableCharSet];</span><br><span class="line">            <span class="keyword">if</span>(rangeOfInavlidChars.length != <span class="number">0</span> || [string isEqualToString:<span class="string">@&quot;&quot;</span>])</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//取得域名部分</span></span><br><span class="line">        <span class="built_in">NSString</span> *domainString = [email substringFromIndex:range1.location+<span class="number">1</span>];</span><br><span class="line">        <span class="built_in">NSArray</span> *domainArray   = [domainString componentsSeparatedByString:<span class="string">@&quot;.&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">NSString</span> *string <span class="keyword">in</span> domainArray)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">NSRange</span> rangeOfInavlidChars=[string rangeOfCharacterFromSet:tmpInvalidMutableCharSet];</span><br><span class="line">            <span class="keyword">if</span>(rangeOfInavlidChars.length !=<span class="number">0</span> || [string isEqualToString:<span class="string">@&quot;&quot;</span>])</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>经过测试第一种方法好用。第二种方法尚未测试。</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanVzdGluamluZzA2MTIvYXJ0aWNsZS9kZXRhaWxzLzczMTAyMzc=">http://blog.csdn.net/justinjing0612/article/details/7310237<i class="fa fa-external-link-alt"></i></span></p>
+          <p><strong>第一种最简单的办法</strong></p>
+<p>去：<span class="exturl" data-url="aHR0cDovL3d3dy53YW1wc2VydmVyLmNvbS9lbi8=">http://www.wampserver.com/en/<i class="fa fa-external-link-alt"></i></span> 进行查找进行更新，找到对应的版本进行更新，具体的讲解可以参考这里：<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQveXVrb24xMjM0NS9hcnRpY2xlL2RldGFpbHMvMTEzMDUzODc=">http://blog.csdn.net/yukon12345/article/details/11305387<i class="fa fa-external-link-alt"></i></span></p>
+<p><strong>第二种也是最简单的办法</strong></p>
+<p>是去php的官方网站进行下载想要的php版本进行自己更新，网址别找错了，是<span class="exturl" data-url="aHR0cDovL3dpbmRvd3MucGhwLm5ldC8=">http://windows.php.net/<i class="fa fa-external-link-alt"></i></span> 这个网址，不是php.net这个网址，不然你只能下载Linux版本的啦，下载不到windows版本的啦</p>
+<p>具体的替换方法也有两种（主要针对php的升级）：</p>
+<p>第一种请参考：<span class="exturl" data-url="aHR0cDovL3d3dy5qYjUxLm5ldC9hcnRpY2xlLzM5MzIyLmh0bQ==">http://www.jb51.net/article/39322.htm<i class="fa fa-external-link-alt"></i></span></p>
+<p>第二种请参看：<span class="exturl" data-url="aHR0cDovL3d3dy53YW5nemhpYm8uY29tL3BocC83OTUuaHRtbA==">http://www.wangzhibo.com/php/795.html<i class="fa fa-external-link-alt"></i></span> 或者 <span class="exturl" data-url="aHR0cDovL3d3dy5oYW93dC5pbmZvL2FyY2hpdmVzLzE4My5odG1s">http://www.haowt.info/archives/183.html<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -664,7 +580,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-UITextView-%E5%92%8C-UITextField%E4%B8%AD%E9%94%AE%E7%9B%98%E8%BE%93%E5%85%A5%E7%9A%84%E5%86%85%E5%AE%B9%E7%9A%84%E8%8E%B7%E5%8F%96.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/%E8%87%AAPHP-5-3-4%E7%89%88%E6%9C%AC%E5%BC%80%E5%A7%8Bmt_rand-%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E8%A6%81%E6%B1%82%E5%8F%98%E5%8A%A8-mt_rand-max-1-is-smaller-than-min-2.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -682,7 +598,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-UITextView-%E5%92%8C-UITextField%E4%B8%AD%E9%94%AE%E7%9B%98%E8%BE%93%E5%85%A5%E7%9A%84%E5%86%85%E5%AE%B9%E7%9A%84%E8%8E%B7%E5%8F%96.html" class="post-title-link" itemprop="url">iOS7 UITextView 和 UITextField中键盘输入的内容的获取</a>
+          <a href="/2025/06/27/%E8%87%AAPHP-5-3-4%E7%89%88%E6%9C%AC%E5%BC%80%E5%A7%8Bmt_rand-%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0%E8%A6%81%E6%B1%82%E5%8F%98%E5%8A%A8-mt_rand-max-1-is-smaller-than-min-2.html" class="post-title-link" itemprop="url">自PHP 5.3.4版本开始mt_rand()函数的参数要求变动 mt_rand(): max(1) is smaller than min(2)</a>
         </h2>
 
         <div class="post-meta-container">
@@ -694,7 +610,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:37:31 / 修改时间：12:11:39" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:31+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 10:26:22 / 修改时间：12:10:20" itemprop="dateCreated datePublished" datetime="2025-06-27T10:26:22+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -716,412 +632,13 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>UITextField中的内容的获取方式：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) textFieldDidEndEditing:(<span class="built_in">UITextField</span> *)textField</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//获取输入的内容</span></span><br><span class="line">    <span class="built_in">NSString</span> *content = [textField text];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>UITextView中的内容的获取方式：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>)textView:(<span class="built_in">UITextView</span> *)textView shouldChangeTextInRange:(<span class="built_in">NSRange</span>)range replacementText:(<span class="built_in">NSString</span> *)text      </span><br><span class="line">&#123;      </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ([text isEqualToString:<span class="string">@&quot;\n&quot;</span>]) &#123;      </span><br><span class="line">        </span><br><span class="line">        [textView resignFirstResponder];</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NO</span>;      </span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(range.location &gt;= <span class="number">500</span>)<span class="comment">//如果输入超过规定的字数20，就不再让输入  </span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>  <span class="literal">NO</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">NSString</span> *content = text;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Objective-C-KVC%E7%9A%84%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0%E5%92%8C%E7%A4%BA%E4%BE%8B.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Objective-C-KVC%E7%9A%84%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0%E5%92%8C%E7%A4%BA%E4%BE%8B.html" class="post-title-link" itemprop="url">Objective-C KVC的简单概述和示例</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:16:08 / 修改时间：11:19:26" itemprop="dateCreated datePublished" datetime="2025-06-26T11:16:08+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>KVC的简单概述和示例</p>
-<p>1 、概述</p>
-<p>KVC是KeyValue Coding的简称，它是一种可以直接通过字符串的名字(key)来访问类属性的机制。而不是通过调用Setter、Getter方法访问。</p>
-<p>当使用KVO、Core Data、CocoaBindings、AppleScript(Mac支持)时，KVC是关键技术。</p>
-<p>2、如何使用KVC</p>
-<p>关键方法定义在：NSKeyValueCodingprotocol</p>
-<p>KVC支持类对象和内建基本数据类型。</p>
-<p><em><strong>获取值</strong></em></p>
-<p>valueForKey:，传入NSString属性的名字。</p>
-<p>valueForKeyPath:，传入NSString属性的路径，xx.xx形式。</p>
-<p>valueForUndefinedKey它的默认实现是抛出异常，可以重写这个函数做错误处理。</p>
-<p><em><strong>修改值</strong></em></p>
-<p>setValue:forKey:</p>
-<p>setValue:forKeyPath:</p>
-<p>setValue:forUndefinedKey:</p>
-<p>setNilValueForKey: 当对非类对象属性设置nil时，调用，默认抛出异常。</p>
-<p><em><strong>一对多关系成员的情况</strong></em></p>
-<p>mutableArrayValueForKey：有序一对多关系成员  NSArray</p>
-<p>mutableSetValueForKey：无序一对多关系成员  NSSet</p>
-<hr>
-<p>示例操作：</p>
-<p>创建Person和AppleDevice类</p>
-<figure class="highlight objectivec"><figcaption><span>Person.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Person.h</span></span><br><span class="line"><span class="comment">//  KVCDemoa</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@private</span></span><br><span class="line">    <span class="built_in">NSString</span> *_name;</span><br><span class="line">    <span class="built_in">NSArray</span> *_apples;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight objectivec"><figcaption><span>Person.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Person.m</span></span><br><span class="line"><span class="comment">//  KVCDemoa</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;Person.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight objectivec"><figcaption><span>AppleDevice.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  AppleDevice.h</span></span><br><span class="line"><span class="comment">//  KVCDemoa</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">AppleDevice</span> : <span class="title">NSObject</span></span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@private</span></span><br><span class="line">    <span class="built_in">NSString</span> *_name;</span><br><span class="line">    <span class="built_in">NSArray</span> *_price;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight objectivec"><figcaption><span>AppleDevice.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  AppleDevice.m</span></span><br><span class="line"><span class="comment">//  KVCDemoa</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;AppleDevice.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">AppleDevice</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-<p>实现操作过程代码：</p>
-<figure class="highlight objectivec"><figcaption><span>main.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  </span></span><br><span class="line"><span class="comment">//  KVCDemoa</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-19.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;AppleDevice.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;Person.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> main(<span class="type">int</span> argc, <span class="keyword">const</span> <span class="type">char</span> * argv[])</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        Person *person = [[Person alloc] init];</span><br><span class="line">        [person setValue:<span class="string">@&quot;Durban&quot;</span></span><br><span class="line">                  forKey:<span class="string">@&quot;_name&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        AppleDevice *mac = [[AppleDevice alloc] init];</span><br><span class="line">        [mac setValue:<span class="string">@&quot;mac&quot;</span></span><br><span class="line">               forKey:<span class="string">@&quot;_name&quot;</span>];</span><br><span class="line">        [mac setValue:@<span class="number">10000</span></span><br><span class="line">               forKey:<span class="string">@&quot;_price&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        AppleDevice *iphone = [[AppleDevice alloc] init];</span><br><span class="line">        [iphone setValue:<span class="string">@&quot;iphone&quot;</span></span><br><span class="line">               forKey:<span class="string">@&quot;_name&quot;</span>];</span><br><span class="line">        [iphone setValue:@<span class="number">10000</span></span><br><span class="line">               forKey:<span class="string">@&quot;_price&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        AppleDevice *ipad = [[AppleDevice alloc] init];</span><br><span class="line">        [ipad setValue:<span class="string">@&quot;ipad&quot;</span></span><br><span class="line">               forKey:<span class="string">@&quot;_name&quot;</span>];</span><br><span class="line">        [ipad setValue:@<span class="number">3800</span></span><br><span class="line">               forKey:<span class="string">@&quot;_price&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">NSArray</span> *apples = @[mac,ipad,iphone];</span><br><span class="line">        </span><br><span class="line">        [person setValue:apples forKey:<span class="string">@&quot;_apples&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">NSNumber</span> *num = [person valueForKeyPath:<span class="string">@&quot;_apples.@sum._price&quot;</span>];</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;num = %@&quot;</span>,num);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// insert code here...</span></span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Hello, World!&quot;</span>);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>得到的结果是：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2013-12-19 08:39:49.754 KVCDemoa[27764:303] num = 23800</span><br><span class="line">2013-12-19 08:39:49.783 KVCDemoa[27764:303] Hello, World!</span><br><span class="line">Program ended with <span class="built_in">exit</span> code: 0</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/SVN-%E6%8F%90%E4%BA%A4%E7%9A%84%E6%97%B6%E5%80%99%E6%8F%90%E7%A4%BA-No-space-left-on-device.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/SVN-%E6%8F%90%E4%BA%A4%E7%9A%84%E6%97%B6%E5%80%99%E6%8F%90%E7%A4%BA-No-space-left-on-device.html" class="post-title-link" itemprop="url">SVN 提交的时候提示'No space left on device'</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:16:04 / 修改时间：11:24:03" itemprop="dateCreated datePublished" datetime="2025-06-26T11:16:04+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>第一次遇到一个比较奇怪的问题就是svn报了一个错误“No space left on device”，这个错误第一次遇到。看到这个错误，第一个反应是磁盘空间满了；但 df 一看，每个分区的空间都还富余的很。从 munin 的监控图表上看 Filesystem usage 也很平稳，但下面的 Inode usage 就有问题了，其中一个分区的 usage 已经到了100%。赶紧跑到服务器上 <code>df -i</code> 检查，果然是 Inode 耗尽。原来这个分区是用来扔各种日志和临时文件的，其中有某个程序产生的临时文件又小又多，又没有进行定时回滚，造成在磁盘空间耗尽之前文件系统的 Inode 就被用光了。超出系统中同时运行的最大 message queue 个数限制 ： 在 root 下用 <code>sysctl kernel.msgmni</code> 检查该参数，<code>sysctl -w kernel.msgmni=XXX</code> 重新设定即可。</p>
-<p>我这边正在尝试，大家也可以尝试一下。</p>
-<p>如果不起作用，可以重启一下svn。</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS94aWFvZmFuMjEvYXJjaGl2ZS8yMDEzLzA1LzIxLzMwOTA0NDcuaHRtbA==">http://www.cnblogs.com/xiaofan21/archive/2013/05/21/3090447.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Apache-%E4%B9%8B-Ubuntu%E4%B8%8B%E5%90%AF%E5%8A%A8-%E9%87%8D%E5%90%AF-%E5%81%9C%E6%AD%A2apache%E6%9C%8D%E5%8A%A1%E5%99%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Apache-%E4%B9%8B-Ubuntu%E4%B8%8B%E5%90%AF%E5%8A%A8-%E9%87%8D%E5%90%AF-%E5%81%9C%E6%AD%A2apache%E6%9C%8D%E5%8A%A1%E5%99%A8.html" class="post-title-link" itemprop="url">Apache 之 Ubuntu下启动/重启/停止apache服务器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:16:00 / 修改时间：11:23:12" itemprop="dateCreated datePublished" datetime="2025-06-26T11:16:00+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>一直不想使用Apache，因为我周边的人觉得不好，我也觉得既然别人说的不好，也就没有尝试的必要，但是由于其普遍性，在帮别人做项目的时候，还是需要使用一下的Apache的，这里简单的记录一下，Apache的启动和停止的命令操作。</p>
-<p>Task: Start Apache 2 Server &#x2F;启动apache服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/init.d/apache2 start</span></span><br></pre></td></tr></table></figure>
-
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> /etc/init.d/apache2 start</span><br></pre></td></tr></table></figure>
-
-<p>Task: Restart Apache 2 Server &#x2F;重启apache服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/init.d/apache2 restart</span></span><br></pre></td></tr></table></figure>
-
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> /etc/init.d/apache2 restart</span><br></pre></td></tr></table></figure>
-
-<p>Task: Stop Apache 2 Server &#x2F;停止apache服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/init.d/apache2 stop</span></span><br></pre></td></tr></table></figure>
-
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> /etc/init.d/apache2 stop</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>参考文章:</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jicy5waHBjaGluYS5jb20vaG9tZS5waHA/bW9kPXNwYWNlJnVpZD0zOTUwJmRvPWJsb2cmaWQ9NDg5MzQ=">http://bbs.phpchina.com/home.php?mod=space&amp;uid=3950&amp;do=blog&amp;id=48934<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E6%80%8E%E6%A0%B7%E5%88%A4%E6%96%ADios-app-%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%90%AF%E5%8A%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E6%80%8E%E6%A0%B7%E5%88%A4%E6%96%ADios-app-%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%90%AF%E5%8A%A8.html" class="post-title-link" itemprop="url">iOS7 怎样判断ios app 第一次启动</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:15:56 / 修改时间：11:25:06" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:56+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于第一次启动iOS APP的宣传画面的制作中的判断，判断第一次启动，判断是否是第一次启动。关于这个我查找了相关资料，进行了google资料搜索。</p>
-<hr>
-<p>一个有用的例子是发送一个分析实例。这可能是一个很好的方法来确定有多少人下载实用应用程序。有人会说：“但是，嘿，苹果AppStore已经告诉我，应用程序的下载量了”。</p>
-<p>流行的解决方案是在大多数地方是用[NSUserDefaults standardUserDefaults的一个关键，如果它不存在，这意味着这是应用程序启动，否则，它不是第一次。</p>
-<p>你可以搜索的关键，如果它未设置运行 first-time-code，并设置它，但在app的其余部分你将无法知道它是不是第一次运行（除非你使用一个全局变量）</p>
-<p>因此，我建议我的解决方案：</p>
-<p>在appdelegate.m中找到 “<code>application:didFinishLaunchingWithOptions:</code>”方法, 添加以下代码:</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (![[<span class="built_in">NSUserDefaults</span> standardUserDefaults] boolForKey:<span class="string">@&quot;everLaunched&quot;</span>]) </span><br><span class="line">&#123;  </span><br><span class="line">    [[<span class="built_in">NSUserDefaults</span> standardUserDefaults] setBool:<span class="literal">YES</span> forKey:<span class="string">@&quot;everLaunched&quot;</span>];  </span><br><span class="line">    [[<span class="built_in">NSUserDefaults</span> standardUserDefaults] setBool:<span class="literal">YES</span> forKey:<span class="string">@&quot;firstLaunch&quot;</span>];  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;  </span><br><span class="line">    [[<span class="built_in">NSUserDefaults</span> standardUserDefaults] setBool:<span class="literal">NO</span> forKey:<span class="string">@&quot;firstLaunch&quot;</span>];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>总的解决办法是 2 个key: @”everLaunched”判断用户以前是否登录,</p>
-<p>@”firstLaunch” 用来开发者在程序的其他部分判断.</p>
-<p>在第一次启动的时候 key @”everLaunched” 不会被赋址的, 并且设置为YES. @”firstLaunch”被设置为 YES.</p>
-<p>在程序的其他部分用以下代码判断:</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([[<span class="built_in">NSUserDefaults</span> standardUserDefaults] boolForKey:<span class="string">@&quot;firstLaunch&quot;</span>]) </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="comment">// 这里判断是否第一次  </span></span><br><span class="line">    <span class="built_in">UIAlertView</span> *alert=[[<span class="built_in">UIAlertView</span> alloc] initWithTitle:<span class="string">@&quot;第一次&quot;</span>   </span><br><span class="line">                                                  message:<span class="string">@&quot;进入App&quot;</span>  </span><br><span class="line">                                                 delegate:<span class="keyword">self</span>   </span><br><span class="line">                                        cancelButtonTitle:<span class="string">@&quot;我知道了&quot;</span>   </span><br><span class="line">                                        otherButtonTitles:<span class="literal">nil</span>];  </span><br><span class="line">    [alert show];  </span><br><span class="line">    [alert release];  </span><br><span class="line">      </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>在PHP 5.3.3版本以前，<code>mt_rand($a, $b)</code>传入的参数$a和$b二者没有数字大小比较的限制，但是自5.3.4版本PHP开始，传入的参数必须满足<code>$a&lt;=$b</code>，即<code>mt_rand(1, 1)</code>和<code>mt_rand(1, 2)</code>是可以的，但是<code>mt_rand(2, 1)</code>就会报错：<code>mt_rand(): max(1) is smaller than min(2)</code>。  </p>
+<p>这样，如果你使用mt_rand()函数时不是输入的固定数字，而是传入的一个变量的话，就必须先将变量做一个比较，以确定哪个变量放在前边或后边。<br>比如，例子片段：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$a</span>&lt;<span class="variable">$b</span>) &#123;</span><br><span class="line">  <span class="variable">$rnd</span> = <span class="title function_ invoke__">mt_rand</span>(<span class="variable">$a</span>, <span class="variable">$b</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="variable">$rnd</span> = <span class="title function_ invoke__">mt_rand</span>(<span class="variable">$b</span>, <span class="variable">$a</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <hr>
 <p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQva3lsaW5ibC9hcnRpY2xlL2RldGFpbHMvODYzODk4OA==">http://blog.csdn.net/kylinbl/article/details/8638988<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5sYzM2NS5uZXQvYmxvZy9iLzE1Mjg3Lw==">http://www.lc365.net/blog/b/15287/<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -1148,7 +665,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-NSNotificationCenter%E7%9A%84%E4%BD%9C%E7%94%A8.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/PHP%E4%B8%AD%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%8F%B7%E7%9A%84%E9%AA%8C%E8%AF%81%E5%87%BD%E6%95%B0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1166,7 +683,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-NSNotificationCenter%E7%9A%84%E4%BD%9C%E7%94%A8.html" class="post-title-link" itemprop="url">iOS7 NSNotificationCenter的作用</a>
+          <a href="/2025/06/27/PHP%E4%B8%AD%E8%BA%AB%E4%BB%BD%E8%AF%81%E5%8F%B7%E7%9A%84%E9%AA%8C%E8%AF%81%E5%87%BD%E6%95%B0.html" class="post-title-link" itemprop="url">PHP中身份证号的验证函数</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1178,7 +695,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-26 11:15:52 / 修改时间：11:26:04" itemprop="dateCreated datePublished" datetime="2025-06-26T11:15:52+08:00">2025-06-26</time>
+      <time title="创建时间：2025-06-27 10:26:11 / 修改时间：10:28:40" itemprop="dateCreated datePublished" datetime="2025-06-27T10:26:11+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1200,31 +717,370 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>关于NSNotificationCenter的使用，之前一直想使用一下，结果今天就真的使用上了。</p>
-<blockquote>
-<p>NSNotificationCenter有什么作用，简单说之，就是两个不相干的对象之间可以通过他来传递消息，只要你把相关发送的消息和处理的事件在他那里注册就行了。</p>
-<p>我们可以这样理解：NSNotificationCenter就是一个信息中心，有很多用户已经声明他们需要这些信息。当有信息更新的时候，通过这个NSNotificationCenter就可以以广播的形式，将信息更新的消息在整个应用程序中间广播，对于那些注册消息侦听的用户就可以受到该消息，没有注册的用户就无法接收该消息。</p>
-</blockquote>
-<p>使用方法如下：</p>
-<p>第一步：定义一个方法，当注册信息侦听的对象，接受到消息后就调用该函数作为消息相应的函数</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)update:(<span class="built_in">NSNotificationCenter</span>*)notification</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> addHeadImage];</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span></span><br><span class="line">                                                    name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                  object:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>PHP中身份证号的验证函数</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 检查身份账号的格式是否正确</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isValidChacterNumber</span>(<span class="params"><span class="variable">$id_card</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">strlen</span>(<span class="variable">$id_card</span>)==<span class="number">18</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">idcard_checksum18</span>(<span class="variable">$id_card</span>);</span><br><span class="line">    &#125;<span class="keyword">elseif</span>((<span class="title function_ invoke__">strlen</span>(<span class="variable">$id_card</span>)==<span class="number">15</span>))&#123;</span><br><span class="line">        <span class="variable">$id_card</span>=<span class="title function_ invoke__">idcard_15to18</span>(<span class="variable">$id_card</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">idcard_checksum18</span>(<span class="variable">$id_card</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 计算身份证校验码，根据国家标准GB 11643-1999 </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">idcard_verify_number</span>(<span class="params"><span class="variable">$idcard_base</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">strlen</span>(<span class="variable">$idcard_base</span>)!=<span class="number">17</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//加权因子 </span></span><br><span class="line">    <span class="variable">$factor</span>=<span class="keyword">array</span>(<span class="number">7</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">6</span>,<span class="number">3</span>,<span class="number">7</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">5</span>,<span class="number">8</span>,<span class="number">4</span>,<span class="number">2</span>);</span><br><span class="line">    <span class="comment">//校验码对应值 </span></span><br><span class="line">    <span class="variable">$verify_number_list</span>=<span class="keyword">array</span>(<span class="string">&#x27;1&#x27;</span>,<span class="string">&#x27;0&#x27;</span>,<span class="string">&#x27;X&#x27;</span>,<span class="string">&#x27;9&#x27;</span>,<span class="string">&#x27;8&#x27;</span>,<span class="string">&#x27;7&#x27;</span>,<span class="string">&#x27;6&#x27;</span>,<span class="string">&#x27;5&#x27;</span>,<span class="string">&#x27;4&#x27;</span>,<span class="string">&#x27;3&#x27;</span>,<span class="string">&#x27;2&#x27;</span>);</span><br><span class="line">    <span class="variable">$checksum</span>=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="variable">$i</span>=<span class="number">0</span>;<span class="variable">$i</span>&lt;<span class="title function_ invoke__">strlen</span>(<span class="variable">$idcard_base</span>);<span class="variable">$i</span>++)&#123;</span><br><span class="line">        <span class="variable">$checksum</span> += <span class="title function_ invoke__">substr</span>(<span class="variable">$idcard_base</span>,<span class="variable">$i</span>,<span class="number">1</span>) * <span class="variable">$factor</span>[<span class="variable">$i</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$mod</span>=<span class="variable">$checksum</span> % <span class="number">11</span>;</span><br><span class="line">    <span class="variable">$verify_number</span>=<span class="variable">$verify_number_list</span>[<span class="variable">$mod</span>];</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$verify_number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 将15位身份证升级到18位 </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">idcard_15to18</span>(<span class="params"><span class="variable">$idcard</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">strlen</span>(<span class="variable">$idcard</span>)!=<span class="number">15</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// 如果身份证顺序码是996 997 998 999，这些是为百岁以上老人的特殊编码 </span></span><br><span class="line">        <span class="keyword">if</span>(<span class="title function_ invoke__">array_search</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$idcard</span>,<span class="number">12</span>,<span class="number">3</span>),<span class="keyword">array</span>(<span class="string">&#x27;996&#x27;</span>,<span class="string">&#x27;997&#x27;</span>,<span class="string">&#x27;998&#x27;</span>,<span class="string">&#x27;999&#x27;</span>)) !== <span class="literal">false</span>)&#123;</span><br><span class="line">            <span class="variable">$idcard</span>=<span class="title function_ invoke__">substr</span>(<span class="variable">$idcard</span>,<span class="number">0</span>,<span class="number">6</span>).<span class="string">&#x27;18&#x27;</span>.<span class="title function_ invoke__">substr</span>(<span class="variable">$idcard</span>,<span class="number">6</span>,<span class="number">9</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="variable">$idcard</span>=<span class="title function_ invoke__">substr</span>(<span class="variable">$idcard</span>,<span class="number">0</span>,<span class="number">6</span>).<span class="string">&#x27;19&#x27;</span>.<span class="title function_ invoke__">substr</span>(<span class="variable">$idcard</span>,<span class="number">6</span>,<span class="number">9</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$idcard</span>=<span class="variable">$idcard</span>.<span class="title function_ invoke__">idcard_verify_number</span>(<span class="variable">$idcard</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$idcard</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 18位身份证校验码有效性检查 </span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">idcard_checksum18</span>(<span class="params"><span class="variable">$idcard</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">strlen</span>(<span class="variable">$idcard</span>)!=<span class="number">18</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$idcard_base</span>=<span class="title function_ invoke__">substr</span>(<span class="variable">$idcard</span>,<span class="number">0</span>,<span class="number">17</span>);</span><br><span class="line">    <span class="keyword">if</span>(<span class="title function_ invoke__">idcard_verify_number</span>(<span class="variable">$idcard_base</span>)!=<span class="title function_ invoke__">strtoupper</span>(<span class="title function_ invoke__">substr</span>(<span class="variable">$idcard</span>,<span class="number">17</span>,<span class="number">1</span>)))&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>第二步：对象注册，并关连消息。实质上也就是注册事件的侦听，可以单独调用，也可以放在自己的函数内部进行调用。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                             selector:<span class="keyword">@selector</span>(update:)</span><br><span class="line">                                                 name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                               object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+<p>调用的方法</p>
+<p><code>isValidChacterNumber($num_string);</code></p>
+<hr>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5waHBlcm5vdGUuY29tL3BocC1mdW5jdGlvbi81NDguaHRtbA==">http://www.phpernote.com/php-function/548.html<i class="fa fa-external-link-alt"></i></span></p>
 
-<p>在函数中进行调用</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) sinaLogin:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                             selector:<span class="keyword">@selector</span>(update:)</span><br><span class="line">                                                 name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                               object:<span class="literal">nil</span>];</span><br><span class="line">    </span><br><span class="line">    WBAuthorizeRequest *request = [WBAuthorizeRequest request];</span><br><span class="line">    request.redirectURI = kRedirectURI;</span><br><span class="line">    request.scope = <span class="string">@&quot;all&quot;</span>;</span><br><span class="line">    [WeiboSDK sendRequest:request];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
 
-<p>第三步：在要发出通知消息的地方调用。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] postNotificationName:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                            object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+    
+    
+    
 
-<p>第四步：使用完后，别忘了注销掉该消息的侦听函数</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span></span><br><span class="line">                                                    name:<span class="string">@&quot;updateMe&quot;</span></span><br><span class="line">                                                  object:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
 
-<p>其实这里我是放在了我的调用函数里面，如果你觉的你的函数在调用完之后不去注销，也可以去掉的，然后在其他的地方进行注销。</p>
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/MySQL%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9%E8%A1%A8%E5%89%8D%E7%BC%80.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/MySQL%E6%89%B9%E9%87%8F%E4%BF%AE%E6%94%B9%E8%A1%A8%E5%89%8D%E7%BC%80.html" class="post-title-link" itemprop="url">MySQL批量修改表前缀</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:26:08 / 修改时间：10:30:46" itemprop="dateCreated datePublished" datetime="2025-06-27T10:26:08+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>批量修改表名的操作方法:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> CONCAT( <span class="string">&#x27;ALTER TABLE &#x27;</span>, TABLE_NAME, <span class="string">&#x27;RENAME TO &#x27;</span>, TABLE_NAME,<span class="string">&#x27;;&#x27;</span> )</span><br><span class="line"><span class="keyword">FROM</span> information_schema.TABLES</span><br><span class="line"><span class="keyword">WHERE</span> TABLE_NAME <span class="keyword">LIKE</span> <span class="string">&#x27;uc_%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>执行后得到如下的结果：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">&#x27;ALTER TABLE uc_aaa RENAME TO uc_aaa;&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;ALTER TABLE uc_bbb RENAME TO uc_bbb;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>导出结果到SQL文件中，然后去掉括号和引号，只保留如下的数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER TABLE</span> uc_aaa RENAME <span class="keyword">TO</span> uc_aaa;</span><br><span class="line"><span class="keyword">ALTER TABLE</span> uc_bbb RENAME <span class="keyword">TO</span> uc_bbb;</span><br></pre></td></tr></table></figure>
+
+<p>然后选择要修改的数据库，执行上面得到的SQL语句就可以了。<br>附：<br>1、批量删除指定前缀的表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> CONCAT( <span class="string">&#x27;drop table &#x27;</span>, TABLE_NAME, <span class="string">&#x27;;&#x27;</span> )</span><br><span class="line"><span class="keyword">FROM</span> information_schema.TABLES</span><br><span class="line"><span class="keyword">WHERE</span> TABLE_NAME <span class="keyword">LIKE</span> <span class="string">&#x27;uc_%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2、“dbtable_name”改成“db_table_name”</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> CONCAT( <span class="string">&#x27;ALTER TABLE &#x27;</span>, TABLE_NAME, <span class="string">&#x27;RENAME TO db_&#x27;</span>, <span class="built_in">SUBSTRING</span>(TABLE_NAME,<span class="number">3</span>),<span class="string">&#x27;;&#x27;</span> )</span><br><span class="line"><span class="keyword">FROM</span> information_schema.TABLES</span><br><span class="line"><span class="keyword">WHERE</span> TABLE_NAME <span class="keyword">LIKE</span> <span class="string">&#x27;db%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
 <hr>
 <p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2p6c3AvYXJ0aWNsZS9kZXRhaWxzLzY3Nzc3MDA=">http://blog.csdn.net/sjzsp/article/details/6777700<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5pc2xhbmRjbi5jb20vcG9zdC84NTUuaHRtbA==">http://www.islandcn.com/post/855.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/PHP-%E4%B9%8B-smarty-%E7%9A%84%E5%A5%87%E8%91%A9%E8%AF%AD%E6%B3%95.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/PHP-%E4%B9%8B-smarty-%E7%9A%84%E5%A5%87%E8%91%A9%E8%AF%AD%E6%B3%95.html" class="post-title-link" itemprop="url">PHP 之 smarty 的奇葩语法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:26:05 / 修改时间：10:33:02" itemprop="dateCreated datePublished" datetime="2025-06-27T10:26:05+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近观赏了一下smarty（不知道为啥还有人在使用这个东西啊），发现了一个奇葩的使用方法。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="comment">#function name=menu level=0#&#125;</span></span><br><span class="line">   &#123;<span class="comment">#foreach $data as $entry#&#125;</span></span><br><span class="line">    &#123;<span class="comment">#if is_array($entry)#&#125;      </span></span><br><span class="line">&#123;<span class="comment">#$entry@key#&#125;</span></span><br><span class="line">     &#123;<span class="comment">#call name=menu data=$entry level=$level+1#&#125;</span></span><br><span class="line">    &#123;<span class="comment">#else#&#125;      </span></span><br><span class="line">&#123;<span class="comment">#$entry#&#125;</span></span><br><span class="line">   &#123;<span class="comment">#/if#&#125;</span></span><br><span class="line">  &#123;<span class="comment">#/foreach#&#125;  </span></span><br><span class="line">&#123;<span class="comment">#/function#&#125;</span></span><br><span class="line"></span><br><span class="line">&#123;<span class="comment">#* create an array to demonstrate *#&#125;</span></span><br><span class="line">&#123;<span class="comment">#$menu = [&#x27;item1&#x27;,&#x27;item2&#x27;,&#x27;item3&#x27; =&gt; [&#x27;item3-1&#x27;,&#x27;item3-2&#x27;,&#x27;item3-3&#x27; =&gt;</span></span><br><span class="line">[<span class="string">&#x27;item3-3-1&#x27;</span>,<span class="string">&#x27;item3-3-2&#x27;</span>]],<span class="string">&#x27;item4&#x27;</span>]<span class="comment">#&#125;</span></span><br><span class="line"></span><br><span class="line">&#123;<span class="comment">#* run the array through the function *#&#125;</span></span><br><span class="line">&#123;<span class="comment">#call name=menu data=$menu#&#125;</span></span><br><span class="line">&#123;<span class="comment">#* call menu data=$menu *#&#125; &#123;#* short-hand *#&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>输出的结果是如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;level0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item3<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;level1&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item3-1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item3-2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item3-3<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;level2&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item3-3-1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item3-3-2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>item4<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这就是smarty的call的内置函数的试用方法</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS7-%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE-MPMoviePlayerController.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/iOS7-%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE-MPMoviePlayerController.html" class="post-title-link" itemprop="url">iOS7 视频播放 MPMoviePlayerController</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:26:01 / 修改时间：10:33:48" itemprop="dateCreated datePublished" datetime="2025-06-27T10:26:01+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>IOS7 视频播放 需要使用 MPMoviePlayerController</p>
+<p>首先是加在一下库文件MediaPlayer.framework</p>
+<p>然后实现如下的代码就好了</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - 视频播放</span></span><br><span class="line">-(<span class="type">void</span>) showMovie:(<span class="built_in">UIGestureRecognizer</span> *)tap</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;视频播放&quot;</span>);</span><br><span class="line">    <span class="built_in">UIImageView</span> * nanshanImage=[[<span class="built_in">UIImageView</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">1024</span>,<span class="number">699</span>)];</span><br><span class="line">    nanshanImage.image=[<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;boy.jpg&quot;</span>];</span><br><span class="line">    [<span class="keyword">self</span>.view addSubview:nanshanImage];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIButton</span>* playButton= [[<span class="built_in">UIButton</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">145</span>, <span class="number">250</span>, <span class="number">70</span>, <span class="number">80</span>)];</span><br><span class="line">    [playButton addTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(PlayMovieAction:) forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line">    playButton.backgroundColor=[<span class="built_in">UIColor</span> redColor];</span><br><span class="line">    [<span class="keyword">self</span>.view addSubview:playButton];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>)PlayMovieAction:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//视频文件路径，此视频已经存入项目包中。属于本地播放</span></span><br><span class="line">    <span class="built_in">NSString</span> *path = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;jinxiuMovie&quot;</span> ofType:<span class="string">@&quot;mp4&quot;</span>];</span><br><span class="line">    <span class="comment">//视频URL</span></span><br><span class="line">    <span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> fileURLWithPath:path];</span><br><span class="line">    <span class="comment">//视频播放对象</span></span><br><span class="line">    <span class="built_in">MPMoviePlayerController</span> *movie = [[<span class="built_in">MPMoviePlayerController</span> alloc] initWithContentURL:url];</span><br><span class="line">    movie.controlStyle = <span class="built_in">MPMovieControlStyleFullscreen</span>;</span><br><span class="line">    [movie.view setFrame:<span class="keyword">self</span>.view.bounds];</span><br><span class="line">    movie.initialPlaybackTime = <span class="number">-1</span>;</span><br><span class="line">    [<span class="keyword">self</span>.view addSubview:movie.view];</span><br><span class="line">    <span class="comment">// 注册一个播放结束的通知，当播放结束时，监听到并且做一些处理</span></span><br><span class="line">    <span class="comment">//播放器自带有播放结束的通知，在此仅仅只需要注册观察者监听通知即可。</span></span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] addObserver:<span class="keyword">self</span></span><br><span class="line">                                             selector:<span class="keyword">@selector</span>(myMovieFinishedCallback:)</span><br><span class="line">                                                 name:<span class="built_in">MPMoviePlayerPlaybackDidFinishNotification</span></span><br><span class="line">                                               object:movie];</span><br><span class="line">    [movie play];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>)myMovieFinishedCallback:(<span class="built_in">NSNotification</span>*)notify</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//视频播放对象</span></span><br><span class="line">    <span class="built_in">MPMoviePlayerController</span>* theMovie = [notify object];</span><br><span class="line">    <span class="comment">//销毁播放通知</span></span><br><span class="line">    [[<span class="built_in">NSNotificationCenter</span> defaultCenter] removeObserver:<span class="keyword">self</span></span><br><span class="line">                                                    name:<span class="built_in">MPMoviePlayerPlaybackDidFinishNotification</span></span><br><span class="line">                                                  object:theMovie];</span><br><span class="line">    [theMovie.view removeFromSuperview];</span><br><span class="line">    <span class="comment">// 释放视频对象，此对象由上面建立视频对象时候所alloc,在此做释放操作</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;视频播放完成&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>里面的播放文件是MP4格式的，格式支持：MOV、MP4、M4V、与3GP等格式，还支持多种音频格式。</p>
+<hr>
+<p>刚开始接触先记录一下</p>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5vc2NoaW5hLm5ldC9xdWVzdGlvbi8yMTMyMTcvXzQwNjI1">http://www.oschina.net/question/213217\_40625<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/CentOS%E4%B8%8A%E5%A6%82%E4%BD%95yum%E5%AE%89%E8%A3%85git.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/CentOS%E4%B8%8A%E5%A6%82%E4%BD%95yum%E5%AE%89%E8%A3%85git.html" class="post-title-link" itemprop="url">CentOS上如何yum安装git</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:25:58 / 修改时间：10:34:30" itemprop="dateCreated datePublished" datetime="2025-06-27T10:25:58+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><code>yum install git</code> 出现错误，会报错出现类似下面的情况</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Setting up Install Process</span><br><span class="line">No package git available.</span><br><span class="line">Nothing to <span class="keyword">do</span></span><br></pre></td></tr></table></figure>
+
+<p>原因是因为没有资源文件存在，搜索不到吧，解决办法如下：</p>
+<p>需要先添加EPEL(Extra Packages for Enterprise Linux) repository:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CentOS5.x 32-bit(x86/i386):</span><br><span class="line"> rpm -Uvh http://dl.fedoraproject.org/pub/epel/5/i386/epel-release-5-4.noarch.rpm</span><br><span class="line">CentOS5.x 64-bit(x64):</span><br><span class="line"> rpm -Uvh http://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm</span><br><span class="line"> CentOS6.x32-bit (x86/i386):</span><br><span class="line"></span><br><span class="line"> rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-5.noarch.rpm</span><br><span class="line">CentOS6.x 64-bit(x64):</span><br><span class="line"> rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-5.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGFpYWh1L2FydGljbGUvZGV0YWlscy83NTE2OTM5">http://blog.csdn.net/laiahu/article/details/7516939<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -1244,7 +1100,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/53/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/53/">53</a><span class="page-number current">54</span><a class="page-number" href="/page/55/">55</a><span class="space">&hellip;</span><a class="page-number" href="/page/105/">105</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/55/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/53/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/53/">53</a><span class="page-number current">54</span><a class="page-number" href="/page/55/">55</a><span class="space">&hellip;</span><a class="page-number" href="/page/110/">110</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/55/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

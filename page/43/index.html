@@ -194,18 +194,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1048</span>
+          <span class="site-state-item-count">1098</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">174</span>
+        <span class="site-state-item-count">178</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -245,7 +245,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Flask%E4%B8%AD%E5%AE%9E%E7%8E%B0%E4%BD%BF%E7%94%A8Mongodb%E5%88%86%E9%A1%B5%E7%9A%84%E7%A8%8B%E5%BA%8F%E9%80%BB%E8%BE%91.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/NVM%E7%AE%A1%E7%90%86node-%E5%B9%B6%E5%8A%A0%E9%80%9Fnvm-%E5%8A%A0%E9%80%9Fnpm.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -263,7 +263,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Flask%E4%B8%AD%E5%AE%9E%E7%8E%B0%E4%BD%BF%E7%94%A8Mongodb%E5%88%86%E9%A1%B5%E7%9A%84%E7%A8%8B%E5%BA%8F%E9%80%BB%E8%BE%91.html" class="post-title-link" itemprop="url">Flask中实现使用Mongodb分页的程序逻辑</a>
+          <a href="/2025/07/01/NVM%E7%AE%A1%E7%90%86node-%E5%B9%B6%E5%8A%A0%E9%80%9Fnvm-%E5%8A%A0%E9%80%9Fnpm.html" class="post-title-link" itemprop="url">NVM管理node，并加速nvm、加速npm</a>
         </h2>
 
         <div class="post-meta-container">
@@ -275,7 +275,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 14:09:00 / 修改时间：14:18:32" itemprop="dateCreated datePublished" datetime="2025-06-30T14:09:00+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-01 11:54:15 / 修改时间：14:39:02" itemprop="dateCreated datePublished" datetime="2025-07-01T11:54:15+08:00">2025-07-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -297,90 +297,41 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>实现的逻辑如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">page = <span class="built_in">int</span>(request.args.get(<span class="string">&#x27;page&#x27;</span>)) <span class="keyword">if</span> request.args.get(<span class="string">&#x27;page&#x27;</span>) <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line">    pagesize = <span class="number">20</span></span><br><span class="line">    prev_page = page - <span class="number">1</span> <span class="keyword">if</span> page - <span class="number">1</span> <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line">    next_page = page + <span class="number">1</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment"># 关键字查询</span></span><br><span class="line">    keywords = request.args.get(<span class="string">&#x27;keywords&#x27;</span>)</span><br><span class="line">    start_date = request.args.get(<span class="string">&#x27;start_date&#x27;</span>) </span><br><span class="line">    end_date = request.args.get(<span class="string">&#x27;end_date&#x27;</span>)</span><br><span class="line"> </span><br><span class="line">    params = []</span><br><span class="line">    params_query = &#123;&#125;</span><br><span class="line">    <span class="keyword">if</span> keywords:</span><br><span class="line">        params.append(&#123;<span class="string">&#x27;title&#x27;</span>:&#123;<span class="string">&#x27;$regex&#x27;</span>:<span class="string">&#x27;^%s&#x27;</span> %keywords &#125;&#125;)</span><br><span class="line">        params_query[<span class="string">&#x27;keywords&#x27;</span>] = keywords</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> start_date <span class="keyword">and</span> end_date:</span><br><span class="line">        start = <span class="string">&#x27;%s 00:00:00&#x27;</span> % start_date</span><br><span class="line">        end = <span class="string">&#x27;%s 23:59:59&#x27;</span> % end_date</span><br><span class="line">        start = <span class="built_in">int</span>(time.mktime(time.strptime(start,<span class="string">&#x27;%Y-%m-%d %H:%M:%S&#x27;</span>)))</span><br><span class="line">        end = <span class="built_in">int</span>(time.mktime(time.strptime(end,<span class="string">&#x27;%Y-%m-%d %H:%M:%S&#x27;</span>)))</span><br><span class="line">        params.append(&#123;<span class="string">&#x27;create_time&#x27;</span>:&#123;<span class="string">&#x27;$gt&#x27;</span>:start&#125;&#125;)</span><br><span class="line">        params.append(&#123;<span class="string">&#x27;create_time&#x27;</span>:&#123;<span class="string">&#x27;$lte&#x27;</span>:end&#125;&#125;)</span><br><span class="line"> </span><br><span class="line">        params_query[<span class="string">&#x27;start_date&#x27;</span>] = start_date</span><br><span class="line">        params_query[<span class="string">&#x27;end_date&#x27;</span>] = end_date</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">if</span> params:</span><br><span class="line">        <span class="comment"># if len(params) == 1:</span></span><br><span class="line">        <span class="comment">#   where = params</span></span><br><span class="line">        <span class="comment"># else:</span></span><br><span class="line">        where = &#123;<span class="string">&#x27;$and&#x27;</span>:params&#125; </span><br><span class="line">        itunes_sum = mongo.db.itunes.find(where).count()</span><br><span class="line">        itunes = mongo.db.itunes.find(where).skip((page - <span class="number">1</span>) * pagesize).sort(<span class="string">&#x27;create_time&#x27;</span>,-<span class="number">1</span>).limit(pagesize)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        itunes_sum = mongo.db.itunes.count()</span><br><span class="line">        itunes = mongo.db.itunes.find().skip((page - <span class="number">1</span>) * pagesize).sort(<span class="string">&#x27;create_time&#x27;</span>,-<span class="number">1</span>).limit(pagesize)</span><br><span class="line">     </span><br><span class="line">    <span class="keyword">return</span> render_template(</span><br><span class="line">            <span class="string">&#x27;front/spider_itunes.html&#x27;</span>,</span><br><span class="line">            itunes=itunes,</span><br><span class="line">            itunes_sum=itunes_sum,</span><br><span class="line">            title=<span class="string">u&quot;iTunes爬虫&quot;</span>,</span><br><span class="line">            prev_page=prev_page,</span><br><span class="line">            next_page=next_page,</span><br><span class="line">            params=params_query</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+          <p>nvm的安装请转到这里：</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NyZWF0aW9uaXgvbnZt">https://github.com/creationix/nvm<i class="fa fa-external-link-alt"></i></span></p>
+<p><strong>下面先说nvm的加速</strong></p>
+<p>nvm 默认是从 <span class="exturl" data-url="aHR0cDovL25vZGVqcy5vcmcvZGlzdC8=">http://nodejs.org/dist/<i class="fa fa-external-link-alt"></i></span> 下载的, 国外服务器, 必然很慢,</p>
+<p>好在 nvm 以及支持从镜像服务器下载包, 于是我们可以方便地从七牛的 node dist 镜像下载:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ NVM_NODEJS_ORG_MIRROR=http://dist.u.qiniudn.com nvm install 0.12.7</span><br></pre></td></tr></table></figure>
 
-<p>mongodb还是别扭点，常用就好了。</p>
+<p>于是你就会看到一段非常快速进度条:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">######################################################################## 100.0%</span></span><br><span class="line">Now using node v0.12.7</span><br></pre></td></tr></table></figure>
 
-      
-    </div>
+<p>如果你不想每次都输入环境变量 NVM_NODEJS_ORG_MIRROR, 那么我建议你加入到 .bashrc 文件中:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nvm</span></span><br><span class="line"><span class="built_in">export</span> NVM_NODEJS_ORG_MIRROR=http://dist.u.qiniudn.com</span><br><span class="line"><span class="built_in">source</span> ~/git/nvm/nvm.sh</span><br></pre></td></tr></table></figure>
 
-    
-    
-    
+<p>然后你可以继续非常方便地安装各个版本的 node 了, 你可以查看一下你当前已经安装的版本:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm <span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
 
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+<p>查看远端的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm ls-remote</span><br></pre></td></tr></table></figure>
 
+<p><strong>下面再说下npm加速</strong></p>
+<p>同理 nvm , npm 默认是从国外的源获取和下载包信息, 不慢才奇怪.</p>
+<p>可以通过简单的 —registry 参数, 使用国内的镜像 <span class="exturl" data-url="aHR0cDovL3IuY25wbWpzLm9yZy8=">http://r.cnpmjs.org<i class="fa fa-external-link-alt"></i></span> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm --registry=http://r.cnpmjs.org install koa</span><br></pre></td></tr></table></figure>
 
+<p>但是毕竟镜像跟官方的 npm 源还是会有一个同步时间差异, 目前 cnpm 的默认同步时间间隔是 15 分钟.</p>
+<p>如果你是模块发布者, 或者你想马上同步一个模块, 那么推荐你安装 cnpm cli:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm --registry=http://r.cnpmjs.org install cnpm -g</span><br></pre></td></tr></table></figure>
 
+<p>通过 cnpm 命令行, 你可以快速同步任意模块:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cnpm <span class="built_in">sync</span> koa connect mocha</span><br></pre></td></tr></table></figure>
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Flask%E4%B8%AD%E5%AE%9E%E7%8E%B0%E4%BD%BF%E7%94%A8SQLAlchemy-MySQLdb%E5%88%86%E9%A1%B5%E7%9A%84%E7%A8%8B%E5%BA%8F%E9%80%BB%E8%BE%91.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Flask%E4%B8%AD%E5%AE%9E%E7%8E%B0%E4%BD%BF%E7%94%A8SQLAlchemy-MySQLdb%E5%88%86%E9%A1%B5%E7%9A%84%E7%A8%8B%E5%BA%8F%E9%80%BB%E8%BE%91.html" class="post-title-link" itemprop="url">Flask中实现使用SQLAlchemy  MySQLdb分页的程序逻辑</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-30 14:08:58 / 修改时间：14:19:21" itemprop="dateCreated datePublished" datetime="2025-06-30T14:08:58+08:00">2025-06-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>逻辑的话还是蛮简单的，多查看一个文档就可以了。代码如下</p>
-<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">page = <span class="built_in">int</span>(request.args.get(<span class="string">&#x27;page&#x27;</span>)) <span class="keyword">if</span> request.args.get(<span class="string">&#x27;page&#x27;</span>) <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line">    pagesize = <span class="number">20</span></span><br><span class="line">    prev_page = page - <span class="number">1</span> <span class="keyword">if</span> page - <span class="number">1</span> <span class="keyword">else</span> <span class="number">1</span></span><br><span class="line">    next_page = page + <span class="number">1</span></span><br><span class="line">      </span><br><span class="line">    <span class="comment"># 关键字查询</span></span><br><span class="line">    keywords = request.args.get(<span class="string">&#x27;keywords&#x27;</span>)</span><br><span class="line">    start_date = request.args.get(<span class="string">&#x27;start_date&#x27;</span>) </span><br><span class="line">    end_date = request.args.get(<span class="string">&#x27;end_date&#x27;</span>)</span><br><span class="line">  </span><br><span class="line">    params_query = &#123;&#125;</span><br><span class="line">    query = Itunes.query</span><br><span class="line">    <span class="keyword">if</span> keywords:</span><br><span class="line">        query = query.<span class="built_in">filter</span>(Itunes.title.startswith(keywords))</span><br><span class="line">        params_query[<span class="string">&#x27;keywords&#x27;</span>] = keywords</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> start_date <span class="keyword">and</span> end_date:</span><br><span class="line">        start = <span class="string">&#x27;%s 00:00:00&#x27;</span> % start_date</span><br><span class="line">        end = <span class="string">&#x27;%s 23:59:59&#x27;</span> % end_date</span><br><span class="line">        start = <span class="built_in">int</span>(time.mktime(time.strptime(start,<span class="string">&#x27;%Y-%m-%d %H:%M:%S&#x27;</span>)))</span><br><span class="line">        end = <span class="built_in">int</span>(time.mktime(time.strptime(end,<span class="string">&#x27;%Y-%m-%d %H:%M:%S&#x27;</span>)))</span><br><span class="line">          </span><br><span class="line">        query = query.<span class="built_in">filter</span>(Itunes.create_time &gt; start)</span><br><span class="line">        query = query.<span class="built_in">filter</span>(Itunes.create_time &lt;= end)</span><br><span class="line">  </span><br><span class="line">        params_query[<span class="string">&#x27;start_date&#x27;</span>] = start_date</span><br><span class="line">        params_query[<span class="string">&#x27;end_date&#x27;</span>] = end_date</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">if</span> params_query: </span><br><span class="line">        itunes_sum = query.count()</span><br><span class="line">        itunes = query.offset((page-<span class="number">1</span>)*pagesize).limit(pagesize).<span class="built_in">all</span>()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        itunes_sum = Itunes.query.count()</span><br><span class="line">        itunes = Itunes.query.offset((page-<span class="number">1</span>)*pagesize).limit(pagesize).<span class="built_in">all</span>()</span><br><span class="line">          </span><br><span class="line">      </span><br><span class="line">      </span><br><span class="line">    <span class="keyword">return</span> render_template(</span><br><span class="line">            <span class="string">&#x27;front/spider_apple.html&#x27;</span>,</span><br><span class="line">            itunes=itunes,</span><br><span class="line">            itunes_sum=itunes_sum,</span><br><span class="line">            title=<span class="string">u&quot;Apple爬虫&quot;</span>,</span><br><span class="line">            prev_page=prev_page,</span><br><span class="line">            next_page=next_page,</span><br><span class="line">            params=params_query</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+<p>呃, 我就是不想安装 cnpm cli 怎么办? 哈哈, 早就想到你会这么懒了, 于是我们还有一个 web 页面:</p>
+<p>例如我想马上同步 koa, 直接打开浏览器: <span class="exturl" data-url="aHR0cDovL2NucG1qcy5vcmcvc3luYy9rb2E=">http://cnpmjs.org/sync/koa<i class="fa fa-external-link-alt"></i></span></p>
+<p>或者你是命令行控, 通过 open 命令打开:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ open http://cnpmjs.org/sync/koa</span><br></pre></td></tr></table></figure>
 
 
 
@@ -409,7 +360,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Gulp-%E5%AE%9E%E7%8E%B0-js-CSS-img-%E5%90%88%E5%B9%B6%E5%92%8C%E5%8E%8B%E7%BC%A9.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/%E5%9B%BD%E5%86%85%E8%A7%A3%E5%86%B3github%E8%AE%BF%E9%97%AE%E6%85%A2%E7%9A%84%E5%8A%9E%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -427,7 +378,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Gulp-%E5%AE%9E%E7%8E%B0-js-CSS-img-%E5%90%88%E5%B9%B6%E5%92%8C%E5%8E%8B%E7%BC%A9.html" class="post-title-link" itemprop="url">Gulp 实现 js、CSS,img 合并和压缩</a>
+          <a href="/2025/07/01/%E5%9B%BD%E5%86%85%E8%A7%A3%E5%86%B3github%E8%AE%BF%E9%97%AE%E6%85%A2%E7%9A%84%E5%8A%9E%E6%B3%95.html" class="post-title-link" itemprop="url">国内解决github访问慢的办法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -439,7 +390,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 14:08:55 / 修改时间：14:20:40" itemprop="dateCreated datePublished" datetime="2025-06-30T14:08:55+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-01 11:53:20 / 修改时间：12:07:30" itemprop="dateCreated datePublished" datetime="2025-07-01T11:53:20+08:00">2025-07-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -461,14 +412,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>前提条件，知道如何安装nodejs、gulp，这里不做介绍，可以自行google</p>
-<p>实现此功能需要安装的gulp工具有如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gulp-htmlmin gulp-imagemin imagemin-pngcrush gulp-minify-css gulp-jshint gulp-uglify gulp-concat gulp-rename gulp-notify --save-dev</span><br></pre></td></tr></table></figure>
+          <p>github 慢, 或者说是它的资源 host 被堵而已, 大家可以通过简单的 hosts 映射解决:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">185.31.16.184 github.global.ssl.fastly.net</span><br></pre></td></tr></table></figure>
 
-<p>gulp配置文件如下</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在你的项目根目录下创建gulpfile.js，代码如下：</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">// 引入 gulp</span></span><br><span class="line"><span class="keyword">var</span> gulp = <span class="built_in">require</span>(<span class="string">&#x27;gulp&#x27;</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 引入组件</span></span><br><span class="line"><span class="keyword">var</span> htmlmin = <span class="built_in">require</span>(<span class="string">&#x27;gulp-htmlmin&#x27;</span>), <span class="comment">//html压缩</span></span><br><span class="line">    imagemin = <span class="built_in">require</span>(<span class="string">&#x27;gulp-imagemin&#x27;</span>),<span class="comment">//图片压缩</span></span><br><span class="line">    pngcrush = <span class="built_in">require</span>(<span class="string">&#x27;imagemin-pngcrush&#x27;</span>),</span><br><span class="line">    minifycss = <span class="built_in">require</span>(<span class="string">&#x27;gulp-minify-css&#x27;</span>),<span class="comment">//css压缩</span></span><br><span class="line">    jshint = <span class="built_in">require</span>(<span class="string">&#x27;gulp-jshint&#x27;</span>),<span class="comment">//js检测</span></span><br><span class="line">    uglify = <span class="built_in">require</span>(<span class="string">&#x27;gulp-uglify&#x27;</span>),<span class="comment">//js压缩</span></span><br><span class="line">    concat = <span class="built_in">require</span>(<span class="string">&#x27;gulp-concat&#x27;</span>),<span class="comment">//文件合并</span></span><br><span class="line">    rename = <span class="built_in">require</span>(<span class="string">&#x27;gulp-rename&#x27;</span>),<span class="comment">//文件更名</span></span><br><span class="line">    notify = <span class="built_in">require</span>(<span class="string">&#x27;gulp-notify&#x27;</span>);<span class="comment">//提示信息</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">// 压缩html</span></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;html&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>(<span class="string">&#x27;src/*.html&#x27;</span>)</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">htmlmin</span>(&#123;<span class="attr">collapseWhitespace</span>: <span class="literal">true</span>&#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./dest&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">notify</span>(&#123; <span class="attr">message</span>: <span class="string">&#x27;html task ok&#x27;</span> &#125;));</span><br><span class="line"> </span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 压缩图片</span></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;img&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>(<span class="string">&#x27;src/images/*&#x27;</span>)</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">imagemin</span>(&#123;</span><br><span class="line">        <span class="attr">progressive</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">svgoPlugins</span>: [&#123;<span class="attr">removeViewBox</span>: <span class="literal">false</span>&#125;],</span><br><span class="line">        <span class="attr">use</span>: [<span class="title function_">pngcrush</span>()]</span><br><span class="line">    &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;./dest/images/&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">notify</span>(&#123; <span class="attr">message</span>: <span class="string">&#x27;img task ok&#x27;</span> &#125;));</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 合并、压缩、重命名css</span></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;css&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>(<span class="string">&#x27;src/css/*.css&#x27;</span>)</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">concat</span>(<span class="string">&#x27;main.css&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dest/css&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">rename</span>(&#123; <span class="attr">suffix</span>: <span class="string">&#x27;.min&#x27;</span> &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">minifycss</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dest/css&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">notify</span>(&#123; <span class="attr">message</span>: <span class="string">&#x27;css task ok&#x27;</span> &#125;));</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 检查js</span></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;lint&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>(<span class="string">&#x27;src/js/*.js&#x27;</span>)</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">jshint</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(jshint.<span class="title function_">reporter</span>(<span class="string">&#x27;default&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">notify</span>(&#123; <span class="attr">message</span>: <span class="string">&#x27;lint task ok&#x27;</span> &#125;));</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 合并、压缩js文件</span></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;js&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> gulp.<span class="title function_">src</span>(<span class="string">&#x27;src/js/*.js&#x27;</span>)</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">concat</span>(<span class="string">&#x27;all.js&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dest/js&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">rename</span>(&#123; <span class="attr">suffix</span>: <span class="string">&#x27;.min&#x27;</span> &#125;))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">uglify</span>())</span><br><span class="line">    .<span class="title function_">pipe</span>(gulp.<span class="title function_">dest</span>(<span class="string">&#x27;dest/js&#x27;</span>))</span><br><span class="line">    .<span class="title function_">pipe</span>(<span class="title function_">notify</span>(&#123; <span class="attr">message</span>: <span class="string">&#x27;js task ok&#x27;</span> &#125;));</span><br><span class="line">&#125;);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 默认任务</span></span><br><span class="line">gulp.<span class="title function_">task</span>(<span class="string">&#x27;default&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">  gulp.<span class="title function_">run</span>(<span class="string">&#x27;img&#x27;</span>, <span class="string">&#x27;css&#x27;</span>, <span class="string">&#x27;lint&#x27;</span>, <span class="string">&#x27;js&#x27;</span>, <span class="string">&#x27;html&#x27;</span>);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 监听html文件变化</span></span><br><span class="line">  gulp.<span class="title function_">watch</span>(<span class="string">&#x27;src/*.html&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    gulp.<span class="title function_">run</span>(<span class="string">&#x27;html&#x27;</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// Watch .css files</span></span><br><span class="line">  gulp.<span class="title function_">watch</span>(<span class="string">&#x27;src/css/*.css&#x27;</span>, [<span class="string">&#x27;css&#x27;</span>]);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// Watch .js files</span></span><br><span class="line">  gulp.<span class="title function_">watch</span>(<span class="string">&#x27;src/js/*.js&#x27;</span>, [<span class="string">&#x27;lint&#x27;</span>, <span class="string">&#x27;js&#x27;</span>]);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// Watch image files</span></span><br><span class="line">  gulp.<span class="title function_">watch</span>(<span class="string">&#x27;src/images/*&#x27;</span>, [<span class="string">&#x27;img&#x27;</span>]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>执行下看看效果吧</p>
+<p>原因是这样的吧： <span class="exturl" data-url="aHR0cDovL3dlaWJvLmNvbS8xNDE1MzM4MjQ0L0FDVFlrcTh4Sw==">http://weibo.com/1415338244/ACTYkq8xK<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -495,7 +442,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Grunt-%E5%AE%9E%E7%8E%B0-js-CSS-%E5%90%88%E5%B9%B6%E5%92%8C%E5%8E%8B%E7%BC%A9.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Nodejs-iconv-lite-%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%87%A0%E4%B8%AA%E7%8E%AF%E8%8A%82.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -513,358 +460,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Grunt-%E5%AE%9E%E7%8E%B0-js-CSS-%E5%90%88%E5%B9%B6%E5%92%8C%E5%8E%8B%E7%BC%A9.html" class="post-title-link" itemprop="url">Grunt 实现 js、CSS 合并和压缩</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-30 14:08:52 / 修改时间：14:28:26" itemprop="dateCreated datePublished" datetime="2025-06-30T14:08:52+08:00">2025-06-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>前提条件，知道如何安装nodejs、grunt，这里不做介绍，可以自行google</p>
-<p>实现此功能需要安装的Grunt工具有如下</p>
-<p>grunt-contrib-concat</p>
-<p>grunt-contrib-uglify</p>
-<p>grunt-css</p>
-<p>1、实现js的合并和压缩</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="keyword">function</span>(<span class="params">grunt</span>) &#123;</span><br><span class="line">    <span class="comment">// 配置</span></span><br><span class="line">    grunt.<span class="title function_">initConfig</span>(&#123;</span><br><span class="line">        pkg : grunt.<span class="property">file</span>.<span class="title function_">readJSON</span>(<span class="string">&#x27;package.json&#x27;</span>),</span><br><span class="line">        concat : &#123;   <span class="comment">//合并文件</span></span><br><span class="line">            domop : &#123;</span><br><span class="line">                <span class="attr">src</span>: [<span class="string">&#x27;assets/test1.js&#x27;</span>, <span class="string">&#x27;assets/test2.js&#x27;</span>],  <span class="comment">//源文件目录</span></span><br><span class="line">                <span class="attr">dest</span>: <span class="string">&#x27;dest/result.js&#x27;</span>   <span class="comment">//目标文件目录，自动创建dest目录</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        uglify : &#123;   <span class="comment">//压缩文件</span></span><br><span class="line">            options : &#123;</span><br><span class="line">                banner : <span class="string">&#x27;/*! &lt;%= pkg.name %&gt; &lt;%= grunt.template.today(&quot;yyyy-mm-dd&quot;) %&gt; */\n&#x27;</span></span><br><span class="line">            &#125;,</span><br><span class="line">            build : &#123;</span><br><span class="line">                src : <span class="string">&#x27;dest/result.js&#x27;</span>,</span><br><span class="line">                dest : <span class="string">&#x27;dest/result.min.js&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// 载入concat和uglify插件，分别对于合并和压缩</span></span><br><span class="line">    grunt.<span class="title function_">loadNpmTasks</span>(<span class="string">&#x27;grunt-contrib-concat&#x27;</span>);</span><br><span class="line">    grunt.<span class="title function_">loadNpmTasks</span>(<span class="string">&#x27;grunt-contrib-uglify&#x27;</span>);</span><br><span class="line">    <span class="comment">// 注册任务</span></span><br><span class="line">    grunt.<span class="title function_">registerTask</span>(<span class="string">&#x27;default&#x27;</span>, [<span class="string">&#x27;concat&#x27;</span>, <span class="string">&#x27;uglify&#x27;</span>]);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>2、实现css的合并和压缩</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = <span class="keyword">function</span>(<span class="params">grunt</span>)&#123;</span><br><span class="line">    grunt.<span class="title function_">initConfig</span>(&#123;</span><br><span class="line">        <span class="attr">pkg</span>:grunt.<span class="property">file</span>.<span class="title function_">readJSON</span>(<span class="string">&#x27;package.json&#x27;</span>),</span><br><span class="line">        <span class="attr">concat</span>:&#123;</span><br><span class="line">            <span class="attr">css</span>:&#123;</span><br><span class="line">                <span class="attr">src</span>:[<span class="string">&#x27;assets/*.css&#x27;</span>],</span><br><span class="line">                <span class="attr">dest</span>:<span class="string">&#x27;dest/all.css&#x27;</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">cssmin</span>:&#123;</span><br><span class="line">            <span class="attr">css</span>: &#123;</span><br><span class="line">                <span class="attr">src</span>: <span class="string">&#x27;dest/asset/all.css&#x27;</span>,</span><br><span class="line">                <span class="attr">dest</span>: <span class="string">&#x27;dest/asset/all-min.css&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">  </span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// 载入concat和css插件</span></span><br><span class="line">    grunt.<span class="title function_">loadNpmTasks</span>(<span class="string">&#x27;grunt-contrib-concat&#x27;</span>);<span class="comment">//用于合并</span></span><br><span class="line">    grunt.<span class="title function_">loadNpmTasks</span>(<span class="string">&#x27;grunt-css&#x27;</span>);<span class="comment">//用于压缩</span></span><br><span class="line">    grunt.<span class="title function_">registerTask</span>(<span class="string">&#x27;default&#x27;</span>,[<span class="string">&#x27;concat&#x27;</span>,<span class="string">&#x27;cssmin&#x27;</span>]);<span class="comment">//任务</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E6%A8%A1%E5%9D%97%E5%86%B2%E7%AA%81-%E7%BC%96%E8%AF%91php%E6%A8%A1%E5%9D%97%E7%9A%84%E6%97%B6%E5%80%99%E4%B8%80%E5%AE%9A-with-PHP-config.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/%E6%A8%A1%E5%9D%97%E5%86%B2%E7%AA%81-%E7%BC%96%E8%AF%91php%E6%A8%A1%E5%9D%97%E7%9A%84%E6%97%B6%E5%80%99%E4%B8%80%E5%AE%9A-with-PHP-config.html" class="post-title-link" itemprop="url">模块冲突 编译php模块的时候一定--with-PHP-config</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-30 12:01:18 / 修改时间：14:06:13" itemprop="dateCreated datePublished" datetime="2025-06-30T12:01:18+08:00">2025-06-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>一般的错误提示是：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NOTICE: PHP message: PHP Warning: PHP Startup: mcrypt: Unable to initialize module</span><br></pre></td></tr></table></figure>
-
-<p>或者</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PHP Warning:  Module <span class="string">&#x27;gd&#x27;</span> already loaded <span class="keyword">in</span> Unknown on line 0</span><br></pre></td></tr></table></figure>
-
-<p>当服务器中安装了2个以上的php环境时会出现以上错误,这是由于phpize编译的版本不一致，所以安装扩展的时候 一定要加上–with-php-config</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/php/bin/phpize <span class="comment">#写全phpize的路径</span></span><br><span class="line">./configure --with-php-config=/usr/local/php/bin/php-config  <span class="comment">#配置时 要将php-config的路径附上</span></span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
-
-<p>上面的路径根据具体情况具体分析</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/%E4%BC%98%E5%8C%96-RequireJS-%E9%A1%B9%E7%9B%AE-%E5%90%88%E5%B9%B6%E4%B8%8E%E5%8E%8B%E7%BC%A9--%E4%BC%98%E5%8C%96%E5%99%A8-Optimizer.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/%E4%BC%98%E5%8C%96-RequireJS-%E9%A1%B9%E7%9B%AE-%E5%90%88%E5%B9%B6%E4%B8%8E%E5%8E%8B%E7%BC%A9--%E4%BC%98%E5%8C%96%E5%99%A8-Optimizer.html" class="post-title-link" itemprop="url">优化 RequireJS 项目（合并与压缩）- 优化器（Optimizer）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-30 12:01:15 / 修改时间：14:06:03" itemprop="dateCreated datePublished" datetime="2025-06-30T12:01:15+08:00">2025-06-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近在使用js开发项目，用到了requirejs，到后面会发现好多的js文件要加载，于是找到了优化js的方法，就是使用requirejs自带的Optimizer优化器。</p>
-<p>具体操作如下：</p>
-<p><em>前提是你已经安装了nodejs：</em></p>
-<p>0.安装requirejs</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> cnpm install requirejs -g / cnpm install requirejs -g / npm install requirejs -g /sudo npm install requirejs -g</span><br></pre></td></tr></table></figure>
-
-<p>1.构建一个配置文件(相对于执行文件夹)并包含指定的参数，build.js</p>
-<p>2.编写build.js，内容如下（仅供参考）：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">(&#123;</span><br><span class="line">    <span class="attr">appDir</span>: <span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">    <span class="attr">baseUrl</span>: <span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">    <span class="attr">dir</span>: <span class="string">&#x27;./dist&#x27;</span>,</span><br><span class="line">    <span class="attr">modules</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">name</span>: <span class="string">&#x27;main&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">fileExclusionRegExp</span>: <span class="regexp">/^(r|build)\.js$/</span>,</span><br><span class="line">    <span class="attr">optimizeCss</span>: <span class="string">&#x27;standard&#x27;</span>,</span><br><span class="line">    <span class="attr">removeCombined</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="attr">paths</span>: &#123;</span><br><span class="line">        <span class="attr">jquery</span>: <span class="string">&#x27;vendor/jquery/dist/jquery.min&#x27;</span>,</span><br><span class="line">        <span class="attr">director</span>: <span class="string">&#x27;vendor/director/build/director.min&#x27;</span>,</span><br><span class="line">        <span class="attr">highcharts</span>: <span class="string">&#x27;vendor/highcharts/highcharts&#x27;</span>,</span><br><span class="line">        <span class="attr">react</span>: <span class="string">&#x27;vendor/react/react.min&#x27;</span>,</span><br><span class="line">        <span class="attr">reactAddons</span>: <span class="string">&#x27;vendor/react/react-with-addons.min&#x27;</span>,</span><br><span class="line">        <span class="title class_">JSXTransformer</span>: <span class="string">&#x27;vendor/react/JSXTransformer&#x27;</span>,</span><br><span class="line">        <span class="attr">cookieStorage</span>: <span class="string">&#x27;vendor/cookie-storage/dist/cookie-storage&#x27;</span>,</span><br><span class="line">        <span class="attr">json2</span>: <span class="string">&#x27;vendor/json/json2&#x27;</span>,</span><br><span class="line">        <span class="attr">xdate</span>: <span class="string">&#x27;vendor/xdate/src/xdate&#x27;</span>,</span><br><span class="line">        <span class="attr">moment</span>: <span class="string">&#x27;vendor/moment/min/moment.min&#x27;</span>,</span><br><span class="line">        <span class="attr">jPages</span>: <span class="string">&#x27;vendor/jPages/js/jPages&#x27;</span>,</span><br><span class="line">        <span class="attr">numberFormat</span>: <span class="string">&#x27;vendor/number-format.js/lib/format.min&#x27;</span>,</span><br><span class="line">        <span class="attr">bootstrap</span>:<span class="string">&#x27;vendor/bootstrap/dist/js/bootstrap.min&#x27;</span>,</span><br><span class="line">        <span class="attr">datetimepicker</span>:<span class="string">&#x27;vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker&#x27;</span>,</span><br><span class="line">        <span class="attr">datetimepickerLanguage</span>:<span class="string">&#x27;vendor/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN&#x27;</span>,</span><br><span class="line">        <span class="attr">fancybox</span>:<span class="string">&#x27;vendor/fancybox/source/jquery.fancybox.pack&#x27;</span>,</span><br><span class="line">        <span class="attr">async</span>:<span class="string">&#x27;vendor/async/lib/async&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">shim</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;highcharts&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;deps&#x27;</span>: [<span class="string">&#x27;jquery&#x27;</span>],</span><br><span class="line">            <span class="string">&#x27;exports&#x27;</span>: <span class="string">&#x27;Highcharts&#x27;</span>      <span class="comment">// Still gotta make this available //使用全局的Highcharts做为模块名称</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;datetimepickerLanguage&#x27;</span>:&#123;<span class="comment">//因datetimepickerLanguage依赖datetimepicker,所以次代码是优先加载datetimepicker</span></span><br><span class="line">            <span class="string">&#x27;deps&#x27;</span>:[<span class="string">&#x27;datetimepicker&#x27;</span>]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;datetimepicker&#x27;</span>:&#123;</span><br><span class="line">            <span class="string">&#x27;deps&#x27;</span>:[<span class="string">&#x27;css!vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min&#x27;</span>]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;bootstrap&#x27;</span>:&#123;</span><br><span class="line">            <span class="string">&#x27;deps&#x27;</span>:[<span class="string">&#x27;jquery&#x27;</span>]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;fancybox&#x27;</span>:&#123;</span><br><span class="line">            <span class="string">&#x27;deps&#x27;</span>:[</span><br><span class="line">                <span class="string">&#x27;jquery&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;css!vendor/fancybox/source/jquery.fancybox.css&#x27;</span></span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;async&#x27;</span>:&#123;</span><br><span class="line">            <span class="string">&#x27;deps&#x27;</span>:[</span><br><span class="line">                <span class="string">&#x27;vendor/async/deps/nodeunit&#x27;</span>,</span><br><span class="line">                <span class="string">&#x27;css!vendor/async/deps/nodeunit.css&#x27;</span></span><br><span class="line">            ]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">map</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;*&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;css&#x27;</span>: <span class="string">&#x27;vendor/require-css/css&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>3.执行命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">r.js -o build.js</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/MacOS-%E7%BB%88%E7%AB%AF%E5%85%89%E6%A0%87%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%93%8D%E4%BD%9C.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/MacOS-%E7%BB%88%E7%AB%AF%E5%85%89%E6%A0%87%E7%9A%84%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%93%8D%E4%BD%9C.html" class="post-title-link" itemprop="url">MacOS 终端光标的快捷键操作</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-30 12:01:12 / 修改时间：14:05:53" itemprop="dateCreated datePublished" datetime="2025-06-30T12:01:12+08:00">2025-06-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">常用的快捷键：</span><br><span class="line">Ctrl + d        删除一个字符，相当于通常的Delete键（命令行若无所有字符，则相当于<span class="built_in">exit</span>；处理多行标准输入时也表示eof）</span><br><span class="line">Ctrl + h        退格删除一个字符，相当于通常的Backspace键</span><br><span class="line">Ctrl + u        删除光标之前到行首的字符</span><br><span class="line">Ctrl + k        删除光标之前到行尾的字符</span><br><span class="line">Ctrl + c        取消当前行输入的命令，相当于Ctrl + Break</span><br><span class="line">Ctrl + a        光标移动到行首（Ahead of line），相当于通常的Home键</span><br><span class="line">Ctrl + e        光标移动到行尾（End of line）</span><br><span class="line">Ctrl + f        光标向前(Forward)移动一个字符位置</span><br><span class="line">Ctrl + b        光标往回(Backward)移动一个字符位置</span><br><span class="line">Ctrl + l        清屏，相当于执行clear命令</span><br><span class="line">Ctrl + p        调出命令历史中的前一条（Previous）命令，相当于通常的上箭头</span><br><span class="line">Ctrl + n        调出命令历史中的下一条（Next）命令，相当于通常的上箭头</span><br><span class="line">Ctrl + r        显示：号提示，根据用户输入查找相关历史命令（reverse-i-search）</span><br><span class="line"> </span><br><span class="line">次常用快捷键：</span><br><span class="line">Alt + f         光标向前（Forward）移动到下一个单词</span><br><span class="line">Alt + b         光标往回（Backward）移动到前一个单词</span><br><span class="line">Ctrl + w        删除从光标位置前到当前所处单词（Word）的开头</span><br><span class="line">Alt + d         删除从光标位置到当前所处单词的末尾</span><br><span class="line">Ctrl + y        粘贴最后一次被删除的单词</span><br></pre></td></tr></table></figure>
-
-<p>以上就是快捷键了，在这里我只想揭露一些事情，这些快捷键都是emacs的快捷键！熟悉终端的同学应该知道，终端里可以设置快捷键的类型是vim还是emacs。当然了大多数的终端都用的emacs，因为啥自己想去吧。<br>在这里之所以又将这些东西提出来的原因是：mac os x虽然是图形界面，但是chrome，xcode啥的也支持这些快捷键！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Nodejs-Async%E7%9A%84%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Nodejs-Async%E7%9A%84%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B.html" class="post-title-link" itemprop="url">Nodejs Async的使用实例</a>
+          <a href="/2025/07/01/Nodejs-iconv-lite-%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%87%A0%E4%B8%AA%E7%8E%AF%E8%8A%82.html" class="post-title-link" itemprop="url">Nodejs iconv-lite 使用过程中需要注意的几个环节</a>
         </h2>
 
         <div class="post-meta-container">
@@ -875,14 +471,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2025-06-30 12:01:09" itemprop="dateCreated datePublished" datetime="2025-06-30T12:01:09+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-01 11:52:51" itemprop="dateCreated datePublished" datetime="2025-07-01T11:52:51+08:00">2025-07-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-08 09:41:07" itemprop="dateModified" datetime="2025-07-08T09:41:07+08:00">2025-07-08</time>
+      <time title="修改时间：2025-07-08 09:41:06" itemprop="dateModified" datetime="2025-07-08T09:41:06+08:00">2025-07-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -904,11 +500,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>最近在玩nodejs，里面使用了mysql，但是如果你用过php的话，就知道过你想得到一个结果，操作的办法是从上一个sql语句中得到某个需要的值，然后再进行下一个语句使用到，使用nodejs的话，里面设计到了异步，为了达到我们需要的效果，认识了下async这个工具包。看下实例吧</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">index</span> = <span class="keyword">function</span>(<span class="params">req,res</span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> id = req.<span class="property">query</span>.<span class="property">id</span>;</span><br><span class="line">    <span class="keyword">var</span> result;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> sql = <span class="string">&quot;select * from ?? order by id DESC&quot;</span>;</span><br><span class="line">    <span class="keyword">var</span> options = [<span class="string">&#x27;user&#x27;</span>];</span><br><span class="line">    sql = mysql.<span class="title function_">format</span>(sql,options);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">async</span>.<span class="title function_">waterfall</span>([</span><br><span class="line">        <span class="keyword">function</span>(<span class="params">done</span>)&#123;</span><br><span class="line">            <span class="keyword">var</span> sql = <span class="string">&quot;select * from ?? order by id DESC&quot;</span>;</span><br><span class="line">            <span class="keyword">var</span> options = [<span class="string">&#x27;user&#x27;</span>];</span><br><span class="line">            sql = mysql.<span class="title function_">format</span>(sql,options);</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">            <span class="variable constant_">DB</span>.<span class="title function_">select</span>(sql,<span class="keyword">function</span>(<span class="params">error,result</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(!result)&#123;</span><br><span class="line">                    result = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">var</span> templates_data = <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">                templates_data[<span class="string">&#x27;title&#x27;</span>] = <span class="string">&#x27;Qeeniao Admin&#x27;</span>;</span><br><span class="line">                templates_data[<span class="string">&#x27;result&#x27;</span>] = result;</span><br><span class="line"> </span><br><span class="line">                <span class="title function_">done</span>(<span class="literal">null</span>,result);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="keyword">function</span>(<span class="params">list1,done</span>)&#123;</span><br><span class="line">            <span class="keyword">var</span> sql = <span class="string">&quot;select * from ?? order by id DESC&quot;</span>;</span><br><span class="line">            <span class="keyword">var</span> options = [<span class="string">&#x27;user&#x27;</span>];</span><br><span class="line">            sql = mysql.<span class="title function_">format</span>(sql,options);</span><br><span class="line"> </span><br><span class="line">            <span class="keyword">var</span> tmp = [];</span><br><span class="line">            <span class="keyword">if</span>(list1.<span class="property">length</span> &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                list1.<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">item</span>)&#123;</span><br><span class="line">                    tmp.<span class="title function_">push</span>(item);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line"> </span><br><span class="line">            <span class="variable constant_">DB</span>.<span class="title function_">select</span>(sql,<span class="keyword">function</span>(<span class="params">error,result</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(!result)&#123;</span><br><span class="line">                    result = [];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">var</span> templates_data = <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">                templates_data[<span class="string">&#x27;title&#x27;</span>] = <span class="string">&#x27;Qeeniao Admin&#x27;</span>;</span><br><span class="line">                templates_data[<span class="string">&#x27;result&#x27;</span>] = result;</span><br><span class="line"> </span><br><span class="line">                <span class="keyword">if</span>(result.<span class="property">length</span> &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                    result.<span class="title function_">map</span>(<span class="keyword">function</span>(<span class="params">item</span>)&#123;</span><br><span class="line">                        tmp.<span class="title function_">push</span>(item);</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="title function_">done</span>(<span class="literal">null</span>,tmp);</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    ],<span class="keyword">function</span>(<span class="params">error,result</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!result)&#123;</span><br><span class="line">            result = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> templates_data = <span class="keyword">new</span> <span class="title class_">Object</span>();</span><br><span class="line">        templates_data[<span class="string">&#x27;title&#x27;</span>] = <span class="string">&#x27;Qeeniao Admin&#x27;</span>;</span><br><span class="line">        templates_data[<span class="string">&#x27;result&#x27;</span>] = result;</span><br><span class="line"> </span><br><span class="line">        res.<span class="title function_">render</span>(<span class="string">&#x27;admin/index&#x27;</span>,templates_data);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-
-<p>参考文章:<span class="exturl" data-url="aHR0cDovL3lpamllYnV5aS5jb20vYmxvZy9iZTIzNDM5NGNkMzUwZGUxNjQ3OWM1ODNmNmY2YmNiNi5odG1s">http://yijiebuyi.com/blog/be234394cd350de16479c583f6f6bcb6.html<i class="fa fa-external-link-alt"></i></span></p>
+          <p>最近在使用Nodejs的一个库Iconv-lite，有时候会报出这样一个提示</p>
+<blockquote>
+<p>Iconv-lite warning: decode()-ing strings is deprecated. Refer to <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FzaHR1Y2hraW4vaWNvbnYtbGl0ZS93aWtpL1VzZS1CdWZmZXJzLXdoZW4tZGVjb2Rpbmc=">https://github.com/ashtuchkin/iconv-lite/wiki/Use-Buffers-when-decoding<i class="fa fa-external-link-alt"></i></span></p>
+</blockquote>
+<p>已经给出了对应的Refer。</p>
+<p>具体详情见：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FzaHR1Y2hraW4vaWNvbnYtbGl0ZS93aWtpL1VzZS1CdWZmZXJzLXdoZW4tZGVjb2Rpbmc=">https://github.com/ashtuchkin/iconv-lite/wiki/Use-Buffers-when-decoding<i class="fa fa-external-link-alt"></i></span><br>其实看完之后，很简单就是<br>如果有一个Buffer数据的话，你进行了toString()后，就已经进行了一层默认的decode操作，一般默认的是utf-8，<br>所以如果你在进行iconv.decode()的时候，就会出现一个提示，这个在最新版本会出现这个问题，其他的版本我就不知道了，<br>如果你在使用的过程中，decode之后，没有效果的话，可以试试，在decode之前先不要任何操作，直接将Buffer数据进行<br>decode，进过测试，直接decode(Bufffer)数据会效果比较好，谁用谁知道。</p>
 
       
     </div>
@@ -935,7 +532,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/React-Pager%E5%88%86%E9%A1%B5%E5%AE%9E%E4%BE%8B.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/DNS-%E6%94%B6%E9%9B%86.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -953,7 +550,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/React-Pager%E5%88%86%E9%A1%B5%E5%AE%9E%E4%BE%8B.html" class="post-title-link" itemprop="url">React Pager分页实例</a>
+          <a href="/2025/07/01/DNS-%E6%94%B6%E9%9B%86.html" class="post-title-link" itemprop="url">DNS 收集</a>
         </h2>
 
         <div class="post-meta-container">
@@ -965,7 +562,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 12:01:03 / 修改时间：14:05:35" itemprop="dateCreated datePublished" datetime="2025-06-30T12:01:03+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-01 11:52:47 / 修改时间：12:08:47" itemprop="dateCreated datePublished" datetime="2025-07-01T11:52:47+08:00">2025-07-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -987,11 +584,295 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>React的分页实例来了！[适合与webpack组合使用，不太适合纯html页面调用，不过可以根据您自己的情况进行改写]</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(<span class="keyword">function</span>(<span class="params"><span class="built_in">require</span>,<span class="built_in">exports</span>,<span class="variable language_">module</span></span>)&#123;</span><br><span class="line">   <span class="string">&#x27;use strict&#x27;</span>;</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">var</span> <span class="title class_">React</span> = <span class="built_in">require</span>(<span class="string">&#x27;reactAddons&#x27;</span>);</span><br><span class="line">   </span><br><span class="line">    <span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title class_">React</span>.<span class="title function_">createClass</span>(&#123;</span><br><span class="line">        <span class="attr">clickHandler</span>:<span class="keyword">function</span>(<span class="params">e</span>)&#123;</span><br><span class="line">            e.<span class="title function_">preventDefault</span>();</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">props</span>.<span class="title function_">listData</span>(e.<span class="property">currentTarget</span>.<span class="property">dataset</span>.<span class="property">page</span>);</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">render</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">            <span class="keyword">var</span> cx = <span class="title class_">React</span>.<span class="property">addons</span>.<span class="property">classSet</span>;</span><br><span class="line">            <span class="keyword">var</span> preClass = <span class="title function_">cx</span>(&#123;</span><br><span class="line">                <span class="string">&#x27;previous&#x27;</span>:<span class="literal">true</span>,</span><br><span class="line">                <span class="string">&#x27;disabled&#x27;</span>:<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">pre_stop</span> == <span class="literal">true</span></span><br><span class="line">            &#125;);</span><br><span class="line">            <span class="keyword">var</span> nextClass = <span class="title function_">cx</span>(&#123;</span><br><span class="line">                <span class="string">&#x27;next&#x27;</span>:<span class="literal">true</span>,</span><br><span class="line">                <span class="string">&#x27;disabled&#x27;</span>:<span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">next_stop</span> == <span class="literal">true</span></span><br><span class="line">            &#125;);</span><br><span class="line">   </span><br><span class="line">            <span class="keyword">return</span> (</span><br><span class="line">                <span class="language-xml"><span class="tag">&lt;<span class="name">nav</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">className</span>=<span class="string">&quot;pager&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                        <span class="tag">&lt;<span class="name">li</span> <span class="attr">className</span>=<span class="string">&#123;preClass&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                            <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span> <span class="attr">onClick</span>=<span class="string">&#123;this.clickHandler&#125;</span> <span class="attr">data-page</span>=<span class="string">&#123;this.props.page-1&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                                <span class="tag">&lt;<span class="name">span</span> <span class="attr">aria-hidden</span>=<span class="string">&quot;true&quot;</span> &gt;</span><span class="symbol">&amp;larr;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span> Older</span></span><br><span class="line"><span class="language-xml">                            <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                        <span class="tag">&lt;<span class="name">li</span> <span class="attr">className</span>=<span class="string">&#123;nextClass&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                            <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#&quot;</span> <span class="attr">onClick</span>=<span class="string">&#123;this.clickHandler&#125;</span> <span class="attr">data-page</span>=<span class="string">&#123;this.props.page+1&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                                Newer <span class="tag">&lt;<span class="name">span</span> <span class="attr">aria-hidden</span>=<span class="string">&quot;true&quot;</span>&gt;</span><span class="symbol">&amp;rarr;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                            <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">                <span class="tag">&lt;/<span class="name">nav</span>&gt;</span></span></span><br><span class="line">            );</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">   </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+          <blockquote>
+<p>&#x3D;&gt;]Open DNS</p>
+<p>208.67.222.222</p>
+<p>208.67.220.220</p>
+</blockquote>
+<blockquote>
+<p>&#x3D;&gt;]V2EX DNS</p>
+<p>199.91.73.222</p>
+<p>178.79.131.110</p>
+</blockquote>
+<blockquote>
+<p>&#x3D;&gt;]OneDNS</p>
+<p>112.124.47.27</p>
+</blockquote>
+<blockquote>
+<p>&#x3D;&gt;]Comodo Secure DNS</p>
+<p>8.26.56.26</p>
+<p>8.20.247.20</p>
+</blockquote>
+<blockquote>
+<p>&#x3D;&gt;]Google Public DNS</p>
+<p>The Google Public DNS IPv4 addresses</p>
+<p>8.8.8.8</p>
+<p>8.8.4.4</p>
+</blockquote>
+<blockquote>
+<p>The Google Public DNS IPv6 addresses</p>
+<p>2001:4860:4860::8888</p>
+<p>2001:4860:4860::8844</p>
+</blockquote>
+<blockquote>
+<p>&#x3D;&gt;]114 DNS</p>
+<p>无劫持</p>
+<p>114.114.114.114</p>
+<p>114.114.115.115</p>
+<p>拦截有害网站</p>
+<p>114.114.114.119</p>
+<p>114.114.115.119</p>
+<p>拦截色情网站</p>
+<p>114.114.114.110</p>
+<p>114.114.115.110</p>
+</blockquote>
+<blockquote>
+<p>&#x3D;&gt;]Norton ConnectSafe</p>
+<p>A - Security (malware, phishing sites and scam sites)</p>
+<p>Preferred DNS: 199.85.126.10</p>
+<p>Alternate DNS: 199.85.127.10</p>
+<p>B - Security + Pornography</p>
+<p>Preferred DNS: 199.85.126.20</p>
+<p>Alternate DNS: 199.85.127.20</p>
+<p>C - Security + Pornography + Non-Family Friendly</p>
+<p>Preferred DNS: 199.85.126.30</p>
+<p>Alternate DNS: 199.85.127.30</p>
+</blockquote>
+<blockquote>
+<p>&#x3D;&gt;]DNS派 公共DNS</p>
+<p>电信：</p>
+<p>101.226.4.6</p>
+<p>218.30.118.6</p>
+</blockquote>
+<blockquote>
+<p>联通：</p>
+<p>123.125.81.6</p>
+<p>140.207.198.6</p>
+</blockquote>
+<blockquote>
+<p>移动：</p>
+<p>101.226.4.6</p>
+<p>218.30.118.6</p>
+</blockquote>
+<blockquote>
+<p>铁通：</p>
+<p>101.226.4.6</p>
+<p>218.30.118.6</p>
+</blockquote>
+<blockquote>
+<p>&#x3D;&gt;]阿里DNS</p>
+<p>223.5.5.5</p>
+<p>223.6.6.6</p>
+</blockquote>
+<hr>
+<p>DNS 网站</p>
+<blockquote>
+<p><span class="exturl" data-url="aHR0cDovL2Rucy52MmV4LmNvbS8=">http://dns.v2ex.com/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy4xMTRkbnMuY29tLw==">http://www.114dns.com/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5hbGlkbnMuY29tLw==">http://www.alidns.com/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5vcGVuZG5zLmNvbS8=">http://www.opendns.com/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5pbnRlcm5pYy5uZXQv">http://www.internic.net/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5ub3J0b25kbnMuY29tLw==">http://www.nortondns.com/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5td3NsLm9yZy5jbi9vbmVkbnM=">http://www.mwsl.org.cn/onedns<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5kbnNwYWkuY29tL3B1YmxpYy5odG1s">http://www.dnspai.com/public.html<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5jb21vZG8uY29tL3NlY3VyZS1kbnMv">http://www.comodo.com/secure-dns/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL2NvZGUuZ29vZ2xlLmNvbS9pbnRsL3poLUNOL3NwZWVkL3B1YmxpYy1kbnM=">http://code.google.com/intl/zh-CN/speed/public-dns<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5kbnNiZWQuY29tLw==">http://www.dnsbed.com/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy56bmRucy5jb20v">http://www.zndns.com/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy44amRucy5jb20v">http://www.8jdns.com/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy4zNjBkbnMuY29tLw==">http://www.360dns.com/<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3B1YmxpYy1kbnMudGsv">http://public-dns.tk/<i class="fa fa-external-link-alt"></i></span></p>
+</blockquote>
 
-<p>如何调用？</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title class_">PagerTest</span> = <span class="title class_">React</span>.<span class="title function_">createClass</span>(<span class="params"></span>)&#123;</span><br><span class="line">  <span class="attr">getInitialState</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      <span class="attr">lostData</span>: &#123;</span><br><span class="line">        <span class="attr">lostUserItem</span>: [],</span><br><span class="line">        <span class="attr">totalCount</span>: <span class="number">0</span>,</span><br><span class="line">        <span class="attr">currentTotalCount</span>: <span class="number">0</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">pagesize</span>: <span class="number">20</span>,</span><br><span class="line">      <span class="attr">page</span>: <span class="number">1</span>,</span><br><span class="line">      <span class="attr">params</span>: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">render</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">let</span> nextStop = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">let</span> preStop = <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">//this.state.lostData.lostUserItem 这个就是一个数据数组</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">lostData</span>.<span class="property">lostUserItem</span>.<span class="property">length</span> &lt; <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">pagesize</span>) &#123;</span><br><span class="line">      nextStop = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ((<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">page</span> - <span class="number">1</span>) &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">      preStop = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> pager_props = &#123;</span><br><span class="line">      <span class="attr">page</span>: <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">page</span>,</span><br><span class="line">      <span class="attr">pre_stop</span>: preStop,</span><br><span class="line">      <span class="attr">next_stop</span>: nextStop,</span><br><span class="line">      <span class="attr">listData</span>: <span class="variable language_">this</span>.<span class="property">loadMorePage</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">Pager</span> &#123;<span class="attr">...pager_props</span>&#125;/&gt;</span></span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/MacOS-%E4%B8%8B-%E4%BD%BF%E7%94%A8powerline%E4%B8%BABash%E5%92%8CVIM%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AA%E7%BE%8E%E8%A7%82%E5%A5%A2%E5%8D%8E%E7%9A%84%E7%8A%B6%E6%80%81%E6%8F%90%E7%A4%BA%E6%A0%8F.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/01/MacOS-%E4%B8%8B-%E4%BD%BF%E7%94%A8powerline%E4%B8%BABash%E5%92%8CVIM%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AA%E7%BE%8E%E8%A7%82%E5%A5%A2%E5%8D%8E%E7%9A%84%E7%8A%B6%E6%80%81%E6%8F%90%E7%A4%BA%E6%A0%8F.html" class="post-title-link" itemprop="url">MacOS 下 使用powerline为Bash和VIM配置一个美观奢华的状态提示栏</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-01 11:36:21 / 修改时间：11:37:32" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:21+08:00">2025-07-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><strong>开始Mac上安装powerline</strong></p>
+<p>首先我们需要下载安装powerline。在正式安装之前先啰嗦几句powerline的代码结构，github上的powerline项目下涵盖了用于适配各种APP(bash，vim等)的代码。因此，你完全可以在Mac任何一个地方下载该代码包，然后将不同的APP配置使用这个路径，以Plugin形式加载。为了方便读者选择性安装，本文对于不同的程序将分开给出安装路径和配置。</p>
+<p>先确定本机环境有一套版本大于等于2.7的Python的环境。如果没有合适环境的话，可以通过homebrew安装，这里不多做赘述。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; python -v</span><br><span class="line">Python 2.7.9</span><br></pre></td></tr></table></figure>
+
+<p>然后通过pip安装powerline：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; pip install powerline-status</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后通过pip show powerline-status查看powerline所处的具体路径。注意：这个路径很重要，会用在之后的配置环节</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; pip show powerline-status</span><br><span class="line">Name: powerline-status</span><br><span class="line">Version: 2.0</span><br><span class="line">Location: /Library/Python/2.7/site-packages</span><br><span class="line">Requires:</span><br></pre></td></tr></table></figure>
+
+<p><strong>配置Bash使用powerline</strong></p>
+<p>配置方法很简单，只需要在Bash配置文件(例如：&#x2F;etc&#x2F;bashrc，<del>&#x2F;.bashrc，</del>&#x2F;.bash_profile)中增加一行调用安装路径下的bindings&#x2F;bash&#x2F;powerline.sh即可。这样每次调用生成新的Bash窗口时，都会自动执行powerline.sh文件中的内容。下面以~&#x2F;.bash_profile为例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; <span class="built_in">echo</span> &lt;&lt; <span class="string">EOF &gt;&gt; ~/.bash_profile </span></span><br><span class="line"><span class="string">. /Library/Python/2.7/site-packages/powerline/bindings/bash/powerline.sh</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line">shell&gt; . /Library/Python/2.7/site-packages/powerline/bindings/bash/powerline.sh</span><br></pre></td></tr></table></figure>
+
+<p>注意：根据python安装方式的不同，你的powerline所在路径也可能不同。如果你是通过python官网或者apple store通过安装工具安装的python，那么你的powerline安装路径就是&#x2F;Library&#x2F;Python&#x2F;2.7&#x2F;site-packages&#x2F;powerline&#x2F;。如果你是通过brew install python的话，那么你的powerline路径可能会有不同。请根据实际情况修改上面的命令。</p>
+<p><strong>Teriminal字体配置</strong></p>
+<p>执行完上面两步后，不出意外powerline就已经开始工作了。但是你会发现Bash提示符会是一些非常恶心的符号。</p>
+<p>出现这样情况的原因是powerline为了美观自己造了一些符号，而这些符号不在Unicode字库内（如果你不知道Unicode字库是什么的话可以看下博主以前的相关介绍）。所以想要powerline正常显示的话，需要安装特殊处理过的字体。好在有一位热心人的帮助，他把大部分的程序猿常用的等宽字体都打上了powerline patch使得我们的这部配置将异常简单。首先我们从github上下载并安装字体：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">shell&gt; git <span class="built_in">clone</span> https://github.com/powerline/fonts.git</span><br><span class="line">shell&gt; <span class="built_in">cd</span> fonts</span><br><span class="line">shell&gt; ./install.sh</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后我们就可以在iTerm2或者Terminal的字体选项里看到并选择多个xxx for powerline的字体了。*注意：对于ASCII fonts和non-ASCII fonts都需要选择for powerline的字体</p>
+<p><strong>VIM相关配置</strong></p>
+<p>这部分我们将介绍如何为VIM配置powerline。首先你需要确保你的vim编译时开启了python支持。如果通过python –version|grep +python没有结果的话，那么你需要通过brew install vim –with-python –with-ruby –with-perl重新编译安装vim，或者使用brew install macvim –env-std –override-system-vim安装macvim。</p>
+<p>然后，你只需要在~&#x2F;.vimrc中加上以下部分，VIM就能够正常加载powerline功能了：</p>
+<p>注意：其中set rtp+&#x3D;&#x2F;Library&#x2F;Python&#x2F;2.7&#x2F;site-packages&#x2F;powerline&#x2F;bindings&#x2F;vim和上文一样需要按照自己的实际情况调整。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> rtp+=/Library/Python/2.7/site-packages/powerline/bindings/vim</span><br><span class="line"><span class="string">&quot; These lines setup the environment to show graphics and colors correctly.</span></span><br><span class="line"><span class="string">set nocompatible</span></span><br><span class="line"><span class="string">set t_Co=256</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">let g:minBufExplForceSyntaxEnable = 1</span></span><br><span class="line"><span class="string">python from powerline.vim import setup as powerline_setup</span></span><br><span class="line"><span class="string">python powerline_setup()</span></span><br><span class="line"><span class="string">python del powerline_setup</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">if ! has(&#x27;gui_running&#x27;)</span></span><br><span class="line"><span class="string">   set ttimeoutlen=10</span></span><br><span class="line"><span class="string">   augroup FastEscape</span></span><br><span class="line"><span class="string">      autocmd!</span></span><br><span class="line"><span class="string">      au InsertEnter * set timeoutlen=0</span></span><br><span class="line"><span class="string">      au InsertLeave * set timeoutlen=1000</span></span><br><span class="line"><span class="string">   augroup END</span></span><br><span class="line"><span class="string">endif</span></span><br><span class="line"><span class="string"> </span></span><br><span class="line"><span class="string">set laststatus=2 &quot;</span> Always display the statusline <span class="keyword">in</span> all windows</span><br><span class="line"><span class="built_in">set</span> guifont=Inconsolata\ <span class="keyword">for</span>\ Powerline:h14</span><br><span class="line"><span class="built_in">set</span> noshowmode <span class="string">&quot; Hide the default mode text (e.g. -- INSERT -- below the statusline</span></span><br></pre></td></tr></table></figure>
+
+<p>如果有不明白的可以借鉴这篇文章：</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9jb2RlcndhbGwuY29tL3AveWlvdDRxL3NldHVwLXZpbS1wb3dlcmxpbmUtYW5kLWl0ZXJtMi1vbi1tYWMtb3MteA==">https://coderwall.com/p/yiot4q/setup-vim-powerline-and-iterm2-on-mac-os-x<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/%E9%80%9A%E8%BF%87ps-grep%E5%92%8Ckill%E6%89%B9%E9%87%8F%E6%9D%80%E6%AD%BB%E8%BF%9B%E7%A8%8B.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/01/%E9%80%9A%E8%BF%87ps-grep%E5%92%8Ckill%E6%89%B9%E9%87%8F%E6%9D%80%E6%AD%BB%E8%BF%9B%E7%A8%8B.html" class="post-title-link" itemprop="url">通过ps、grep和kill批量杀死进程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-01 11:36:15 / 修改时间：11:38:08" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:15+08:00">2025-07-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>这两天Node的程序kill到手都软了，网上查了一个很好的方法，直接拿来用了。</p>
+<p>功能：杀死进程名称中包含node的所有进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -ef | grep node | awk <span class="string">&#x27;&#123;print $2&#125;&#x27;</span> | xargs <span class="built_in">kill</span> -9</span><br></pre></td></tr></table></figure>
+
 
 
       
@@ -1019,7 +900,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/30/Samba%E5%9C%A8CentOS7%E4%B8%8B%E7%9A%84%E5%9B%BE%E5%BD%A2%E5%8C%96%E7%95%8C%E9%9D%A2%E7%9A%84%E5%AE%89%E8%A3%85.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/KoaJS-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E5%85%A8%E5%B1%80%E7%BB%9F%E4%B8%80%E5%A4%84%E7%90%86.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -1037,7 +918,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/30/Samba%E5%9C%A8CentOS7%E4%B8%8B%E7%9A%84%E5%9B%BE%E5%BD%A2%E5%8C%96%E7%95%8C%E9%9D%A2%E7%9A%84%E5%AE%89%E8%A3%85.html" class="post-title-link" itemprop="url">Samba在CentOS7下的图形化界面的安装</a>
+          <a href="/2025/07/01/KoaJS-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-%E5%85%A8%E5%B1%80%E7%BB%9F%E4%B8%80%E5%A4%84%E7%90%86.html" class="post-title-link" itemprop="url">KoaJS 异常处理 全局统一处理</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1049,7 +930,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-30 12:01:00 / 修改时间：14:05:25" itemprop="dateCreated datePublished" datetime="2025-06-30T12:01:00+08:00">2025-06-30</time>
+      <time title="创建时间：2025-07-01 11:36:12 / 修改时间：11:39:57" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:12+08:00">2025-07-01</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1071,29 +952,408 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>第一步：下载 samba 的源码包</p>
-<p><span class="exturl" data-url="aHR0cDovL2FyY2hpdmVzLmZlZG9yYXByb2plY3Qub3JnL3B1Yi9hcmNoaXZlL2ZlZG9yYS9saW51eC9yZWxlYXNlcy8xNC9FdmVyeXRoaW5nL3NvdXJjZS9TUlBNUy8=">http://archives.fedoraproject.org/pub/archive/fedora/linux/releases/14/Everything/source/SRPMS/<i class="fa fa-external-link-alt"></i></span></p>
-<p>下载文件：</p>
-<p>system-config-samba-docs-1.0.9-1.fc14.src.rpm</p>
-<p>system-config-samba-0.99.47-1.fc14.src.rpm</p>
-<p>名称跟这个差不多的就可以，最好是下载最新的版本</p>
-<p>第二步：安装 rpm-build  的编译工具，目的是编译 rpm 包。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y rpm-build</span><br></pre></td></tr></table></figure>
+          <p>记录下koajs的异常使用:</p>
+<p>下面介绍一下 几个文件</p>
+<p>test.js启动文件</p>
+<p>router.js 路由文件</p>
+<p>api&#x2F;Admin.js 逻辑处理文件</p>
+<p>koajs的异常处理逻辑代码如下[放在test.js 启动文件中]</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 统一处理默认Error</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">app.<span class="title function_">use</span>(<span class="keyword">function</span> *(next) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">yield</span> next;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">status</span> = err.<span class="property">status</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">body</span> = &#123;</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&quot;GowhichApiServerError&quot;</span>,</span><br><span class="line">      <span class="attr">code</span>: err.<span class="property">status</span> || <span class="number">600</span>,</span><br><span class="line">      <span class="attr">message</span>: err.<span class="property">message</span> || <span class="string">&quot;Server internal error.&quot;</span>,</span><br><span class="line">      <span class="attr">success</span>: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<p>第三步：对源码包进行编译</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpmbuild --rebuild system-config-samba-0.99.47-1.fc14.src.rpm</span><br><span class="line">rpmbuild --rebuild system-config-samba-docs-1.0.9-1.fc14.src.rpm</span><br></pre></td></tr></table></figure>
+<p>600 :我自己定义的,为了区别系统的错误</p>
+<p>接下来简单的看下路由:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">post</span>(<span class="string">&#x27;/xxx/xxxxx&#x27;</span>, <span class="title class_">Admin</span>.<span class="property">mailxxxxImport</span>);</span><br><span class="line">router.<span class="title function_">post</span>(<span class="string">&#x27;/xxxx/xxxx&#x27;</span>, <span class="title class_">Admin</span>.<span class="property">mailxxxxBill</span>);</span><br></pre></td></tr></table></figure>
 
-<p>注意：在编译过程中会提示错误信息，请根据对应的提示安装对应的依赖包，</p>
-<p>安装完执行同样的命令进行安装。</p>
-<p>在此rpmbuild&#x2F;RPMS&#x2F;noarch&#x2F;目录下会生成对应的包，以.rpm结尾</p>
-<p>第四步：安装编译好的包,如下，实际可能名称不同</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh system-config-samba-1.2.90-1.el6.noarch.rpm  system-config-samba-docs-1.0.9-1.el6.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>这个router 我使用的是koa-router</p>
+<p>好了, 到这里应该说一切都没问题了.下面就看我们如何出发这个错误了</p>
+<p>那么在Admin.js里面我们写段代码:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span>.<span class="property">mailxxxxBill</span> = <span class="keyword">function</span> *(next)&#123;</span><br><span class="line">  <span class="keyword">var</span> uid = <span class="title function_">_uid</span>(<span class="variable language_">this</span>.<span class="property">request</span>);</span><br><span class="line">  <span class="keyword">var</span> taskid = <span class="variable language_">this</span>.<span class="property">request</span>.<span class="property">body</span>.<span class="property">taskid</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!uid || !taskid) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="keyword">throw</span>(<span class="string">&#x27;任务参数不能为空&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//测试使用</span></span><br><span class="line">  <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="keyword">throw</span>(<span class="string">&#x27;任务参数不能为空&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>第五步：经过一系列的安装配置，下一步就是打开 samba 的图形化界面了</p>
-<p>执行命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system-config-samba/sudo system-config-samba</span><br></pre></td></tr></table></figure>
+<p>没错就是这句代码:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">this</span>.<span class="keyword">throw</span>(<span class="string">&#x27;任务参数不能为空&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>当触发的时候,就会调用test.js的错误处理逻辑,可以了,动起来吧.</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
 
 
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/NPM-node%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7-%E5%91%BD%E4%BB%A4%E6%A6%82%E8%BF%B0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/01/NPM-node%E6%A8%A1%E5%9D%97%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7-%E5%91%BD%E4%BB%A4%E6%A6%82%E8%BF%B0.html" class="post-title-link" itemprop="url">npm-node模块管理工具 命令概述</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-07-01 11:36:09" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:09+08:00">2025-07-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-09 10:37:05" itemprop="dateModified" datetime="2025-07-09T10:37:05+08:00">2025-07-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>npm (node package manager)是node模块管理工具，类似与Linux下的yum和apt。</p>
+<p>常用npm命令（参考：<span class="exturl" data-url="aHR0cHM6Ly9ucG1qcy5vcmcvZG9jLyVFRiVCQyU4OQ==">https://npmjs.org/doc/）<i class="fa fa-external-link-alt"></i></span></p>
+<p>安装模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br></pre></td></tr></table></figure>
+
+<p>安装当前目录package.json文件中配置的dependencies模块</p>
+<p>安装本地的模块文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;tarball file&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install ./package.tgz</span><br></pre></td></tr></table></figure>
+
+<p>安装指定URL的模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;tarball url&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install https://github.com/indexzero/forever/tarball/v0.5.6</span><br></pre></td></tr></table></figure>
+
+<p>安装本地文件系统中指定的目录包含的模块</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;folder&gt;</span><br></pre></td></tr></table></figure>
+
+<p>安装并更新package.json中的版本配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;name&gt; [–save|–save-dev|–save-optional]</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<p>添加–save 参数安装的模块的名字及其版本信息会出现在package.json的dependencies选项中</p>
+<p>添加–save-dev 参数安装的模块的名字及其版本信息会出现在package.json的devDependencies选项中</p>
+<p>添加–save-optional 参数安装的模块的名字及其版本信息会出现在package.json的optionalDependencies选项中</p>
+<p>安装模块的config的tag配置中含有指定tag的版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;name&gt;@&lt;tag&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install sax@latest</span><br></pre></td></tr></table></figure>
+
+<p>安装模块的指定版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;name&gt;@&lt;version&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install xx@xx</span><br></pre></td></tr></table></figure>
+
+<p>安装模块指定版本号范围内的某一个版本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install &lt;name&gt;@&lt;version range&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install async@”&gt;=0.2.0 &lt;0.2.9″</span><br></pre></td></tr></table></figure>
+
+<p>–force强制拉取远程资源，即使本地已经安装这个模块</p>
+<p>Example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install underscore –force</span><br></pre></td></tr></table></figure>
+
+<p>-g或–global全局安装模块，如果没有这个参数，会安装在当前目录的node_modules子目录下</p>
+<p>Example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g express</span><br></pre></td></tr></table></figure>
+
+<p>显示npm的bin目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm bin</span><br></pre></td></tr></table></figure>
+
+<p>设置npm配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> &lt;key&gt; &lt;value&gt; [–global]</span><br></pre></td></tr></table></figure>
+
+<p>使用–global参数，设置全局配置</p>
+<p>Example:</p>
+<p>设置代理</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> proxy=http://proxy.tencent.com:8080</span><br></pre></td></tr></table></figure>
+
+<p>设置npm的镜像地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config <span class="built_in">set</span> registry http://npm.oa.com</span><br></pre></td></tr></table></figure>
+
+<p>获取npm配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config get &lt;key&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Example:</p>
+<p>获取npm当前镜像地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config get registory</span><br></pre></td></tr></table></figure>
+
+<p>删除npm配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config delete &lt;key&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Example:</p>
+<p>删除代理设置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config delete proxy</span><br></pre></td></tr></table></figure>
+
+<p>在编辑器中打开npm配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config edit</span><br></pre></td></tr></table></figure>
+
+<p>交互式的创建package.json文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm init</span><br></pre></td></tr></table></figure>
+
+<p>创建模块的压缩包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm pack [&lt;pkg&gt; [&lt;pkg&gt; … ]]</span><br></pre></td></tr></table></figure>
+
+<p>如果没有参数，则npm会打包当前模块目录</p>
+<p>发布模块，发布后可通过名称来安装该模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm publish &lt;tarball&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm publish &lt;folder&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<p><folder>：包含package.json文件的目录</p>
+<p><tarball>：经过gzip压缩并归档的一个URL或文件路径，该压缩包包含单个目录，且该目录内有package.json文件</p>
+<p>删除模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">rm</span> &lt;name&gt;</span><br><span class="line">npm r &lt;name&gt;</span><br><span class="line">npm uninstall &lt;name&gt;</span><br><span class="line">npm un &lt;name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>注意：不会删除package.json文件dependencies选项中对应的依赖配置</p>
+<p>查找模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm search [search terms ..]</span><br><span class="line">npm s [search terms ..]</span><br><span class="line">npm se [search terms ..]</span><br></pre></td></tr></table></figure>
+
+<p>查找匹配查找字符串的模块</p>
+<p>更新模块</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm update [-g] [&lt;name&gt; [&lt;name&gt; … ]]</span><br></pre></td></tr></table></figure>
+
+<p>更新指定name列表中的模块。-g参数更新全局安装的模块。</p>
+<p>如果没有指定name，且不是在某个模块内，会更新当前目录依赖的所有包都会被更新（包括全局和模块内）；如果当前目录在某个模块目录内，会更新该模块依赖的模块，所以不指定name直接运行npm update时，最好在某个模块内运行，以免更新到其他不想更新的模块。</p>
+<p>执行脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm start [&lt;name&gt;]</span><br><span class="line">npm stop [&lt;name&gt;]</span><br><span class="line">npm <span class="built_in">test</span> [&lt;name&gt;]</span><br></pre></td></tr></table></figure>
+
+<p>等</p>
+<p>运行package的start脚本，该脚本写在package.json文件scripts的start字段中。</p>
+<p>该字段的值可以是当前系统控制台可执行的脚本，也可以是当前系统可执行文件的路径。</p>
+<p>如果不传name参数，则执行当前目录下package.json文件中定义的脚本。</p>
+<p>详见<span class="exturl" data-url="aHR0cHM6Ly9ucG1qcy5vcmcvZG9jL21pc2MvbnBtLXNjcmlwdHMuaHRtbA==">https://npmjs.org/doc/misc/npm-scripts.html<i class="fa fa-external-link-alt"></i></span></p>
+<p>package.json文件</p>
+<p>模块的配置文件，详见<span class="exturl" data-url="aHR0cHM6Ly9ucG1qcy5vcmcvZG9jL2ZpbGVzL3BhY2thZ2UuanNvbi5odG1s">https://npmjs.org/doc/files/package.json.html<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Chrome%E7%9A%84%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95-Chrome%E7%9A%84%E6%89%A9%E5%B1%95%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/01/Chrome%E7%9A%84%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95-Chrome%E7%9A%84%E6%89%A9%E5%B1%95%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95.html" class="post-title-link" itemprop="url">Chrome的插件安装目录 Chrome的扩展安装目录</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-01 11:36:06 / 修改时间：11:42:21" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:06+08:00">2025-07-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Chrome的插件目录在：</p>
+<blockquote>
+<pre><code>Ubuntu:      ~/.config/google-chrome/Default/Extensions
+
+Windows:   C:\Users\Administrator\AppData\Local\Google\Chrome\User Data/Default/Extensions/
+
+Mac OS X:   ./Library/Application Support/Google/Chrome/Default/Extensions
+</code></pre>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/%E4%BF%AE%E6%94%B9Sublime-Text-3-%E7%9A%84%E4%BE%A7%E8%BE%B9%E6%A0%8F%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F-%E5%AD%97%E4%BD%93%E7%B1%BB%E5%9E%8B.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/01/%E4%BF%AE%E6%94%B9Sublime-Text-3-%E7%9A%84%E4%BE%A7%E8%BE%B9%E6%A0%8F%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F-%E5%AD%97%E4%BD%93%E7%B1%BB%E5%9E%8B.html" class="post-title-link" itemprop="url">修改Sublime Text 3 的侧边栏字体大小,字体类型</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-01 11:36:02 / 修改时间：11:43:41" itemprop="dateCreated datePublished" datetime="2025-07-01T11:36:02+08:00">2025-07-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><strong>一.修改字体大小</strong></p>
+<p>安装PackageResourceViewer</p>
+<p>使用PackageResourceViewer打开Theme文件进行编辑</p>
+<p>快捷键 <code>⌘(command)+⇧(shift)+P</code> 打开 Command Palette 输入 <code>PackageResourceViewer: Open Resource</code> 回车，</p>
+<p>打开包列表 选择 <code>Theme - Default</code>，</p>
+<p>再选择 Default.sublimt-theme [这里有可能是你自己目前安装正在使用的一个主题,如果不能用的话,可以自己更换一个试试]</p>
+<p>搜索<code> sidebar_label</code>，在 <code>&quot;class&quot;: &quot;sidebar_label&quot;</code> 后边加一行：<code>&quot;font.size&quot;: 18</code>，将字体大小设置为18，保存.</p>
+<p><strong>二.修改字体类型</strong></p>
+<p>进行第一步操作后,在<code>sidebar_label</code>后面加入一行:<code>&quot;font.face&quot;:&quot;Courier New&quot;</code>,这里的字体可以是你自己系统里面自带的.</p>
 
       
     </div>
@@ -1113,7 +1373,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/42/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><span class="page-number current">43</span><a class="page-number" href="/page/44/">44</a><span class="space">&hellip;</span><a class="page-number" href="/page/105/">105</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/44/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/42/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><span class="page-number current">43</span><a class="page-number" href="/page/44/">44</a><span class="space">&hellip;</span><a class="page-number" href="/page/110/">110</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/44/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

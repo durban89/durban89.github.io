@@ -194,18 +194,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1048</span>
+          <span class="site-state-item-count">1098</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">174</span>
+        <span class="site-state-item-count">178</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -245,7 +245,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS7-UIActionSheet%E4%B8%AD%E7%9A%84UIActionSheetDelegate%E4%B8%8EUIImagePickerController%E7%9A%84%E5%8D%8F%E4%BD%9C.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/%E7%BB%93%E5%90%88ISAPI_Rewrite-3-%E5%AE%9E%E7%8E%B0IIS6%E7%9A%84%E4%BC%AA%E9%9D%99%E6%80%81%E9%85%8D%E7%BD%AE.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -263,7 +263,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/27/iOS7-UIActionSheet%E4%B8%AD%E7%9A%84UIActionSheetDelegate%E4%B8%8EUIImagePickerController%E7%9A%84%E5%8D%8F%E4%BD%9C.html" class="post-title-link" itemprop="url">iOS7 UIActionSheet中的UIActionSheetDelegate与UIImagePickerController的协作</a>
+          <a href="/2025/06/27/%E7%BB%93%E5%90%88ISAPI_Rewrite-3-%E5%AE%9E%E7%8E%B0IIS6%E7%9A%84%E4%BC%AA%E9%9D%99%E6%80%81%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">结合ISAPI_Rewrite 3 实现IIS6的伪静态配置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -275,7 +275,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-27 09:45:23 / 修改时间：09:57:17" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:23+08:00">2025-06-27</time>
+      <time title="创建时间：2025-06-27 14:14:16 / 修改时间：14:41:50" itemprop="dateCreated datePublished" datetime="2025-06-27T14:14:16+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -297,90 +297,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>UIActionSheet中的UIActionSheetDelegate与UIImagePickerController的协作，实现图片来源的选择，代码如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) actionSheet:(<span class="built_in">UIActionSheet</span> *)actionSheet clickedButtonAtIndex:(<span class="built_in">NSInteger</span>)buttonIndex&#123;</span><br><span class="line">    <span class="built_in">UIImagePickerController</span> *picker=[[<span class="built_in">UIImagePickerController</span> alloc]init];</span><br><span class="line">    picker.delegate=<span class="keyword">self</span>;</span><br><span class="line">    picker.allowsEditing=<span class="literal">YES</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">switch</span> (buttonIndex)&#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//拍照</span></span><br><span class="line">            <span class="keyword">if</span> ([<span class="built_in">UIImagePickerController</span> isSourceTypeAvailable: <span class="built_in">UIImagePickerControllerSourceTypeCamera</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                picker.sourceType=<span class="built_in">UIImagePickerControllerSourceTypeCamera</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//相册</span></span><br><span class="line">            <span class="keyword">if</span> ([<span class="built_in">UIImagePickerController</span> isSourceTypeAvailable: <span class="built_in">UIImagePickerControllerSourceTypePhotoLibrary</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                picker.sourceType=<span class="built_in">UIImagePickerControllerSourceTypePhotoLibrary</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//图片库</span></span><br><span class="line">            <span class="keyword">if</span> ([<span class="built_in">UIImagePickerController</span> isSourceTypeAvailable: <span class="built_in">UIImagePickerControllerSourceTypeSavedPhotosAlbum</span>])</span><br><span class="line">            &#123;</span><br><span class="line">                picker.sourceType=<span class="built_in">UIImagePickerControllerSourceTypeSavedPhotosAlbum</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>([[<span class="built_in">UIDevice</span> currentDevice] userInterfaceIdiom] == <span class="built_in">UIUserInterfaceIdiomPhone</span>)&#123;</span><br><span class="line">        [<span class="keyword">self</span> presentViewController:picker animated:<span class="literal">YES</span> completion:<span class="literal">nil</span>];</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">UIPopoverController</span> * popOver = [[<span class="built_in">UIPopoverController</span> alloc] initWithContentViewController: picker];</span><br><span class="line">        popOver.delegate = <span class="keyword">self</span>;</span><br><span class="line">        _popOverController = popOver;</span><br><span class="line">        [_popOverController presentPopoverFromRect:<span class="built_in">CGRectMake</span>(<span class="number">0</span>,<span class="number">100</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">                                            inView:<span class="keyword">self</span>.view</span><br><span class="line">                              permittedArrowDirections:<span class="built_in">UIPopoverArrowDirectionUp</span></span><br><span class="line">                                          animated:<span class="literal">YES</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>结合ISAPI_Rewrite 3 [<span class="exturl" data-url="aHR0cDovL3d3dy5oZWxpY29udGVjaC5jb20vaXNhcGlfcmV3cml0ZS9kb3dubG9hZC5odG1sXSVFNSVBRSU5RSVFNyU4RSVCMElJUzYlRTclOUElODQlRTQlQkMlQUElRTklOUQlOTklRTYlODAlODElRTklODUlOEQlRTclQkQlQUUlRUYlQkMlOEMlRTQlQjglODAlRTglODglQUNpaXMlRTclOUElODQlRTclQUQlOUIlRTklODAlODklRTklQTElQjklRTUlOTAlQUYlRTUlOEElQTglRTYlODglOTAlRTUlOEElOUYlRTUlQjAlQjElRTUlQTUlQkQlRTQlQkElODYlRUYlQkMlOEMlRTUlODUlQjYlRTQlQkIlOTYlRTklOTclQUUlRTklQTIlOTglRTUlQTQlOUElRTYlOTUlQjAlRTYlOTglQUYlRTUlOUIlQTAlRTQlQjglQkElRTglODclQUElRTUlQjclQjElRTUlODYlOTklRTclOUElODQlRTQlQkMlQUElRTklOUQlOTklRTYlODAlODElRTYlOTYlODclRTQlQkIlQjYlRTclOUElODQlRTglQTclODQlRTUlODglOTklRTYlOUMlODklRTklOTclQUUlRTklQTIlOTg=">http://www.helicontech.com/isapi_rewrite/download.html]实现IIS6的伪静态配置，一般iis的筛选项启动成功就好了，其他问题多数是因为自己写的伪静态文件的规则有问题<i class="fa fa-external-link-alt"></i></span>  </p>
+<p>下面是一些相关的文件配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Helicon ISAPI_Rewrite configuration file</span></span><br><span class="line"><span class="comment"># Version 3.1.0.104</span></span><br><span class="line"></span><br><span class="line">RewriteEngine On</span><br><span class="line">RewriteCompatibility2 On</span><br><span class="line">RepeatLimit 200</span><br><span class="line">RewriteBase </span><br><span class="line">RewriteRule ^/(/)?$ /index\.php [L]</span><br><span class="line">RewriteRule ^/(\w+)\.php$ /<span class="variable">$1</span>.php [L]</span><br><span class="line">RewriteRule ^/(\w+)\.html$ /index\.php?controller=<span class="variable">$1</span> [L]</span><br><span class="line">RewriteRule ^/(\w+)\/(\w+)\.html$ /index\.php?controller=<span class="variable">$1</span>&amp;action=<span class="variable">$2</span> [L]</span><br><span class="line">RewriteRule ^/(\w+)\/(\w+)\/([\w\-\=\&amp;\/a-zA-Z0-9_%]+)\.html$ /index\.php?controller=<span class="variable">$1</span>&amp;action=<span class="variable">$2</span>&amp;arguments=<span class="variable">$3</span> [L]</span><br></pre></td></tr></table></figure>
 
-<p>这里加了一个UIPopoverController，但是UIPopoverController只能在ipad设备上面使用。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/iOS7-%E4%B8%AD-UIActionSheet%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/27/iOS7-%E4%B8%AD-UIActionSheet%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8.html" class="post-title-link" itemprop="url">iOS7 中 UIActionSheet的简单应用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-27 09:45:21 / 修改时间：09:57:46" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:21+08:00">2025-06-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>UIActionSheet简单的应用</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIActionSheet</span> *actionSheet = [[<span class="built_in">UIActionSheet</span> alloc] initWithTitle:<span class="string">@&quot;请选择背景图片的来源&quot;</span></span><br><span class="line">                                                         delegate:<span class="keyword">self</span></span><br><span class="line">                                                cancelButtonTitle:<span class="string">@&quot;取消&quot;</span></span><br><span class="line">                                           destructiveButtonTitle:<span class="literal">nil</span></span><br><span class="line">                                                otherButtonTitles:<span class="string">@&quot;拍照&quot;</span>,<span class="string">@&quot;相册&quot;</span>,<span class="string">@&quot;图片库&quot;</span>,<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">actionSheet.actionSheetStyle = <span class="built_in">UIActionSheetStyleDefault</span>;</span><br><span class="line">[actionSheet showInView: <span class="keyword">self</span>.view];</span><br></pre></td></tr></table></figure>
 
 
       
@@ -408,7 +328,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/jQuery-hash%E8%A7%A3%E6%9E%90url-hash-%E7%9B%91%E5%90%AChashchange.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/%E4%BA%8C%E7%BB%B4%E7%A0%81%E7%94%9F%E6%88%90.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -426,7 +346,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/27/jQuery-hash%E8%A7%A3%E6%9E%90url-hash-%E7%9B%91%E5%90%AChashchange.html" class="post-title-link" itemprop="url">jQuery.hash解析url hash，监听hashchange</a>
+          <a href="/2025/06/27/%E4%BA%8C%E7%BB%B4%E7%A0%81%E7%94%9F%E6%88%90.html" class="post-title-link" itemprop="url">二维码生成</a>
         </h2>
 
         <div class="post-meta-container">
@@ -438,7 +358,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-27 09:45:18 / 修改时间：10:06:01" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:18+08:00">2025-06-27</time>
+      <time title="创建时间：2025-06-27 14:14:13 / 修改时间：14:42:37" itemprop="dateCreated datePublished" datetime="2025-06-27T14:14:13+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -460,80 +380,621 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="1"><a href="#1" class="headerlink" title="什么是hashsearch、hashpath"></a><a href="#1">什么是hashsearch、hashpath</a></h4><p>其实那，hashsearch、hashpath这两个词是我自造的。在javascript语言里称url改变该部分不会影响页面重新加载的部分为hash，在后台语言里称之为fragment（碎片）。在这里，我们统称为hash。</p>
-<p>在js里获取hash部分，可以使用如下语句获取：</p>
-<p>&#x2F;&#x2F; 获取当前浏览器的hash部分</p>
-<p>&#x2F;&#x2F; 如浏览器的url为：<span class="exturl" data-url="aHR0cDovL3FpYW5kdWFuYmxvZy5jb20vI2hlbGxvd29ybGQ=">http://qianduanblog.com/#helloworld<i class="fa fa-external-link-alt"></i></span></p>
-<p>var hash&#x3D;location.hash;&#x2F;&#x2F;&#x3D;&gt;”#helloworld”</p>
-<p>在html发展的历史中，以前使用hash的作用很简单，就是做锚点使用。hash的“#”和CSS里的“#”是相同的意思，表示id。url的hash部分为#123，那么就会在页面打开的时候直接定位到id&#x3D;123的元素位置。这个特性，已经被所有浏览器所接受并支持。通常这一功能用作于文章的目录部分，表示索引作用。</p>
-<p>如下示例：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!doctype <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">title</span>&gt;</span>指向id=123的内容<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">	<span class="selector-tag">div</span></span></span><br><span class="line"><span class="language-css">	&#123;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">height</span>: <span class="number">200px</span>;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">margin-bottom</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">		<span class="attribute">background</span>: <span class="number">#eee</span>;</span></span><br><span class="line"><span class="language-css">	&#125;</span></span><br><span class="line"><span class="language-css">	</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;#123&quot;</span>&gt;</span>点击这里立即跳转到id=123的元素位置<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;121&quot;</span>&gt;</span>id=121<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;122&quot;</span>&gt;</span>id=122<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;123&quot;</span>&gt;</span>id=123<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;124&quot;</span>&gt;</span>id=124<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;125&quot;</span>&gt;</span>id=125<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+          <p>Google方式</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 二维码生成器</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> $url</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $x</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $level</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $margin</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">two_dimensional_code</span>(<span class="params"><span class="variable">$url</span>,<span class="variable">$x</span> =<span class="string">&#x27;150&#x27;</span>,<span class="variable">$level</span>=<span class="string">&#x27;L&#x27;</span>,<span class="variable">$margin</span>=<span class="string">&#x27;0&#x27;</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&lt;img src=&quot;http://chart.apis.google.com/chart?chs=&#x27;</span>.<span class="variable">$x</span>.<span class="string">&#x27;x&#x27;</span>.<span class="variable">$x</span>.<span class="string">&#x27;&amp;cht=qr&amp;chld=&#x27;</span>.<span class="variable">$level</span>.<span class="string">&#x27;|&#x27;</span>.<span class="variable">$margin</span>.<span class="string">&#x27;&amp;chl=&#x27;</span>.<span class="title function_ invoke__">urlencode</span>(<span class="variable">$url</span>).<span class="string">&#x27;&quot; /&gt;&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>如上例子，点击a链接就改变了当前url的hash，指向了hash指向的位置。当前了，如果为hash的id的元素不存在的话，那么各个浏览器的反应是各不相同的，部分高级浏览器不会改变页面滚动条的位置，部分低级浏览器会直接跳转到页面顶部。</p>
-<p>说到这里，要解释下什么是hashsearch、hashpath了。从字面可以理解，<code>hashsearch=hash+search</code>，<code>hashpath=hash+path</code>。可能在专业术语里已经有这两个字了，但都与这篇文章无关，因为这俩个词是自造的。什么是hash，我们已经知道了。</p>
-<p>那什么是search呢？</p>
-<p>在url中有一部分是search部分，如：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/?name=aaa&amp;age=100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/?name=bbb&amp;age=10</span></span><br></pre></td></tr></table></figure>
+<p>但是国内的话还是比较慢：记录下一个比较快的，不知道这个是否长期有效</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 二维码生成器</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> $url</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> string</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">two_dimensional_code</span>(<span class="params"><span class="variable">$url</span></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&lt;img src=&quot;http://qr.liantu.com/api.php?text=&#x27;</span>.<span class="variable">$url</span>.<span class="string">&#x27;&quot; /&gt;&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>url的“?”后面的部分称之为search值，是被后台程序所接收的。</p>
-<p>path又是什么呢？</p>
-<p>如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/name/aaa/age/100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/name/bbb/age/10</span></span><br></pre></td></tr></table></figure>
 
-<p>一眼就看出来了，search和path的不同点，通常我们都把search的url重定向成path类型的。</p>
-<p>所以，由上可知，hashsearch、hashpath分别指的是：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#?name=aaa&amp;age=100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!name/aaa/age/100</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
 
-<p>规范1：hashsearch的开头部分为“#?”，而hashpath的开头部分为“#!”，多个“#”会被忽略，多个“?”或“!”会被最后一个“?”或“!”所覆盖，如下：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!name/aaa/age/100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#####!!!!!!name/aaa/age/100</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#####????!name/aaa/age/100</span></span><br></pre></td></tr></table></figure>
+    
+    
+    
 
-<p>以上3个url的hash会被解析成相同的结果。</p>
-<p>规范2：hash部分的解析以开头的协议规定（“?”表示search类型，“!”表示path类型），与后面的内容无关，不符合规范的部分会被抛弃解析。</p>
-<h4 id="2"><a href="#2" class="headerlink" title="哪些地方可以用hashsearch、hashpath"></a><a href="#2">哪些地方可以用hashsearch、hashpath</a></h4><p>也许我们都认为url的hash是个小角色，它的作用微乎其微，就像当初我们认为ajax很渺小一样可笑。值得回味的是，把ajax发扬光大的谷歌同样在把url的hash也再次推向时代的前言，它是随着ajax的出现，诞生的一种新型url结构。</p>
-<p>先看看如下几个url：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/aaa</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/bbb</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/ccc</span></span><br><span class="line"><span class="attr">http</span>:<span class="comment">//qianduanblog.com/#!user/ddd</span></span><br></pre></td></tr></table></figure>
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
 
-<p>从url的结构，很明显的看出来，这四个url的目的肯定是不同的，分别表示aaa、bbb、ccc、ddd四个用户所见的页面，但是有一点相同的是，这四个url是同一个页面，在浏览器打开的时候，只请求一次，不会分别请求。这是hash在url中发挥的重要特性。</p>
-<p>有这样一个疑问了，既然页面相同的，那么四个用户的页面又如何区分呢？这里必须用到ajax，在页面载入之后，ajax载入四个用户独特的内容。</p>
-<p>在当今，hash部分通常应用于单页面应用的丰富表现里，国外很多网站（twitter、谷歌等）已经这样做了，同样国内的如网易邮箱也这样做了。这样做的好处是：</p>
-<ol>
-<li>页面只需要一次加载。</li>
-<li>页面体验流畅，反应速度快。</li>
-<li>页面内容按需加载，减轻服务器压力。</li>
-<li>页面可以适配搜索引擎。</li>
-</ol>
-<p>前3条的意思很明显，第4条的详细内容，我在这里就不说了，大家有兴趣可以去查看谷歌的介绍文字：jquery插件2：jquery.hash解析url hash，监听hashchange <span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXJzLmdvb2dsZS5jb20vd2VibWFzdGVycy9hamF4LWNyYXdsaW5nL2RvY3MvZ2V0dGluZy1zdGFydGVkJUUzJTgwJTgyJUU1JUE0JUE3JUU2JUE2JTgyJUU3JTlBJTg0JUU2JTg0JThGJUU2JTgwJTlEJUU2JTk4JUFGaGFzaHBhdGglRTYlOTglQUYlRTUlOEYlQUYlRTQlQkIlQTUlRTglQTIlQUIlRTYlOTAlOUMlRTclQjQlQTIlRTUlQkMlOTUlRTYlOTMlOEUlRTglQUUlQTQlRTglQUYlODYlRTclOUElODQlRUYlQkMlOEMlRTglODAlOENoYXNoc2VhcmNoJUU1JTg4JTk5JUU0JUI4JThEJUU1JThGJUFGJUU0JUJCJUE1JUVGJUJDJTg4JUU3JTlCJUFFJUU1JTg5JThEJUVGJUJDJTg5JUUzJTgwJTgyJUU2JTg5JTgwJUU0JUJCJUE1JUVGJUJDJThDJUU2JTg4JTkxJUU0JUJCJUFDJUU1JThGJUFGJUU0JUJCJUE1JUU2JUEwJUI5JUU2JThEJUFFJUU1JTg2JTg1JUU1JUFFJUI5JUU3JTlBJTg0JUU0JUI4JThEJUU1JTkwJThDJUU2JTlEJUE1JUU5JTgwJTg5JUU2JThCJUE5JUU0JUI4JThEJUU1JTkwJThDJUU3JTlBJTg0aGFzaCVFNyVCMSVCQiVFNSU5RSU4QiVFMyU4MCU4Mg==">https://developers.google.com/webmasters/ajax-crawling/docs/getting-started。大概的意思是hashpath是可以被搜索引擎认识的，而hashsearch则不可以（目前）。所以，我们可以根据内容的不同来选择不同的hash类型。<i class="fa fa-external-link-alt"></i></span></p>
-<h4 id="3"><a href="#3" class="headerlink" title="jquery.hash及hashchange"></a><a href="#3">jquery.hash及hashchange</a></h4><p>说明：jquery.hash.js默认的hashType为hashpath，其标示符为”!“，而hashsearch的标示符为”?”。</p>
-<p>3.1、解析hash</p>
-<p>按照以上的hash规则，我们可以把hash解析成键值对，$.hash();就可以直接解析，例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://qianduanblog.com/#!a/1/b/2/c/3</span></span><br><span class="line"><span class="comment">// http://qianduanblog.com/#?a=1&amp;b=2&amp;c=3</span></span><br><span class="line"><span class="comment">// $.hash();</span></span><br><span class="line"><span class="comment">// =&gt;&#123;a:&quot;1&quot;,b:&quot;2&quot;,c:&quot;3&quot;&#125;</span></span><br></pre></td></tr></table></figure>
 
-<p> 3.2、读取hash</p>
-<p>把hash解析成了键值对（json对象），读取它就很好办了，例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// http://qianduanblog.com/#!a/1/b/2/c/3</span></span><br><span class="line"><span class="comment">// http://qianduanblog.com/#?a=1&amp;b=2&amp;c=3</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;&quot;1&quot;</span></span><br><span class="line">$.<span class="title function_">hash</span>([<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>]);</span><br><span class="line"><span class="comment">// =&gt;&#123;a:&quot;1&quot;,b:&quot;2&quot;&#125;</span></span><br></pre></td></tr></table></figure>
 
-<p>3.3、设置hash</p>
-<p>设置hash的值也很简单，如：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 单个设置</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;11&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!a/11/b/2/c/3</span></span><br><span class="line"><span class="comment">// 单个设置的时候同时修改hash类型</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;11&quot;</span>,<span class="string">&quot;?&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#?a=11&amp;b=2&amp;c=3</span></span><br><span class="line"><span class="comment">// 多个设置</span></span><br><span class="line">$.<span class="title function_">hash</span>(&#123;<span class="attr">a</span>:<span class="number">111</span>,<span class="attr">b</span>:<span class="number">222</span>&#125;);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#?a=111&amp;b=222&amp;c=3</span></span><br><span class="line"><span class="comment">// 多个设置的时候同时修改hash类型</span></span><br><span class="line">$.<span class="title function_">hash</span>(&#123;<span class="attr">a</span>:<span class="number">111</span>,<span class="attr">b</span>:<span class="number">222</span>&#125;,<span class="string">&quot;!&quot;</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!a/111/b/222/c/3</span></span><br></pre></td></tr></table></figure>
 
-<p>3.4、删除hash</p>
-<p>删除hash操作也很简单，例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 删除单个</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;a&quot;</span>,<span class="literal">null</span>)</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!b/222/c/3</span></span><br><span class="line"><span class="comment">// 删除多个</span></span><br><span class="line">$.<span class="title function_">hash</span>([<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>],<span class="literal">null</span>)</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#!c/3</span></span><br></pre></td></tr></table></figure>
+    
 
-<p>3.5、清空hash</p>
-<p>清空操作一如既往的方便，例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">hash</span>(<span class="literal">null</span>);</span><br><span class="line"><span class="comment">// =&gt;http://qianduanblog.com/#</span></span><br></pre></td></tr></table></figure>
 
-<p>3.6、监听hashchange</p>
-<p>监听的使用方法也很便捷，例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 单监听，当监听的变量发生变化时触发</span></span><br><span class="line"><span class="comment">// 假设a值由1变化为2</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;listen&quot;</span>,<span class="string">&quot;a&quot;</span>,<span class="keyword">function</span>(<span class="params">oldObj,newObj</span>)&#123;</span><br><span class="line"><span class="comment">// 当hash中的a值发生变化就会触发监听事件</span></span><br><span class="line"><span class="comment">// 回调函数有2个参数</span></span><br><span class="line"><span class="comment">// 参数1：旧值的对象，如这里监听的是a，那么其为&#123;a:1&#125;</span></span><br><span class="line"><span class="comment">// 参数2：现值的对象，如这里监听的是a，那么其为&#123;a:2&#125;</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 并监听，当监听的变量都同时发生变化时才触发</span></span><br><span class="line"><span class="comment">// 假设b由2=&gt;3</span></span><br><span class="line"><span class="comment">// 假设c由3=&gt;4</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;listenAnd&quot;</span>,[<span class="string">&quot;b&quot;</span>,<span class="string">&quot;c&quot;</span>],<span class="keyword">function</span>(<span class="params">oldObj,newObj</span>)&#123;</span><br><span class="line"><span class="comment">// 参数1：旧值的对象，如这里监听的是b、c，那么其为&#123;b:2,c:3&#125;</span></span><br><span class="line"><span class="comment">// 参数2：现值的对象，如这里监听的是b、c，那么其为&#123;b:3,c:4&#125;</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">// 或监听，当监听的变量任何一个发生变化时都触发</span></span><br><span class="line"><span class="comment">// 假设d由4=&gt;5</span></span><br><span class="line"><span class="comment">// 假设e没变5=&gt;5</span></span><br><span class="line">$.<span class="title function_">hash</span>(<span class="string">&quot;listenOr&quot;</span>,[<span class="string">&quot;d&quot;</span>,<span class="string">&quot;e&quot;</span>],<span class="keyword">function</span>(<span class="params">oldObj,newObj</span>)&#123;</span><br><span class="line"><span class="comment">// 参数1：旧值的对象，如这里监听的是d、e，那么其为&#123;d:4,e:5&#125;</span></span><br><span class="line"><span class="comment">// 参数2：现值的对象，如这里监听的是d、e，那么其为&#123;b:5,e:5&#125;</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<div class="post-block">
+  
+  
 
-<h4 id="4"><a href="#4" class="headerlink" title="插件下载及演示"></a><a href="#4">插件下载及演示</a></h4><p>下载地址：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Zlc3RhdGljLmFsaWFwcC5jb20vI2pxdWVyeS5oYXNo">http://festatic.aliapp.com/#jquery.hash<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL2Zlc3RhdGljLmFsaWFwcC5jb20vanMvanF1ZXJ5Lmhhc2gvIyFhLzEvYi8yL2MvMw==">http://festatic.aliapp.com/js/jquery.hash/#!a/1/b/2/c/3<i class="fa fa-external-link-alt"></i></span></p>
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/Apache-%E5%9F%9F%E5%90%8D%E8%B7%B3%E8%BD%AC.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/Apache-%E5%9F%9F%E5%90%8D%E8%B7%B3%E8%BD%AC.html" class="post-title-link" itemprop="url">Apache 域名跳转</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 14:13:59 / 修改时间：14:43:38" itemprop="dateCreated datePublished" datetime="2025-06-27T14:13:59+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>如果想要实现访问jingguan.365use.com时，跳转到&lt;<span class="exturl" data-url="aHR0cDovL3d3dy5sYW5kc2NhcGVtZWRpYS5jbi8=">http://www.landscapemedia.cn<i class="fa fa-external-link-alt"></i></span> ，可以做如下操作&gt;</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerName jingguan.365use.com</span><br><span class="line">    RewriteEngine on</span><br><span class="line">    RewriteCond %&#123;HTTP_HOST&#125; ^jingguan.365use.com  [NC]</span><br><span class="line">    RewriteRule ^(.*) http://www.landscapemedia.cn<span class="variable">$1</span> [R=permanent,L]</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/PHP8-5%E6%96%B0%E5%8A%9F%E8%83%BD%E9%A2%84%E8%A7%88.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/PHP8-5%E6%96%B0%E5%8A%9F%E8%83%BD%E9%A2%84%E8%A7%88.html" class="post-title-link" itemprop="url">PHP8.5新功能预览</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 13:30:01 / 修改时间：13:43:36" itemprop="dateCreated datePublished" datetime="2025-06-27T13:30:01+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>PHP 8.5 将于 2025 年 11 月发布，并带来一些有用的新功能和改进。此版本侧重于开发人员体验增强、新的实用程序函数和更好的调试功能。</p>
+<h3 id="1"><a href="#1" class="headerlink" title="新的数组函数"></a><a href="#1">新的数组函数</a></h3><p><em><strong>array_first()</strong></em> 和 <em><strong>array_last()</strong></em></p>
+<p>PHP 8.5 添加了两个请求量很大的函数，用于检索数组的第一个和最后一个值，补充了 PHP 7.3 中现有的<code>array_key_first()</code>和<code>array_key_last()</code>函数。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$users</span> = [<span class="string">&#x27;Alice&#x27;</span>, <span class="string">&#x27;Bob&#x27;</span>, <span class="string">&#x27;Charlie&#x27;</span>];</span><br><span class="line"></span><br><span class="line"><span class="variable">$firstUser</span> = <span class="title function_ invoke__">array_first</span>(<span class="variable">$users</span>);  <span class="comment">// &#x27;Alice&#x27;</span></span><br><span class="line"><span class="variable">$lastUser</span> = <span class="title function_ invoke__">array_last</span>(<span class="variable">$users</span>);    <span class="comment">// &#x27;Charlie&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Works with associative arrays too</span></span><br><span class="line"><span class="variable">$data</span> = [<span class="string">&#x27;name&#x27;</span> =&gt; <span class="string">&#x27;John&#x27;</span>, <span class="string">&#x27;age&#x27;</span> =&gt; <span class="number">30</span>, <span class="string">&#x27;city&#x27;</span> =&gt; <span class="string">&#x27;Berlin&#x27;</span>];</span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">array_first</span>(<span class="variable">$data</span>); <span class="comment">// &#x27;John&#x27;</span></span><br><span class="line"><span class="keyword">echo</span> <span class="title function_ invoke__">array_last</span>(<span class="variable">$data</span>);  <span class="comment">// &#x27;Berlin&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Returns null for empty arrays</span></span><br><span class="line"><span class="variable">$empty</span> = [];</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">array_first</span>(<span class="variable">$empty</span>)); <span class="comment">// null</span></span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">array_last</span>(<span class="variable">$empty</span>));  <span class="comment">// null</span></span><br></pre></td></tr></table></figure>
+
+<p>这些函数等效于：</p>
+<p><code>array_first($array)</code> → <code>$array[array_key_first($array)]</code><br><code>array_last($array)</code> → <code>$array[array_key_last($array)]</code></p>
+<h3 id="2"><a href="#2" class="headerlink" title="管道操作"></a><a href="#2">管道操作</a></h3><p>PHP 8.5 引入了一个新的管道运算符 <em><strong>(|&gt;)</strong></em>，它允许从左到右链接多个可调用对象，将左侧可调用对象的返回值传递给右侧可调用对象：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$result</span> = <span class="string">&#x27;Hello World&#x27;</span></span><br><span class="line">    |&gt; <span class="title function_ invoke__">strtoupper</span>(...)</span><br><span class="line">    |&gt; <span class="title function_ invoke__">str_shuffle</span>(...)</span><br><span class="line">    |&gt; <span class="title function_ invoke__">trim</span>(...);</span><br><span class="line"><span class="comment">// 输出: &#x27;LWHO LDLROE&#x27; (or similar shuffled result)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 等价于:</span></span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">trim</span>(<span class="title function_ invoke__">str_shuffle</span>(<span class="title function_ invoke__">strtoupper</span>(<span class="string">&#x27;Hello World&#x27;</span>)));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 或者等价于:</span></span><br><span class="line"><span class="variable">$result</span> = <span class="string">&#x27;Hello World&#x27;</span>;</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">strtoupper</span>(<span class="variable">$result</span>);</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">str_shuffle</span>(<span class="variable">$result</span>);</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$result</span>);</span><br></pre></td></tr></table></figure>
+
+<p>管道运算符适用于任何可调用对象 - 函数、方法、闭包和第一类可调用对象。但是，它有一些限制：</p>
+<ul>
+<li>所有可调用对象必须只接受一个必需的参数</li>
+<li>不能使用具有按引用参数的函数(少数例外)</li>
+<li>返回值始终作为第一个参数传递</li>
+</ul>
+<h3 id="3"><a href="#3" class="headerlink" title="新的错误和异常处理程序 getter"></a><a href="#3">新的错误和异常处理程序 getter</a></h3><p>PHP 8.5 引入了两个新函数，允许您检索当前活动的错误和异常处理程序：<code>get_error_handler()</code>和<code>get_exception_handler()</code>。 这两个函数都返回当前可调用的处理程序，如果未设置自定义处理程序，则返回<code>null</code>。</p>
+<h3 id="4"><a href="#4" class="headerlink" title="新的cURL函数"></a><a href="#4">新的cURL函数</a></h3><p><em><strong>curl_multi_get_handles()</strong></em></p>
+<p>cURL 扩展获得了一个新函数，用于从多手柄中检索所有句柄：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$multiHandle</span> = <span class="title function_ invoke__">curl_multi_init</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable">$ch1</span> = <span class="title function_ invoke__">curl_init</span>(<span class="string">&#x27;https://api.example.com/users&#x27;</span>);</span><br><span class="line"><span class="variable">$ch2</span> = <span class="title function_ invoke__">curl_init</span>(<span class="string">&#x27;https://api.example.com/posts&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">curl_multi_add_handle</span>(<span class="variable">$multiHandle</span>, <span class="variable">$ch1</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_multi_add_handle</span>(<span class="variable">$multiHandle</span>, <span class="variable">$ch2</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// New in PHP 8.5: Get all handles</span></span><br><span class="line"><span class="variable">$handles</span> = <span class="title function_ invoke__">curl_multi_get_handles</span>(<span class="variable">$multiHandle</span>);</span><br><span class="line"><span class="comment">// Returns: [$ch1, $ch2]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Execute and process results</span></span><br><span class="line"><span class="variable">$running</span> = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">curl_multi_exec</span>(<span class="variable">$multiHandle</span>, <span class="variable">$running</span>);</span><br><span class="line">&#125; <span class="keyword">while</span> (<span class="variable">$running</span> &gt; <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (<span class="variable">$handles</span> <span class="keyword">as</span> <span class="variable">$handle</span>) &#123;</span><br><span class="line">    <span class="variable">$response</span> = <span class="title function_ invoke__">curl_multi_getcontent</span>(<span class="variable">$handle</span>);</span><br><span class="line">    <span class="title function_ invoke__">curl_multi_remove_handle</span>(<span class="variable">$multiHandle</span>, <span class="variable">$handle</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5"><a href="#5" class="headerlink" title="新的Locale函数"></a><a href="#5">新的Locale函数</a></h3><p><em><strong>locale_is_right_to_left()</strong></em></p>
+<p>PHP 8.5 添加了对检测从右到左 (RTL) 语言环境的支持，从而提高了国际化功能：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Check if locale uses RTL writing</span></span><br><span class="line"><span class="variable">$isRTL</span> = <span class="title function_ invoke__">locale_is_right_to_left</span>(<span class="string">&#x27;ar_SA&#x27;</span>); <span class="comment">// true (Arabic)</span></span><br><span class="line"><span class="variable">$isLTR</span> = <span class="title function_ invoke__">locale_is_right_to_left</span>(<span class="string">&#x27;en_US&#x27;</span>); <span class="comment">// false (English)</span></span><br><span class="line"><span class="variable">$isFarsi</span> = <span class="title function_ invoke__">locale_is_right_to_left</span>(<span class="string">&#x27;fa_IR&#x27;</span>); <span class="comment">// true (Persian/Farsi)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Object-oriented approach</span></span><br><span class="line"><span class="variable">$isRTL</span> = <span class="title class_">Locale</span>::<span class="title function_ invoke__">isRightToLeft</span>(<span class="string">&#x27;he_IL&#x27;</span>); <span class="comment">// true (Hebrew)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="6"><a href="#6" class="headerlink" title="新PHP_BUILD_DATE常量"></a><a href="#6">新PHP_BUILD_DATE常量</a></h3><p>一个新的常量提供了 PHP 二进制文件的构建日期，用于调试和版本审计：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> PHP_BUILD_DATE; <span class="comment">// e.g., &#x27;Nov 15 2025 10:30:45&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Useful for debugging in production</span></span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;PHP Version: &#x27;</span> . PHP_VERSION . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&#x27;Build Date: &#x27;</span> . PHP_BUILD_DATE . <span class="string">&quot;\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7"><a href="#7" class="headerlink" title="CLI 增强功能"></a><a href="#7">CLI 增强功能</a></h3><p><em><strong>php –ini&#x3D;diff</strong></em></p>
+<p>一个新的 CLI 选项，用于仅输出非默认 INI 指令：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Show only modified settings</span></span><br><span class="line">php --ini=diff</span><br><span class="line"></span><br><span class="line"><span class="comment"># Example output:</span></span><br><span class="line"><span class="comment"># memory_limit = 256M (default: 128M)</span></span><br><span class="line"><span class="comment"># max_execution_time = 60 (default: 30)</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/%E7%BD%91%E7%AB%99%E5%A6%82%E4%BD%95%E7%A6%81%E6%AD%A2%E7%99%BE%E5%BA%A6%E8%BD%AC%E7%A0%81-%E8%AE%B0%E5%BD%95.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/%E7%BD%91%E7%AB%99%E5%A6%82%E4%BD%95%E7%A6%81%E6%AD%A2%E7%99%BE%E5%BA%A6%E8%BD%AC%E7%A0%81-%E8%AE%B0%E5%BD%95.html" class="post-title-link" itemprop="url">网站如何禁止百度转码【记录】</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 11:00:08 / 修改时间：11:33:07" itemprop="dateCreated datePublished" datetime="2025-06-27T11:00:08+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>网站如何禁止百度转码  </p>
+<p><strong>A. no-transform协议</strong>  </p>
+<p>TC支持的no-transform协议为如下两种形式：<br>a. HTTP Response中显式声明Cache-control为no-transform。<br>b. meta标签中显式声明Cache-control为no-tranform，格式为：<br><code>&lt;head&gt;&lt;meta http-equiv=”Cache-Control” content=”no-transform ” /&gt;&lt;/head&gt;</code>如第三方站点不希望页面被转码，可添加此协议，当用户进入第三方网站时，先进入中间提示页，页面将引导用户自主选择跳转至原网页。  </p>
+<p><strong>B. handheld协议</strong>  </p>
+<p>页面通过<link>标签显式指定WAP网页，声明格式如下：<br><code>&lt;link rel=”alternate” type=”application/vnd.wap.xhtml+xml” media=”handheld” href=”target”/&gt;</code><br>如第三方站点不希望页面被转码，可添加此协议，告知我们原网页对应有一个WAP版页面，当用户进入第三方网站时，先进入中间提示页，让用户自主选择跳转至原网页或第三方网站自有的wap页面。  </p>
+<p><strong>C. User-Agent相关设置</strong></p>
+<p>User-Agent相关TC抓取页面时，使用的User-Agent为：<code>Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; baidu Transcoder;)</code><br>如第三方站点不希望转码HTML页面，且又可以提供对应的自有WAP页面，则可以根据这个User-Agent，返回自有WAP页，同时在HTTP Response显示声明：Content-Type为：vnd.wap.xhtml+xml，那么TC将不对这个页面转码，而是直接跳转至相应的自有WAP页面。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/%E7%99%BE%E5%BA%A6%E5%88%86%E4%BA%AB%E6%8F%92%E4%BB%B6-%E5%88%86%E4%BA%AB%E6%8C%89%E9%92%AE%E8%87%AA%E5%AE%9A%E4%B9%89-bShare%E5%88%86%E4%BA%AB%E6%8F%92%E4%BB%B6-%E5%88%86%E4%BA%AB%E6%8C%89%E9%92%AE%E8%87%AA%E5%AE%9A%E4%B9%89.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/%E7%99%BE%E5%BA%A6%E5%88%86%E4%BA%AB%E6%8F%92%E4%BB%B6-%E5%88%86%E4%BA%AB%E6%8C%89%E9%92%AE%E8%87%AA%E5%AE%9A%E4%B9%89-bShare%E5%88%86%E4%BA%AB%E6%8F%92%E4%BB%B6-%E5%88%86%E4%BA%AB%E6%8C%89%E9%92%AE%E8%87%AA%E5%AE%9A%E4%B9%89.html" class="post-title-link" itemprop="url">百度分享插件-分享按钮自定义，bShare分享插件-分享按钮自定义</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 11:00:05 / 修改时间：11:33:53" itemprop="dateCreated datePublished" datetime="2025-06-27T11:00:05+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>百度分享插件-分享按钮自定义</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;bsync-custom icon-medium-blue&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">a</span> <span class="attr">title</span>=<span class="string">&quot;一键分享到各大微博和社交网络&quot;</span> <span class="attr">class</span>=<span class="string">&quot;bshare-bsync&quot;</span> <span class="attr">onclick</span>=<span class="string">&quot;javascript:bShare.more(event);return false;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">&quot;bshareDiv&quot;</span> <span class="attr">href</span>=<span class="string">&quot;http://www.bshare.cn/share&quot;</span>&gt;</span>分享按钮<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">src</span>=<span class="string">&quot;http://static.bshare.cn/b/buttonLite.js#uuid=773faa5d-cee1-4696-9c99-d400a5d7a1c1<span class="symbol">&amp;amp;</span>style=999<span class="symbol">&amp;amp;</span>img=http%3A%2F%2Fjingguan.365use.com%2Fwap%2Fimages%2Frfhui1.jpg<span class="symbol">&amp;amp;</span>h=20<span class="symbol">&amp;amp;</span>w=23<span class="symbol">&amp;amp;</span>mdiv=0<span class="symbol">&amp;amp;</span>pop=-1<span class="symbol">&amp;amp;</span>bp=qqmb,bsharesync,sinaminiblog,qzone,189share,sohuminiblog,renren,xinhuamb,tianya,shouji,ifengmb,neteasemb,qqxiaoyou,kaixin001,weixin,douban,qqim&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>bShare分享插件-分享按钮自定义</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line">    <span class="selector-class">.userStyle</span>&#123;</span><br><span class="line">        <span class="attribute">width</span>:<span class="number">100%</span>;</span><br><span class="line">        <span class="attribute">height</span>:<span class="number">30px</span>;</span><br><span class="line">        <span class="attribute">display</span>:block;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-class">.userStyle</span> <span class="selector-tag">span</span><span class="selector-class">.bds_more</span>&#123;</span><br><span class="line">        <span class="attribute">background</span>:<span class="built_in">url</span>(<span class="string">&quot;/wap/images/rfhui1.jpg&quot;</span>) no-repeat scroll <span class="number">0</span> <span class="number">5px</span> <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>) <span class="meta">!important</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;<span class="selector-tag">div</span> class=&quot;userStyle&quot;&gt;</span><br><span class="line">    &lt;!-- Baidu <span class="selector-tag">Button</span> BEGIN --&gt;</span><br><span class="line">    &lt;<span class="selector-tag">div</span> id=&quot;bdshare&quot; class=&quot;bdshare_t bds_tools get-codes-bdshare&quot;&gt;</span><br><span class="line">        &lt;<span class="selector-tag">span</span> class=&quot;bds_more&quot;&gt;&lt;/<span class="selector-tag">span</span>&gt;</span><br><span class="line">    &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">    &lt;script type=&quot;<span class="selector-tag">text</span>/javascript&quot; id=&quot;bdshare_js&quot; data=&quot;type=tools&quot; &gt;&lt;/script&gt;</span><br><span class="line">    &lt;script type=&quot;<span class="selector-tag">text</span>/javascript&quot; id=&quot;bdshell_js&quot;&gt;&lt;/script&gt;</span><br><span class="line">    &lt;script type=&quot;<span class="selector-tag">text</span>/javascript&quot;&gt;</span><br><span class="line">        document<span class="selector-class">.getElementById</span>(&quot;bdshell_js&quot;)<span class="selector-class">.src</span> = &quot;http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=<span class="string">&quot; + Math.ceil(new Date()/3600000);</span></span><br><span class="line"><span class="string">    &lt;/script&gt;</span></span><br><span class="line"><span class="string">    &lt;!-- Baidu Button END --&gt;</span></span><br><span class="line"><span class="string">&lt;/div&gt;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/Masonry-%E4%B8%8D%E4%BD%BF%E7%94%A8Infinite-%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E6%97%A0%E9%99%90%E5%8A%A0%E8%BD%BD-ajax%E6%97%A0%E9%99%90%E5%8A%A0%E8%BD%BD-%E9%80%9A%E8%BF%87%E5%88%86%E9%A1%B5%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/Masonry-%E4%B8%8D%E4%BD%BF%E7%94%A8Infinite-%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E6%97%A0%E9%99%90%E5%8A%A0%E8%BD%BD-ajax%E6%97%A0%E9%99%90%E5%8A%A0%E8%BD%BD-%E9%80%9A%E8%BF%87%E5%88%86%E9%A1%B5%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD.html" class="post-title-link" itemprop="url">Masonry 不使用Infinite 实现数据无限加载 ajax无限加载【通过分页自动加载】</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 11:00:02 / 修改时间：12:03:35" itemprop="dateCreated datePublished" datetime="2025-06-27T11:00:02+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>masonry 不使用Infinite 实现数据无限加载 ajax无限加载【通过分页自动加载】</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 引入文件 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;/wap/js/masonry/jquery.masonry.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;/wap/js/masonry/js/jquery.infinitescroll.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;bg_e7&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;p4_3&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">&quot;ul_mt4&quot;</span> <span class="attr">id</span>=<span class="string">&quot;masonry&quot;</span>&gt;</span></span><br><span class="line">            &#123;#foreach $list as $item#&#125;<span class="comment">&lt;!-- foreach循环 多个DOM元素 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">&quot;masonry-item&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;dierg&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;p04&quot;</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#wap_url_reset(&quot;&#123;#$item.mark#&#125;/show&quot;,&quot;id/&#123;#$item.oid#&#125;&quot;)#&#125;&#x27;</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">img</span> <span class="attr">width</span>=<span class="string">&quot;143&quot;</span> <span class="attr">src</span>=<span class="string">&quot;&#123;#$item.cover#&#125;&quot;</span> /&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;p3_5&quot;</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;h24_jc_c666&quot;</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#wap_url_reset(&quot;&#123;#$item.mark#&#125;/show&quot;,&quot;id/&#123;#$item.oid#&#125;&quot;)#&#125;&#x27;</span>&gt;</span></span><br><span class="line">                                &#123;#$item.o_title|cut_str:7#&#125;</span><br><span class="line">                            <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;h20_c666&quot;</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#wap_url_reset(&quot;&#123;#$item.mark#&#125;/show&quot;,&quot;id/&#123;#$item.oid#&#125;&quot;)#&#125;&#x27;</span>&gt;</span></span><br><span class="line">                                &#123;#$item.o_content|cut_str_with_string:7#&#125;</span><br><span class="line">                            <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;h22_lh20&quot;</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&#x27;&#123;#if $item.mark == &quot;news&quot;#&#125;zx_img1&#123;#elseif $item.mark == &quot;case&quot;#&#125;anli_1&#123;#elseif $item.mark == &quot;activity&quot;#&#125;fbg1_bg&#123;#/if#&#125;&#x27;</span>&gt;</span></span><br><span class="line">                                <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#wap_url_reset(&quot;&#123;#$item.mark#&#125;/index&quot;)#&#125;&#x27;</span>&gt;</span></span><br><span class="line">                                    &#123;#$wapcategory[$item.cid].cat_name#&#125;</span><br><span class="line">                                <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;fr_cb2&quot;</span>&gt;</span></span><br><span class="line">                                &#123;#if $item.ccid#&#125;</span><br><span class="line">                                <span class="tag">&lt;<span class="name">strong</span> <span class="attr">class</span>=<span class="string">&quot;color3&quot;</span>&gt;</span>/<span class="tag">&lt;/<span class="name">strong</span>&gt;</span> <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#wap_url_reset(&quot;&#123;#$item.mark#&#125;/index&quot;,&quot;cid/&#123;#$item.cid#&#125;-ccid/&#123;#$item.ccid#&#125;&quot;)#&#125;&#x27;</span>&gt;</span>&#123;#$wapcategory[$item.ccid].cat_name#&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">                                &#123;#/if#&#125;</span><br><span class="line">                            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;diyig&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">            &#123;#/foreach#&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;page-nav&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display: none&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;pages&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;page_icon&quot;</span>&gt;</span>上一页<span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">b</span>&gt;</span>1<span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;?p=2&quot;</span>&gt;</span>2<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;?p=2&quot;</span> <span class="attr">class</span>=<span class="string">&quot;nextprev&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;2&quot;</span>&gt;</span>下一页<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;h100_cboth&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;min_w640&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;pdwei_img&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;/wap/images/wfd_img.jpg&quot;</span> <span class="attr">width</span>=<span class="string">&quot;100%&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;dwenimg&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;/wap/images/gbi.png&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    $(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> $container = $(<span class="string">&#x27;#masonry&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">        $container.<span class="title function_">imagesLoaded</span>( <span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">            $container.<span class="title function_">masonry</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">                itemSelector : <span class="string">&#x27;.masonry-item&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                gutterWidth : <span class="number">2</span>,</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">isAnimated</span>: <span class="literal">true</span></span></span><br><span class="line"><span class="language-javascript">            &#125;);</span></span><br><span class="line"><span class="language-javascript">        &#125;);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> pre_href;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">//滚动</span></span></span><br><span class="line"><span class="language-javascript">        $(<span class="variable language_">window</span>).<span class="title function_">scroll</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="comment">// 当滚动到最底部以上100像素时， 加载新内容</span></span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">if</span> ($(<span class="variable language_">document</span>).<span class="title function_">height</span>() - $(<span class="variable language_">this</span>).<span class="title function_">scrollTop</span>() - $(<span class="variable language_">this</span>).<span class="title function_">height</span>()&lt;<span class="number">100</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="title function_">ajax_load_data</span>();</span></span><br><span class="line"><span class="language-javascript">            &#125;</span></span><br><span class="line"><span class="language-javascript">        &#125;);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">function</span> <span class="title function_">ajax_load_data</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">var</span> href = $(<span class="string">&#x27;#page-nav&#x27;</span>).<span class="title function_">find</span>(<span class="string">&#x27;.nextprev&#x27;</span>).<span class="title function_">attr</span>(<span class="string">&#x27;href&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">            <span class="keyword">if</span>(href &amp;&amp; href != pre_href)&#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;href = &#x27;</span>+href);</span></span><br><span class="line"><span class="language-javascript">                pre_href = href;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">                $.<span class="title function_">ajax</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">                    <span class="attr">url</span>:href,</span></span><br><span class="line"><span class="language-javascript">                    <span class="attr">data</span>:&#123;<span class="string">&#x27;act&#x27;</span>:<span class="string">&#x27;ajax_wap_news&#x27;</span>&#125;,</span></span><br><span class="line"><span class="language-javascript">                    <span class="attr">dataType</span>:<span class="string">&#x27;json&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                    <span class="attr">type</span>:<span class="string">&#x27;post&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                    <span class="attr">beforeSend</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                        <span class="title function_">show_loading_body</span>();</span></span><br><span class="line"><span class="language-javascript">                    &#125;,</span></span><br><span class="line"><span class="language-javascript">                    <span class="attr">complete</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                        <span class="title function_">show_loading_body</span>();</span></span><br><span class="line"><span class="language-javascript">                    &#125;,</span></span><br><span class="line"><span class="language-javascript">                    <span class="attr">success</span>:<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                        <span class="keyword">if</span>(data.<span class="property">status</span> != <span class="literal">undefined</span> &amp;&amp; data.<span class="property">status</span> == <span class="string">&#x27;ok&#x27;</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                            <span class="keyword">if</span>(data.<span class="property">html</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                                <span class="keyword">var</span> $boxes = $( data.<span class="property">html</span> );</span></span><br><span class="line"><span class="language-javascript">                                $container.<span class="title function_">append</span>( $boxes ).<span class="title function_">masonry</span>( <span class="string">&#x27;appended&#x27;</span>, $boxes);</span></span><br><span class="line"><span class="language-javascript">                            &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">                            <span class="keyword">if</span>(data.<span class="property">str_pages</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                                $(<span class="string">&#x27;#page-nav&#x27;</span>).<span class="title function_">html</span>(data.<span class="property">str_pages</span>);</span></span><br><span class="line"><span class="language-javascript">                            &#125;</span></span><br><span class="line"><span class="language-javascript">                        &#125;</span></span><br><span class="line"><span class="language-javascript">                    &#125;</span></span><br><span class="line"><span class="language-javascript">                &#125;);</span></span><br><span class="line"><span class="language-javascript">            &#125;</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/Blocksit-%E7%80%91%E5%B8%83%E6%B5%81%E6%8F%92%E4%BB%B6-%E5%AE%9E%E7%8E%B0%E7%80%91%E5%B8%83%E6%B5%81%E6%95%B0%E6%8D%AE-%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD-%E6%97%A0%E9%99%90%E5%8A%A0%E8%BD%BD.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/Blocksit-%E7%80%91%E5%B8%83%E6%B5%81%E6%8F%92%E4%BB%B6-%E5%AE%9E%E7%8E%B0%E7%80%91%E5%B8%83%E6%B5%81%E6%95%B0%E6%8D%AE-%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD-%E6%97%A0%E9%99%90%E5%8A%A0%E8%BD%BD.html" class="post-title-link" itemprop="url">Blocksit 瀑布流插件 实现瀑布流数据 异步加载（无限加载）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:59:59 / 修改时间：11:36:00" itemprop="dateCreated datePublished" datetime="2025-06-27T10:59:59+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Blocksit 瀑布流插件 实现瀑布流数据 异步加载（无限加载）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&quot;width:1000px; overflow:hidden; margin:0 auto&quot;</span>&gt;</span>    </span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kppcl&quot;</span> <span class="attr">style</span>=<span class="string">&quot;width:1008px; position:relative&quot;</span> <span class="attr">id</span>=<span class="string">&quot;kppcl&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kppcld&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kppcld_t&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kpic&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#url_reset(&quot;activity/detail&quot;,&quot;id_&#123;#$item.id#&#125;&quot;)#&#125;&#x27;</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;&#123;#$item.logo#&#125;&quot;</span> <span class="attr">width</span>=<span class="string">&quot;322&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kname&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#url_reset(&quot;activity/detail&quot;,&quot;id_&#123;#$item.id#&#125;&quot;)#&#125;&#x27;</span>&gt;</span>&#123;#$item.title#&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kinfor&quot;</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">table</span> <span class="attr">width</span>=<span class="string">&quot;100%&quot;</span> <span class="attr">border</span>=<span class="string">&quot;0&quot;</span> <span class="attr">cellspacing</span>=<span class="string">&quot;0&quot;</span> <span class="attr">cellpadding</span>=<span class="string">&quot;0&quot;</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">th</span>&gt;</span>时<span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span>间：<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;#$item.start_date#&#125;-&#123;#$item.end_date#&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">th</span>&gt;</span>地<span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span>点：<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;#$item.area_name#&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kppcld_b&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kppcld&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kppcld_t&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kpic&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#url_reset(&quot;activity/detail&quot;,&quot;id_&#123;#$item.id#&#125;&quot;)#&#125;&#x27;</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;&#123;#$item.logo#&#125;&quot;</span> <span class="attr">width</span>=<span class="string">&quot;322&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kname&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#url_reset(&quot;activity/detail&quot;,&quot;id_&#123;#$item.id#&#125;&quot;)#&#125;&#x27;</span>&gt;</span>&#123;#$item.title#&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kinfor&quot;</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">table</span> <span class="attr">width</span>=<span class="string">&quot;100%&quot;</span> <span class="attr">border</span>=<span class="string">&quot;0&quot;</span> <span class="attr">cellspacing</span>=<span class="string">&quot;0&quot;</span> <span class="attr">cellpadding</span>=<span class="string">&quot;0&quot;</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">th</span>&gt;</span>时<span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span>间：<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;#$item.start_date#&#125;-&#123;#$item.end_date#&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">th</span>&gt;</span>地<span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span>点：<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;#$item.area_name#&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kppcld_b&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kppcld&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kppcld_t&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kpic&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#url_reset(&quot;activity/detail&quot;,&quot;id_&#123;#$item.id#&#125;&quot;)#&#125;&#x27;</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;&#123;#$item.logo#&#125;&quot;</span> <span class="attr">width</span>=<span class="string">&quot;322&quot;</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kname&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&#x27;&#123;#url_reset(&quot;activity/detail&quot;,&quot;id_&#123;#$item.id#&#125;&quot;)#&#125;&#x27;</span>&gt;</span>&#123;#$item.title#&#125;<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kinfor&quot;</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">table</span> <span class="attr">width</span>=<span class="string">&quot;100%&quot;</span> <span class="attr">border</span>=<span class="string">&quot;0&quot;</span> <span class="attr">cellspacing</span>=<span class="string">&quot;0&quot;</span> <span class="attr">cellpadding</span>=<span class="string">&quot;0&quot;</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">th</span>&gt;</span>时<span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span>间：<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;#$item.start_date#&#125;-&#123;#$item.end_date#&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">th</span>&gt;</span>地<span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span><span class="symbol">&amp;nbsp;</span>点：<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">                            <span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;#$item.area_name#&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;kppcld_b&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;page&quot;</span> <span class="attr">style</span>=<span class="string">&quot;display: none&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;pages&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">b</span> <span class="attr">class</span>=<span class="string">&quot;page_icon&quot;</span>&gt;</span>上一页<span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">b</span>&gt;</span>1<span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;?p=2&quot;</span>&gt;</span>2<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">&quot;?p=2&quot;</span> <span class="attr">class</span>=<span class="string">&quot;nextprev&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;2&quot;</span>&gt;</span>下一页<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;/js/blocksit.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">language</span>=<span class="string">&quot;javascript&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    $(<span class="variable language_">window</span>).<span class="title function_">load</span>( <span class="keyword">function</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        $(<span class="string">&#x27;#kppcl&#x27;</span>).<span class="title class_">BlocksIt</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">numOfCol</span>: <span class="number">3</span>,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">offsetX</span>: <span class="number">5</span>,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">offsetY</span>: <span class="number">5</span></span></span><br><span class="line"><span class="language-javascript">        &#125;);</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> current_p = <span class="number">0</span>;</span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//滚动</span></span></span><br><span class="line"><span class="language-javascript">    $(<span class="variable language_">window</span>).<span class="title function_">scroll</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 当滚动到最底部以上100像素时， 加载新内容</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">if</span> ($(<span class="variable language_">document</span>).<span class="title function_">height</span>() - $(<span class="variable language_">this</span>).<span class="title function_">scrollTop</span>() - $(<span class="variable language_">this</span>).<span class="title function_">height</span>()&lt;<span class="number">100</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="title function_">ajax_load_data</span>();</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;);</span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">function</span> <span class="title function_">ajax_load_data</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">var</span> next_p = $(<span class="string">&#x27;#page&#x27;</span>).<span class="title function_">find</span>(<span class="string">&#x27;.nextprev&#x27;</span>).<span class="title function_">attr</span>(<span class="string">&#x27;rel&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">if</span>(next_p &amp;&amp; next_p != current_p)&#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;nextpage = &#x27;</span>+next_p);</span></span><br><span class="line"><span class="language-javascript">            current_p = next_p;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">            $.<span class="title function_">ajax</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">url</span>:<span class="string">&#x27;&#123;#url_reset(&quot;request/front/ajax&quot;,&quot;&quot;,&quot;php&quot;)#&#125;&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">data</span>:&#123;<span class="string">&#x27;act&#x27;</span>:<span class="string">&#x27;ajax_forum&#x27;</span>,<span class="string">&#x27;p&#x27;</span>:next_p&#125;,</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">dataType</span>:<span class="string">&#x27;json&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">type</span>:<span class="string">&#x27;post&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">beforeSend</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                    <span class="title function_">show_loading_body</span>();</span></span><br><span class="line"><span class="language-javascript">                &#125;,</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">complete</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                    <span class="title function_">show_loading_body</span>();</span></span><br><span class="line"><span class="language-javascript">                &#125;,</span></span><br><span class="line"><span class="language-javascript">                <span class="attr">success</span>:<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                    <span class="keyword">if</span>(data.<span class="property">status</span> != <span class="literal">undefined</span> &amp;&amp; data.<span class="property">status</span> == <span class="string">&#x27;ok&#x27;</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                        <span class="keyword">if</span>(data.<span class="property">html</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                            $(<span class="string">&#x27;#kppcl&#x27;</span>).<span class="title function_">append</span>(data.<span class="property">html</span>).<span class="title class_">BlocksIt</span>(<span class="string">&#x27;reload&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">                        &#125;</span></span><br><span class="line"><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">                        <span class="keyword">if</span>(data.<span class="property">pages_str</span>)&#123;</span></span><br><span class="line"><span class="language-javascript">                            $(<span class="string">&#x27;#page&#x27;</span>).<span class="title function_">html</span>(data.<span class="property">pages_str</span>);</span></span><br><span class="line"><span class="language-javascript">                        &#125;</span></span><br><span class="line"><span class="language-javascript">                    &#125;</span></span><br><span class="line"><span class="language-javascript">                &#125;</span></span><br><span class="line"><span class="language-javascript">            &#125;);</span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>参考文章：</p>
+<p><span class="exturl" data-url="aHR0cDovL215Lm9zY2hpbmEubmV0L1JheW4vYmxvZy8xMjM5Mzg=">http://my.oschina.net/Rayn/blog/123938<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/Windows%E4%B8%8Bgit-bash%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/27/Windows%E4%B8%8Bgit-bash%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">Windows下git bash乱码问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-27 10:59:57 / 修改时间：11:36:35" itemprop="dateCreated datePublished" datetime="2025-06-27T10:59:57+08:00">2025-06-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>转载某个牛逼的人物，做个记录，</p>
+<p>如果找不到就到git的安装目录下面去看看。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">1,/etc/gitconfig：</span><br><span class="line">[gui]</span><br><span class="line">    encoding = utf-8 <span class="comment">#代码库统一用urf-8,在git gui中可以正常显示中文</span></span><br><span class="line">[i18n]</span><br><span class="line">    commitencoding = GB2312 <span class="comment">#log编码，window下默认gb2312,声明后发到服务器才不会乱码</span></span><br><span class="line">[svn]</span><br><span class="line">    pathnameencoding = GB2312 <span class="comment">#支持中文路径</span></span><br><span class="line">2,/etc/git-completion.bash:</span><br><span class="line"><span class="built_in">alias</span> <span class="built_in">ls</span>=<span class="string">&#x27;ls --show-control-chars --color=auto&#x27;</span>  <span class="comment">#ls能够正常显示中文</span></span><br><span class="line">3,/etc/inputrc:</span><br><span class="line"><span class="built_in">set</span> output-meta on   <span class="comment">#bash中可以正常输入中文</span></span><br><span class="line"><span class="built_in">set</span> convert-meta off</span><br><span class="line">4,/etc/profile:</span><br><span class="line"><span class="built_in">export</span> LESSHARSET=utf-8   <span class="comment">#$ git log 命令不像其它 vcs 一样，n 条 log 从头滚到底，它会恰当地停在第一页，按 space 键再往后翻页。这是通过将 log 送给 less 处理实现的。以上即是设置 less 的字符编码，使得 $ git log 可以正常显示中文。</span></span><br></pre></td></tr></table></figure>
+
+<p>如果没有就加上吧，有了的话就改下，如果是一样的话就不用修改了。</p>
 <hr>
 <p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3FpYW5kdWFuYmxvZy5jb20vMjAwMy5odG1s">http://qianduanblog.com/2003.html<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9HdWt3L2FyY2hpdmUvMjAxMi8wMS8xNi8yMzIzNDE3Lmh0bWw=">http://www.cnblogs.com/Gukw/archive/2012/01/16/2323417.html<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -560,7 +1021,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/window.location.hash%E5%B1%9E%E6%80%A7%E4%BB%8B%E7%BB%8D.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/27/JavaScript-%E6%89%8B%E6%9C%BA%E5%8F%91%E9%80%81%E9%AA%8C%E8%AF%81%E7%A0%81-%E6%93%8D%E4%BD%9C%E6%8C%89%E9%92%AE%E5%BB%B6%E8%BF%9F%E6%93%8D%E4%BD%9C.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -578,7 +1039,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/27/window.location.hash%E5%B1%9E%E6%80%A7%E4%BB%8B%E7%BB%8D.html" class="post-title-link" itemprop="url">window.location.hash属性介绍</a>
+          <a href="/2025/06/27/JavaScript-%E6%89%8B%E6%9C%BA%E5%8F%91%E9%80%81%E9%AA%8C%E8%AF%81%E7%A0%81-%E6%93%8D%E4%BD%9C%E6%8C%89%E9%92%AE%E5%BB%B6%E8%BF%9F%E6%93%8D%E4%BD%9C.html" class="post-title-link" itemprop="url">JavaScript 手机发送验证码 操作按钮延迟操作</a>
         </h2>
 
         <div class="post-meta-container">
@@ -590,7 +1051,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-27 09:45:15 / 修改时间：10:02:16" itemprop="dateCreated datePublished" datetime="2025-06-27T09:45:15+08:00">2025-06-27</time>
+      <time title="创建时间：2025-06-27 10:59:54 / 修改时间：11:37:28" itemprop="dateCreated datePublished" datetime="2025-06-27T10:59:54+08:00">2025-06-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -612,547 +1073,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>来了解一下hash，javascript中的hash是啥。</p>
-<p>location是javascript里边管理地址栏的内置对象，比如location.href就管理页面的url，用location.href&#x3D;url就可以直接将页面重定向url。而location.hash则可以用来获取或设置页面的标签值。比如<span class="exturl" data-url="aHR0cDovL2RvbWFpbi8jYWRtaW4lRTclOUElODRsb2NhdGlvbi5oYXNoPSUyMiNhZG1pbg==">http://domain/#admin的location.hash=&quot;#admin<i class="fa fa-external-link-alt"></i></span>“ 。利用这个属性值可以做一个非常有意义的事情。</p>
-<p>很多人都喜欢收藏网页，以便于以后的浏览。不过对于Ajax页面来说的话，一般用一个页面来处理所有的事务，也就是说，如果你浏览到一个Ajax页面里边有意思的内容，想将它收藏起来，可是地址只有一个呀，下次你打开这个地址，还是得像以往一样不断地去点击网页，找到你钟情的那个页面。另外的话，浏览器上的“前进”“后退”按钮也会失效，这于很多习惯了传统页面的用户来说，是一个很大的使用障碍。</p>
-<p>那么，怎么用location.hash来解决这两个问题呢？其实一点也不神秘。</p>
-<p>比如，某人的管理系统，主要功能有三个：普通搜索、高级搜索、后台管理，我分别给它们分配一个hash值：#search、#advsearch、#admin，在页面初始化的时候，通过window.location.hash来判断用户需要访问的页面，然后通过javascript来调整显示页面</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> hash; </span><br><span class="line">hash=(!<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">hash</span>)?<span class="string">&quot;#search&quot;</span>:<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">hash</span>; </span><br><span class="line"><span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">hash</span>=hash; </span><br><span class="line"><span class="comment">//调整地址栏地址，使前进、后退按钮能使用 </span></span><br><span class="line"><span class="keyword">switch</span>(hash)&#123;   </span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;#search&quot;</span>:  </span><br><span class="line">        <span class="title function_">selectPanel</span>(<span class="string">&quot;pnlSearch&quot;</span>);   <span class="comment">//显示普通搜索面板  </span></span><br><span class="line">        <span class="keyword">break</span>;    </span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;#advsearch&quot;</span>:    </span><br><span class="line">        <span class="title function_">selectPanel</span>(<span class="string">&quot;adSearch&quot;</span>);    <span class="comment">//显示高级搜索面板</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">&quot;#admin&quot;</span>:  </span><br><span class="line">        <span class="title function_">selectPanel</span>(<span class="string">&quot;adminSearch&quot;</span>); <span class="comment">//显示后台搜索面板</span></span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>Js 手机发送验证码 操作按钮延迟操作</p>
+<p>实例代码记录：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">start_sms_button</span>(<span class="params">obj</span>)&#123;</span><br><span class="line">        <span class="keyword">var</span> count = <span class="number">1</span> ;</span><br><span class="line">        <span class="keyword">var</span> sum = <span class="number">30</span>;</span><br><span class="line">        <span class="keyword">var</span> i = <span class="built_in">setInterval</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(count &gt; <span class="number">10</span>)&#123;</span><br><span class="line">                obj.<span class="title function_">attr</span>(<span class="string">&#x27;disabled&#x27;</span>,<span class="literal">false</span>);</span><br><span class="line">                obj.<span class="title function_">val</span>(<span class="string">&#x27;发送验证码&#x27;</span>);</span><br><span class="line">                <span class="built_in">clearInterval</span>(i);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                obj.<span class="title function_">val</span>(<span class="string">&#x27;剩余&#x27;</span>+<span class="built_in">parseInt</span>(sum - count)+<span class="string">&#x27;秒&#x27;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            count++;</span><br><span class="line">        &#125;,<span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">        <span class="comment">//发送验证码</span></span><br><span class="line">        $(<span class="string">&#x27;#send_sms&#x27;</span>).<span class="title function_">click</span>(<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">            <span class="keyword">var</span> phone_obj = $(<span class="string">&#x27;input[name=&quot;phone&quot;]&#x27;</span>);</span><br><span class="line">            <span class="keyword">var</span> send_obj = $(<span class="string">&#x27;input#send_sms&#x27;</span>);</span><br><span class="line">            <span class="keyword">var</span> val = phone_obj.<span class="title function_">val</span>();</span><br><span class="line">            <span class="keyword">if</span>(val)&#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="title class_">IsMobile</span>(val))&#123;</span><br><span class="line">                    send_obj.<span class="title function_">attr</span>(<span class="string">&#x27;disabled&#x27;</span>,<span class="string">&quot;disabled&quot;</span>);</span><br><span class="line">                    <span class="comment">//30秒后重新启动发送按钮</span></span><br><span class="line">                    <span class="title function_">start_sms_button</span>(send_obj);</span><br><span class="line">                    $.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">                        <span class="attr">url</span>:<span class="string">&#x27;&#123;#url_reset(&quot;index/sms&quot;)#&#125;&#x27;</span>,</span><br><span class="line">                        <span class="attr">data</span>:&#123;<span class="string">&#x27;mobile&#x27;</span>:val&#125;,</span><br><span class="line">                        <span class="attr">dataType</span>:<span class="string">&#x27;json&#x27;</span>,</span><br><span class="line">                        <span class="attr">type</span>:<span class="string">&#x27;post&#x27;</span>,</span><br><span class="line">                        <span class="attr">beforeSend</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">                            <span class="title function_">show_loading_body</span>();</span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="attr">complete</span>:<span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">                            <span class="title function_">show_loading_body</span>();</span><br><span class="line">                        &#125;,</span><br><span class="line">                        <span class="attr">success</span>:<span class="keyword">function</span>(<span class="params">data</span>)&#123;</span><br><span class="line">                            <span class="keyword">if</span>(data.<span class="property">status</span>!=<span class="literal">undefined</span> &amp;&amp; (data.<span class="property">status</span> == <span class="string">&#x27;ok&#x27;</span> || data.<span class="property">status</span> == <span class="string">&#x27;error&#x27;</span>))&#123;</span><br><span class="line">                                <span class="title function_">showMsg</span>(data.<span class="property">msg</span>);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="title function_">showMsg</span>(<span class="string">&quot;手机号的格式错误&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="title function_">showMsg</span>(<span class="string">&#x27;手机号不能为空&#x27;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
-<p>通过<code>window.location.hash=hash</code>这个语句来调整地址栏的地址，使得浏览器里边的“前进”、“后退”按钮能正常使用（实质上欺骗了浏览器）。然后再根据hash值的不同来显示不同的面板（用户可以收藏对应的面板了），这就使得Ajax页面的浏览趋于传统化了。</p>
-<p>不过现在有一个比较简单的解决方式。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">history.<span class="title function_">pushState</span>()</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9jaGluYS1hc3B4L2FyY2hpdmUvMjAwOC8wNC8yMC8xMTYyNTk3Lmh0bWw=">http://www.cnblogs.com/china-aspx/archive/2008/04/20/1162597.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/%E9%BB%84%E6%B8%A4.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/%E9%BB%84%E6%B8%A4.html" class="post-title-link" itemprop="url">黄渤</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 17:53:09 / 修改时间：17:53:37" itemprop="dateCreated datePublished" datetime="2025-06-26T17:53:09+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%9D%82%E8%B0%88/" itemprop="url" rel="index"><span itemprop="name">杂谈</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>黄渤 28 岁时，考上了北影成人学院，但学费不够，女同学小欧给了 2.4 万元，后来黄渤成名了，他娶了小欧为妻，但他妻子长相平平，因此有人问他：你有没有想过要换老婆？谁知黄渤却说：“糟糠之妻，不可抛弃，给我 100 亿都不会换老婆！”<br>别看黄渤颜值并不出众，但他非常受女明星欢迎，特别是林志玲，从不掩饰对他的喜欢，更是多次主动向黄渤表白说：“黄渤是我的理想伴侣，如果他单身，我一定会把他追到手，然后嫁给他。”<br>但就算林志玲貌美如花，黄渤也看不上她，因为他心中只有一个人，那就是他的初恋女友小欧。<br>小欧是黄渤的高中同学，那时的小欧很喜欢跳舞，而黄渤则是唱歌跳舞都喜欢，因为志同道合，两人经常一起练习舞蹈，久而久之，他们也从同学变成了无话不谈的好朋友。<br>高中毕业后，黄渤选择去追梦，因为他的梦想是成为一名歌手，于是他和朋友组建了一个乐队，开始四处表演，但中途其中一名队员因为一些事情离开了，这时黄渤想让小欧加入，没想到她二话不说就答应了。<br>就这样小欧跟着黄渤开始到各个歌舞厅卖唱，只为了完成他的梦想。<br>但卖唱多年，黄渤还是默默无闻，并不是他唱的不行，而是他的长相太一般了，因此一直没有遇到伯乐。<br>但他也不是没有收获，因为他和小欧成为了恋人。<br>后来，黄渤的父亲得知儿子有了女朋友后，便让他带回家看看，没想到黄渤的父亲看到小欧的长相后，顿时非常满意，也把她当成了准儿媳，于是他让儿子别出去折腾了，在家乡给他开间工厂，让他们两人去管理。<br>可没想到，工厂做不到一年，就倒闭了，这让黄渤非常自责，对什么都不提起兴趣，小欧便想让他出去走走，放松下心情。<br>刚好这时，黄渤认识的演员好朋友得知了他的情况，于是推荐黄渤来北京跟他一起拍戏，但黄渤对演戏一窍不通，本想拒绝，但小欧却觉得这是个机会，就当是散散心也好。<br>谁料，拍完这部戏后，黄渤就爱上了表演，觉得当演员也挺好的，于是好朋友建议他说，如果你真想当演员，那么可以去报考北影的表演系，这样有个正式的文凭，以后接戏也方便。<br>对此，小欧也觉得很有道理，她也非常支持黄渤去考北影，更是决定跟他一起留在北京，陪他一起奋斗。<br>可黄渤报考两次，都考不上，因为北影的表演系还是很有难度的，而这时的黄渤也已经 28 岁了，没有那么多时间去浪费，于是他改变思路，报考了播音系，因为这个相对表演系来说，简单点，没想到一考就通过了，这让他非常高興。<br>然而，付了一万多学费后，黄渤身上就再也没有多余的钱了，那么接下来几个学期的生活费该怎么办，想到这他就非常发愁。<br>这时，小欧拿出了 6000 块给他当生活费，并且对他说：你好好学，生活费我会帮你解决。<br>这让黄渤非常感动，他对小欧说：等我几年，我一定娶你。<br>在接下来的日子里，小欧在外打工，省吃俭用，住的是地下室，吃得也是最简单，只为了省下更多的钱，两年里，她一共资助了黄渤 2.4 万，也是有了她的支持，黄渤才能够顺利拿到文凭。<br>果然，有了文凭后，找黄渤拍戏的人也变多了，没多久他就凭借《疯狂的石头》一炮而红。<br>成名后，黄渤做得第一件事，就是与小欧结束多年的恋爱长跑，正式娶她为妻。<br>婚后，小欧负责家庭，而黄渤则是在外打拼，因为家里有小欧照顾，所以黄渤没有后顾之忧，可以专心于事业，最终凭借《心花路放》《一出好戏》等影片，成为百亿票房里的一员，更是稳居一线演员多年，事业可谓顺风顺水。<br>也是这个时候，有很多女明星主动向黄渤示好，其中就包括林志玲，但黄渤却是非常直接地对她们说：我是已婚男人。<br>一句话，就和她们保持了距离。<br>但黄渤虽然说自己结婚了，可却很少有人见过他的妻子，因为黄渤不喜欢带妻子出席活动，可见过他妻子后，很多人都表示，他的妻子长相平平，可能是这个原因，所以黄渤才不愿带她一起。<br>于是，有次主持人问黄渤说：你跟那么多女明星合作过，其中很多人对你有好感，那你有没有想过要换老婆？<br>没想到，黄渤笑着说：“想是想过，身边扑上来的也有，但换老婆这种事情咱们干不出来，就算给我一百万我也不换，因为在我一穷二白的时候，妻子就已经陪在我身边了，我们同甘共苦，让我抛弃糟糠之妻，我做不来！”<br>如今，黄渤和妻子小欧已经结婚 16 年，依旧恩爱如初，他们夫妻白手起家，同甘共苦，彼此互相扶持，互相信任，互相理解，都希望对方能够过得更好，因此他们夫妻的感情一直很好，这才是爱情最好的模样。<br>不得不说，小欧嫁对了人，其实，一个成功男人的背后都有一个默默付出的女人，而小欧就是黄渤背后的女人，黄渤的成功离不开她的付出，好男人是懂得感恩的，绝不会抛弃糟糠之妻，而黄渤成名后，没有抛弃糟糠之妻，而是对妻子一直那么专一，是个好男人，而他妻子也是好妻子，两人非常般配，也非常有夫妻相，对此你怎么看？</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/%E4%BF%AE%E6%94%B9navigationItem%E4%B8%8A%E7%9A%84title-%E9%A2%9C%E8%89%B2%E5%92%8C%E6%A0%B7%E5%BC%8F.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/%E4%BF%AE%E6%94%B9navigationItem%E4%B8%8A%E7%9A%84title-%E9%A2%9C%E8%89%B2%E5%92%8C%E6%A0%B7%E5%BC%8F.html" class="post-title-link" itemprop="url">修改navigationItem上的title 颜色和样式</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 14:55:30 / 修改时间：16:26:08" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:30+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>今天正好做到这里，以为之前的设计是通过view的跳转，然后直接传递title过来，然后在viewDidLoad里面直接赋值，但是有遇到了一个比较傻眼的情况，接口只给我id，木有title，于是我就只有获取完title在赋值啦，于是找到了一个策略，就是在获取完数据后，直接使用下面的代码就好了，既可以修改样式还可以修改标题</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] initWithFrame:<span class="built_in">CGRectZero</span>];</span><br><span class="line">label.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br><span class="line">label.font = [<span class="built_in">UIFont</span> boldSystemFontOfSize:<span class="number">18.0</span>];</span><br><span class="line">label.textAlignment = <span class="built_in">NSTextAlignmentCenter</span>;</span><br><span class="line">label.textColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line"><span class="keyword">self</span>.navigationItem.titleView = label;</span><br><span class="line">label.text = _personName;</span><br><span class="line">[label sizeToFit];</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>文章参考：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdG9uZ3poaXRhby9hcnRpY2xlL2RldGFpbHMvOTg1MjYzMw==">http://blog.csdn.net/tongzhitao/article/details/9852633<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-UIViewController%E4%B8%AD%E4%BD%BF%E7%94%A8UIRefreshControl-%E5%AE%9E%E7%8E%B0-UITableView%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-UIViewController%E4%B8%AD%E4%BD%BF%E7%94%A8UIRefreshControl-%E5%AE%9E%E7%8E%B0-UITableView%E4%B8%8B%E6%8B%89%E5%88%B7%E6%96%B0.html" class="post-title-link" itemprop="url">iOS7 UIViewController中使用UIRefreshControl  实现 UITableView下拉刷新</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 14:55:28 / 修改时间：16:27:25" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:28+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>之前做了一个使用UITableViewController中实现刷新的方法，这里实现一个使用UIViewController实现下拉刷新，当果然要使用到UIRefreshControl。</p>
-<p>创建啥的我就不记录了，文件列一下</p>
-<p>MeCelebrityViewController.m</p>
-<p>MeCelebrityViewController.h</p>
-<p>MeCelebrityViewController.xib</p>
-<p>下面列出主要的实现过程</p>
-<p>第一步：组件的添加</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UIRefreshControl</span>* refreshControl;</span><br></pre></td></tr></table></figure>
-
-<p>viewDidLoad的初始化</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//添加刷新</span></span><br><span class="line">_refreshControl = [[<span class="built_in">UIRefreshControl</span> alloc] init];</span><br><span class="line">[_refreshControl addTarget:<span class="keyword">self</span></span><br><span class="line">                  action:<span class="keyword">@selector</span>(refreshView:)</span><br><span class="line">        forControlEvents:<span class="built_in">UIControlEventValueChanged</span>];</span><br><span class="line">[_refreshControl setAttributedTitle:[[<span class="built_in">NSAttributedString</span> alloc] initWithString:<span class="string">@&quot;松手更新数据&quot;</span>]];</span><br><span class="line">[_dataTableView addSubview:_refreshControl];</span><br></pre></td></tr></table></figure>
-
-<p>这里的<code>_dataTableView</code>是要自己添加的</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> tableViewX = <span class="number">0.0</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> tableViewY = <span class="number">0.0</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> tableWidth = <span class="keyword">self</span>.navigationController.navigationBar.frame.size.width;</span><br><span class="line"><span class="built_in">CGFloat</span> tableHeight = [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height;</span><br><span class="line">_dataTableView = [[<span class="built_in">UITableView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(tableViewX,</span><br><span class="line">                                                               tableViewY,</span><br><span class="line">                                                               tableWidth,</span><br><span class="line">                                                               tableHeight)</span><br><span class="line">                                              style:<span class="built_in">UITableViewStylePlain</span>];</span><br><span class="line"></span><br><span class="line">_cellHeight = <span class="number">70.0</span>;</span><br><span class="line">_dataTableView.delegate = <span class="keyword">self</span>;</span><br><span class="line">_dataTableView.dataSource = <span class="keyword">self</span>;</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:_dataTableView];</span><br></pre></td></tr></table></figure>
-
-<p>第二步：实现下拉刷新的动作</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) refreshView:(<span class="built_in">UIRefreshControl</span> *)refresh</span><br><span class="line">&#123;</span><br><span class="line">    refresh.attributedTitle = [[<span class="built_in">NSAttributedString</span> alloc] initWithString:<span class="string">@&quot;更新数据中...&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSDateFormatter</span> *formatter = [[<span class="built_in">NSDateFormatter</span> alloc] init];</span><br><span class="line">    [formatter setDateFormat:<span class="string">@&quot;MMM d, h:mm a&quot;</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *lastUpdated = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;上次更新日期 %@&quot;</span>,</span><br><span class="line">                             [formatter stringFromDate:[<span class="built_in">NSDate</span> date]]];</span><br><span class="line">    refresh.attributedTitle = [[<span class="built_in">NSAttributedString</span> alloc] initWithString:lastUpdated];</span><br><span class="line">    [<span class="keyword">self</span> initData];</span><br><span class="line">    [_dataTableView reloadData];</span><br><span class="line">    [refresh endRefreshing];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果不是很完美，因为有遮挡的现象，不过流程走通了，下面开始自己的制作吧，如果有需要的帮助的话，请看下面的QQ群，加群交流</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy55b3VyZGV2ZWxvcGVyLm5ldC9pdGVtL3Byb2dyYW0tYS11aXRhYmxldmlldy13aXRoLXB1bGxkb3duLXRvLXJlZnJlc2gv">http://www.yourdeveloper.net/item/program-a-uitableview-with-pulldown-to-refresh/<i class="fa fa-external-link-alt"></i></span></p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy50ZWNocmVwdWJsaWMuY29tL2Jsb2cvc29mdHdhcmUtZW5naW5lZXIvaW9zLTYtYmVzdC1wcmFjdGljZXMtaW50cm9kdWNpbmctdGhlLXVpcmVmcmVzaGNvbnRyb2wv">http://www.techrepublic.com/blog/software-engineer/ios-6-best-practices-introducing-the-uirefreshcontrol/<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3iOS%E7%80%91%E5%B8%83%E6%B5%81-UIScrollView%E6%88%96UITableView-%E8%BF%90%E8%A1%8C%E4%B8%8D%E6%B5%81%E7%95%85.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3iOS%E7%80%91%E5%B8%83%E6%B5%81-UIScrollView%E6%88%96UITableView-%E8%BF%90%E8%A1%8C%E4%B8%8D%E6%B5%81%E7%95%85.html" class="post-title-link" itemprop="url">iOS7 如何解决iOS瀑布流(UIScrollView或UITableView)运行不流畅</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 14:55:24 / 修改时间：16:28:07" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:24+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>如果UITableView滑动太快，可能同时就发出了比如10个图片请求。这些请求虽然都在后台运行，但是它们可能在同一个时间点返回UI线程。这个时候如果加载图片到UIImageView太频繁，就会造成UI卡得严重。（虽然在new iPad和iPhone4s上看不出来）</p>
-<p>在找到这个问题的同时，也发现performSelectorAfterDelay这个方法，会堆积到UI线程空闲的时候执行。而dispatch_after或者dispatch_async都会直接插入UI线程当场执行。所以这个问题其实可以用performSelectorAfterDelay来解决，测试也是非常流畅，感觉不出一点点的卡。但会出现新的问题，那就是在滑动过程中，不会加载任何图片。知道scrollView停止的时候，图片才会出来。当然这不是理想的解决方法了。这个方法也没有解决异步过程集中到达UI线程的问题。然后采用了NSOperationQueue来解决这个问题。</p>
-<p>问题本身和UITableView加载不流畅是一样的。</p>
-<h4 id="1"><a href="#1" class="headerlink" title="解决办法"></a><a href="#1">解决办法</a></h4><p>主要要做到一下几个方面：</p>
-<ol>
-<li>除了UI部分，所有的加载操作都在后台完成。<br>这一点可以通过dispatch或者performSelectorInBackground或者NSOperationQueue来实现。见：<br>在iOS开发中利用GCD进行多线程编程<br>iOS开发中使用NSOperationQueue进行多线程操作</li>
-<li>避免后台加载完成多个资源之后集中到达占用UI线程的处理时间太长。<br>这一点可以通过NSOperationQueue来实现，将资源到UI的展现过程放在队列中逐个执行，且在每个操作完成之后进行强制等待，可以用usleep(int microSeconds)来解决。</li>
-<li>重用cell。<br>创建cell一般是很慢的，一定要重用，甚至为了performance，可以在view创建之初就创建足够多的cell在重用队列中。</li>
-</ol>
-<hr>
-<p>参考文章</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cudW5pZWFnbGUubmV0LzIwMTIvMDgvMzEvJUU1JUE2JTgyJUU0JUJEJTk1JUU4JUE3JUEzJUU1JTg2JUIzaW9zJUU3JTgwJTkxJUU1JUI4JTgzJUU2JUI1JTgxdWlzY3JvbGx2aWV3JUU2JTg4JTk2dWl0YWJsZXZpZXclRTglQkYlOTAlRTglQTElOEMlRTQlQjglOEQlRTYlQjUlODElRTclOTUlODUv">http://blog.unieagle.net/2012/08/31/如何解决ios瀑布流uiscrollview或uitableview运行不流畅/<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E5%9C%A8Appdelegate.m%E4%B8%AD%E5%A4%84%E7%90%86%E5%A4%9A%E4%B8%AAhandleopenURL.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E5%9C%A8Appdelegate.m%E4%B8%AD%E5%A4%84%E7%90%86%E5%A4%9A%E4%B8%AAhandleopenURL.html" class="post-title-link" itemprop="url">iOS7 在Appdelegate.m中处理多个handleopenURL</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 14:55:22 / 修改时间：16:28:53" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:22+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>类似的情况如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span>  [WeiboSDK handleOpenURL:url delegate:<span class="keyword">self</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> [FBAppCall handleOpenURL:url</span><br><span class="line">              sourceApplication:sourceApplication</span><br><span class="line">                fallbackHandler:^(FBAppCall *call) &#123;</span><br><span class="line">                    </span><br><span class="line">                    <span class="built_in">NSLog</span>(<span class="string">@&quot;In fallback handler&quot;</span>);</span><br><span class="line">                    </span><br><span class="line">                &#125;];</span><br></pre></td></tr></table></figure>
-
-<p>facebook要调用我的handleOpenUrl，但是Sina Weibo也要调用,导致的结果是如何进行区分，然后进行不同的url调用。</p>
-<p>其实很简单，对于这样的接口其实在ios中有过scheme的设置，完全可以判断url的前缀是否含有你自己设置的前缀，可以如下</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *string =[url absoluteString];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ([string hasPrefix:<span class="string">@&quot;微博url的前缀&quot;</span>])</span><br><span class="line">&#123;</span><br><span class="line">     <span class="keyword">return</span> [WeiboSDK handleOpenURL:url delegate:<span class="keyword">self</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> ([string hasPrefix:<span class="string">@&quot;Facebook的url的前缀&quot;</span>])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> [WXApi handleOpenURL:url delegate:<span class="keyword">self</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>嗯，记录下</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/Java-%E4%BD%BF%E7%94%A8%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/Java-%E4%BD%BF%E7%94%A8%E6%95%B0%E7%BB%84%E8%BF%9B%E8%A1%8C-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F.html" class="post-title-link" itemprop="url">Java 使用数组进行 选择排序</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 14:55:19 / 修改时间：16:32:25" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:19+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Java 使用数组进行 选择排序，简单的实现过程是这样子的</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SelectionSort</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span> <span class="params">(String[] args)</span>&#123;</span><br><span class="line">		<span class="type">int</span>[] intArray = &#123;<span class="number">12</span>,<span class="number">11</span>,<span class="number">45</span>,<span class="number">6</span>,<span class="number">8</span>,<span class="number">43</span>,<span class="number">40</span>,<span class="number">57</span>,<span class="number">3</span>,<span class="number">20</span>&#125;;</span><br><span class="line">		<span class="type">int</span> keyValue;</span><br><span class="line">		<span class="type">int</span> index;</span><br><span class="line">		<span class="type">int</span> temp;</span><br><span class="line">		System.out.println(<span class="string">&quot;排序前的数组&quot;</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;intArray.length;i++)&#123;</span><br><span class="line">			System.out.print(intArray[i]+<span class="string">&quot; &quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println();</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i &lt; intArray.length; i++)&#123;</span><br><span class="line">			index = i;</span><br><span class="line">			keyValue = intArray[i];</span><br><span class="line">			<span class="keyword">for</span>(<span class="type">int</span> j=i;j&lt;intArray.length;j++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(intArray[j] &lt; keyValue)&#123;</span><br><span class="line">					index = j;</span><br><span class="line">					keyValue = intArray[j];</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			temp = intArray[i];</span><br><span class="line">			intArray[i] = intArray[index];</span><br><span class="line">			intArray[index] = temp;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">&quot;排序后的数组&quot;</span>);</span><br><span class="line">		<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;intArray.length;i++)&#123;</span><br><span class="line">			System.out.print(intArray[i]+<span class="string">&quot; &quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>得到的结果是</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">排序前的数组</span><br><span class="line">12 11 45 6 8 43 40 57 3 20 </span><br><span class="line">排序后的数组</span><br><span class="line">3 6 8 11 12 20 40 43 45 57</span><br></pre></td></tr></table></figure>
-
-<p>嗯，是这个样子的，</p>
-<p>选择排序的特点就是：</p>
-<p>效率低，但是实现很简单。</p>
 
       
     </div>
@@ -1172,7 +1096,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/51/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/51/">51</a><span class="page-number current">52</span><a class="page-number" href="/page/53/">53</a><span class="space">&hellip;</span><a class="page-number" href="/page/105/">105</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/53/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/51/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/51/">51</a><span class="page-number current">52</span><a class="page-number" href="/page/53/">53</a><span class="space">&hellip;</span><a class="page-number" href="/page/110/">110</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/53/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
