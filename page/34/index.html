@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1118</span>
+          <span class="site-state-item-count">1132</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">179</span>
+        <span class="site-state-item-count">182</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -245,7 +245,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/%E5%88%A9%E7%94%A8Cloudflare%E5%B0%86URL%E6%98%A0%E5%B0%84%E5%88%B0Workers%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0URL%E9%87%8D%E5%AE%9A%E5%90%91.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/ReactJS%E4%B8%AD%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E5%88%B0qiniu-2017-05-10%E6%9B%B4%E6%96%B0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -263,7 +263,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/%E5%88%A9%E7%94%A8Cloudflare%E5%B0%86URL%E6%98%A0%E5%B0%84%E5%88%B0Workers%E8%B7%AF%E7%94%B1%E5%AE%9E%E7%8E%B0URL%E9%87%8D%E5%AE%9A%E5%90%91.html" class="post-title-link" itemprop="url">利用Cloudflare将URL映射到Workers路由实现URL重定向</a>
+          <a href="/2025/07/03/ReactJS%E4%B8%AD%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E5%88%B0qiniu-2017-05-10%E6%9B%B4%E6%96%B0.html" class="post-title-link" itemprop="url">ReactJS中上传图片到qiniu(2017-05-10更新)</a>
         </h2>
 
         <div class="post-meta-container">
@@ -275,7 +275,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 14:42:38 / 修改时间：15:09:48" itemprop="dateCreated datePublished" datetime="2025-07-03T14:42:38+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 17:11:26 / 修改时间：17:19:56" itemprop="dateCreated datePublished" datetime="2025-07-03T17:11:26+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -297,24 +297,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>我想到达到的效果</p>
-<p>当访问 <code>https://www.gowhich.com/blog/1</code> 时301跳转到 <code>https://blog.gowhich.com/2025/05/29/ubuntu和centos的时间更新操作.html</code></p>
-<p>如果是一个两个的跳转 通过nginx倒是也可以实现</p>
-<p>但是我有1124个贴子需要全部跳转，用nginx就实现不了了</p>
-<p>而且这个跳转也不是直接对应<code>id</code>跳转，</p>
-<p>比如 <code>https://www.gowhich.com/blog/1</code> 时301跳转到 <code>https://blog.gowhich.com/blog/1</code></p>
-<p>因为之前的文章都通过hexo重新生成了，带id不好分辨文章，所以新的文章的url就跟之前变化很大，需要一步一步调整所有贴子</p>
-<p>还好不多，调整起来就是花费点时间，跳转倒是个比较大的问题</p>
-<hr>
-<p>以上就是事情原因，解决方案就是使用Cloudflare的Workers路由</p>
-<h2 id="1"><a href="#1" class="headerlink" title="Cloudflare的Workers路由创建"></a><a href="#1">Cloudflare的Workers路由创建</a></h2><p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1751526064/2025-07-03_14-53_aggaka.png"><br><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1751526195/2025-07-03_15-03_zfymsz.png"></p>
-<h2 id="2"><a href="#2" class="headerlink" title="Workers路由代码编辑"></a><a href="#2">Workers路由代码编辑</a></h2><p>我的实现逻辑就是上面说的，代码如下</p>
-<figure class="highlight js"><figcaption><span>worker.js</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Welcome to Cloudflare Workers! This is your first worker.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * - Run &quot;npm run dev&quot; in your terminal to start a development server</span></span><br><span class="line"><span class="comment"> * - Open a browser tab at http://localhost:8787/ to see your worker in action</span></span><br><span class="line"><span class="comment"> * - Run &quot;npm run deploy&quot; to publish your worker</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Learn more at https://developers.cloudflare.com/workers/</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> dictData = &#123;</span><br><span class="line">  <span class="number">1</span>: <span class="string">&quot;/2025/05/29/ubuntu和centos的时间更新操作.html&quot;</span>,</span><br><span class="line">  <span class="number">2</span>: <span class="string">&quot;/2025/05/29/Yii%E4%B8%ADurlManager%E7%9A%84%E9%85%8D%E7%BD%AE.html&quot;</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">addEventListener</span>(<span class="string">&#x27;fetch&#x27;</span>, <span class="function"><span class="params">event</span> =&gt;</span> &#123;</span><br><span class="line">  event.<span class="title function_">respondWith</span>(<span class="title function_">handleRequest</span>(event.<span class="property">request</span>));</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">handleRequest</span>(<span class="params">request</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> url = <span class="keyword">new</span> <span class="title function_">URL</span>(request.<span class="property">url</span>);</span><br><span class="line">  <span class="keyword">const</span> pathArr = url.<span class="property">pathname</span>.<span class="title function_">split</span>(<span class="string">&#x27;/&#x27;</span>);</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(pathArr);</span><br><span class="line">  <span class="keyword">if</span> (pathArr.<span class="property">length</span> &lt; <span class="number">3</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">fetch</span>(request); <span class="comment">// Response.redirect(request.url, 200);</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> pathId = pathArr[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(url.<span class="property">pathname</span>);</span><br><span class="line">  <span class="keyword">if</span> (url.<span class="property">pathname</span>.<span class="title function_">match</span>(<span class="string">&#x27;/blog/view/id/*&#x27;</span>)) &#123;</span><br><span class="line">    pathId = pathArr[<span class="number">4</span>];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置新域名</span></span><br><span class="line">  <span class="keyword">const</span> newDomain = <span class="string">&#x27;https://blog.gowhich.com&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> newPathName = dictData[pathId] || <span class="literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// console.log(dictData);</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(newPathName);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (newPathName == <span class="literal">undefined</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">fetch</span>(request); <span class="comment">// Response.redirect(request.url, 200);</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 保留路径和查询参数</span></span><br><span class="line">  <span class="keyword">const</span> newUrl = newDomain + newPathName + url.<span class="property">search</span></span><br><span class="line"></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(newUrl);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回 301 重定向</span></span><br><span class="line">  <span class="keyword">return</span> <span class="title class_">Response</span>.<span class="title function_">redirect</span>(newUrl, <span class="number">301</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 无匹配则正常访问</span></span><br><span class="line">  <span class="keyword">return</span> <span class="title function_">fetch</span>(request);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+          <p>之前有写过类似的一篇文章，有位同学突然找来解惑，发现自己采用了另外的一个方法，这里也分享下，希望对使用reactjs的同学有帮助。</p>
+<p>逻辑思路是这样子的，在componentDidMount中实现更新dom的操作，异步加载需要的资源文件，然后在加载完后实现qiniu的初始化操作。这里就不需要在webpack或者其他打包工具中去引入qiniu的包文件，导致打完包的文件过大了。</p>
+<p>我这里使用了nodejs的库scriptjs，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> $S = <span class="built_in">require</span>(<span class="string">&#x27;scriptjs&#x27;</span>);</span><br></pre></td></tr></table></figure>
 
-<p>编辑完之后点击部署就可以了</p>
-<h2 id="3"><a href="#3" class="headerlink" title="配置"></a><a href="#3">配置</a></h2><p>点击创建好的路由，配置按照如下步骤</p>
-<p><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1751526065/2025-07-03_14-57_gbmlx8.png"><br><img data-src="https://res.cloudinary.com/dy5dvcuc1/image/upload/v1751526315/2025-07-03_14-59_oqjfkk.png"></p>
-<p>然后点击添加路由</p>
+<p>可以实现异步的加载文件，当然你也可以使用你认为更好的，当然也别忘记告诉我下。以下为代码实现部分：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> uploadToken = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">getUploadToken</span>();</span><br><span class="line"></span><br><span class="line">  $S([</span><br><span class="line">    <span class="string">&#x27;https://dn-kdjz.qbox.me/js/plupload/2.1.1/plupload.full.min.js&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;https://dn-kdjz.qbox.me/js/qiniu-js-sdk/1.0.17.2/qiniu.min.js&#x27;</span></span><br><span class="line">  ], <span class="string">&#x27;uploadBundle&#x27;</span>);</span><br><span class="line"></span><br><span class="line">  $S.<span class="title function_">ready</span>(<span class="string">&#x27;uploadBundle&#x27;</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 证件合影</span></span><br><span class="line">    <span class="keyword">let</span> options1 = &#123;</span><br><span class="line">      <span class="attr">runtimes</span>: <span class="string">&#x27;html5,flash,html4&#x27;</span>,</span><br><span class="line">      <span class="attr">browse_button</span>: <span class="string">&#x27;photoId&#x27;</span>,</span><br><span class="line">      <span class="attr">uptoken</span>: uploadToken,</span><br><span class="line">      <span class="attr">get_new_uptoken</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">domain</span>: <span class="string">&#x27;https://xxxx.xxxxxx&#x27;</span>, <span class="comment">// bucket域名，下载资源时用到，必需</span></span><br><span class="line">      <span class="attr">container</span>: <span class="string">&#x27;photoIdContainer&#x27;</span>, <span class="comment">// 上传区域DOM ID，默认是browser_button的父元素</span></span><br><span class="line">      <span class="attr">max_file_size</span>: <span class="string">&#x27;100mb&#x27;</span>, <span class="comment">// 最大文件体积限制</span></span><br><span class="line">      <span class="attr">flash_swf_url</span>: <span class="string">&#x27;/js/plupload/2.2.1/Moxie.swf&#x27;</span>, <span class="comment">//引入flash，相对路径</span></span><br><span class="line">      <span class="attr">max_retries</span>: <span class="number">3</span>, <span class="comment">// 上传失败最大重试次数</span></span><br><span class="line">      <span class="attr">dragdrop</span>: <span class="literal">true</span>, <span class="comment">// 开启可拖曳上传</span></span><br><span class="line">      <span class="attr">drop_element</span>: <span class="string">&#x27;photoIdContainer&#x27;</span>, <span class="comment">// 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传</span></span><br><span class="line">      <span class="attr">chunk_size</span>: <span class="string">&#x27;4mb&#x27;</span>, <span class="comment">// 分块上传时，每块的体积</span></span><br><span class="line">      <span class="attr">auto_start</span>: <span class="literal">true</span>, <span class="comment">// 选择文件后自动上传，若关闭需要自己绑定事件触发上传</span></span><br><span class="line">      <span class="attr">init</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;FilesAdded&#x27;</span>: <span class="function">(<span class="params">up, files</span>) =&gt;</span> &#123;</span><br><span class="line">          plupload.<span class="title function_">each</span>(files, <span class="keyword">function</span>(<span class="params">file</span>) &#123;</span><br><span class="line">            <span class="comment">// 文件添加进队列后，处理相关的事情</span></span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;BeforeUpload&#x27;</span>: <span class="function">(<span class="params">up, file</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="comment">// 每个文件上传前，处理相关的事情</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;UploadProgress&#x27;</span>: <span class="function">(<span class="params">up, file</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="comment">// 每个文件上传时，处理相关的事情</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;FileUploaded&#x27;</span>: <span class="title function_">async</span>(up, file, info) =&gt; &#123;</span><br><span class="line">          <span class="comment">// 查看简单反馈</span></span><br><span class="line">          <span class="keyword">let</span> domain = up.<span class="title function_">getOption</span>(<span class="string">&#x27;domain&#x27;</span>);</span><br><span class="line">          <span class="keyword">let</span> res = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(info);</span><br><span class="line">          <span class="keyword">let</span> sourceLink = <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="title function_">getDownloadUrl</span>(res.<span class="property">key</span>);</span><br><span class="line">          <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">            <span class="attr">photoIdKey</span>: res.<span class="property">key</span>,</span><br><span class="line">            <span class="attr">photoId</span>: sourceLink</span><br><span class="line">          &#125;)</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;Error&#x27;</span>: <span class="function">(<span class="params">up, err, errTip</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="comment">//上传出错时，处理相关的事情</span></span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;UploadComplete&#x27;</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="comment">//队列文件处理完毕后，处理相关的事情</span></span><br><span class="line">          <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;上传完成&#x27;</span>);</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">&#x27;Key&#x27;</span>: <span class="function">(<span class="params">up, file</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">let</span> timestamp = <span class="built_in">parseInt</span>((<span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">valueOf</span>() / <span class="number">1000</span>));</span><br><span class="line">          <span class="comment">// 若想在前端对每个文件的key进行个性化处理，可以配置该函数</span></span><br><span class="line">          <span class="comment">// 该配置必须要在unique_names: false，save_key: false时才生效</span></span><br><span class="line">          <span class="keyword">let</span> key = <span class="string">`idcard/<span class="subst">$&#123;timestamp&#125;</span>_<span class="subst">$&#123;file.name&#125;</span>`</span>;</span><br><span class="line">          <span class="keyword">return</span> key</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 第一个按钮</span></span><br><span class="line">    <span class="keyword">const</span> uploader1 = <span class="title class_">Qiniu</span>.<span class="title function_">uploader</span>(options1);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有个getUploadToken方法，这个方法是根据官方文档的策略实现了一个获取上传token的方法，此方法是通过访问服务端的接口来获取token。具体实现过程可以参考官方，不明白的也可以加群讨论。</p>
 
       
     </div>
@@ -341,7 +332,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/x509--certificate-signed-by-unknown-authority-%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E4%B9%9F%E8%AE%B8%E6%B2%A1%E6%9C%89%E4%BD%A0%E6%83%B3%E7%9A%84%E9%82%A3%E4%B9%88%E5%A4%8D%E6%9D%82.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/PHP7-%E6%96%B0%E7%89%B9%E6%80%A7-%E5%AD%A6%E4%B9%A0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -359,7 +350,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/x509--certificate-signed-by-unknown-authority-%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98%E4%B9%9F%E8%AE%B8%E6%B2%A1%E6%9C%89%E4%BD%A0%E6%83%B3%E7%9A%84%E9%82%A3%E4%B9%88%E5%A4%8D%E6%9D%82.html" class="post-title-link" itemprop="url">x509: certificate signed by unknown authority 这个问题也许没有你想的那么复杂</a>
+          <a href="/2025/07/03/PHP7-%E6%96%B0%E7%89%B9%E6%80%A7-%E5%AD%A6%E4%B9%A0.html" class="post-title-link" itemprop="url">PHP7 新特性 学习</a>
         </h2>
 
         <div class="post-meta-container">
@@ -371,7 +362,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-07-03 14:20:35 / 修改时间：14:21:43" itemprop="dateCreated datePublished" datetime="2025-07-03T14:20:35+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 17:11:22 / 修改时间：17:20:39" itemprop="dateCreated datePublished" datetime="2025-07-03T17:11:22+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -393,17 +384,53 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><code>x509: certificate signed by unknown authority</code> 这个问题也许没有你想的那么复杂</p>
-<p>起初是遇到了个问题</p>
-<p>我就更新了个cdn的证书</p>
-<p>结果golang的http库无法正常请求接口，php的file_get_contents也无法正常请求接口</p>
-<p>报错信息</p>
-<p>golang的http库反馈的是 x509: certificate signed by unknown authority</p>
-<p>php的file_get_contents 反馈的是 error:14090086:SSL routines:ssl3_get_server_certificate:certificate verify failed on line 1</p>
-<p>经过多种的猜测，发现执行完这个命令后一切都恢复了正常</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum update ca-certificates -y</span><br></pre></td></tr></table></figure>
+          <p>PHP7 的新特性大概浏览下，还是能在工作的效率上有很大益处的。</p>
+<p><strong>1，性能提升</strong></p>
+<p>这个我就不做测试了，哈哈</p>
+<p><strong>2，类型声明</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;name = <span class="string">&#x27;durban&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$student</span> = <span class="keyword">new</span> <span class="title class_">Student</span>();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">enroll</span>(<span class="params">Student <span class="variable">$student</span>, <span class="keyword">array</span> <span class="variable">$classes</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$classes</span> <span class="keyword">as</span> <span class="variable">$class</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;Enrolling &quot;</span> . <span class="variable">$student</span>-&gt;name . <span class="string">&quot; in &quot;</span> . <span class="variable">$class</span> . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// enroll(&quot;name&quot;, [&quot;class 1&quot;, &quot;class 2&quot;]);// Fatal error: Uncaught TypeError: Argument 1 passed to enroll() must be an instance of Student, string given</span></span><br><span class="line"><span class="comment">// enroll($student, &quot;class&quot;); // Fatal error: Uncaught TypeError: Argument 2 passed to enroll() must be of the type array, string given</span></span><br><span class="line"><span class="title function_ invoke__">enroll</span>(<span class="variable">$student</span>, <span class="keyword">array</span>(<span class="string">&quot;class 1&quot;</span>, <span class="string">&quot;class 2&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">stringTest</span>(<span class="params"><span class="keyword">string</span> <span class="variable">$string</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$string</span> . <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_ invoke__">stringTest</span>(<span class="string">&quot;a string&quot;</span>);</span><br></pre></td></tr></table></figure>
 
+<p><strong>3，可以声明严格类型校验模式 , 此声明必须第一个声明</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> (strict_types = <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
 
+<p><strong>4, 标量类型提示</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getTotal</span>(<span class="params"><span class="keyword">float</span> <span class="variable">$a</span>, <span class="keyword">float</span> <span class="variable">$b</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$a</span> + <span class="variable">$b</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// getTotal(&#x27;a&#x27;, 2); //Argument 1 passed to getTotal() must be of the type float, string given,</span></span><br><span class="line"><span class="variable">$total</span> = <span class="title function_ invoke__">getTotal</span>(<span class="number">3</span>, <span class="number">2</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$total</span> . <span class="string">&quot;\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>5, 返回类型声明</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getSum</span>(<span class="params"><span class="keyword">float</span> <span class="variable">$a</span>, <span class="keyword">float</span> <span class="variable">$b</span></span>): <span class="title">int</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// return $a + $b; // Fatal error: Uncaught TypeError: Return value of getTotal() must be of the type integer, float returned</span></span><br><span class="line">    <span class="keyword">return</span> (<span class="keyword">int</span>) (<span class="variable">$a</span> + <span class="variable">$b</span>); <span class="comment">// truncate float like non-strict</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$sum</span> = <span class="title function_ invoke__">getSum</span>(<span class="number">3</span>, <span class="number">6</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$sum</span> . <span class="string">&quot;\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>6, 错误处理</strong></p>
+<p>新的继承如下</p>
+<blockquote>
+<p>|- Exception implements Throwable</p>
+<p>   |- …</p>
+<p>|- Error implements Throwable</p>
+<p>   |- TypeError extends Error</p>
+<p>   |- ParseError extends Error</p>
+<p>   |- ArithmeticError extends Error</p>
+<pre><code>  |- DivisionByZeroError extends ArithmeticError
+</code></pre>
+<p>   |- AssertionError extends Error</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// Code that may throw an Exception or Error.</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="built_in">Throwable</span> <span class="variable">$t</span>) &#123;</span><br><span class="line">    <span class="comment">// Executed only in PHP 7, will not match in PHP 5</span></span><br><span class="line">&#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">    <span class="comment">// Executed only in PHP 5, will not be reached in PHP 7</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>7, Null Coalesce Operator</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$name</span> = <span class="variable">$firstName</span> ??  <span class="string">&quot;Guest&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>等同于</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!empty(<span class="variable">$firstName</span>)) &#123;</span><br><span class="line">    <span class="variable">$name</span> = <span class="variable">$firstName</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="variable">$name</span> = <span class="string">&quot;Guest&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还可以像下面这样使用</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$name</span> = <span class="variable">$firstName</span> ?? <span class="variable">$username</span> ?? <span class="variable">$placeholder</span> ?? “Guest”;</span><br></pre></td></tr></table></figure>
+
+<p><strong>8, Spaceship Operator</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$compare</span> = <span class="number">2</span> &lt;=&gt; <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>等同于下面</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2</span> &lt; <span class="number">1</span>? <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"><span class="number">2</span> = <span class="number">1</span>? <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"><span class="number">2</span> &gt; <span class="number">1</span>? <span class="keyword">return</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>9，Easy User-land CSPRNG：  random_int and random_bytes.</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$int</span> = <span class="title function_ invoke__">random_int</span>(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="variable">$int</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$bytes</span> = <span class="title function_ invoke__">random_bytes</span>(<span class="number">5</span>);</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">bin2hex</span>(<span class="variable">$bytes</span>));</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -430,7 +457,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E4%BC%A0%E8%BE%93.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Laravel-%E4%B9%8B-Left-Join-%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -448,7 +475,503 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/Nodejs-%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86%E4%BC%A0%E8%BE%93.html" class="post-title-link" itemprop="url">Nodejs 数据加密传输</a>
+          <a href="/2025/07/03/Laravel-%E4%B9%8B-Left-Join-%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">Laravel 之 Left Join 方法使用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 17:10:21 / 修改时间：17:21:05" itemprop="dateCreated datePublished" datetime="2025-07-03T17:10:21+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>举例子如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$models</span> = <span class="built_in">static</span>::<span class="title function_ invoke__">where</span>(<span class="string">&#x27;user_id&#x27;</span>, <span class="variable">$userId</span>)-&gt;<span class="title function_ invoke__">leftJoin</span>(<span class="string">&#x27;product_gift&#x27;</span>, function (<span class="variable">$join</span>) &#123;</span><br><span class="line">    <span class="variable">$join</span>-&gt;<span class="title function_ invoke__">on</span>(<span class="string">&#x27;product_gift_exchange_order.prd_id&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;product_gift.prd_id&#x27;</span>);</span><br><span class="line">    <span class="variable">$join</span>-&gt;<span class="title function_ invoke__">on</span>(<span class="string">&#x27;product_gift_exchange_order.gift_code&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="string">&#x27;product_gift.gift_code&#x27;</span>);</span><br><span class="line">&#125;)-&gt;<span class="title function_ invoke__">orderBy</span>(<span class="string">&#x27;product_gift_exchange_order.autokid&#x27;</span>, <span class="string">&#x27;DESC&#x27;</span>)-&gt;<span class="title function_ invoke__">get</span>([</span><br><span class="line">    <span class="string">&#x27;product_gift_exchange_order.autokid&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;product_gift_exchange_order.ctime&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;product_gift_exchange_order.exchange_amount&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;product_gift.gift_name&#x27;</span>,</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Sublime-text-3-%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB-%E6%94%AF%E6%8C%81retine%E5%B1%8F%E5%B9%95%E7%9A%84%E5%A4%96%E8%AE%BE.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Sublime-text-3-%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB-%E6%94%AF%E6%8C%81retine%E5%B1%8F%E5%B9%95%E7%9A%84%E5%A4%96%E8%AE%BE.html" class="post-title-link" itemprop="url">Sublime text 3 配置分享 - 支持retine屏幕的外设</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 16:50:24 / 修改时间：16:56:16" itemprop="dateCreated datePublished" datetime="2025-07-03T16:50:24+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>记录分享</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;always_show_minimap_viewport&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;bold_folder_labels&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;color_scheme&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Packages/Material Theme/schemes/Material-Theme.tmTheme&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;folder_exclude_patterns&quot;</span><span class="punctuation">:</span></span><br><span class="line">    <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;node_modules&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;font_face&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Source Code Pro For Powerline&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;font_options&quot;</span><span class="punctuation">:</span></span><br><span class="line">    <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;subpixel_antialias&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;font_size&quot;</span><span class="punctuation">:</span> <span class="number">16</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;ignored_packages&quot;</span><span class="punctuation">:</span></span><br><span class="line">    <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;Vintage&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;indent_guide_options&quot;</span><span class="punctuation">:</span></span><br><span class="line">    <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;draw_normal&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;draw_active&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;line_padding_bottom&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;line_padding_top&quot;</span><span class="punctuation">:</span> <span class="number">0</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_scrollbars&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_arrow_folders&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_big_fileicons&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_bold_tab&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_bright_scrollbars&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_bullet_tree_indicator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_compact_panel&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_compact_sidebar&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_contrast_mode&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_disable_fileicons&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_disable_folder_animation&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_disable_tree_indicator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_panel_separator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_small_statusbar&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_small_tab&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_tabs_autowidth&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_tabs_separator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_tree_headings&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;overlay_scroll_bars&quot;</span><span class="punctuation">:</span> <span class="string">&quot;enabled&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;theme&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Material-Theme.sublime-theme&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Sublime-text-3-%E4%B9%8B-%E5%88%86%E4%BA%AB-phpfmt%E7%9A%84%E9%85%8D%E7%BD%AE.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Sublime-text-3-%E4%B9%8B-%E5%88%86%E4%BA%AB-phpfmt%E7%9A%84%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">Sublime text 3 之 分享 phpfmt的配置</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 16:50:19 / 修改时间：16:51:32" itemprop="dateCreated datePublished" datetime="2025-07-03T16:50:19+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>配置分享，好像很难找到标准的</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;psr2&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;enable_auto_align&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;php_bin&quot;</span><span class="punctuation">:</span><span class="string">&quot;/usr/local/opt/php71/bin/php&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>就这么简单。但是还有个保存自动格式化的，这个在默认的配置里面加就好了。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Sublime-text-3-%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Sublime-text-3-%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB.html" class="post-title-link" itemprop="url">Sublime text 3 配置分享</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 16:50:18 / 修改时间：16:57:05" itemprop="dateCreated datePublished" datetime="2025-07-03T16:50:18+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Sublime text 3 配置分享</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;always_show_minimap_viewport&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;font_face&quot;</span><span class="punctuation">:</span><span class="string">&quot;Source Code Pro for Powerline&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;font_size&quot;</span><span class="punctuation">:</span><span class="number">14</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;bold_folder_labels&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;color_scheme&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Packages/Material Theme/schemes/Material-Theme.tmTheme&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;ignored_packages&quot;</span><span class="punctuation">:</span></span><br><span class="line">    <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;Vintage&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;indent_guide_options&quot;</span><span class="punctuation">:</span></span><br><span class="line">    <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;draw_normal&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;draw_active&quot;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;translate_tabs_to_spaces&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_acid-lime&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_blue&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_brba&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_bright-teal&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_cyan&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_graphite&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_indigo&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_lime&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_orange&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_pink&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_purple&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_red&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_scrollbars&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_sky&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_tomato&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_accent_yellow&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_arrow_folders&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_big_fileicons&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_bold_tab&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_bright_scrollbars&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_bullet_tree_indicator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_compact_panel&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_compact_sidebar&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_contrast_mode&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_disable_fileicons&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_disable_folder_animation&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_disable_tree_indicator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_panel_separator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_small_statusbar&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_small_tab&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_tabs_autowidth&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_tabs_separator&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;material_theme_tree_headings&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;overlay_scroll_bars&quot;</span><span class="punctuation">:</span> <span class="string">&quot;enabled&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;theme&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Material-Theme.sublime-theme&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>需要插件或者包</p>
+<ul>
+<li><p>Material Theme</p>
+</li>
+<li><p>Material Theme - Appbar</p>
+</li>
+<li><p>powerline</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Git-%E4%B9%8B-ssh-config-%E5%8A%A0%E9%80%9Fclone%E4%BB%93%E5%BA%93%E4%BB%A3%E7%A0%81.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Git-%E4%B9%8B-ssh-config-%E5%8A%A0%E9%80%9Fclone%E4%BB%93%E5%BA%93%E4%BB%A3%E7%A0%81.html" class="post-title-link" itemprop="url">Git 之 ssh config 加速clone仓库代码</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 16:50:12 / 修改时间：16:58:26" itemprop="dateCreated datePublished" datetime="2025-07-03T16:50:12+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>代码记录如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Host github.com</span><br><span class="line">    User git</span><br><span class="line">    Hostname ssh.github.com</span><br><span class="line">    Port 443</span><br><span class="line">    ProxyCommand connect -S 127.0.0.1:1180 %h %p</span><br><span class="line">Host bitbucket.org</span><br><span class="line">    User git</span><br><span class="line">    Hostname altssh.bitbucket.org</span><br><span class="line">    Port 443</span><br><span class="line">    ProxyCommand connect -S 127.0.0.1:1180 %h %p</span><br></pre></td></tr></table></figure>
+
+<p>操作方式是这里用到了connect 这个功能，所以为了为了使用这个功能，前提是安装connect</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install connect</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Git-%E4%B9%8B-%E7%94%A8socks5%E5%8A%A0%E9%80%9Fgit-clone.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Git-%E4%B9%8B-%E7%94%A8socks5%E5%8A%A0%E9%80%9Fgit-clone.html" class="post-title-link" itemprop="url">Git 之 用socks5加速git clone</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-03 16:50:08 / 修改时间：16:58:42" itemprop="dateCreated datePublished" datetime="2025-07-03T16:50:08+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>需要使用github，但是国内访问很慢，往往会发生connection refused的事情发生，那就自己去弄个vpn吧。前提不要做扰乱国家安稳的事情</p>
+<p>下面记录下git的配置方法</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global http.proxy <span class="string">&#x27;socks5://127.0.0.1:1080&#x27;</span></span><br><span class="line">git config --global https.proxy <span class="string">&#x27;socks5://127.0.0.1:1080&#x27;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E4%B9%8B-Koa2-%E6%B7%BB%E5%8A%A0travis-ci-%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%B7%A5%E5%85%B7.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Nodejs-%E4%B9%8B-Koa2-%E6%B7%BB%E5%8A%A0travis-ci-%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%B7%A5%E5%85%B7.html" class="post-title-link" itemprop="url">Nodejs 之 Koa2 添加travis ci 持续集成工具</a>
         </h2>
 
         <div class="post-meta-container">
@@ -459,14 +982,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2025-07-03 11:59:52" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:52+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 16:50:05" itemprop="dateCreated datePublished" datetime="2025-07-03T16:50:05+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-08 09:40:54" itemprop="dateModified" datetime="2025-07-08T09:40:54+08:00">2025-07-08</time>
+      <time title="修改时间：2025-07-08 09:41:02" itemprop="dateModified" datetime="2025-07-08T09:41:02+08:00">2025-07-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -488,18 +1011,28 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>数据加密传输，这个目前我接触的几个方式，一个是密文传输，一个明文传输</p>
-<p>密文传输，就是用密钥对数据加密，使用公钥对数据解密，传输的通道可以是https的也可以是http的。</p>
-<p>明文传输，前提是建立一个安全的传输通道，这里使用证书对通道的安全做了防护，然后传输数据，使用的是明文。</p>
-<p>比较专业的 可以后面慢慢分享，不过这里我就介绍下明文传输，如果是用nodejs建立安全通道</p>
-<p>使用两个库，分别是urllib和request，这里的证书只介绍使用pfx文件</p>
-<p>urllib库的方式</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">urllibRequest</span> = (<span class="params">url, method, data, pfx, pass</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span>(<span class="params">resolve, reject</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> options = &#123;</span><br><span class="line">      <span class="attr">data</span>: data,</span><br><span class="line">      <span class="attr">method</span>: method,</span><br><span class="line">      <span class="attr">pfx</span>: pfx,</span><br><span class="line">      <span class="attr">passphrase</span>: pass,</span><br><span class="line">      <span class="attr">rejectUnauthorized</span>: <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    urllib.<span class="title function_">request</span>(url, options, <span class="keyword">function</span>(<span class="params">err, data, res</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">reject</span>(err);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">resolve</span>(data.<span class="title function_">toString</span>());</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>最近使用koa2做项目测试开发，想整合下travis ci,网上资料也比较少，于是自己就整了个，做个记录。</p>
+<p>先来看下travis.yml的配置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">language:</span> <span class="string">node_js</span></span><br><span class="line"><span class="attr">node_js:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;6&quot;</span></span><br><span class="line"><span class="attr">before_script:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">./node_modules/.bin/knex</span> <span class="string">migrate:latest</span> <span class="string">--knexfile=&#x27;./app/knexfile.js&#x27;</span></span><br><span class="line"><span class="attr">script:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">test</span></span><br></pre></td></tr></table></figure>
 
-<p>request库的方法</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">httpRequest</span> = (<span class="params">url, method, data, pfx, pass</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> options = &#123;</span><br><span class="line">      <span class="attr">url</span>: url,</span><br><span class="line">      <span class="attr">method</span>: method,</span><br><span class="line">      <span class="attr">form</span>: data,</span><br><span class="line">      <span class="attr">headers</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;Content-type&#x27;</span>: <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span></span><br><span class="line">      &#125;,</span><br><span class="line">      <span class="attr">agentOptions</span>: &#123;</span><br><span class="line">        <span class="attr">pfx</span>: pfx,</span><br><span class="line">        <span class="attr">passphrase</span>: pass,</span><br><span class="line">        <span class="attr">rejectUnauthorized</span>: <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="title function_">request</span>(options, <span class="keyword">function</span>(<span class="params">err, httpResponse, data</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_">reject</span>(err);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">resolve</span>(data);</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为是接口测试，所以首先需要做表创建等操作。</p>
+<p>测试的命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NODE_ENV=production NODE_CONFIG_DIR=<span class="string">&#x27;./app/config/&#x27;</span> ./node_modules/.bin/mocha --require <span class="string">&#x27;babel-polyfill&#x27;</span> --compilers js:babel-register  ./app/test/**/*.js</span><br></pre></td></tr></table></figure>
 
+<p>主要是测试这里，使用了supertest，大概看下是如何调用的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> request = <span class="built_in">require</span>(<span class="string">&#x27;supertest&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> should = <span class="built_in">require</span>(<span class="string">&#x27;should&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> index = <span class="built_in">require</span>(<span class="string">&#x27;../../index&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> app = <span class="title function_">request</span>(index.<span class="title function_">listen</span>());</span><br><span class="line"></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;/api/persons&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> personId;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;POST /api/persons - create person success and respond with 200&#x27;</span>, <span class="keyword">function</span>(<span class="params">done</span>) &#123;</span><br><span class="line">    app.<span class="title function_">post</span>(<span class="string">&#x27;/api/persons&#x27;</span>)</span><br><span class="line">      .<span class="title function_">send</span>(&#123;</span><br><span class="line">        <span class="string">&#x27;firstName&#x27;</span>: <span class="string">&#x27;Jennifer&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;lastName&#x27;</span>: <span class="string">&#x27;Lawrence&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;age&#x27;</span>: <span class="number">24</span></span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">200</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="keyword">function</span>(<span class="params">res</span>) &#123;</span><br><span class="line">        (res.<span class="property">body</span>.<span class="property">id</span> &gt; <span class="number">0</span>).<span class="property">should</span>.<span class="property">be</span>.<span class="property">true</span>;</span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">end</span>(<span class="keyword">function</span>(<span class="params">err, res</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">done</span>(err);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> resJson = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(res.<span class="property">text</span>);</span><br><span class="line">        personId = resJson.<span class="property">id</span>;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">done</span>();</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;GET /api/persons - fetch persons item&#x27;</span>, <span class="keyword">function</span>(<span class="params">done</span>) &#123;</span><br><span class="line">    app.<span class="title function_">get</span>(<span class="string">&#x27;/api/persons&#x27;</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">200</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="keyword">function</span>(<span class="params">res</span>) &#123;</span><br><span class="line">        (res.<span class="property">body</span>.<span class="property">length</span> &gt; <span class="number">0</span>).<span class="property">should</span>.<span class="property">be</span>.<span class="property">true</span>;</span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">end</span>(<span class="keyword">function</span>(<span class="params">err, res</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">done</span>(err);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">done</span>();</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;GET /api/persons/:id - fetch a person&#x27;</span>, <span class="keyword">function</span>(<span class="params">done</span>) &#123;</span><br><span class="line">    app.<span class="title function_">get</span>(<span class="string">`/api/persons/<span class="subst">$&#123;personId&#125;</span>`</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">200</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="keyword">function</span>(<span class="params">res</span>) &#123;</span><br><span class="line">        (res.<span class="property">body</span>.<span class="property">id</span> == personId).<span class="property">should</span>.<span class="property">be</span>.<span class="property">true</span>;</span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">end</span>(<span class="keyword">function</span>(<span class="params">err, res</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">done</span>(err);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">done</span>();</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;DELETE /api/persons/:id - delete a person&#x27;</span>, <span class="keyword">function</span>(<span class="params">done</span>) &#123;</span><br><span class="line">    app.<span class="title function_">delete</span>(<span class="string">`/api/persons/<span class="subst">$&#123;personId&#125;</span>`</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">200</span>)</span><br><span class="line">      .<span class="title function_">end</span>(<span class="keyword">function</span>(<span class="params">err, res</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">done</span>(err);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">done</span>();</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;GET /api/persons/:id - fetch a person should 404&#x27;</span>, <span class="keyword">function</span>(<span class="params">done</span>) &#123;</span><br><span class="line">    app.<span class="title function_">get</span>(<span class="string">`/api/persons/<span class="subst">$&#123;personId&#125;</span>`</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">404</span>)</span><br><span class="line">      .<span class="title function_">end</span>(<span class="keyword">function</span>(<span class="params">err, res</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">done</span>(err);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">done</span>();</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
+<p>这里主要注意的是</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> index = <span class="built_in">require</span>(<span class="string">&#x27;../../index&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>需要将koa实例暴漏出来，不然在做travis ci的集成后，启动了项目，测试的时候依然找不到具体访问地址。</p>
+<p>来看下我的index.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Knex</span> <span class="keyword">from</span> <span class="string">&#x27;knex&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">Model</span></span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;objection&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> knexConfig <span class="keyword">from</span> <span class="string">&#x27;./knexfile&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">&#x27;config&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Koa</span> <span class="keyword">from</span> <span class="string">&#x27;koa&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> koaLogger <span class="keyword">from</span> <span class="string">&#x27;koa-logger&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> bodyParser <span class="keyword">from</span> <span class="string">&#x27;koa-bodyparser&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> render <span class="keyword">from</span> <span class="string">&#x27;koa-ejs&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> co <span class="keyword">from</span> <span class="string">&#x27;co&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> koaStatic <span class="keyword">from</span> <span class="string">&quot;koa2-static&quot;</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;./router&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// initial knex</span></span><br><span class="line"><span class="keyword">const</span> knex = <span class="title class_">Knex</span>(knexConfig.<span class="property">development</span>);</span><br><span class="line"><span class="title class_">Model</span>.<span class="title function_">knex</span>(knex);</span><br><span class="line"></span><br><span class="line"><span class="comment">// initial app</span></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> <span class="title class_">Koa</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// initial render</span></span><br><span class="line"><span class="title function_">render</span>(app, &#123;</span><br><span class="line">  <span class="attr">root</span>: path.<span class="title function_">join</span>(__dirname + <span class="string">&#x27;/view&#x27;</span>),</span><br><span class="line">  <span class="attr">layout</span>: <span class="string">&#x27;template&#x27;</span>,</span><br><span class="line">  <span class="attr">viewExt</span>: <span class="string">&#x27;ejs&#x27;</span>,</span><br><span class="line">  <span class="attr">cache</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">debug</span>: <span class="literal">true</span></span><br><span class="line">&#125;);</span><br><span class="line">app.<span class="property">context</span>.<span class="property">render</span> = co.<span class="title function_">wrap</span>(app.<span class="property">context</span>.<span class="property">render</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// initial static</span></span><br><span class="line"></span><br><span class="line">app.<span class="title function_">use</span>(<span class="title function_">koaLogger</span>())</span><br><span class="line">  .<span class="title function_">use</span>(<span class="title function_">bodyParser</span>())</span><br><span class="line">  .<span class="title function_">use</span>(router.<span class="title function_">routes</span>())</span><br><span class="line">  .<span class="title function_">use</span>(<span class="title function_">koaStatic</span>(&#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/web&#x27;</span>,</span><br><span class="line">    <span class="attr">root</span>: __dirname + <span class="string">&quot;/../static&quot;</span></span><br><span class="line">  &#125;));</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = app;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是这里的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = app;</span><br></pre></td></tr></table></figure>
+
+<p>暴漏出来，再supertest中才可以独立启动server测试。好的不明白的加群聊聊吧。</p>
 
       
     </div>
@@ -526,7 +1059,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/PM2%E5%90%AF%E5%8A%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8F%82%E6%95%B0.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -544,523 +1077,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/PM2%E5%90%AF%E5%8A%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%8F%82%E6%95%B0.html" class="post-title-link" itemprop="url">PM2启动配置文件参数</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:49 / 修改时间：12:01:13" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:49+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>PM2启动配置文件参数比较全的一个。如下：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span>             <span class="punctuation">:</span> <span class="string">&quot;node-app&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;cwd&quot;</span>              <span class="punctuation">:</span> <span class="string">&quot;/srv/node-app/current&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;args&quot;</span>             <span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;--toto=heya coco&quot;</span><span class="punctuation">,</span> <span class="string">&quot;-d&quot;</span><span class="punctuation">,</span> <span class="string">&quot;1&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;script&quot;</span>           <span class="punctuation">:</span> <span class="string">&quot;bin/app.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;node_args&quot;</span>        <span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;--harmony&quot;</span><span class="punctuation">,</span> <span class="string">&quot; --max-stack-size=102400000&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;log_date_format&quot;</span>  <span class="punctuation">:</span> <span class="string">&quot;YYYY-MM-DD HH:mm Z&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;error_file&quot;</span>       <span class="punctuation">:</span> <span class="string">&quot;/var/log/node-app/node-app.stderr.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;out_file&quot;</span>         <span class="punctuation">:</span> <span class="string">&quot;log/node-app.stdout.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;pid_file&quot;</span>         <span class="punctuation">:</span> <span class="string">&quot;pids/node-geo-api.pid&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;instances&quot;</span>        <span class="punctuation">:</span> <span class="number">6</span><span class="punctuation">,</span> <span class="comment">//or 0 =&gt; &#x27;max&#x27;</span></span><br><span class="line">  <span class="attr">&quot;min_uptime&quot;</span>       <span class="punctuation">:</span> <span class="string">&quot;200s&quot;</span><span class="punctuation">,</span> <span class="comment">// 200 seconds, defaults to 1000</span></span><br><span class="line">  <span class="attr">&quot;max_restarts&quot;</span>     <span class="punctuation">:</span> <span class="number">10</span><span class="punctuation">,</span> <span class="comment">// defaults to 15</span></span><br><span class="line">  <span class="attr">&quot;max_memory_restart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1M&quot;</span><span class="punctuation">,</span> <span class="comment">// 1 megabytes, e.g.: &quot;2G&quot;, &quot;10M&quot;, &quot;100K&quot;, 1024 the default unit is byte.</span></span><br><span class="line">  <span class="attr">&quot;cron_restart&quot;</span>     <span class="punctuation">:</span> <span class="string">&quot;1 0 * * *&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;watch&quot;</span>            <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;ignore_watch&quot;</span>      <span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;[\\/\\\\]\\./&quot;</span><span class="punctuation">,</span> <span class="string">&quot;node_modules&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;merge_logs&quot;</span>       <span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;exec_interpreter&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;node&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;exec_mode&quot;</span>        <span class="punctuation">:</span> <span class="string">&quot;fork&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;autorestart&quot;</span>      <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="comment">// enable/disable automatic restart when an app crashes or exits</span></span><br><span class="line">  <span class="attr">&quot;vizion&quot;</span>           <span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span> <span class="comment">// enable/disable vizion features (versioning control)</span></span><br><span class="line">  <span class="comment">// Default environment variables that will be injected in any environment and at any start</span></span><br><span class="line">  <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;NODE_ENV&quot;</span><span class="punctuation">:</span> <span class="string">&quot;production&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;AWESOME_SERVICE_API_TOKEN&quot;</span><span class="punctuation">:</span> <span class="string">&quot;xxx&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="attr">&quot;env_*&quot;</span> <span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;SPECIFIC_ENV&quot;</span> <span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>比较有用的参数:</p>
-<p>cron_restart:定时启动，解决重启能解决的问题</p>
-<p>max_memory_restart：解决内容不够用的问题，不过会有风险【数据丢失】</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/React-Router-%E4%B9%8B-routerWillLeave-%E5%AE%9E%E7%8E%B0-%E8%87%AA%E5%AE%9A%E4%B9%89Dialog.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/React-Router-%E4%B9%8B-routerWillLeave-%E5%AE%9E%E7%8E%B0-%E8%87%AA%E5%AE%9A%E4%B9%89Dialog.html" class="post-title-link" itemprop="url">react-router 之 routerWillLeave 实现 自定义Dialog</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:44 / 修改时间：12:02:12" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:44+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>react-router 可以在 react中起到路由的作用，同时也有一个routerWillLeave，这个函数帮助我们再处理路由的时候，离开某个路由要做的某个判断起到了很好的作用，但是version 2 才有这个功能，这里记录下如何自定自己弹出框。</p>
-<p>由于react-router自带的功能不是很好，需要我们自己处理一下，于是google参考了stackoverflow上的一篇文章，先建立一个函数</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">setAsyncRouteLeaveHook</span>(<span class="params">router, route, hook</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> withinHook = <span class="literal">false</span></span><br><span class="line">  <span class="keyword">let</span> finalResult = <span class="literal">undefined</span></span><br><span class="line">  <span class="keyword">let</span> finalResultSet = <span class="literal">false</span></span><br><span class="line">  router.<span class="title function_">setRouteLeaveHook</span>(route, <span class="function"><span class="params">nextLocation</span> =&gt;</span> &#123;</span><br><span class="line">    withinHook = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">if</span> (!finalResultSet) &#123;</span><br><span class="line">      <span class="title function_">hook</span>(nextLocation).<span class="title function_">then</span>(<span class="function"><span class="params">result</span> =&gt;</span> &#123;</span><br><span class="line">        finalResult = result</span><br><span class="line">        finalResultSet = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">if</span> (!withinHook &amp;&amp; nextLocation) &#123;</span><br><span class="line">          router.<span class="title function_">replace</span>(nextLocation)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> result = finalResultSet ? finalResult : <span class="literal">false</span></span><br><span class="line">    withinHook = <span class="literal">false</span></span><br><span class="line">    finalResult = <span class="literal">undefined</span></span><br><span class="line">    finalResultSet = <span class="literal">false</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>原来的push，我这里改成了replace，为了适合我自己的逻辑。</p>
-<p>然后添加一下routerWillLeave的逻辑</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">routerWillLeave</span>(<span class="params">nextLocation</span>) &#123;</span><br><span class="line">    <span class="comment">//获取红包相关的信息</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="title class_">Popbox</span>.<span class="title function_">pop</span>(&#123;</span><br><span class="line">        <span class="attr">text</span>: <span class="string">&#x27;你离使用红包只差一步之遥，确定放弃吗？&#x27;</span>,</span><br><span class="line">        <span class="attr">confirmBtnText</span>: <span class="string">&#x27;继续绑卡&#x27;</span>,</span><br><span class="line">        <span class="attr">cancelBtnText</span>: <span class="string">&#x27;放弃&#x27;</span>,</span><br><span class="line">        <span class="attr">cancelFunc</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="title function_">resolve</span>(<span class="literal">true</span>);</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里是需要返回一个Promise的，所以自己的代码记得处理一下。</p>
-<p>最后我们跟根据自己的逻辑来设置一下这个Hook。</p>
-<p>我这里是放在了componentDidMount中做的处理</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; type &#125; = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">params</span>;</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">if</span>(type)&#123;</span><br><span class="line">      <span class="title function_">setAsyncRouteLeaveHook</span>(<span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">router</span>, <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">route</span>, <span class="variable language_">this</span>.<span class="property">routerWillLeave</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>好了，希望能帮到不了解英文的你，或者是找不到资料的你。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/PHP-%E4%B9%8B-multipart-form-data-%E6%96%B9%E5%BC%8F-Post-%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/PHP-%E4%B9%8B-multipart-form-data-%E6%96%B9%E5%BC%8F-Post-%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE.html" class="post-title-link" itemprop="url">PHP 之 multipart/form-data 方式 Post 提交数据</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:30 / 修改时间：12:02:34" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:30+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>post的curl库，模拟post提交的时候，默认的方式 multipart&#x2F;form-data ，这个算是post提交的几个基础的实现方式。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$postUrl</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="variable">$postData</span> = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">&#x27;user_name&#x27;</span>=&gt;<span class="variable">$userName</span>,</span><br><span class="line">    <span class="string">&#x27;identity_no&#x27;</span>=&gt;<span class="variable">$idCardNo</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="variable">$curl</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_URL, <span class="variable">$postUrl</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_USERAGENT,<span class="string">&#x27;Opera/9.80 (Windows NT 6.2; Win64; x64) Presto/2.12.388 Version/12.15&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_SSL_VERIFYPEER, <span class="literal">false</span>); <span class="comment">// stop verifying certificate</span></span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_RETURNTRANSFER, <span class="literal">true</span>); </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_POST, <span class="literal">true</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_POSTFIELDS, <span class="variable">$postData</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_FOLLOWLOCATION, <span class="literal">true</span>);</span><br><span class="line"><span class="variable">$r</span> = <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$curl</span>); </span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$curl</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="variable">$r</span>);</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/PHP-%E4%B9%8B-x-www-form-urlencoded-%E6%96%B9%E5%BC%8F-Post-%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/PHP-%E4%B9%8B-x-www-form-urlencoded-%E6%96%B9%E5%BC%8F-Post-%E6%8F%90%E4%BA%A4%E6%95%B0%E6%8D%AE.html" class="post-title-link" itemprop="url">PHP 之 x-www-form-urlencoded 方式 Post 提交数据</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:27 / 修改时间：12:07:54" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:27+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>php的curl库进行post提交还是蛮方便的。但是提交方式不同，contentType 不同导致你的api是否能接收到数据也是个变数，这里来个简单的实例。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$postUrl</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="variable">$postData</span> = <span class="keyword">array</span>(</span><br><span class="line">    <span class="string">&#x27;user_name&#x27;</span>=&gt;<span class="variable">$userName</span>,</span><br><span class="line">    <span class="string">&#x27;identity_no&#x27;</span>=&gt;<span class="variable">$idCardNo</span></span><br><span class="line">);</span><br><span class="line"><span class="variable">$postData</span> = <span class="title function_ invoke__">http_build_query</span>(<span class="variable">$postData</span>);</span><br><span class="line"><span class="variable">$curl</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_URL, <span class="variable">$postUrl</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_USERAGENT,<span class="string">&#x27;Opera/9.80 (Windows NT 6.2; Win64; x64) Presto/2.12.388 Version/12.15&#x27;</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_SSL_VERIFYPEER, <span class="literal">false</span>); <span class="comment">// stop verifying certificate</span></span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_RETURNTRANSFER, <span class="literal">true</span>); </span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_POST, <span class="literal">true</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_HTTPHEADER, <span class="keyword">array</span>(<span class="string">&#x27;Content-Type: application/x-www-form-urlencoded&#x27;</span>));</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_POSTFIELDS, <span class="variable">$postData</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_FOLLOWLOCATION, <span class="literal">true</span>);</span><br><span class="line"><span class="variable">$r</span> = <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$curl</span>); </span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$curl</span>);</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">print_r</span>(<span class="variable">$r</span>);</span><br></pre></td></tr></table></figure>
-
-<p>关键一段代码是</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>, CURLOPT_HTTPHEADER, <span class="keyword">array</span>(<span class="string">&#x27;Content-Type: application/x-www-form-urlencoded&#x27;</span>));</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Docker-%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E6%94%B6%E9%9B%86.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/Docker-%E5%9B%BD%E5%86%85%E9%95%9C%E5%83%8F%E9%85%8D%E7%BD%AE%E6%94%B6%E9%9B%86.html" class="post-title-link" itemprop="url">Docker 国内镜像配置收集</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:22 / 修改时间：12:08:26" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:22+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Docker 国内镜像配置收集</p>
-<p>&#x2F;&#x2F;DaoCloud</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-machine ssh default</span><br><span class="line"><span class="built_in">sudo</span> sed -i <span class="string">&quot;s|EXTRA_ARGS=&#x27;|EXTRA_ARGS=&#x27;--registry-mirror=http://723acd29.m.daocloud.io |g&quot;</span> /var/lib/boot2docker/profile</span><br></pre></td></tr></table></figure>
-
-<p>&#x2F;&#x2F;灵雀云</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker-machine ssh default</span><br><span class="line"><span class="built_in">sudo</span> sh -c <span class="string">&quot;echo EXTRA_ARGS=&#x27;--registry-mirror=http://houchaohann.m.alauda.cn&#x27; &gt;&gt;/var/lib/boot2docker/profile</span></span><br></pre></td></tr></table></figure>
-
-<p>&#x2F;&#x2F;是速云</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-machine create -d virtualbox --engine-registry-mirror http://dapeng89.m.tenxcloud.net mydocker</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/JavaScript-%E4%B9%8B-%E4%BA%8B%E4%BB%B6%E7%BB%9F%E8%AE%A1-%E9%98%B2%E9%87%8D%E5%A4%8D%E7%BB%9F%E8%AE%A1.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/JavaScript-%E4%B9%8B-%E4%BA%8B%E4%BB%B6%E7%BB%9F%E8%AE%A1-%E9%98%B2%E9%87%8D%E5%A4%8D%E7%BB%9F%E8%AE%A1.html" class="post-title-link" itemprop="url">JavaScript 之 事件统计，防重复统计</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:17 / 修改时间：12:09:09" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:17+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>事件统计防重复统计，不服来挑错</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">track</span>(<span class="params">eventName, params</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> img = <span class="keyword">new</span> <span class="title class_">Image</span>();</span><br><span class="line">  <span class="keyword">if</span>(<span class="keyword">typeof</span> params == <span class="string">&#x27;object&#x27;</span>) &#123;</span><br><span class="line">    params = <span class="title class_">JSON</span>.<span class="title function_">stringify</span>(params);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    params = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">var</span> t = <span class="keyword">new</span> <span class="title class_">Date</span>().<span class="title function_">valueOf</span>();</span><br><span class="line">  <span class="keyword">var</span> random = <span class="title class_">Math</span>.<span class="title function_">random</span>();</span><br><span class="line">  <span class="keyword">var</span> referrer = <span class="variable language_">document</span>.<span class="property">referrer</span>;</span><br><span class="line">  img.<span class="property">src</span> = <span class="string">&#x27;/track?event=&#x27;</span>+<span class="built_in">encodeURIComponent</span>(eventName)+<span class="string">&#x27;&amp;params=&#x27;</span> + <span class="built_in">encodeURIComponent</span>(params) + <span class="string">&#x27;&amp;t=&#x27;</span>+t+<span class="string">&#x27;&amp;r=&#x27;</span>+random+<span class="string">&#x27;&amp;referrer=&#x27;</span>+referrer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>后端将r值t值,外加一个ip的值，作为唯一的索引。为了做到数据准确到达，程序端少操作为主，这样会减少操作事件，将逻辑交给数据库操作了，增加数据到达率。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> insertEventSql = <span class="string">`REPLACE INTO <span class="subst">$&#123;config.mysql.prefix&#125;</span>xxxx.event_log </span></span><br><span class="line"><span class="string">                          (<span class="subst">$&#123;keys.join(<span class="string">&#x27;,&#x27;</span>)&#125;</span>) </span></span><br><span class="line"><span class="string">                          VALUES </span></span><br><span class="line"><span class="string">                          (<span class="subst">$&#123;values.join(<span class="string">&#x27;,&#x27;</span>)&#125;</span>)`</span>;</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Gitlab-%E4%B9%8B-mail_room.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/Gitlab-%E4%B9%8B-mail_room.html" class="post-title-link" itemprop="url">Gitlab 之 mail_room</a>
+          <a href="/2025/07/03/Nodejs-%E5%BA%94%E7%94%A8%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90.html" class="post-title-link" itemprop="url">Nodejs 应用性能分析</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1071,14 +1088,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2025-07-03 11:59:11" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:11+08:00">2025-07-03</time>
+      <time title="创建时间：2025-07-03 16:50:02" itemprop="dateCreated datePublished" datetime="2025-07-03T16:50:02+08:00">2025-07-03</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-07-09 10:37:07" itemprop="dateModified" datetime="2025-07-09T10:37:07+08:00">2025-07-09</time>
+      <time title="修改时间：2025-07-08 09:40:56" itemprop="dateModified" datetime="2025-07-08T09:40:56+08:00">2025-07-08</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1100,19 +1117,19 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>最近使用docker部署gitlab，启动后会有一个问题，不知道哪里会一直在执行mail_room 这个命令，查看了下配置</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Reply by email</span></span><br><span class="line"><span class="comment"># Allow users to comment on issues and merge requests by replying to notification emails.</span></span><br><span class="line"><span class="comment"># For documentation on how to set this up, see http://doc.gitlab.com/ce/incoming_email/README.html</span></span><br><span class="line"> gitlab_rails[<span class="string">&#x27;incoming_email_enabled&#x27;</span>] = <span class="literal">true</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># # The email address including the `%&#123;key&#125;` placeholder that will be replaced to reference the item being replied to.</span></span><br><span class="line"><span class="comment"># # The `+%&#123;key&#125;` placeholder is added after the user part, after a `+` character, before the `@`.</span></span><br><span class="line"> gitlab_rails[<span class="string">&#x27;incoming_email_address&#x27;</span>] = <span class="string">&quot;gitlab-incoming+%&#123;key&#125;@xxxx.com&quot;</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># # Email account username</span></span><br><span class="line"><span class="comment"># # With third party providers, this is usually the full email address.</span></span><br><span class="line"><span class="comment"># # With self-hosted email servers, this is usually the user part of the email address.</span></span><br><span class="line"> gitlab_rails[<span class="string">&#x27;incoming_email_email&#x27;</span>] = <span class="string">&quot;xx@xx&quot;</span></span><br><span class="line"><span class="comment"># # Email account password</span></span><br><span class="line"> gitlab_rails[<span class="string">&#x27;incoming_email_password&#x27;</span>] = <span class="string">&quot;xxxxx&quot;</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># # IMAP server host</span></span><br><span class="line"> gitlab_rails[<span class="string">&#x27;incoming_email_host&#x27;</span>] = <span class="string">&quot;imap.xxxx.com&quot;</span></span><br><span class="line"><span class="comment"># # IMAP server port</span></span><br><span class="line"> gitlab_rails[<span class="string">&#x27;incoming_email_port&#x27;</span>] = 993</span><br><span class="line"><span class="comment"># # Whether the IMAP server uses SSL</span></span><br><span class="line"> gitlab_rails[<span class="string">&#x27;incoming_email_ssl&#x27;</span>] = <span class="literal">true</span></span><br><span class="line"><span class="comment"># # Whether the IMAP server uses StartTLS</span></span><br><span class="line"> gitlab_rails[<span class="string">&#x27;incoming_email_start_tls&#x27;</span>] = <span class="literal">true</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># # The mailbox where incoming mail will end up. Usually &quot;inbox&quot;.</span></span><br><span class="line"> gitlab_rails[<span class="string">&#x27;incoming_email_mailbox_name&#x27;</span>] = <span class="string">&quot;inbox&quot;</span></span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
+          <p>node.js 从 4.4.0 版本开始内置了 profiler， <code>--prof</code> 命令选项运行应用会在当前目录生成性能日志文件。</p>
+<p>简单记录下使用方法</p>
+<p>运行的时候加上 –prof 参数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node app.js --prof</span><br></pre></td></tr></table></figure>
 
-<p>这里是启动的。</p>
-<p>错误日志提示</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2016-08-23_02:07:08.56923 /opt/gitlab/embedded/lib/ruby/2.1.0/openssl/ssl.rb:240:<span class="keyword">in</span> `post_connection_check<span class="string">&#x27;: hostname &quot;imap.xxxx.com&quot; does not match the server certificate (OpenSSL::SSL::SSLError)</span></span><br></pre></td></tr></table></figure>
+<p>运行后会在当前目录生成一个类似：isolate-0x1d1e1b0-v8-10041.log这样的文件</p>
+<p>执行如下命令来分析程序的性能</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node --prof-process isolate-0x1d1e1b0-v8-10041.log</span><br></pre></td></tr></table></figure>
 
-<p>这里的是imap.xxx.com是一个腾讯企业邮箱的imap的配置，后来查看了下具体的配置，改为了imap.exmail.qq.com,还是报错</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2016-08-23_02:21:11.00526 /opt/gitlab/embedded/lib/ruby/2.1.0/net/imap.rb:1158:<span class="keyword">in</span> `get_tagged_response<span class="string">&#x27;: ������Ч���߲�֧�� (Net::IMAP::BadResponseError)</span></span><br><span class="line"><span class="string">2016-08-23_02:21:11.00553      	from /opt/gitlab/embedded/lib/ruby/2.1.0/net/imap.rb:1210:in `block in send_command&#x27;</span></span><br><span class="line">2016-08-23_02:21:11.00574      	from /opt/gitlab/embedded/lib/ruby/2.1.0/net/imap.rb:1192:<span class="keyword">in</span> `send_command<span class="string">&#x27;</span></span><br><span class="line"><span class="string">2016-08-23_02:21:11.00578      	from /opt/gitlab/embedded/lib/ruby/2.1.0/net/imap.rb:373:in `starttls&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>具体不知道啥原因，果断将true改为false。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Reply by email</span></span><br><span class="line"><span class="comment"># Allow users to comment on issues and merge requests by replying to notification emails.</span></span><br><span class="line"><span class="comment"># For documentation on how to set this up, see http://doc.gitlab.com/ce/incoming_email/README.html</span></span><br><span class="line"> gitlab_rails[<span class="string">&#x27;incoming_email_enabled&#x27;</span>] = <span class="literal">false</span></span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
-
+<p>具体解析分析的结果请看参考文章</p>
+<p>参考：</p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cua2Fua2FuYW4uY29tL2FydGljbGUvOGJjYTY1YWQtbm9kZS5qcy01ZTk0NzUyOC1jcHUtNTM2MDc1Mjg4ZmM3OWFkODc2ODQ5NWVlOTg5OC5odG1s">诊断 node.js 应用 CPU 占用过高的问题<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnL2VuL2RvY3MvZ3VpZGVzL3NpbXBsZS1wcm9maWxpbmcv">Easy profiling for Node.js Applications | Node.js<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -1132,7 +1149,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/33/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><span class="page-number current">34</span><a class="page-number" href="/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/page/112/">112</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/35/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/33/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/33/">33</a><span class="page-number current">34</span><a class="page-number" href="/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/page/114/">114</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/35/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

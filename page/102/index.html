@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1118</span>
+          <span class="site-state-item-count">1132</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">179</span>
+        <span class="site-state-item-count">182</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -245,7 +245,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/iOS-UIButton-%E5%81%9A%E5%9C%86%E8%A7%92%E6%95%88%E6%9E%9C.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/%E5%9C%A8popViewControllerAnimated%E5%90%8E%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -263,7 +263,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/iOS-UIButton-%E5%81%9A%E5%9C%86%E8%A7%92%E6%95%88%E6%9E%9C.html" class="post-title-link" itemprop="url">iOS UIButton 做圆角效果</a>
+          <a href="/2025/06/12/%E5%9C%A8popViewControllerAnimated%E5%90%8E%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0.html" class="post-title-link" itemprop="url">在popViewControllerAnimated后调用函数</a>
         </h2>
 
         <div class="post-meta-container">
@@ -275,7 +275,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:34:57 / 修改时间：09:39:08" itemprop="dateCreated datePublished" datetime="2025-06-12T09:34:57+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 11:49:38 / 修改时间：11:56:10" itemprop="dateCreated datePublished" datetime="2025-06-12T11:49:38+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -297,9 +297,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>首先引入文件：<strong>#import &lt;QuartzCore&#x2F;QuartzCore.h&gt;</strong></p>
-<p>再次执行类似下面的代码：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIButton</span> *moreButton = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeCustom</span>];</span><br><span class="line">moreButton.frame = <span class="built_in">CGRectMake</span>(<span class="number">1.0</span>f, <span class="number">1.0</span>f, cell.contentView.frame.size.width<span class="number">-2</span>, cell.contentView.frame.size.height<span class="number">-2</span>);</span><br><span class="line">[moreButton.layer setMasksToBounds:<span class="literal">YES</span>];</span><br><span class="line">[moreButton.layer setCornerRadius:<span class="number">10.0</span>]; <span class="comment">//设置矩形四个圆角半径</span></span><br><span class="line">[moreButton.layer setBorderWidth:<span class="number">1.0</span>]; <span class="comment">//边框宽度</span></span><br><span class="line">moreButton.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br></pre></td></tr></table></figure>
+          <p>当你在A视图调用pushViewController:animated:，并且从B视图返回A视图的时候需要做一些操作，比如刷新数据，或者做个浏览记录的操作的时候，可以调用这个函数viewWillAppear，就可以解决问题了。</p>
+<p>在我的实例中，我在A视图做了这个操作：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.navigationController.navigationBarHidden = <span class="literal">YES</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但是在B视图我要做相反的操作</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">self</span>.navigationController.navigationBarHidden = <span class="literal">NO</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但是在返回来的时候，问题出现了，A视图达不到我想要的效果了，似乎也继承了B视图的navigationBar不隐藏的操作，但是我需要隐藏，那么结果做这个操作就好 了：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) viewWillAppear:(<span class="type">BOOL</span>)animated&#123;</span><br><span class="line">    <span class="keyword">self</span>.navigationController.navigationBarHidden = <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -326,7 +332,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/iOS-UIView%E4%B9%8B%E9%97%B4%E5%B8%B8%E7%94%A8%E8%A7%86%E5%9B%BE%E4%B9%8B%E9%97%B4%E5%88%87%E6%8D%A2%E6%96%B9%E5%BC%8F.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/Django%E6%A8%A1%E6%9D%BF%E4%B8%AD%E4%BD%BF%E7%94%A8CSS-JavaScript.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -344,7 +350,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/iOS-UIView%E4%B9%8B%E9%97%B4%E5%B8%B8%E7%94%A8%E8%A7%86%E5%9B%BE%E4%B9%8B%E9%97%B4%E5%88%87%E6%8D%A2%E6%96%B9%E5%BC%8F.html" class="post-title-link" itemprop="url">iOS UIView之间常用视图之间切换方式</a>
+          <a href="/2025/06/12/Django%E6%A8%A1%E6%9D%BF%E4%B8%AD%E4%BD%BF%E7%94%A8CSS-JavaScript.html" class="post-title-link" itemprop="url">Django模板中使用CSS, JavaScript</a>
         </h2>
 
         <div class="post-meta-container">
@@ -356,7 +362,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:34:49 / 修改时间：10:19:08" itemprop="dateCreated datePublished" datetime="2025-06-12T09:34:49+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 11:49:32 / 修改时间：12:01:36" itemprop="dateCreated datePublished" datetime="2025-06-12T11:49:32+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -378,50 +384,282 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>在iOS开发中，经常遇到两个View之间互相切换，列举下各种方式，但是下面每种方式都要自己灵活运用，不一定就是进入下一个、后一个必须用“一”里面的方式。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="进入下&#x2F;后一个View"></a><a href="#1">进入下&#x2F;后一个View</a></h3><p>A:insertSubView系列：（注意，如果你新增视图不够大，则遮不住上一层视图，即前后2个视图都存在，当然你可以做透明来查看所有，与二A对应）</p>
+          <h3 id="1"><a href="#1" class="headerlink" title="测试环境"></a><a href="#1">测试环境</a></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">r&#x27;^css/(?P&lt;path&gt;.*)$&#x27;</span>, <span class="string">&#x27;django.views.static.serve&#x27;</span>, &#123;<span class="string">&#x27;document_root&#x27;</span>: <span class="string">&#x27;/var/www/django-demo/css&#x27;</span>&#125;),</span><br><span class="line">(<span class="string">r&#x27;^js/(?P&lt;/path&gt;&lt;path&gt;.*)$&#x27;</span>, <span class="string">&#x27;django.views.static.serve&#x27;</span>, &#123;<span class="string">&#x27;document_root&#x27;</span>: <span class="string">&#x27;/var/www/django-demo/js&#x27;</span>&#125;),</span><br><span class="line">(<span class="string">r&#x27;^images/(?P&lt;/path&gt;&lt;path&gt;.*)$&#x27;</span>, <span class="string">&#x27;django.views.static.serve&#x27;</span>, &#123;<span class="string">&#x27;document_root&#x27;</span>: <span class="string">&#x27;/var/www/django-demo/images&#x27;</span>&#125;),</span><br></pre></td></tr></table></figure>
+
+<p>模板中使用下述方式即可：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">&quot;/css/demo.css&quot;</span> <span class="attr">type</span>=<span class="string">&quot;text/css&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注：可采用<code>os.path.dirname(globals()[&quot;__file__&quot;])</code>来获得当前文件所在路径，比如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">r&#x27;^css/(?P&lt;path&gt;.*)$&#x27;</span>, <span class="string">&#x27;django.views.static.serve&#x27;</span>, &#123;<span class="string">&#x27;document_root&#x27;</span>: os.path.dirname(<span class="built_in">globals</span>()[<span class="string">&quot;__file__&quot;</span>])+<span class="string">&#x27;/css&#x27;</span>&#125;),</span><br></pre></td></tr></table></figure>
+
+<p>可以使用os.path.abspath()函数返回此路径的绝对路径。<br>=&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>要在django的tempalte file中引用css、js、gif等静态文件，首先一条setting.py中DEBUG开关打开。</p>
+<p>1、在project目录下建立一个存放静态文件的目录，如：medias</p>
+<p>2、在url.py patterns中增加一行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">r&#x27;^site_media/(?P&lt;path&gt;.*)$&#x27;</span>,<span class="string">&#x27;django.views.static.serve&#x27;</span>,&#123;<span class="string">&#x27;document_root&#x27;</span>:settings.STATIC_PATH&#125;),</span><br></pre></td></tr></table></figure>
+
+<p>还要<code>from django.conf import setting</code></p>
+<p>3、在setting.py中加入一行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">STATIC_PATH=<span class="string">&#x27;./medias&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>如此设置后，就可以在template file 中引用media中存放的静态文件了，如：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&#x27;/site_media/django.gif&#x27;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2"><a href="#2" class="headerlink" title="线上环境"></a><a href="#2">线上环境</a></h3><p>在使用Django开发的Web项目中是避免不了使用css、javascript、js等静态文件的，而对于这些静态文件的处理，django官 网这样写：Django itself doesn’t serve static (media) files, such as images, style sheets, or video. It leaves that job to whichever Web server you choose.就是说django本身不处理类似于图片、样式表、视频等静态文件，它将此项工作交给了你选择的Web服务器。<br>在网上搜索到的django项目处理静态文件的示例中，大家似乎都在使用如下的方法让django处理静态文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">urlpatterns += patterns(<span class="string">&#x27;&#x27;</span>, (<span class="string">r&#x27;^static/(?P.*)$&#x27;</span>, <span class="string">&#x27;django.views.static.serve&#x27;</span>, &#123;<span class="string">&#x27;document_root&#x27;</span>:  settings.MEDIA_ROOT&#125;), )</span><br></pre></td></tr></table></figure>
+
+<p>而对于django.views.static.serve方法，django官网说得很清楚：Using this method is inefficient and insecure. Do not use this in a production setting. Use this only for development.就是说这种方法是低效且不安全的，不要在生产环境使用此方法，只在开发环境使用。<br>这时对于静态文件的处理，我们只能使用我们选择的Web服务器来处理了。比如使用nginx服务器的话，可以如下设置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen   80; ## listen for ipv4; this line is default and implied</span><br><span class="line">    root /home/davidzhang/pythonweb/mysite/mysite;</span><br><span class="line">    index    index.html index.htm;</span><br><span class="line"></span><br><span class="line">    # Make site accessible from http://localhost/</span><br><span class="line">    server_name local.ubuntu.python.blog.com;</span><br><span class="line"></span><br><span class="line">    access_log /var/log/uwsgi/local.ubuntu.python.blog.access.log;</span><br><span class="line">    error_log /var/log/uwsgi/local.ubuntu.python.blog.error.log;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        include    uwsgi_params;</span><br><span class="line">        uwsgi_pass    unix:///tmp/mysite.socket;</span><br><span class="line">        #uwsgi_pass    127.0.0.1:9090;</span><br><span class="line">    &#125;</span><br><span class="line">    location ^~ /static &#123;                    #^~ 与 /static之间有空格</span><br><span class="line">        alias /usr/local/lib/python2.7/dist-packages/Django-1.4.2-py2.7.egg/django/contrib/admin/static;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~* ^/(css|img|js)/.*$ &#123;</span><br><span class="line">        root /home/davidzhang/pythonweb/mysite/media;</span><br><span class="line">        expires 12h;</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~ ^.+\.(gif|jpg|png|ico|jpeg)$ &#123;</span><br><span class="line">        expires 3d;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/uwsgi%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2%E8%84%9A%E6%9C%AC.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/12/uwsgi%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2%E8%84%9A%E6%9C%AC.html" class="post-title-link" itemprop="url">uWSGI启动和停止脚本</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-12 11:46:37 / 修改时间：11:49:17" itemprop="dateCreated datePublished" datetime="2025-06-12T11:46:37+08:00">2025-06-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>一晚上写的shell的脚本</p>
+<p>uwsgi启动和停止脚本（代码如下）：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="keyword">if</span> [ ! -n <span class="string">&quot;<span class="variable">$1</span>&quot;</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;</span></span><br><span class="line">    <span class="built_in">exit</span> 0</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$1</span> = start ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">    psid=`ps aux | grep <span class="string">&quot;uwsgi&quot;</span> | grep -v <span class="string">&quot;grep&quot;</span> | <span class="built_in">wc</span> -l`</span><br><span class="line">    <span class="keyword">if</span> [ <span class="variable">$psid</span> -gt 4 ]</span><br><span class="line">    <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;uwsgi is running!&quot;</span></span><br><span class="line">        <span class="built_in">exit</span> 0</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        uwsgi /etc/uwsgi.ini</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;Start uwsgi service [OK]&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$1</span> = stop ];<span class="keyword">then</span></span><br><span class="line">    killall -9 uwsgi</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Stop uwsgi service [OK]&quot;</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$1</span> = restart ];<span class="keyword">then</span></span><br><span class="line">    killall -9 uwsgi</span><br><span class="line">    /usr/bin/uwsgi --ini /etc/uwsgi.ini</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Restart uwsgi service [OK]&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;Usages: sh uwsgiserver.sh [start|stop|restart]&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/%E8%AE%A9UISearchBar%E4%B8%8A%E8%8B%B1%E6%96%87Cancel%E5%8F%98%E6%88%90%E4%B8%AD%E6%96%87%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%96%B9%E6%B3%95(%E6%94%B9%E5%8F%98%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE%E6%96%87%E5%AD%97).html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/12/%E8%AE%A9UISearchBar%E4%B8%8A%E8%8B%B1%E6%96%87Cancel%E5%8F%98%E6%88%90%E4%B8%AD%E6%96%87%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%96%B9%E6%B3%95(%E6%94%B9%E5%8F%98%E6%90%9C%E7%B4%A2%E6%8C%89%E9%92%AE%E6%96%87%E5%AD%97).html" class="post-title-link" itemprop="url">让UISearchBar上英文Cancel变成中文的正确方法(改变搜索按钮文字)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-12 09:56:51 / 修改时间：11:07:06" itemprop="dateCreated datePublished" datetime="2025-06-12T09:56:51+08:00">2025-06-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>UISearchBar 在Xcode默认环境的工程中, 所有文字显示的是英文, 这让大家很不爽, 网上有修改Cancel键的上文字的办法, 就是取UISearchBar的子视图上的控件, 进行遍历, 个人认为这个办法不可取, 因为除了取消按钮外, 还有全选,粘贴显示的还是英文, 你是不是也要遍历一下呢? 我也做了这个操作，但是结果没有达到想要的。</p>
+<h3 id="1"><a href="#1" class="headerlink" title="正确的处理方法:"></a><a href="#1">正确的处理方法:</a></h3><p>点击工程名, 打开如下图界面<br>在Localizations默认只有English这一项, 我们只需在Localizations上添加Chinese就可以了, 你还可以根据你的需要添加其他的语言.</p>
+<p>如果用户把手机语言设成英文, 那么显示的就是英文, 设置成中文,那么显示的就是中文.</p>
+<p>正确的解决的方法, 可以让我们节省很多事情, 不是么?</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/loaded-the-BlueView-nib-but-the-view-outlet-was-not-set-%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/12/loaded-the-BlueView-nib-but-the-view-outlet-was-not-set-%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95.html" class="post-title-link" itemprop="url">loaded the "BlueView" nib but the view outlet was not set 错误的解决办法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-12 09:56:48 / 修改时间：11:06:22" itemprop="dateCreated datePublished" datetime="2025-06-12T09:56:48+08:00">2025-06-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>解决办法：</p>
 <ul>
-<li>addSubview: （常用增加视图在本View上面）  </li>
-<li>bringSubviewToFront；将新视图放在其他同级视图的top位置  </li>
-<li>insertSubview:atIndex: 将新视图放在第index层，index是从底层向上数的下标位置  </li>
-<li>insertSubview:aboveSubview:将新视图放在第二个参数view的上面  </li>
-<li>insertSubview:belowSubview:将新视图放在第二个参数view的下面  </li>
-<li>exchangeSubviewAtIndex:withSubviewAtIndex:改变新视图从第一个位置到第二个位置</li>
-</ul>
-<p>B:presentViewController系列：（常用视图切换,与二B对应）</p>
-<ul>
-<li>presentViewController:animated:completion: 弹出，出现一个新视图 可以带动画效果，完成后可以做相应的执行函数经常为nil  </li>
-<li>presentModalViewController:animated: 弹出，出现一个新视图 可以带动画效果</li>
-</ul>
-<p>C:UINavigationController系列：（常用导航栏视图切换，与二C对应）</p>
-<ul>
-<li>pushViewController:animated: 推进一个新视图到栈里，出现新视图，可以带动画效果<br>例 pushViewController:animated:</li>
-</ul>
-<h3 id="2"><a href="#2" class="headerlink" title="返回上&#x2F;前一个View"></a><a href="#2">返回上&#x2F;前一个View</a></h3><p>A:insertSubView系列：（注意，如果你新增视图不够大，则遮不住上一层视图，即前后2个视图都存在，当然你可以做透明来查看所有，与一A对应）</p>
-<ul>
-<li>sendSubviewToBack: 将新视图放在其他同级视图的behind位置  </li>
-<li>removeFromSuperview：将新视图从父视图上移除</li>
-</ul>
-<p>B:presentViewController系列：（与一B对应）</p>
-<ul>
-<li>dismissViewControllerAnimated:completion:退出一个新视图 可以带动画效果，完成后可以做相应的执行函数经常为nil  </li>
-<li>dismissModalViewControllerAnimated: 退出一个新视图 可以带动画效果</li>
-</ul>
-<p>C:UINavigationController系列：（常用导航栏视图切换，与一C对应）</p>
-<ul>
-<li>popViewControllerAnimated: 从一个栈中退出视图，返回上一层，可以带动画效果  </li>
-<li>popToRootViewControllerAnimated:从一个栈中退出视图，返回到navigation的RootView，可以带动画效果  </li>
-<li>popToViewController:animated:从一个栈中退出视图，返回到navigation中指定的view，可以带动画效果<br>基本上上面已经介绍完全部常用视图切换方式：</li>
-</ul>
-<h3 id="3"><a href="#3" class="headerlink" title="UITabBarController：（需要先将几种视图在tabBar种设置好）"></a><a href="#3">UITabBarController：（需要先将几种视图在tabBar种设置好）</a></h3><ul>
-<li><p>setViewControllers:animated:设置要出现的视图</p>
+<li><p>创建控制器. File-&gt;New File-&gt;Iphone OS-&gt;Cocoa Touch Class-&gt;UIViewController subclass;</p>
 </li>
-<li><p>selectedViewController 设置要出现的视图</p>
+<li><p>创建xib. File-&gt;New File-&gt;Iphone OS-&gt;User Interface-&gt;View XIB</p>
 </li>
-<li><p>selectedIndex 设置要出现的视图下标</p>
+<li><p>绑定controller和view. 用Interface Builder打开xxx.xib, 点击Files’ Owner, 在Identity Inspector里面的Class Identity, 选择Step 1创建的控制器类, 接着拖拽File’s Owner到View中, 选择Outlets-&gt;view.先选中file’s owner(这个很重要)</p>
 </li>
 </ul>
-<p>来源:<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDMzNTk2Ni9hcnRpY2xlL2RldGFpbHMvODg1ODE3Mg==">http://blog.csdn.net/u010335966/article/details/8858172<i class="fa fa-external-link-alt"></i></span></p>
+<p>来源:<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdGhlYmVzdHRvbWUvYXJ0aWNsZS9kZXRhaWxzLzc3OTk4OTM=">http://blog.csdn.net/thebesttome/article/details/7799893<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -448,7 +686,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/iOS-%E4%BB%A3%E7%A0%81%E5%BD%A2%E5%BC%8F%E6%B7%BB%E5%8A%A0tabbar.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/CodeSign-error-code-signing-is-required-for-product-type-Application-in-SDK-iOS-5.0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -466,7 +704,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/iOS-%E4%BB%A3%E7%A0%81%E5%BD%A2%E5%BC%8F%E6%B7%BB%E5%8A%A0tabbar.html" class="post-title-link" itemprop="url">iOS 代码形式添加tabbar</a>
+          <a href="/2025/06/12/CodeSign-error-code-signing-is-required-for-product-type-Application-in-SDK-iOS-5.0.html" class="post-title-link" itemprop="url">CodeSign error: code signing is required for product type 'Application' in SDK 'iOS 5.0'</a>
         </h2>
 
         <div class="post-meta-container">
@@ -478,7 +716,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:34:25 / 修改时间：09:36:35" itemprop="dateCreated datePublished" datetime="2025-06-12T09:34:25+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 09:56:44 / 修改时间：11:01:13" itemprop="dateCreated datePublished" datetime="2025-06-12T09:56:44+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -500,12 +738,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>可以直接看代码，可以直接复制，自己运行：</p>
-<p>VlinkageViewController.h(实现UITabBarDelegate)</p>
-<figure class="highlight objectivec"><figcaption><span>VlinkageViewController.h</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  VlinkageViewController.h</span></span><br><span class="line"><span class="comment">//  xunYi</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-5-3.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 david. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;UIKit/UIKit.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VlinkageViewController</span> : <span class="title">UIViewController</span>&lt;<span class="title">UITabBarDelegate</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">retain</span>) <span class="built_in">UITabBar</span> *tabBar;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
-<p>VlinkageViewController.m（关键一点是要实现[self.tabBar setDelegate:self]，不然不起作用的）</p>
-<figure class="highlight objectivec"><figcaption><span>VlinkageViewController.m</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  VlinkageViewController.m</span></span><br><span class="line"><span class="comment">//  xunYi</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-5-3.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 david. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;QuartzCore/QuartzCore.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;VlinkageViewController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VlinkageViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">VlinkageViewController</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> tabBar;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">    <span class="comment">//判断机体的宽度和高度</span></span><br><span class="line">    <span class="built_in">CGRect</span> screenBounds = [[<span class="built_in">UIScreen</span> mainScreen] bounds];</span><br><span class="line">    <span class="built_in">CGFloat</span> width = screenBounds.size.width;</span><br><span class="line">    <span class="built_in">CGFloat</span> height = screenBounds.size.height;</span><br><span class="line"><span class="meta">#<span class="keyword">pragma</span> 添加tabBar</span></span><br><span class="line">    <span class="built_in">CGFloat</span> tabBarHeight = <span class="number">40</span>;</span><br><span class="line">    <span class="built_in">CGFloat</span> tabBarY = height  - tabBarHeight - searchBar.frame.size.height / <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">self</span>.tabBar = [[<span class="built_in">UITabBar</span> alloc] initWithFrame:</span><br><span class="line">                          <span class="built_in">CGRectMake</span>(<span class="number">0</span>, tabBarY, width, tabBarHeight)];</span><br><span class="line">    [<span class="keyword">self</span>.tabBar setDelegate:<span class="keyword">self</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//设置切换title</span></span><br><span class="line">    <span class="built_in">UITabBarItem</span> *tabBarItem1 = [[<span class="built_in">UITabBarItem</span> alloc] initWithTitle:<span class="string">@&quot;查找&quot;</span> image:<span class="literal">nil</span> tag:<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">UITabBarItem</span> *tabBarItem2 = [[<span class="built_in">UITabBarItem</span> alloc] initWithTitle:<span class="string">@&quot;我的关注&quot;</span> image:<span class="literal">nil</span> tag:<span class="number">1</span>];</span><br><span class="line">    <span class="built_in">UITabBarItem</span> *tabBarItem3 = [[<span class="built_in">UITabBarItem</span> alloc] initWithTitle:<span class="string">@&quot;咨询&quot;</span> image:<span class="literal">nil</span> tag:<span class="number">2</span>];</span><br><span class="line">    <span class="built_in">UITabBarItem</span> *tabBarItem4 = [[<span class="built_in">UITabBarItem</span> alloc] initWithTitle:<span class="string">@&quot;更多&quot;</span> image:<span class="literal">nil</span> tag:<span class="number">3</span>];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;tabBarItem1.tag = %d&quot;</span>,tabBarItem1.tag);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;tabBarItem1.tag = %d&quot;</span>,tabBarItem2.tag);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;tabBarItem1.tag = %d&quot;</span>,tabBarItem3.tag);</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;tabBarItem1.tag = %d&quot;</span>,tabBarItem4.tag);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//数组形式添加进 tabBar</span></span><br><span class="line">    <span class="built_in">NSArray</span> *tabBarItemArray = [[<span class="built_in">NSArray</span> alloc]</span><br><span class="line">                                initWithObjects:tabBarItem1, tabBarItem2, tabBarItem3, tabBarItem4, <span class="literal">nil</span>];</span><br><span class="line">    [<span class="keyword">self</span>.tabBar setItems:tabBarItemArray];</span><br><span class="line">    [<span class="keyword">self</span>.view addSubview:<span class="keyword">self</span>.tabBar];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) tabBar:(<span class="built_in">UITabBar</span> *)tabBar didSelectItem:(<span class="built_in">UITabBarItem</span> *)item</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;item.tag= %d&quot;</span>, item.tag);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> didReceiveMemoryWarning];</span><br><span class="line">    <span class="comment">// Dispose of any resources that can be recreated.</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+          <p>解决方法如下:</p>
+<p>选择工程－&gt;Build Settings -&gt; Code Signing -&gt; Code Signing Identity -&gt; Debug -&gt; Any ios SDK 将选项改为：iPhone Developer</p>
 
       
     </div>
@@ -532,7 +766,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/iOS%E9%94%99%E8%AF%AF%E4%B9%8B-could-not-load-inserted-library.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/CSS3-Gradient-%E5%AD%A6%E4%B9%A0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -550,7 +784,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/iOS%E9%94%99%E8%AF%AF%E4%B9%8B-could-not-load-inserted-library.html" class="post-title-link" itemprop="url">iOS错误之-could not load inserted library</a>
+          <a href="/2025/06/12/CSS3-Gradient-%E5%AD%A6%E4%B9%A0.html" class="post-title-link" itemprop="url">CSS3 Gradient 学习</a>
         </h2>
 
         <div class="post-meta-container">
@@ -562,7 +796,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-12 09:34:19 / 修改时间：09:35:44" itemprop="dateCreated datePublished" datetime="2025-06-12T09:34:19+08:00">2025-06-12</time>
+      <time title="创建时间：2025-06-12 09:56:40 / 修改时间：10:57:25" itemprop="dateCreated datePublished" datetime="2025-06-12T09:56:40+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -584,10 +818,12 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>最近写一个程序时,不知道怎么弄的,不能build到真机了,到模拟器没有什么问题,出现的错误是 : 研究可很长时间,也没有弄明白,在网上也着了很多资料,说是enable 了 guardmalloc</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">could not load inserted library: /usr/lib/libgmalloc.dylib</span><br></pre></td></tr></table></figure>
-
-<p>在xcode里面找了很久也没有着到怎么关闭, 最后无意中 发现了关闭他的方法,问题也解决了.<br>方法:<br>菜单–&gt;Product—&gt;EditScheme, 左边框 有一个列表,点击 run xxx.app , 你会发现在右边 Diagnostics里 有一些checkbox, 第三行 便是 关闭 Guard Malloc,<br>保险起见,clean 下工程,重新build 下 就ok了.</p>
+          <p>CSS3发布很久了，现在在国外的一些页面上常能看到他的身影，这让我羡慕已久，只可惜在国内为了兼容IE，让这一项技术受到很大的限制，很多Web前端人员都望而止步。虽然如此但还是有很多朋友在钻研CSS3在web中的应用，为了不被淘汰，我也开始向CSS3进发，争取跟上技术的前沿。从现在开始我会不断的发布一些CSS3的应用，和大家一起分享，今天我们首先要看的就是:CSS3： Gradient─CSS3渐变。  </p>
+<p>CSS3 Gradient分为linear-gradient(线性渐变)和radial-gradient(径向渐变)。而我们今天主要是针对线性渐变来剖析其具体的用法。为了更好的应用CSS3 Gradient,我们需要先了解一下目前的几种现代浏览器的内核，主流内容主要有Mozilla（熟悉的有Firefox，Flock等浏览器）、WebKit（熟悉的有Safari、Chrome等浏览器）、Opera（Opera浏览器）、Trident（讨厌的IE浏览器）。本文照常忽略IE不管，我们主要看看在Mozilla、Webkit、Opera下的应用，当然在IE下也可以实现，他需要通过IE特有的滤镜来实现，在后面会列出滤镜的使用语法，但不会具体介绍如何实用，感兴趣的可以搜索相关技术文档。那我们了解了这些，现在就开始今天的主题吧。</p>
+<p>节选如下：</p>
+<h4 id="1"><a href="#1" class="headerlink" title="CSS3的线性渐变"></a><a href="#1">CSS3的线性渐变</a></h4><p><strong>一、线性渐变在Mozilla下的应用</strong><br>语法：<br><code>-moz-linear-gradient( [&lt;point&gt; || &lt;angle&gt;,]? &lt;stop&gt;, &lt;stop&gt; [, &lt;stop&gt;]* )</code><br>参数：其共有三个参数，第一个参数表示线性渐变的方向，top是从上到下、left是从左到右，如果定义成left top，那就是从左上角到右下角。第二个和第三个参数分别是起点颜色和终点颜色。你还可以在它们之间插入更多的参数，表示多种颜色的渐变。<br>注：这个效果暂时只有在Mozilla内核的浏览器下才能正常显示。<br><strong>二、线性渐变在Webkit下的应用</strong><br>语法：<br><code>-webkit-linear-gradient( [&lt;point&gt; || &lt;angle&gt;,]? &lt;stop&gt;, &lt;stop&gt; [, &lt;stop&gt;]* )//最新发布书写语法</code><br><code>-webkit-gradient(&lt;type&gt;, &lt;point&gt; [, &lt;radius&gt;]?, &lt;point&gt; [, &lt;radius&gt;]? [, &lt;stop&gt;]*) //老式语法书写规则</code><br>参数：-webkit-gradient是webkit引擎对渐变的实现参数，一共有五个。第一个参数表示渐变类型（type），可以是linear（线性渐变）或者radial（径向渐变）。第二个参数和第三个参数，都是一对值，分别表示渐变起点和终点。这对值可以用坐标形式表示，也可以用关键值表示，比如 left top（左上角）和left bottom（左下角）。第四个和第五个参数，分别是两个color-stop函数。color-stop函数接受两个参数，第一个表示渐变的位置，0为起点，0.5为中点，1为结束点；第二个表示该点的颜色。<br><strong>三、线性渐变在Opera下的应用</strong><br>语法：<br><code>-o-linear-gradient([&lt;point&gt; || &lt;angle&gt;,]? &lt;stop&gt;, &lt;stop&gt; [, &lt;stop&gt;]); /* Opera 11.10+ */</code><br>参数：-o-linear-gradient有三个参数。第一个参数表示线性渐变的方向，top是从上到下、left是从左到右，如果定义成left top，那就是从左上角到右下角。第二个和第三个参数分别是起点颜色和终点颜色。你还可以在它们之间插入更多的参数，表示多种颜色的渐变。（注：Opera支持的版本有限，本例测试都是在Opera11.1版本下，后面不在提示）。<br><strong>四、线性渐变在Trident (IE)下的应用</strong><br>语法：<br><code>filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#1471da, endColorstr=#1C85FB);/*IE&lt;9&gt;*/   -ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient (GradientType=0, startColorstr=#1471da, endColorstr=#1C85FB)&quot;;/*IE8+*/</code><br>IE依靠滤镜实现渐变。startColorstr表示起点的颜色，endColorstr表示终点颜色。GradientType表示渐变类型，0为缺省值，表示垂直渐变，1表示水平渐变。</p>
+<p>详细的自己去参考吧。</p>
+<p>来源：<span class="exturl" data-url="aHR0cDovL3d3dy53M2NwbHVzLmNvbS9jb250ZW50L2NzczMtZ3JhZGllbnQ=">http://www.w3cplus.com/content/css3-gradient<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -614,7 +850,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/iOS-UITableViewCell%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AE%BE%E7%BD%AE.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/UINavigationController-pop%E7%9A%84%E4%B8%89%E4%B8%AA%E6%96%B9%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -632,7 +868,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/11/iOS-UITableViewCell%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AE%BE%E7%BD%AE.html" class="post-title-link" itemprop="url">iOS UITableViewCell的基本设置</a>
+          <a href="/2025/06/12/UINavigationController-pop%E7%9A%84%E4%B8%89%E4%B8%AA%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">UINavigationController pop的三个方法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -644,7 +880,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-11 14:00:39 / 修改时间：14:09:35" itemprop="dateCreated datePublished" datetime="2025-06-11T14:00:39+08:00">2025-06-11</time>
+      <time title="创建时间：2025-06-12 09:56:37 / 修改时间：10:55:32" itemprop="dateCreated datePublished" datetime="2025-06-12T09:56:37+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -666,25 +902,11 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="1"><a href="#1" class="headerlink" title="系统默认的颜色设置"></a><a href="#1">系统默认的颜色设置</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//无色  </span></span><br><span class="line">cell.selectionStyle = <span class="built_in">UITableViewCellSelectionStyleNone</span>;  </span><br><span class="line"><span class="comment">//蓝色  </span></span><br><span class="line">cell.selectionStyle = <span class="built_in">UITableViewCellSelectionStyleBlue</span>;  </span><br><span class="line"><span class="comment">//灰色  </span></span><br><span class="line">cell.selectionStyle = <span class="built_in">UITableViewCellSelectionStyleGray</span>;</span><br></pre></td></tr></table></figure>
+          <p>当我们在视图里面调用pushViewController的时候，有时间不想要这种默认的返回方式，或者也会用，但是有时候会遇到奇怪的问题，比如我就遇到了push之后没有返回按钮，或者说返回按钮消失了，不见了，因为我在rootViewController里面将navigationBar隐藏掉了，因为我想要我自己定义的navigationBar，之后在切换的视图里面就要自己定义这个但会按钮，然后给予他一个响应事件，来调用下面的类似代码，但是往往不知道返回到哪里</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.navigationController popToRootViewControllerAnimated:&lt;#(<span class="type">BOOL</span>)#&gt;]</span><br><span class="line">[<span class="keyword">self</span>.navigationController popToViewController:&lt;#(<span class="built_in">UIViewController</span> *)#&gt; animated:&lt;#(<span class="type">BOOL</span>)#&gt;]</span><br><span class="line">[<span class="keyword">self</span>.navigationController popViewControllerAnimated:&lt;#(<span class="type">BOOL</span>)#&gt;]</span><br></pre></td></tr></table></figure>
 
-<h3 id="2"><a href="#2" class="headerlink" title="自定义颜色和背景设置"></a><a href="#2">自定义颜色和背景设置</a></h3><p>改变UITableViewCell选中时背景色：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIColor</span> *color = [[<span class="built_in">UIColoralloc</span>]initWithRed:<span class="number">0.0</span> green:<span class="number">0.0</span> blue:<span class="number">0.0</span> alpha:<span class="number">1</span>];<span class="comment">//通过RGB来定义自己的颜色</span></span><br><span class="line">cell.selectedBackgroundView = [[[<span class="built_in">UIView</span> alloc] initWithFrame:cell.frame] autorelease];  </span><br><span class="line">cell.selectedBackgroundView.backgroundColor = [<span class="built_in">UIColor</span> xxxxxx];</span><br></pre></td></tr></table></figure>
-
-<h3 id="3"><a href="#3" class="headerlink" title="自定义UITableViewCell选中时背景"></a><a href="#3">自定义UITableViewCell选中时背景</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cell.selectedBackgroundView = [[[<span class="built_in">UIImageView</span> alloc] initWithImage:[<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;cellart.png&quot;</span>]] autorelease];</span><br></pre></td></tr></table></figure>
-
-<p>还有字体颜色</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cell.textLabel.highlightedTextColor = [<span class="built_in">UIColor</span> xxxcolor];  [cell.textLabel setTextColor:color];<span class="comment">//设置cell的字体的颜色</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="4"><a href="#4" class="headerlink" title="设置tableViewCell间的分割线的颜色"></a><a href="#4">设置tableViewCell间的分割线的颜色</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[theTableView setSeparatorColor:[<span class="built_in">UIColor</span> xxxx ]];</span><br><span class="line"><span class="built_in">UITableViewCellSeparatorStyle</span>有如下几种</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> &#123;</span><br><span class="line">  <span class="built_in">UITableViewCellSeparatorStyleNone</span>,</span><br><span class="line">  <span class="built_in">UITableViewCellSeparatorStyleSingleLine</span>,</span><br><span class="line">  <span class="built_in">UITableViewCellSeparatorStyleSingleLineEtched</span></span><br><span class="line">&#125; <span class="built_in">UITableViewCellSeparatorStyle</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="5"><a href="#5" class="headerlink" title="设置cell中字体的颜色"></a><a href="#5">设置cell中字体的颜色</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Customize the appearance of table view cells.</span></span><br><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="number">0</span> == indexPath.row)</span><br><span class="line">    &#123;</span><br><span class="line">        cell.textLabel.textColor = [<span class="built_in">UIColor</span> redColor];</span><br><span class="line">        cell.textLabel.highlightedTextColor = [<span class="built_in">UIColor</span> redColor];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="6"><a href="#6" class="headerlink" title="定义UITableViewCell的样式"></a><a href="#6">定义UITableViewCell的样式</a></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;</span><br><span class="line">accessoryType有如下几种</span><br><span class="line">typedef enum &#123;</span><br><span class="line">  UITableViewCellAccessoryNone,</span><br><span class="line">  UITableViewCellAccessoryDisclosureIndicator,</span><br><span class="line">  UITableViewCellAccessoryDetailDisclosureButton,</span><br><span class="line">  UITableViewCellAccessoryCheckmark</span><br><span class="line">&#125; UITableViewCellAccessoryType;</span><br></pre></td></tr></table></figure>
-
-<h3 id="7"><a href="#7" class="headerlink" title="设置UITableViewCell之间分隔线的颜色"></a><a href="#7">设置UITableViewCell之间分隔线的颜色</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[chatTableViewsetSeparatorColor:[<span class="built_in">UIColor</span> blueColor]];</span><br></pre></td></tr></table></figure>
-
-<h3 id="8"><a href="#8" class="headerlink" title="Cell 样式"></a><a href="#8">Cell 样式</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">An enumeration <span class="keyword">for</span> the various styles of cells.</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> &#123;</span><br><span class="line">  <span class="built_in">UITableViewCellStyleDefault</span>,</span><br><span class="line">  <span class="built_in">UITableViewCellStyleValue1</span>,</span><br><span class="line">  <span class="built_in">UITableViewCellStyleValue2</span>,</span><br><span class="line">  <span class="built_in">UITableViewCellStyleSubtitle</span></span><br><span class="line">&#125; <span class="built_in">UITableViewCellStyle</span>;</span><br></pre></td></tr></table></figure>
+<p>在我的代码中，我是希望返回到到rootViewController这个视图中，那就只有调用<code>[self.navigationController popToRootViewControllerAnimated:&lt;#(BOOL)#&gt;]</code></p>
+<p>这个方法最适合了。结果达到了我想要的效果</p>
 
       
     </div>
@@ -711,7 +933,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/error-failed-to-attach-to-process.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -729,7 +951,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/11/iOS-%E8%87%AA%E5%88%B6tableview%E7%9A%84cell-%E5%8F%AF%E4%BB%BB%E6%84%8F%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84UITableViewCell.html" class="post-title-link" itemprop="url">iOS 自制tableview的cell-可任意自定义的UITableViewCell</a>
+          <a href="/2025/06/12/error-failed-to-attach-to-process.html" class="post-title-link" itemprop="url">error: failed to attach to process</a>
         </h2>
 
         <div class="post-meta-container">
@@ -741,7 +963,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-11 14:00:35 / 修改时间：14:06:21" itemprop="dateCreated datePublished" datetime="2025-06-11T14:00:35+08:00">2025-06-11</time>
+      <time title="创建时间：2025-06-12 09:40:52 / 修改时间：10:06:21" itemprop="dateCreated datePublished" datetime="2025-06-12T09:40:52+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -763,33 +985,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>UITableView的强大更多程度上来自于可以任意自定义 UITableViewCell单元格。通常，UITableView中的Cell是动态的，在使用过程中，会创建一个Cell池，根据每个cell的高 度（即tableView:heightForRowAtIndexPath:返回值），以及屏幕高度计算屏幕中可显示几个cell。而进行自定义 TableViewCell无非是采用代码实现或采用IB编辑nib文件来实现两种方式，本文主要收集代码的方式实现各种cell自定义。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="如何动态调整Cell高度"></a><a href="#1">如何动态调整Cell高度</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">UITableViewCell</span> *)tableView:(<span class="built_in">UITableView</span> *)tableView cellForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">static</span> <span class="built_in">NSString</span> *CellIdentifier = <span class="string">@&quot;Cell&quot;</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">UITableViewCell</span> *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];</span><br><span class="line">    <span class="keyword">if</span> (cell == <span class="literal">nil</span>) &#123;</span><br><span class="line">        cell = [[[<span class="built_in">UITableViewCell</span> alloc] initWithFrame:<span class="built_in">CGRectZero</span> reuseIdentifier:CellIdentifier] autorelease];</span><br><span class="line">        <span class="built_in">UILabel</span> *label = [[<span class="built_in">UILabel</span> alloc] initWithFrame:<span class="built_in">CGRectZero</span>];</span><br><span class="line">        label.tag = <span class="number">1</span>;</span><br><span class="line">        label.lineBreakMode = <span class="built_in">UILineBreakModeWordWrap</span>;</span><br><span class="line">        label.highlightedTextColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">        label.numberOfLines = <span class="number">0</span>;</span><br><span class="line">        label.opaque = <span class="literal">NO</span>; <span class="comment">// 选中Opaque表示视图后面的任何内容都不应该绘制</span></span><br><span class="line">        label.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br><span class="line">        [cell.contentView addSubview:label];</span><br><span class="line">        [label release];</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">UILabel</span> *label = (<span class="built_in">UILabel</span> *)[cell viewWithTag:<span class="number">1</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *text;</span><br><span class="line">    text = [textArray objectAtIndex:indexPath.row];</span><br><span class="line">    <span class="built_in">CGRect</span> cellFrame = [cell frame];</span><br><span class="line">    cellFrame.origin = <span class="built_in">CGPointMake</span>(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"> </span><br><span class="line">    label.text = text;</span><br><span class="line">    <span class="built_in">CGRect</span> rect = <span class="built_in">CGRectInset</span>(cellFrame, <span class="number">2</span>, <span class="number">2</span>);</span><br><span class="line">    label.frame = rect;</span><br><span class="line">    [label sizeToFit];</span><br><span class="line">    <span class="keyword">if</span> (label.frame.size.height &gt; <span class="number">46</span>) &#123;</span><br><span class="line">        cellFrame.size.height = <span class="number">50</span> + label.frame.size.height - <span class="number">46</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        cellFrame.size.height = <span class="number">50</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    [cell setFrame:cellFrame];</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> cell;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="built_in">CGFloat</span>)tableView:(<span class="built_in">UITableView</span> *)tableView heightForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UITableViewCell</span> *cell = [<span class="keyword">self</span> tableView:tableView cellForRowAtIndexPath:indexPath];</span><br><span class="line">    <span class="keyword">return</span> cell.frame.size.height;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2"><a href="#2" class="headerlink" title="如何用图片自定义Table Separeator分割线"></a><a href="#2">如何用图片自定义Table Separeator分割线</a></h3><p>一般地，利用类似<code>[tableView setSeparatorColor:[UIColor redColor]];</code>语句即可修改cell中间分割线的颜色。那又如何用一个图片作为分割线背景呢？可以尝试如下：<br>方法一：<br>先设置cell separatorColor为clear，然后把图片做的分割线添加到自定义的custom cell上。<br>方法二：<br>在cell里添加一个像素的imageView后将图片载入进，之后设置<code>tableView.separatorStyle = UITableViewCellSeparatorStyleNone</code></p>
-<h3 id="3"><a href="#3" class="headerlink" title="自定义首行Cell与其上面导航栏间距"></a><a href="#3">自定义首行Cell与其上面导航栏间距</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tableView.tableHeaderView = [[[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">5</span>,<span class="number">20</span>)] autorelease];</span><br></pre></td></tr></table></figure>
-
-<p>自定义UITableViewCell的accessory样式</p>
-<p>默认的accessoryType属性有四种取值：</p>
-<ul>
-<li>UITableViewCellAccessoryNone</li>
-<li>UITableViewCellAccessoryDisclosureIndicator</li>
-<li>UITableViewCellAccessoryDetailDisclosureButton</li>
-<li>UITableViewCellAccessoryCheckmark</li>
-</ul>
-<p>如果想使用自定义附件按钮的其他样式，则需使用UITableView的accessoryView属性来指定。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIButton</span> *button;</span><br><span class="line"><span class="keyword">if</span>(isEditableOrNot) &#123;</span><br><span class="line">    <span class="built_in">UIImage</span> *image = [<span class="built_in">UIImage</span> imageNamed:<span class="string">@&quot;delete.png&quot;</span>];</span><br><span class="line">    button = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeCustom</span>];</span><br><span class="line">    <span class="built_in">CGRect</span> frame = <span class="built_in">CGRectMake</span>(<span class="number">0.0</span>,<span class="number">0.0</span>,image.size.width,image.size.height);</span><br><span class="line">    button.frame = frame;</span><br><span class="line">    [button setBackgroundImage:image forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">    button.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br><span class="line">    cell.accessoryView = button;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    button = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeCustom</span>];</span><br><span class="line">    button.backgroundColor = [<span class="built_in">UIColor</span> clearColor];</span><br><span class="line">    cell.accessoryView = button;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以上代码仅仅是定义了附件按钮两种状态下的样式，问题是现在这个自定义附件按钮的事件仍不可用。即事件还无法传递到 <code>UITableViewDelegate</code>的<code>accessoryButtonTappedForRowWithIndexPath</code>方法上。当我们在上述代码 中在加入以下语句：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[button addTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(btnClicked:event:) forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br></pre></td></tr></table></figure>
-
-<p>虽然可以捕捉到每个附件按钮的点击事件，但我们还无法进行区别到底是哪一行的附件按钮发生了点击动作！因为addTarget:方法最多允许传递两个参 数：target和event，这两个参数都有各自的用途了（target指向事件委托对象，event指向所发生的事件）。看来只依靠Cocoa框架已 经无法做到了。<br>但我们还是可以利用event参数，在自定义的btnClicked方法中判断出事件发生在UITableView的哪一个cell上。因为UITableView有一个很关键的方法indexPathForRowAtPoint，可以根据触摸发生的位置，返回触摸发生在哪一个cell的indexPath。而且通过event对象，正好也可以获得每个触摸在视图中的位置。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 检查用户点击按钮时的位置，并转发事件到对应的accessory tapped事件</span></span><br><span class="line">- (<span class="type">void</span>)btnClicked:(<span class="type">id</span>)sender event:(<span class="type">id</span>)event</span><br><span class="line">&#123;</span><br><span class="line">     <span class="built_in">NSSet</span> *touches = [event allTouches];</span><br><span class="line">     <span class="built_in">UITouch</span> *touch = [touches anyObject];</span><br><span class="line">     <span class="built_in">CGPoint</span> currentTouchPosition = [touch locationInView:<span class="keyword">self</span>.tableView];</span><br><span class="line">     <span class="built_in">NSIndexPath</span> *indexPath = [<span class="keyword">self</span>.tableView indexPathForRowAtPoint:currentTouchPosition];</span><br><span class="line">     <span class="keyword">if</span>(indexPath != <span class="literal">nil</span>)</span><br><span class="line">     &#123;</span><br><span class="line">         [<span class="keyword">self</span> tableView:<span class="keyword">self</span>.tableView accessoryButtonTappedForRowWithIndexPath:indexPath];</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这样，UITableView的accessoryButtonTappedForRowWithIndexPath方法会被触发，并且获得一个indexPath参数。通过这个indexPath参数，我们即可区分到底哪一行的附件按钮发生了触摸事件。</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)tableView:(<span class="built_in">UITableView</span> *)tableView accessoryButtonTappedForRowWithIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span>  *idx = indexPath.row;</span><br><span class="line">   <span class="comment">//这里加入自己的逻辑</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>摘自：<span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS9vd25lcmJsb29kL2FyY2hpdmUvMjAxMi8wOC8wMi8yNjIwMTczLmh0bWw=">http://www.cnblogs.com/ownerblood/archive/2012/08/02/2620173.html<i class="fa fa-external-link-alt"></i></span></p>
+          <p>解决办法的流程是：</p>
+<p>Open only XCode without opening project -&gt; Go to Window -&gt; Organizer -&gt; [ProjectName] and delete it completely -&gt; Quit XCode -&gt; Open iPhone simulator and reset settings -&gt; Quit iPhone simulator -&gt; reboot Mac -&gt; reopen XCode and run application</p>
 
       
     </div>
@@ -816,7 +1013,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/iOS-fonts%E5%AD%97%E4%BD%93%E7%B1%BB%E5%9E%8B.html">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/unbalanced-calls-to-begin-end-appearance-transitions-for-uiviewcontroller%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -834,7 +1031,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/11/iOS-fonts%E5%AD%97%E4%BD%93%E7%B1%BB%E5%9E%8B.html" class="post-title-link" itemprop="url">iOS fonts字体类型</a>
+          <a href="/2025/06/12/unbalanced-calls-to-begin-end-appearance-transitions-for-uiviewcontroller%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.html" class="post-title-link" itemprop="url">unbalanced calls to begin/end appearance transitions for uiviewcontroller的解决方法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -846,7 +1043,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2025-06-11 14:00:29 / 修改时间：14:02:23" itemprop="dateCreated datePublished" datetime="2025-06-11T14:00:29+08:00">2025-06-11</time>
+      <time title="创建时间：2025-06-12 09:40:47 / 修改时间：09:55:17" itemprop="dateCreated datePublished" datetime="2025-06-12T09:40:47+08:00">2025-06-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -868,1628 +1065,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>这里给出个文档的地址：<span class="exturl" data-url="aHR0cDovL2lvc2ZvbnRzLmNvbS8=">http://iosfonts.com/<i class="fa fa-external-link-alt"></i></span> ，里面包括了所有的ios的字体类型库:这里贴一下吧</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Academy Engraved LET</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>AcademyEngravedLetPlain</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>American Typewriter</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>AmericanTypewriter</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>AmericanTypewriter-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>AmericanTypewriter-Condensed</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>AmericanTypewriter-CondensedBold</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>AmericanTypewriter-CondensedLight</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>AmericanTypewriter-Light</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Apple Color Emoji</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>AppleColorEmoji</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Apple SD Gothic Neo</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>AppleSDGothicNeo-Bold</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>AppleSDGothicNeo-Medium</td>
-<td>4.3</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Arial</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>ArialMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Arial-BoldItalicMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Arial-BoldMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Arial-ItalicMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Arial Hebrew</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>ArialHebrew</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>ArialHebrew-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Arial Rounded MT Bold</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>ArialRoundedMTBold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Avenir</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Avenir-Black</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-BlackOblique</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-Book</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-BookOblique</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-Heavy</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-HeavyOblique</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-Light</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-LightOblique</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-Medium</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-MediumOblique</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-Oblique</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir-Roman</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir Next</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>AvenirNext-Bold</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-BoldItalic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-DemiBold</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-DemiBoldItalic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-Heavy</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-HeavyItalic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-Italic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-Medium</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-MediumItalic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-Regular</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-UltraLight</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNext-UltraLightItalic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Avenir Next Condensed</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-Bold</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-BoldItalic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-DemiBold</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-DemiBoldItalic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-Heavy</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-HeavyItalic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-Italic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-Medium</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-MediumItalic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-Regular</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-UltraLight</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>AvenirNextCondensed-UltraLightItalic</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Bangla Sangam MN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>BanglaSangamMN</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>BanglaSangamMN-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Baskerville</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Baskerville</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Baskerville-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Baskerville-BoldItalic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Baskerville-Italic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Baskerville-SemiBold</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Baskerville-SemiBoldItalic</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Bodoni Ornaments</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>BodoniOrnamentsITCTT</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Bodoni 72</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>BodoniSvtyTwoITCTT-Bold</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>BodoniSvtyTwoITCTT-Book</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>BodoniSvtyTwoITCTT-BookIta</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Bodoni 72 Oldstyle</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>BodoniSvtyTwoOSITCTT-Bold</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>BodoniSvtyTwoOSITCTT-Book</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>BodoniSvtyTwoOSITCTT-BookIt</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>BodoniSvtyTwoSCITCTT-Book</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Bradley Hand</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>BradleyHandITCTT-Bold</td>
-<td>6.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Chalkboard SE</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>ChalkboardSE-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>ChalkboardSE-Light</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>ChalkboardSE-Regular</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Chalkduster</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Chalkduster</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Cochin</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Cochin</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Cochin-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Cochin-BoldItalic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Cochin-Italic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Copperplate</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Copperplate</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Copperplate-Bold</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Copperplate-Light</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Courier</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Courier</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Courier-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Courier-BoldOblique</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Courier-Oblique</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Courier New</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>CourierNewPS-BoldItalicMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>CourierNewPS-BoldMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>CourierNewPS-ItalicMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>CourierNewPSMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>DB LCD Temp</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>DBLCDTempBlack</td>
-<td><del>6.0</del>  3.0</td>
-<td><del>6.0</del>  4.3</td>
-</tr>
-<tr>
-<td>Devanagari Sangam MN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>DevanagariSangamMN</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>DevanagariSangamMN-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Didot</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Didot</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Didot-Bold</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Didot-Italic</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Euphemia UCAS</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>EuphemiaUCAS</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>EuphemiaUCAS-Bold</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>EuphemiaUCAS-Italic</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Futura</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Futura-CondensedExtraBold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Futura-CondensedMedium</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Futura-Medium</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Futura-MediumItalic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Geeza Pro</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>GeezaPro</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>GeezaPro-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Georgia</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Georgia</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Georgia-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Georgia-BoldItalic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Georgia-Italic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Gill Sans</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>GillSans</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>GillSans-Bold</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>GillSans-BoldItalic</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>GillSans-Italic</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>GillSans-Light</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>GillSans-LightItalic</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Gujarati Sangam MN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>GujaratiSangamMN</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>GujaratiSangamMN-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Gurmukhi MN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>GurmukhiMN</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>GurmukhiMN-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Heiti SC</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>STHeitiSC-Light</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>STHeitiSC-Medium</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Heiti TC</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>STHeitiTC-Light</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>STHeitiTC-Medium</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Helvetica</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Helvetica</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Helvetica-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Helvetica-BoldOblique</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Helvetica-Light</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Helvetica-LightOblique</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Helvetica-Oblique</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Helvetica Neue</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>HelveticaNeue</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>HelveticaNeue-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>HelveticaNeue-BoldItalic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>HelveticaNeue-CondensedBlack</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>HelveticaNeue-CondensedBold</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>HelveticaNeue-Italic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>HelveticaNeue-Light</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>HelveticaNeue-LightItalic</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>HelveticaNeue-Medium</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>HelveticaNeue-UltraLight</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>HelveticaNeue-UltraLightItalic</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Hiragino Kaku Gothic ProN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>HiraKakuProN-W3</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>HiraKakuProN-W6</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Hiragino Mincho ProN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>HiraMinProN-W3</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>HiraMinProN-W6</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Hoefler Text</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>HoeflerText-Black</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>HoeflerText-BlackItalic</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>HoeflerText-Italic</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>HoeflerText-Regular</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Kailasa</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Kailasa</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Kailasa-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Kannada Sangam MN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>KannadaSangamMN</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>KannadaSangamMN-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Malayalam Sangam MN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>MalayalamSangamMN</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>MalayalamSangamMN-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Marion</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Marion-Bold</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Marion-Italic</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Marion-Regular</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Marker Felt</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>MarkerFelt-Thin</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>MarkerFelt-Wide</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Noteworthy</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Noteworthy-Bold</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Noteworthy-Light</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Optima</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Optima-Bold</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Optima-BoldItalic</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Optima-ExtraBlack</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Optima-Italic</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Optima-Regular</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Oriya Sangam MN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>OriyaSangamMN</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>OriyaSangamMN-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Palatino</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Palatino-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Palatino-BoldItalic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Palatino-Italic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Palatino-Roman</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Papyrus</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Papyrus</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Papyrus-Condensed</td>
-<td>3.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>Party LET</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>PartyLetPlain</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Sinhala Sangam MN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SinhalaSangamMN</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>SinhalaSangamMN-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Snell Roundhand</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>SnellRoundhand</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>SnellRoundhand-Black</td>
-<td>5.0</td>
-<td>5.0</td>
-</tr>
-<tr>
-<td>SnellRoundhand-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Symbol</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Symbol</td>
-<td>6.0</td>
-<td>6.0</td>
-</tr>
-<tr>
-<td>Tamil Sangam MN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>TamilSangamMN</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>TamilSangamMN-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Telugu Sangam MN</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>TeluguSangamMN</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>TeluguSangamMN-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Thonburi</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Thonburi</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Thonburi-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Times New Roman</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>TimesNewRomanPS-BoldItalicMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>TimesNewRomanPS-BoldMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>TimesNewRomanPS-ItalicMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>TimesNewRomanPSMT</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Trebuchet MS</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Trebuchet-BoldItalic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>TrebuchetMS</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>TrebuchetMS-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>TrebuchetMS-Italic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Verdana</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Verdana</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Verdana-Bold</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Verdana-BoldItalic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Verdana-Italic</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Zapf Dingbats</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>ZapfDingbatsITC</td>
-<td>5.0</td>
-<td>4.3</td>
-</tr>
-<tr>
-<td>Zapfino</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Zapfino</td>
-<td>3.0</td>
-<td>4.3</td>
-</tr>
-</tbody></table>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/%E5%85%B3%E4%BA%8Etypedef%E7%9A%84%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/11/%E5%85%B3%E4%BA%8Etypedef%E7%9A%84%E7%94%A8%E6%B3%95%E6%80%BB%E7%BB%93.html" class="post-title-link" itemprop="url">关于typedef的用法总结</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-11 13:53:59 / 修改时间：14:00:18" itemprop="dateCreated datePublished" datetime="2025-06-11T13:53:59+08:00">2025-06-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>不管是在C还是C++代码中，typedef这个词都不少见，当然出现频率较高的还是在C代码中。typedef与#define有些相似，但更多的是不同，<br>特别是在一些复杂的用法上，就完全不同了。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="用途一"></a><a href="#1">用途一</a></h3><p>定义一种类型的别名，而不只是简单的宏替换。可以用作同时声明指针型的多个对象。比如：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">char</span>* pa, pb; <span class="comment">// 这多数不符合我们的意图，它只声明了一个指向字符变量的指针，和一个字符变量；</span></span><br></pre></td></tr></table></figure>
-
-<p>以下则可行：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">char</span>* PCHAR;</span><br><span class="line">PCHAR pa, pb;</span><br></pre></td></tr></table></figure>
-
-<p>这种用法很有用，特别是char* pa, pb的定义，初学者往往认为是定义了两个字符型指针，其实不是，而用typedef char* PCHAR就不会出现这样的问题，减少了错误的发生。</p>
-<h3 id="2"><a href="#2" class="headerlink" title="用途二"></a><a href="#2">用途二</a></h3><p>用在旧的C代码中，帮助struct。以前的代码中，声明struct新对象时，必须要带上struct，即形式为： struct 结构名对象名，如：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tagPOINT1</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>struct tagPOINT1 p1;<br>而在C++中，则可以直接写：结构名对象名，即：tagPOINT1 p1;</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">tagPOINT</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">&#125;POINT;</span><br></pre></td></tr></table></figure>
-
-<p>这样就比原来的方式少写了一个struct，比较省事，尤其在大量使用的时候,</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POINT p1;</span><br></pre></td></tr></table></figure>
-
-<p>或许，在C++中，typedef的这种用途二不是很大，但是理解了它，对掌握以前的旧代码还是有帮助的，毕竟我们在项目中有可能会遇到较早些年代遗留下来的代码。</p>
-<h3 id="3"><a href="#3" class="headerlink" title="用途三"></a><a href="#3">用途三</a></h3><p>用typedef来定义与平台无关的类型。<br>比如定义一个叫 REAL 的浮点类型，在目标平台一上，让它表示最高精度的类型为：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">double</span> REAL;</span><br></pre></td></tr></table></figure>
-
-<p>在不支持 long double 的平台二上，改为：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">double</span> REAL;</span><br></pre></td></tr></table></figure>
-
-<p>在连 double 都不支持的平台三上，改为：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">float</span> REAL;</span><br></pre></td></tr></table></figure>
-
-<p>也就是说，当跨平台时，只要改下 typedef 本身就行，不用对其他源码做任何修改。<br>标准库就广泛使用了这个技巧，比如size_t。另外，因为typedef是定义了一种类型的新别名，不是简单的字符串替换，所以它比宏来得稳健。<br>这个优点在我们写代码的过程中可以减少不少代码量哦！</p>
-<h3 id="4"><a href="#4" class="headerlink" title="用途四"></a><a href="#4">用途四</a></h3><p>为复杂的声明定义一个新的简单的别名。方法是：在原来的声明里逐步用别名替换一部<br>分复杂声明，如此循环，把带变量名的部分留到最后替换，得到的就是原声明的最简化版。<br>举例：<br>原声明：<code>void (*b[10]) (void (*)());</code><br>变量名为b，先替换右边部分括号里的，pFunParam为别名一：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*pFunParam)</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
-
-<p>再替换左边的变量b，pFunx为别名二：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="title function_">void</span> <span class="params">(*pFunx)</span><span class="params">(pFunParam)</span>;</span><br></pre></td></tr></table></figure>
-
-<p>原声明的最简化版：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pFunx b[<span class="number">10</span>];</span><br></pre></td></tr></table></figure>
-
-<p>原声明：<code>doube(*)() (*e)[9];</code><br>变量名为e，先替换左边部分，pFuny为别名一：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="title function_">double</span><span class="params">(*pFuny)</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
-
-<p>再替换右边的变量e，pFunParamy为别名二</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="title function_">pFuny</span> <span class="params">(*pFunParamy)</span>[9];</span><br></pre></td></tr></table></figure>
-
-<p>原声明的最简化版：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pFunParamy e;</span><br></pre></td></tr></table></figure>
-
-<p>理解复杂声明可用的“右左法则”：从变量名看起，先往右，再往左，碰到一个圆括号<br>就调转阅读的方向；括号内分析完就跳出括号，还是按先右后左的顺序，如此循环，直到整个声明分析完。<br>举例：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*func)(<span class="type">int</span> *p);</span><br></pre></td></tr></table></figure>
-
-<p>首先找到变量名func，外面有一对圆括号，而且左边是一个*号，这说明func是一个指针；<br>然后跳出这个圆括号，先看右边，又遇到圆括号，这说明(*func)是一个函数，所以func是一个指向这类函数的指针，即函数指针，<br>这类函数具有int*类型的形参，返回值类型是int。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> (*func[<span class="number">5</span>])(<span class="type">int</span> *);</span><br></pre></td></tr></table></figure>
-
-<p>func右边是一个[]运算符，说明func是具有5个元素的数组；func的左边有一个*，说明<br>func的元素是指针（注意这里的*不是修饰func，而是修饰func[5]的，原因是[]运算符<br>优先级比*高，func先跟[]结合）。跳出这个括号，看右边，又遇到圆括号，说明func数<br>组的元素是函数类型的指针，它指向的函数具有int*类型的形参，返回值类型为int。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/Mac-OS-X-%E7%9A%84%E5%AE%89%E5%85%A8%E7%9D%A1%E7%9C%A0.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/11/Mac-OS-X-%E7%9A%84%E5%AE%89%E5%85%A8%E7%9D%A1%E7%9C%A0.html" class="post-title-link" itemprop="url">Mac OS X 的安全睡眠</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-11 13:53:52 / 修改时间：13:55:46" itemprop="dateCreated datePublished" datetime="2025-06-11T13:53:52+08:00">2025-06-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Mac OS X 默认是使用普通睡眠+安全睡眠（在 Windows 中称为休眠）。</p>
-<p>安全睡眠会在计算机进入睡眠状态时把内存（RAM）中的数据保存到硬盘上的「&#x2F;private&#x2F;var&#x2F;vm&#x2F;sleepimage」文件，然后计算机才进入普通睡眠。这样做的好处是如果计算机完全没电了，那原来内存中的内容还可以从硬盘上恢复。</p>
-<p>但这样也带来了不利之处，每当进入睡眠的时候都要写入内存容量大小的数据到硬盘上，这无疑延长了进入睡眠所需的时间（通常需要20秒-1分钟）；硬盘上还要使用内存容量大小的空间来存储睡眠文件，像笔者的 MacBook 有 4GB 的内存，那就要使用 4GB 的磁盘空间来存储睡眠文件，这对于磁盘空间比较紧张的笔记本用户来说就不太值得了。</p>
-<p>可使用如下的命令进行查看：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -lh /private/var/vm/</span><br></pre></td></tr></table></figure>
-
-<p>可以在「应用程序-实用程序-终端」中使用以下命令禁止安全睡眠：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> pmset -a hibernatemode 0</span><br><span class="line">$ <span class="built_in">sudo</span> nvram “use-nvramrc?”=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
-
-<p>以上设置需要在计算机重启后才能生效。生效后就可以使用下面的命令删除睡眠文件了：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> <span class="built_in">rm</span> -f /private/var/vm/sleepimage</span><br></pre></td></tr></table></figure>
-
-<p>如果需要恢复安全睡眠，可以使用下面的命令：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">sudo</span> pmset -a hibernatemode 3</span><br><span class="line">$ <span class="built_in">sudo</span> nvram “use-nvramrc?”=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-<p>然后重启计算机即可。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/11/%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%9A%84%E9%93%BE%E8%A1%A8%E6%93%8D%E4%BD%9C.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/11/%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E7%9A%84%E9%93%BE%E8%A1%A8%E6%93%8D%E4%BD%9C.html" class="post-title-link" itemprop="url">数据存储的链表操作</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-11 13:53:46 / 修改时间：13:54:29" itemprop="dateCreated datePublished" datetime="2025-06-11T13:53:46+08:00">2025-06-11</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>链表实现数据的存储，解决数组存储数据的不便利性</p>
-<p>实例代码如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* films2.c -- 使用结构链接表 */</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span>			<span class="comment">/* 提供malloc()原型 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span>			<span class="comment">/* 提供strcpy()原型 */</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TSIZE 45			<span class="comment">/* 存放片名的数组大小 */</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">film</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="type">char</span> title[TSIZE];</span><br><span class="line">	<span class="type">int</span> rating;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">film</span> *<span class="title">next</span>;</span>		<span class="comment">/* 指向链表的下一个结构 */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">film</span> *<span class="title">head</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">film</span> *<span class="title">prev</span>, *<span class="title">current</span>;</span></span><br><span class="line">	<span class="type">char</span> input[TSIZE];</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* 手机并存数信息 */</span></span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">&quot;Enter first movie title: &quot;</span>);</span><br><span class="line">	<span class="keyword">while</span>(gets(input) != <span class="literal">NULL</span> &amp;&amp; input[<span class="number">0</span>] != <span class="string">&#x27;\0&#x27;</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		current  = (<span class="keyword">struct</span> film *) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> film));</span><br><span class="line">		<span class="keyword">if</span>(head == <span class="literal">NULL</span>)	<span class="comment">/* 第一个结构 */</span></span><br><span class="line">		&#123;</span><br><span class="line">			head = current;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span>				<span class="comment">/* 后续结构 */</span></span><br><span class="line">		&#123;</span><br><span class="line">			prev-&gt;next = current;</span><br><span class="line">		&#125;</span><br><span class="line">		current-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">		<span class="built_in">strcpy</span>(current-&gt;title, input);</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">&quot;Enter your rating &lt;0-10&gt;: &quot;</span>);</span><br><span class="line">		<span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;current-&gt;rating);</span><br><span class="line">		<span class="keyword">while</span>(getchar() != <span class="string">&#x27;\n&#x27;</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">puts</span>(<span class="string">&quot;Enter next movie title (empty line to stop)&quot;</span>);</span><br><span class="line">		prev = current;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* 给出电影的列表 */</span></span><br><span class="line">	<span class="keyword">if</span>(head == <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;No data entered. &quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Here is the movie list :\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	current = head;</span><br><span class="line">	<span class="keyword">while</span>(current != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Movie: %s Rating: %d\n&quot;</span>,current-&gt;title,current-&gt;rating);</span><br><span class="line">		current = current-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/* 任务完成，因此释放所分配的内存 */</span></span><br><span class="line">	current = head;</span><br><span class="line">	<span class="keyword">while</span>(current != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">free</span>(current);</span><br><span class="line">		current = current-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Bye!\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+          <p>由于上个uivewcontroller的动画没做完，导致下一个的页面无法顺利压栈，这个只需要上一个页面返回的时候不要做动画就可以了。（这是其中的一种情况），</p>
+<p>如果不想去掉这个动画，需要做动画的操作，该怎么办呢，我这里给出一篇文章的做法，基本上都是类似的，我这里贴出地址：</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5jZmFuei5jbi8/Yz1hcnRpY2xlJmE9cmVhZCZpZD0yMzQ0MQ==">http://www.cfanz.cn/?c=article&amp;a=read&amp;id=23441<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>
@@ -2509,7 +1087,7 @@
 
 
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/101/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/101/">101</a><span class="page-number current">102</span><a class="page-number" href="/page/103/">103</a><span class="space">&hellip;</span><a class="page-number" href="/page/112/">112</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/103/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/101/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/101/">101</a><span class="page-number current">102</span><a class="page-number" href="/page/103/">103</a><span class="space">&hellip;</span><a class="page-number" href="/page/114/">114</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/103/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
