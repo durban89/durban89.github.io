@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1132</span>
+          <span class="site-state-item-count">1133</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -236,6 +236,105 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/09/PHP%E5%A6%82%E4%BD%95%E8%BF%9E%E6%8E%A5sftp%E5%B9%B6%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/09/PHP%E5%A6%82%E4%BD%95%E8%BF%9E%E6%8E%A5sftp%E5%B9%B6%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6.html" class="post-title-link" itemprop="url">PHP如何连接sftp并下载文件</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-09 09:59:24 / 修改时间：10:22:44" itemprop="dateCreated datePublished" datetime="2025-07-09T09:59:24+08:00">2025-07-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>首先我们要知道如何在命令行下连接，了解了之后就清楚大概的原理了<br>命令行连接的方式如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sftp -P port user@host</span><br></pre></td></tr></table></figure>
+
+<p>如果端口号默认是22的话就不需要端口号的参数，如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sftp user@host</span><br></pre></td></tr></table></figure>
+
+<p>连接进去之后sftp支持大多数的linux命令，如ls、cd等，但是注意并不是所有的命令都支持，毕竟这是个文件传输的功能，没有太多复杂的命令<br>上面了解之后我们看下PHP中如何链接</p>
+<h2 id="连接sftp"><a href="#连接sftp" class="headerlink" title="连接sftp"></a>连接sftp</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$conf</span> = [</span><br><span class="line">    <span class="string">&#x27;channelId&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;host&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;port&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;user&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;password&#x27;</span> =&gt; <span class="string">&#x27;&#x27;</span></span><br><span class="line">];</span><br><span class="line"><span class="variable">$conn</span> = <span class="title function_ invoke__">ssh2_connect</span>(<span class="variable">$conf</span>[<span class="string">&#x27;host&#x27;</span>], <span class="variable">$conf</span>[<span class="string">&#x27;port&#x27;</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">ssh2_auth_password</span>(<span class="variable">$conn</span>, <span class="variable">$conf</span>[<span class="string">&#x27;user&#x27;</span>], <span class="variable">$conf</span>[<span class="string">&#x27;password&#x27;</span>])) &#123;</span><br><span class="line">    <span class="title function_ invoke__">var_dump</span>(<span class="string">&#x27;ftps 连接失败&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="获取远程文件"><a href="#获取远程文件" class="headerlink" title="获取远程文件"></a>获取远程文件</h2><p>第一步没有问题，说明我们已经进去了sftp里面，然后就可以进行文件下载</p>
+<p>设置要获取的远程文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$remotFile</span> = <span class="string">&#x27;/file/xxx/xxx/xxx.txt&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>配置本地存储文件的路径</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$localPath</span> = <span class="string">&#x27;/storage/data&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建文件夹</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="title function_ invoke__">is_dir</span>(<span class="variable">$localPath</span>)) &#123;</span><br><span class="line">    <span class="variable">$dir</span> = <span class="title function_ invoke__">mkdir</span>(<span class="variable">$localPath</span>, <span class="number">0777</span>, <span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">if</span> (!<span class="variable">$dir</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>设置本地要存储的文件</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果文件已存在就覆盖</span></span><br><span class="line"><span class="variable">$localFile</span> = <span class="string">&#x27;xxxxx.txt&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$localRealFile</span> = <span class="variable">$localPath</span> . <span class="string">&#x27;/&#x27;</span> . <span class="variable">$localFile</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果文件存在则删除，当然这里也可以根据需求进行修改</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">is_file</span>(<span class="variable">$localRealFile</span>)) &#123;</span><br><span class="line">    <span class="title function_ invoke__">unlink</span>(<span class="variable">$localRealFile</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后拉取文件并写到本地</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$sftp</span> = <span class="title function_ invoke__">ssh2_sftp</span>(<span class="variable">$conn</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$resource</span> = <span class="string">&quot;ssh2.sftp://<span class="subst">&#123;$sftp&#125;</span>&quot;</span> . <span class="variable">$remotFile</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//远程文件 拷贝到本地</span></span><br><span class="line"><span class="title function_ invoke__">copy</span>(<span class="variable">$resource</span>, <span class="variable">$localRealFile</span>);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1188,107 +1287,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/08/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8-%E5%87%BD%E6%95%B0-this-%E4%BA%8C.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/08/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8-%E5%87%BD%E6%95%B0-this-%E4%BA%8C.html" class="post-title-link" itemprop="url">TypeScript基础入门 - 函数 - this(二)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-08 16:01:49 / 修改时间：17:56:45" itemprop="dateCreated datePublished" datetime="2025-07-08T16:01:49+08:00">2025-07-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><em><strong>项目实践仓库</strong></em></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/durban89/typescript_demo.git</span><br><span class="line">tag: 1.2.3</span><br></pre></td></tr></table></figure>
-
-<p>为了保证后面的学习演示需要安装下ts-node，这样后面的每个操作都能直接运行看到输出的结果。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -D ts-node</span><br></pre></td></tr></table></figure>
-
-<p>后面自己在练习的时候可以这样使用</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx ts-node 脚本路径</span><br></pre></td></tr></table></figure>
-
-<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a><strong>函数</strong></h2><h3 id="this"><a href="#this" class="headerlink" title="this"></a><strong>this</strong></h3><p>学习如何在JavaScript里正确使用this就好比一场成年礼。 由于TypeScript是JavaScript的超集，TypeScript程序员也需要弄清 this工作机制并且当有bug的时候能够找出错误所在。 幸运的是，TypeScript能通知你错误地使用了 this的地方。 如果你想了解JavaScript里的 this是如何工作的，那么首先阅读Yehuda Katz写的<span class="exturl" data-url="aHR0cDovL3llaHVkYWthdHouY29tLzIwMTEvMDgvMTEvdW5kZXJzdGFuZGluZy1qYXZhc2NyaXB0LWZ1bmN0aW9uLWludm9jYXRpb24tYW5kLXRoaXMv">Understanding JavaScript Function Invocation and “this”<i class="fa fa-external-link-alt"></i></span>。 Yehuda的文章详细的阐述了 this的内部工作原理，因此这里只做简单介绍。</p>
-<h3 id="this参数"><a href="#this参数" class="headerlink" title="this参数"></a><strong>this参数</strong></h3><p>继续上篇文章【<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy84OTM=">TypeScript基础入门 - 函数 - this(一)<i class="fa fa-external-link-alt"></i></span>】</p>
-<p>this.suits[pickedSuit]的类型依旧为any。 这是因为 this来自对象字面量里的函数表达式。 修改的方法是，提供一个显式的 this参数。 this参数是个假的参数，它出现在参数列表的最前面，如下</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"><span class="attr">this</span>: <span class="built_in">void</span></span>) &#123;</span><br><span class="line">    <span class="comment">// 确保`this`在这个独立功能中无法使用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们添加一些接口，Card 和 Deck，让类型重用能够变得清晰简单些，代码如下</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Card</span> &#123;</span><br><span class="line">    <span class="attr">suit</span>: <span class="built_in">string</span>;</span><br><span class="line">    <span class="attr">card</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Deck</span> &#123;</span><br><span class="line">    <span class="attr">suits</span>: <span class="built_in">string</span>[];</span><br><span class="line">    <span class="attr">cards</span>: <span class="built_in">number</span>[];</span><br><span class="line">    <span class="title function_">createCardPicker</span>(<span class="attr">this</span>: <span class="title class_">Deck</span>): <span class="function">() =&gt;</span> <span class="title class_">Card</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">deck</span>: <span class="title class_">Deck</span> = &#123;</span><br><span class="line">    <span class="attr">suits</span>: [</span><br><span class="line">        <span class="string">&#x27;hearts&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;spades&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;clubs&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;diamods&#x27;</span></span><br><span class="line">    ],</span><br><span class="line">    <span class="attr">cards</span>: <span class="title class_">Array</span>(<span class="number">52</span>),</span><br><span class="line">    <span class="attr">createCardPicker</span>: <span class="keyword">function</span> (<span class="params"><span class="attr">this</span>: <span class="title class_">Deck</span></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">let</span> pickedCard = <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">52</span>);</span><br><span class="line">            <span class="keyword">let</span> pickedSuit = <span class="title class_">Math</span>.<span class="title function_">floor</span>(pickedCard / <span class="number">13</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> &#123;</span><br><span class="line">                <span class="attr">suit</span>: <span class="variable language_">this</span>.<span class="property">suits</span>[pickedCard],</span><br><span class="line">                <span class="attr">card</span>: pickedCard % <span class="number">13</span>,</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> cardPicker = deck.<span class="title function_">createCardPicker</span>();</span><br><span class="line"><span class="keyword">let</span> pickedCard = <span class="title function_">cardPicker</span>();</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;card: &quot;</span> + pickedCard.<span class="property">card</span> + <span class="string">&quot; of &quot;</span> + pickedCard.<span class="property">suit</span>);</span><br></pre></td></tr></table></figure>
-
-<p>运行后得到的结果类似如下</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ npx ts-node src/function_5.ts</span><br><span class="line">card: 3 of diamods</span><br></pre></td></tr></table></figure>
-
-<p>现在TypeScript知道createCardPicker期望在某个Deck对象上调用。 也就是说 this是Deck类型的，而非any，因此–noImplicitThis不会报错了。</p>
-<p>本实例结束实践项目地址</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/durban89/typescript_demo.git</span><br><span class="line">tag: 1.2.4</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/22/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><span class="page-number current">23</span><a class="page-number" href="/page/24/">24</a><span class="space">&hellip;</span><a class="page-number" href="/page/114/">114</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/24/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1299,6 +1297,8 @@
   <footer class="footer">
     <div class="footer-inner">
 
+  <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">蒙ICP备18003023号-4 </span>
+  </div>
   <div class="copyright">
     &copy; 2014 – 
     <span itemprop="copyrightYear">2025</span>

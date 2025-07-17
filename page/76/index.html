@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1132</span>
+          <span class="site-state-item-count">1133</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -236,6 +236,90 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/%E5%9C%A8iOS%E4%B8%8A%E7%94%A8Quartz%E7%BB%98%E5%88%B6%E5%9C%86%E8%A7%92%E7%9F%A9%E5%BD%A2.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/23/%E5%9C%A8iOS%E4%B8%8A%E7%94%A8Quartz%E7%BB%98%E5%88%B6%E5%9C%86%E8%A7%92%E7%9F%A9%E5%BD%A2.html" class="post-title-link" itemprop="url">在iOS上用Quartz绘制圆角矩形</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-23 15:48:54 / 修改时间：16:08:17" itemprop="dateCreated datePublished" datetime="2025-06-23T15:48:54+08:00">2025-06-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Bezels是Mac OS X下，苹果私有的UI控件，用来提示用户某些信息。不过iOS下，就有很多第三方的Bezels风格的提示控件实现了。相信大家也见过很多了。下图左侧是OSX的提示音量变化的Bezels，右侧是iOS上的Bezels风格的进度提示。</p>
+<p>在iOS上做Bezels的思路很简单，无非就是在UIView里绘制一个半透明的圆角矩形，然后加入其他的SubView。因为没有现成的绘制圆角矩形的API可用，所以我们来自己绘制一个——反正是为了学习嘛。</p>
+<p>新建项目，添加一个UIView的子类，修改drawRect方法，如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)drawRect:(<span class="built_in">CGRect</span>)rect</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGFloat</span> width = rect.size.width;</span><br><span class="line">    <span class="built_in">CGFloat</span> height = rect.size.height;</span><br><span class="line">    <span class="comment">// 简便起见，这里把圆角半径设置为长和宽平均值的1/10</span></span><br><span class="line">    <span class="built_in">CGFloat</span> radius = (width + height) * <span class="number">0.05</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取CGContext，注意UIKit里用的是一个专门的函数</span></span><br><span class="line">    <span class="built_in">CGContextRef</span> context = <span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line">    <span class="comment">// 移动到初始点</span></span><br><span class="line">    <span class="built_in">CGContextMoveToPoint</span>(context, radius, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绘制第1条线和第1个1/4圆弧</span></span><br><span class="line">    <span class="built_in">CGContextAddLineToPoint</span>(context, width - radius, <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">CGContextAddArc</span>(context, width - radius, radius, radius, <span class="number">-0.5</span> * M_PI, <span class="number">0.0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绘制第2条线和第2个1/4圆弧</span></span><br><span class="line">    <span class="built_in">CGContextAddLineToPoint</span>(context, width, height - radius);</span><br><span class="line">    <span class="built_in">CGContextAddArc</span>(context, width - radius, height - radius, radius, <span class="number">0.0</span>, <span class="number">0.5</span> * M_PI, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绘制第3条线和第3个1/4圆弧</span></span><br><span class="line">    <span class="built_in">CGContextAddLineToPoint</span>(context, radius, height);</span><br><span class="line">    <span class="built_in">CGContextAddArc</span>(context, radius, height - radius, radius, <span class="number">0.5</span> * M_PI, M_PI, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 绘制第4条线和第4个1/4圆弧</span></span><br><span class="line">    <span class="built_in">CGContextAddLineToPoint</span>(context, <span class="number">0</span>, radius);</span><br><span class="line">    <span class="built_in">CGContextAddArc</span>(context, radius, radius, radius, M_PI, <span class="number">1.5</span> * M_PI, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 闭合路径</span></span><br><span class="line">    <span class="built_in">CGContextClosePath</span>(context);</span><br><span class="line">    <span class="comment">// 填充半透明黑色</span></span><br><span class="line">    <span class="built_in">CGContextSetRGBFillColor</span>(context, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.5</span>);</span><br><span class="line">    <span class="built_in">CGContextDrawPath</span>(context, kCGPathFill);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实这用到的只是些很基本的Quartz绘图函数而已。不过，我们顺利的绘制出了半透明，黑色的，圆角Bezel风格的View</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1290,106 +1374,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/%E6%88%B4%E5%B0%94PowerEdge-12G%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%98%AF%E5%90%A6%E6%94%AF%E6%8C%81CentOS%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%89%E8%A3%85.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/%E6%88%B4%E5%B0%94PowerEdge-12G%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%98%AF%E5%90%A6%E6%94%AF%E6%8C%81CentOS%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AE%89%E8%A3%85.html" class="post-title-link" itemprop="url">戴尔PowerEdge 12G服务器是否支持CentOS系统的安装</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-23 15:27:15 / 修改时间：15:40:26" itemprop="dateCreated datePublished" datetime="2025-06-23T15:27:15+08:00">2025-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>我们在采购戴尔服务器的时候，常常到遇到一些疑问，例如：PowerEdge 12G服务器能部署CentOS Linux不？有没有前辈实际安装实施过？具体版本要求？以及需要注意哪些？</p>
-<p>下面风信网整理了一些这方面信息给大家参考，首先大家都知道戴尔官方是支持RHEL的，我们需要明白RHEL和CentOS的关系：</p>
-<p>其实为什么有 CentOS？ CentOS 与 RHEL 有什么关系？</p>
-<p>RHEL 在发行的时候，有两种方式。一种是二进制的发行方式，另外一种是源代码的发行方式。</p>
-<p>无论是哪一种发行方式，你都可以免费获得（例如从网上下载），并再次发布。但如果你使用了他们的在线升级（包括补丁）或咨询服务，就必须要付费。</p>
-<p>RHEL 一直都提供源代码的发行方式，CentOS 就是将 RHEL 发行的源代码从新编译一次，形成一个可使用的二进制版本。由于 LINUX 的源代码是 GNU，所以从获得 RHEL 的源代码到编译成新的二进制，都是合法。只是 REDHAT 是商标，所以必须在新的发行版里将 REDHAT 的商标去掉。</p>
-<p>REDHAT 对这种发行版的态度是：“我们其实并不反对这种发行版，真正向我们付费的用户，他们重视的并不是系统本身，而是我们所提供的商业服务。”</p>
-<p>所以，CentOS 可以得到 RHEL 的所有功能，甚至是更好的软件。但 CentOS 并不向用户提供商业支持，当然也不负上任何商业责任。</p>
-<p>我正逐步将我的 RHEL 转到 CentOS 上，因为我不希望为 RHEL 升级而付费。当然，这是因为我已经有多年的 UNIX 使用经验，因此 RHEL 的商业技术支持对我来说并不重要。</p>
-<p>但如果你是单纯的业务型企业，那么我还是建议你选购 RHEL 软件并购买相应服务。这样可以节省你的 IT 管理费用，并可得到专业服务。</p>
-<p>一句话，选用 CentOS 还是 RHEL，取决于你所在公司是否拥有相应的技术力量。</p>
-<p>戴尔的官方说法：</p>
-<p>所以，我们不难得出一个结论，CentOS其实就是RHEL代码重新编译的一种衍生版的Linux操作系统。我们应该可以从戴尔12代服务器对 RHEL的支持，间接地得出其对应CentOS支持的大致情况。当然这个不能保证100%完全一致，重新编译也可能略有不同，但已十之八九。</p>
-<p>请查阅戴尔服务器的系统兼容表：戴尔PowerEdge服务器对操作系统支持的兼容性矩阵表</p>
-<p>其中RHEL兼容性查询见：<span class="exturl" data-url="aHR0cHM6Ly9oYXJkd2FyZS5yZWRoYXQuY29tL2xpc3QuY2dpP3Byb2R1Y3Q9UmVkJTIwSGF0JTIwSGFyZHdhcmUlMjBDZXJ0aWZpY2F0aW9uJnF1aWNrc2VhcmNoPWRlbGwmc2hvd2FsbD0x">https://hardware.redhat.com/list.cgi?product=Red%20Hat%20Hardware%20Certification&amp;quicksearch=dell&amp;showall=1<i class="fa fa-external-link-alt"></i></span></p>
-<p>通过RHEL的兼容性，我们就可以大致了解CentOS版本对应12G服务器的支持</p>
-<p>比如：PowerEdge R720支持RHEL的情况如下，你猜CentOS会怎样呢？</p>
-<p>抽空做了个实例测试</p>
-<p>我们看出戴尔PowerEdge 12G服务器在RHEL x_64支持6.1 以上版本，所以我的测试特意下载了CentOS发布的最新的x_64 6.4版</p>
-<p>ISO文件可以非常方便地在<span class="exturl" data-url="aHR0cDovL3d3dy5jZW50b3Mub3JnLw==">www.centos.org<i class="fa fa-external-link-alt"></i></span> 上下载</p>
-<p>测试环境，戴尔标准的PowerEdge R620，H710p，Broadcom BCM5720。</p>
-<p><strong>结论：CentOS提供了戴尔PowerEdge R620的系统原生驱动支持（Native driver support），即安装盘已经带有所有需要的驱动，包括PERC，网卡等。过程非常简单，无需额外的周折</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/75/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/75/">75</a><span class="page-number current">76</span><a class="page-number" href="/page/77/">77</a><span class="space">&hellip;</span><a class="page-number" href="/page/114/">114</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/77/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1400,6 +1384,8 @@
   <footer class="footer">
     <div class="footer-inner">
 
+  <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">蒙ICP备18003023号-4 </span>
+  </div>
   <div class="copyright">
     &copy; 2014 – 
     <span itemprop="copyrightYear">2025</span>

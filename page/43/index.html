@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1132</span>
+          <span class="site-state-item-count">1133</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -236,6 +236,108 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-0-0%E7%9A%84%E6%B5%8B%E8%AF%95%E7%89%88%E6%9C%AC-%E8%A7%86%E5%9B%BE%E6%B8%B2%E6%9F%93-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E8%B0%83%E7%94%A8%E7%9A%84%E9%85%8D%E7%BD%AE.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/02/KoaJS-2-0-0%E7%9A%84%E6%B5%8B%E8%AF%95%E7%89%88%E6%9C%AC-%E8%A7%86%E5%9B%BE%E6%B8%B2%E6%9F%93-%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6%E8%B0%83%E7%94%A8%E7%9A%84%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">KoaJS 2.0.0的测试版本-视图渲染、静态文件调用的配置</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-02 11:31:52 / 修改时间：14:28:58" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:52+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>针对koa2.0.0的测试版本，在使用的过程中遇到了很多的问题，这篇文章讲解一下如何进行操作html的调用和静态文件的调用</p>
+<p>因为koa2.0.0版本的升级，很多的中间件都没有跟随着一起调整，所以有些中间件就出现了很多问题，这里说的就是针对试图文件的调用渲染和静态文件的调用</p>
+<p>视图文件的调用使用的是如下的中间件：koa-swig</p>
+<p>安装koa-swig:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa-swig --save</span><br></pre></td></tr></table></figure>
+
+<p>配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">app.context.render = co.wrap(render(&#123;</span><br><span class="line">  root: path.join(__dirname, <span class="string">&#x27;dest&#x27;</span>),</span><br><span class="line">  autoescape: <span class="literal">true</span>,</span><br><span class="line">  cache: <span class="string">&#x27;memory&#x27;</span>, // <span class="built_in">disable</span>, <span class="built_in">set</span> to <span class="literal">false</span> </span><br><span class="line">  ext: <span class="string">&#x27;html&#x27;</span></span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
+
+<p>路由中调用的方式如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">router.get(<span class="string">&#x27;/home&#x27;</span>, (ctx, next) =&gt; &#123;</span><br><span class="line">  <span class="built_in">return</span> next().<span class="keyword">then</span>(() =&gt; &#123;</span><br><span class="line">    ctx.render(&#x27;index.html&#x27;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里到这里就解决了视图调用的问题，访问的时候如果页面中调用的是本地的js或者css的话，会包404的错误，就是找不到对应的路由，OK，下面记录下。</p>
+<p>这里调用得了两个中间件:koa-convert,koa-static</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const convert = require(<span class="string">&#x27;koa-convert&#x27;</span>);</span><br><span class="line">const serve = require(<span class="string">&#x27;koa-static&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>安装这两个中间件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa-static koa-convert --save</span><br></pre></td></tr></table></figure>
+
+<p>对应的配置如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(convert(serve(__dirname + <span class="string">&#x27;/dest&#x27;</span>)));</span><br></pre></td></tr></table></figure>
+
+<p>这里就是很简单了，刚开始的时候是无效的，后来在github上问了一下，就找打了解决办法。可以到这里看下：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2tvYWpzL3N0YXRpYy9pc3N1ZXMvNTk=">https://github.com/koajs/static/issues/59<i class="fa fa-external-link-alt"></i></span></p>
+<p>好了，到这里两个部分的操作就完成了。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -466,7 +568,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>最近koajs更新了一个很重要的版本，就是2.0.0,虽然这个版本是一个还在开发中的版本，但是已经可以下载使用了，当然，我用来下，唉，遗憾的是，虽然koa更新了，但是对应的中间插件并没有更新，这个是为什么呢，其他中间件的人不积极呗，只能试用了下，最重要的一个就是，Router这个中间件，既然也没有更新，不兼容最新版本的koa，好吧，还有在issue中发现了两点，已经有人根据koa-router，自己写了一个koa-66,使用完还不错，下面正式记录一下：</p>
-<p>安装 <span class="exturl" data-url="bWFpbHRvOiYjMTA3OyYjMTExOyYjeDYxOyYjeDQwOyYjeDMyOyYjeDJlOyYjNDg7JiM0NjsmIzQ4OyYjeDJkOyYjeDYxOyYjeDZjOyYjeDcwOyYjMTA0OyYjeDYxOyYjNDY7JiN4MzI7">koa@2.0.0-alpha.2<i class="fa fa-external-link-alt"></i></span></p>
+<p>安装 <span class="exturl" data-url="bWFpbHRvOiYjMTA3OyYjMTExOyYjeDYxOyYjeDQwOyYjNTA7JiM0NjsmI3gzMDsmI3gyZTsmI3gzMDsmIzQ1OyYjOTc7JiN4NmM7JiMxMTI7JiN4Njg7JiN4NjE7JiM0NjsmI3gzMjs=">koa@2.0.0-alpha.2<i class="fa fa-external-link-alt"></i></span></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa@<span class="number">2.0</span><span class="number">.0</span>-alpha<span class="number">.2</span> --save</span><br></pre></td></tr></table></figure>
 
 <p>安装koa-66</p>
@@ -1071,95 +1173,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Webpack-%E6%89%93%E5%8C%85jsx%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Webpack-%E6%89%93%E5%8C%85jsx%E6%96%87%E4%BB%B6%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">Webpack 打包jsx文件配置</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-01 15:25:02 / 修改时间：15:31:01" itemprop="dateCreated datePublished" datetime="2025-07-01T15:25:02+08:00">2025-07-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>打包jsx文件，为了使得此文件可以直接被打包，并且在应用的时候不加入后缀，需要做以下几个步骤：</p>
-<p>1，安装jsx-loader</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install --save-dev jsx-loader</span><br></pre></td></tr></table></figure>
-
-<p>2，配置</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">module</span>: &#123;</span><br><span class="line">  <span class="attr">loaders</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">//tell webpack to use jsx-loader for all *.jsx files</span></span><br><span class="line">      <span class="attr">test</span>: <span class="regexp">/\.jsx$/</span>,</span><br><span class="line">      <span class="attr">loader</span>: <span class="string">&#x27;jsx-loader?insertPragma=React.DOM&amp;harmony&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>3，扩展设置</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">resolve</span>: &#123;</span><br><span class="line">  <span class="attr">extensions</span>: [<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.jsx&#x27;</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/42/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/42/">42</a><span class="page-number current">43</span><a class="page-number" href="/page/44/">44</a><span class="space">&hellip;</span><a class="page-number" href="/page/114/">114</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/44/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1170,6 +1183,8 @@
   <footer class="footer">
     <div class="footer-inner">
 
+  <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">蒙ICP备18003023号-4 </span>
+  </div>
   <div class="copyright">
     &copy; 2014 – 
     <span itemprop="copyrightYear">2025</span>

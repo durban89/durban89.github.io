@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1132</span>
+          <span class="site-state-item-count">1133</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -236,6 +236,88 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/PHP-file_get_contents-%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%AE%B0%E5%BD%95.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/10/PHP-file_get_contents-%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E8%AE%B0%E5%BD%95.html" class="post-title-link" itemprop="url">PHP file_get_contents 中文乱码解决方案记录</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-10 10:57:58 / 修改时间：11:03:44" itemprop="dateCreated datePublished" datetime="2025-07-10T10:57:58+08:00">2025-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近拉取了京东结算订单csv文件，结果发现在用file_get_contents获取内容的时候，中文出现了乱码，感觉京东这么大，这个技术问题他们帮忙解决才好吧，想想还是算了，自己动动手的问题。</p>
+<p>大概我也能猜到，京东的系统默认应该都不是utf-8的编码，大多数还是gbk或者是gb2312，因为之前使用过类似的国内产品，可能是由于历史原因，这个不深究了，</p>
+<p>解决代码逻辑如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$content</span> = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"><span class="variable">$text</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$file</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//$encodType = mb_detect_encoding($text);</span></span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;UTF32_BIG_ENDIAN_BOM&#x27;</span>, <span class="title function_ invoke__">chr</span>(<span class="number">0x00</span>) . <span class="title function_ invoke__">chr</span>(<span class="number">0x00</span>) . <span class="title function_ invoke__">chr</span>(<span class="number">0xFE</span>) . <span class="title function_ invoke__">chr</span>(<span class="number">0xFF</span>));</span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;UTF32_LITTLE_ENDIAN_BOM&#x27;</span>, <span class="title function_ invoke__">chr</span>(<span class="number">0xFF</span>) . <span class="title function_ invoke__">chr</span>(<span class="number">0xFE</span>) . <span class="title function_ invoke__">chr</span>(<span class="number">0x00</span>) . <span class="title function_ invoke__">chr</span>(<span class="number">0x00</span>));</span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;UTF16_BIG_ENDIAN_BOM&#x27;</span>, <span class="title function_ invoke__">chr</span>(<span class="number">0xFE</span>) . <span class="title function_ invoke__">chr</span>(<span class="number">0xFF</span>));</span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;UTF16_LITTLE_ENDIAN_BOM&#x27;</span>, <span class="title function_ invoke__">chr</span>(<span class="number">0xFF</span>) . <span class="title function_ invoke__">chr</span>(<span class="number">0xFE</span>));</span><br><span class="line"><span class="title function_ invoke__">define</span>(<span class="string">&#x27;UTF8_BOM&#x27;</span>, <span class="title function_ invoke__">chr</span>(<span class="number">0xEF</span>) . <span class="title function_ invoke__">chr</span>(<span class="number">0xBB</span>) . <span class="title function_ invoke__">chr</span>(<span class="number">0xBF</span>));</span><br><span class="line"><span class="variable">$first2</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$text</span>, <span class="number">0</span>, <span class="number">2</span>);</span><br><span class="line"><span class="variable">$first3</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$text</span>, <span class="number">0</span>, <span class="number">3</span>);</span><br><span class="line"><span class="variable">$first4</span> = <span class="title function_ invoke__">substr</span>(<span class="variable">$text</span>, <span class="number">0</span>, <span class="number">3</span>);</span><br><span class="line"><span class="variable">$encodType</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="keyword">if</span> (UTF8_BOM == <span class="variable">$first3</span>) &#123;</span><br><span class="line">    <span class="variable">$encodType</span> = <span class="string">&#x27;UTF-8 BOM&#x27;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (UTF32_BIG_ENDIAN_BOM == <span class="variable">$first4</span>) &#123;</span><br><span class="line">    <span class="variable">$encodType</span> = <span class="string">&#x27;UTF-32BE&#x27;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (UTF32_LITTLE_ENDIAN_BOM == <span class="variable">$first4</span>) &#123;</span><br><span class="line">    <span class="variable">$encodType</span> = <span class="string">&#x27;UTF-32LE&#x27;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (UTF16_BIG_ENDIAN_BOM == <span class="variable">$first2</span>) &#123;</span><br><span class="line">    <span class="variable">$encodType</span> = <span class="string">&#x27;UTF-16BE&#x27;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (UTF16_LITTLE_ENDIAN_BOM == <span class="variable">$first2</span>) &#123;</span><br><span class="line">    <span class="variable">$encodType</span> = <span class="string">&#x27;UTF-16LE&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//下面的判断主要还是判断ANSI编码的·</span></span><br><span class="line"><span class="keyword">if</span> (<span class="string">&#x27;&#x27;</span> == <span class="variable">$encodType</span>) &#123;</span><br><span class="line">    <span class="comment">//即默认创建的txt文本-ANSI编码的</span></span><br><span class="line">    <span class="variable">$content</span> = <span class="title function_ invoke__">iconv</span>(<span class="string">&quot;GBK&quot;</span>, <span class="string">&quot;UTF-8&quot;</span>, <span class="variable">$text</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&#x27;UTF-8 BOM&#x27;</span> == <span class="variable">$encodType</span>) &#123;</span><br><span class="line">    <span class="comment">//本来就是UTF-8不用转换</span></span><br><span class="line">    <span class="variable">$content</span> = <span class="variable">$text</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">//其他的格式都转化为UTF-8就可以了</span></span><br><span class="line">    <span class="variable">$content</span> = <span class="title function_ invoke__">iconv</span>(<span class="variable">$encodType</span>, <span class="string">&quot;UTF-8&quot;</span>, <span class="variable">$text</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1512,102 +1594,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E9%AB%98%E8%B4%A8%E9%87%8F%E7%9A%84TypeScript%E5%A3%B0%E6%98%8E%E6%96%87%E4%BB%B6-%E5%8D%81%E4%B8%80--%E4%BD%BF%E7%94%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E9%AB%98%E8%B4%A8%E9%87%8F%E7%9A%84TypeScript%E5%A3%B0%E6%98%8E%E6%96%87%E4%BB%B6-%E5%8D%81%E4%B8%80--%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">如何创建高质量的TypeScript声明文件(十一) - 使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-10 10:57:26 / 修改时间：11:13:21" itemprop="dateCreated datePublished" datetime="2025-07-10T10:57:26+08:00">2025-07-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>在TypeScript 2.0中，在获取，使用和查找声明文件时，它变得非常容易。 下面说下如何做到这三点。</p>
-<p><strong>下载</strong></p>
-<p>在TypeScript 2.0及更高版本中获取类型声明不需要除npm之外的任何工具。</p>
-<p>例如，获取像lodash这样的库的声明只需要以下命令</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save @types/lodash</span><br></pre></td></tr></table></figure>
-
-<p>值得注意的是，如果npm包已经包含了发布中描述的声明文件，则不需要下载相应的@types包。</p>
-<p><strong>使用</strong></p>
-<p>从那里你可以在你的TypeScript代码中使用lodash而不用大惊小怪。这适用于模块和全局代码。</p>
-<p>例如，一旦你安装了你的类型声明，就可以使用import和write</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> _ <span class="keyword">from</span> <span class="string">&quot;lodash&quot;</span>;</span><br><span class="line">_.<span class="title function_">padStart</span>(<span class="string">&quot;Hello TypeScript!&quot;</span>, <span class="number">20</span>, <span class="string">&quot; &quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>或者如果您不使用模块，则可以使用全局变量_。</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_.<span class="title function_">padStart</span>(<span class="string">&quot;Hello TypeScript!&quot;</span>, <span class="number">20</span>, <span class="string">&quot; &quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p><strong>搜索</strong></p>
-<p>在大多数情况下，类型声明包应始终与npm上的包名称相同，但前缀为@types&#x2F;，但如果需要，可以查看<span class="exturl" data-url="aHR0cHM6Ly9ha2EubXMvdHlwZXMlRTQlQkIlQTUlRTYlOUYlQTUlRTYlODklQkUlRTQlQkQlQTAlRTYlOUMlODAlRTUlOTYlOUMlRTYlQUMlQTIlRTclOUElODQlRTUlQkElOTMlRTclOUElODQlRTUlOEMlODUlRTMlODAlODI=">https://aka.ms/types<i class="fa fa-external-link-alt"></i></span> 以查找你最喜欢的库的包。</p>
-<p>注意：如果您要搜索的声明文件不存在，您可以随时贡献一份，并帮助下一位寻找它的开发人员。 有关详细信息，请参阅<span class="exturl" data-url="aHR0cDovL2RlZmluaXRlbHl0eXBlZC5vcmcvZ3VpZGVzL2NvbnRyaWJ1dGluZy5odG1s">DefinitelyTyped贡献<i class="fa fa-external-link-alt"></i></span>指南页面。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/114/">114</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/16/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1618,6 +1604,8 @@
   <footer class="footer">
     <div class="footer-inner">
 
+  <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">蒙ICP备18003023号-4 </span>
+  </div>
   <div class="copyright">
     &copy; 2014 – 
     <span itemprop="copyrightYear">2025</span>

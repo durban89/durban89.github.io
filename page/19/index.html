@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1132</span>
+          <span class="site-state-item-count">1133</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -236,6 +236,194 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90-%E4%B8%80.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/10/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90-%E4%B8%80.html" class="post-title-link" itemprop="url">TypeScript基础入门之模块解析(一)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-10 10:23:24 / 修改时间：10:39:08" itemprop="dateCreated datePublished" datetime="2025-07-10T10:23:24+08:00">2025-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="模块解析"><a href="#模块解析" class="headerlink" title="模块解析"></a>模块解析</h2><blockquote>
+<p>本节假设有关模块的一些基本知识。有关更多信息，请参阅模块文档。</p>
+</blockquote>
+<p>模块解析是编译器用来确定导入所引用内容的过程。<br>考虑一个导入语句，如<code>import &#123; a &#125; from &quot;moduleA&quot;;</code><br>为了检查a的任何使用，编译器需要确切地知道它代表什么，并且需要检查它的定义moduleA。</p>
+<p>此时，编译器将询问”moduleA的类型是什么？“虽然这听起来很简单，但是moduleA可以在您自己的.ts&#x2F;.tsx文件中定义，或者在您的代码所依赖的.d.ts中定义。</p>
+<p>首先，编译器将尝试查找表示导入模块的文件。<br>为此，编译器遵循两种不同策略之一：Classic或Node。<br>这些策略告诉编译器在哪里寻找moduleA。</p>
+<p>如果这不起作用并且模块名称是非相对的（并且在”moduleA”的情况下，则是），则编译器将尝试查找环境模块声明。<br>接下来我们将介绍非相对进口。</p>
+<p>最后，如果编译器无法解析模块，它将记录错误。<br>在这种情况下，错误就像<code>error TS2307: Cannot find module &#39;moduleA&#39;</code></p>
+<h3 id="相对与非相对模块导入"><a href="#相对与非相对模块导入" class="headerlink" title="相对与非相对模块导入"></a>相对与非相对模块导入</h3><p>根据模块引用是相对引用还是非相对引用，模块导入的解析方式不同。</p>
+<p>相对导入是以&#x2F;、.&#x2F;或..&#x2F;开头的导入。<br>一些例子包括：</p>
+<ul>
+<li>import Entry from “.&#x2F;components&#x2F;Entry”;</li>
+<li>import { DefaultHeaders } from “..&#x2F;constants&#x2F;http”;</li>
+<li>import “&#x2F;mod”;</li>
+</ul>
+<p>任何其他import都被视为非亲属。<br>一些例子包括：</p>
+<ul>
+<li>import * as $ from “jquery”;</li>
+<li>import { Component } from “@angular&#x2F;core”;</li>
+</ul>
+<p>相对导入是相对于导入文件解析的，无法解析为环境模块声明。<br>您应该为自己的模块使用相对导入，这些模块可以保证在运行时保持其相对位置。</p>
+<p>可以相对于baseUrl或通过路径映射解析非相对导入，我们将在下面介绍。<br>他们还可以解析为环境模块声明。<br>导入任何外部依赖项时，请使用非相对路径。</p>
+<h3 id="模块解决策略"><a href="#模块解决策略" class="headerlink" title="模块解决策略"></a>模块解决策略</h3><p>有两种可能的模块解析策略：Node和Classic。<br>您可以使用–moduleResolution标志指定模块解析策略。<br>如果未指定，则默认为Classic for <code>--module AMD | System | ES2015</code>或其他Node。</p>
+<h3 id="Classic-策略"><a href="#Classic-策略" class="headerlink" title="Classic 策略"></a><em>Classic 策略</em></h3><p>这曾经是TypeScript的默认解析策略。<br>如今，这种策略主要用于向后兼容。</p>
+<p>将相对于导入文件解析相对导入。<br>因此，从源文件&#x2F;root&#x2F;src&#x2F;folder&#x2F;A.ts中的<code>import &#123; b &#125; from &quot;./moduleB&quot;</code>将导致以下查找：</p>
+<ul>
+<li>&#x2F;root&#x2F;src&#x2F;folder&#x2F;moduleB.ts</li>
+<li>&#x2F;root&#x2F;src&#x2F;folder&#x2F;moduleB.d.ts</li>
+</ul>
+<p>但是，对于非相对模块导入，编译器会从包含导入文件的目录开始遍历目录树，尝试查找匹配的定义文件。</p>
+<p>例如：</p>
+<p>在源文件&#x2F;root&#x2F;src&#x2F;folder&#x2F;A.ts中对moduleB进行非相对导入(例如<code>import &#123; b &#125; from &quot;moduleB&quot;)</code>将导致尝试以下位置来定位”moduleB”：</p>
+<ul>
+<li>&#x2F;root&#x2F;src&#x2F;folder&#x2F;moduleB.ts</li>
+<li>&#x2F;root&#x2F;src&#x2F;folder&#x2F;moduleB.d.ts</li>
+<li>&#x2F;root&#x2F;src&#x2F;moduleB.ts</li>
+<li>&#x2F;root&#x2F;src&#x2F;moduleB.d.ts</li>
+<li>&#x2F;root&#x2F;moduleB.ts</li>
+<li>&#x2F;root&#x2F;moduleB.d.ts</li>
+<li>&#x2F;moduleB.ts</li>
+<li>&#x2F;moduleB.d.ts</li>
+</ul>
+<h3 id="Node-策略"><a href="#Node-策略" class="headerlink" title="Node 策略"></a><em>Node 策略</em></h3><p>他的解析策略试图在运行时模仿Node.js模块解析机制。Node.js模块文档中概述了完整的Node.js解析算法。</p>
+<p><strong>Node.js如何解析模块</strong></p>
+<p>要了解TS编译器将遵循的步骤，重要的是要阐明Node.js模块。<br>传统上，Node.js中的导入是通过调用名为require的函数来执行的。<br>Node.js采取的行为将根据require是否给定相对路径或非相对路径而有所不同。</p>
+<p>相对路径相当简单。<br>例如，让我们考虑位于<code>/root/src/moduleA.js</code>的文件，其中包含import <code>var x = require(&quot;./ moduleB&quot;);</code><br>Node.js按以下顺序解析导入：</p>
+<ol>
+<li>询问名为<code>/root/src/moduleB.js</code>的文件（如果存在）。  </li>
+<li>询问文件夹<code>/root/src/moduleB</code>是否包含名为package.json的文件，该文件指定了”main”模块。在我们的示例中，如果Node.js找到包含<code>&#123;&quot;main&quot;: &quot;lib/mainModule.js&quot;&#125;</code>的文件<code>/root/src/moduleB/package.json</code>，那么Node.js将引用<code>/root/src/moduleB/lib/mainModule.js</code>。  </li>
+<li>询问文件夹&#x2F;root&#x2F;src&#x2F;moduleB是否包含名为index.js的文件。该文件被隐含地视为该文件夹的”main”模块。</li>
+</ol>
+<p>您可以在Node.js文档中了解有关文件模块和文件夹模块的更多信息。</p>
+<p>但是，非相对模块名称的解析以不同方式执行。<br>Node将在名为node_modules的特殊文件夹中查找模块。<br>node_modules文件夹可以与当前文件位于同一级别，或者在目录链中位于更高级别。<br>Node将走向目录链，查看每个node_modules，直到找到您尝试加载的模块。</p>
+<p>按照上面的示例，考虑是否<code>/root/src/moduleA.js</code>使用非相对路径并且导入<code>var x = require(&quot;moduleB&quot;);</code>然后，Node会尝试将moduleB解析到每个位置，直到一个工作。</p>
+<ul>
+<li>&#x2F;root&#x2F;src&#x2F;node_modules&#x2F;moduleB.js</li>
+<li>&#x2F;root&#x2F;src&#x2F;node_modules&#x2F;moduleB&#x2F;package.json (if it specifies a “main” property)</li>
+<li>&#x2F;root&#x2F;src&#x2F;node_modules&#x2F;moduleB&#x2F;index.js</li>
+<li>&#x2F;root&#x2F;node_modules&#x2F;moduleB.js</li>
+<li>&#x2F;root&#x2F;node_modules&#x2F;moduleB&#x2F;package.json (if it specifies a “main” property)</li>
+<li>&#x2F;root&#x2F;node_modules&#x2F;moduleB&#x2F;index.js</li>
+<li>&#x2F;node_modules&#x2F;moduleB.js</li>
+<li>&#x2F;node_modules&#x2F;moduleB&#x2F;package.json (if it specifies a “main” property)</li>
+<li>&#x2F;node_modules&#x2F;moduleB&#x2F;index.js</li>
+</ul>
+<p>请注意，Node.js在步骤(4)和(7)中跳过了一个目录。</p>
+<p>您可以在Node.js文档中阅读有关从node_modules加载模块的过程的更多信息。</p>
+<p><strong>TypeScript如何解析模块</strong></p>
+<p>TypeScript将模仿Node.js运行时解析策略，以便在编译时定位模块的定义文件。<br>为此，TypeScript通过Node的解析逻辑覆盖TypeScript源文件扩展名(.ts、.tsx和.d.ts)。<br>TypeScript还将使用package.json中名为”types”的字段来镜像”main”的目的 - 编译器将使用它来查找要查询的”main”定义文件。</p>
+<p>例如，<code>/root/src/moduleA.ts</code>中的<code>import &#123; b &#125; from &quot;./moduleB&quot;</code>等导入语句将导致尝试以下位置来定位”.&#x2F;moduleB”：</p>
+<ul>
+<li>&#x2F;root&#x2F;src&#x2F;moduleB.ts</li>
+<li>&#x2F;root&#x2F;src&#x2F;moduleB.tsx</li>
+<li>&#x2F;root&#x2F;src&#x2F;moduleB.d.ts</li>
+<li>&#x2F;root&#x2F;src&#x2F;moduleB&#x2F;package.json (if it specifies a “types” property)</li>
+<li>&#x2F;root&#x2F;src&#x2F;moduleB&#x2F;index.ts</li>
+<li>&#x2F;root&#x2F;src&#x2F;moduleB&#x2F;index.tsx</li>
+<li>&#x2F;root&#x2F;src&#x2F;moduleB&#x2F;index.d.ts</li>
+</ul>
+<p>回想一下，Node.js查找名为moduleB.js的文件，然后查找适用的package.json，然后查找index.js。</p>
+<p>类似地，非相对导入将遵循Node.js解析逻辑，首先查找文件，然后查找适用的文件夹。<br>因此，从源文件<code>/root/src/moduleA.ts</code>中的<code>import &#123; b &#125; from &quot;moduleB&quot;</code>将导致以下查找：</p>
+<ul>
+<li>&#x2F;root&#x2F;src&#x2F;node_modules&#x2F;moduleB.ts</li>
+<li>&#x2F;root&#x2F;src&#x2F;node_modules&#x2F;moduleB.tsx</li>
+<li>&#x2F;root&#x2F;src&#x2F;node_modules&#x2F;moduleB.d.ts</li>
+<li>&#x2F;root&#x2F;src&#x2F;node_modules&#x2F;moduleB&#x2F;package.json (if it specifies a “types” property)</li>
+<li>&#x2F;root&#x2F;src&#x2F;node_modules&#x2F;moduleB&#x2F;index.ts</li>
+<li>&#x2F;root&#x2F;src&#x2F;node_modules&#x2F;moduleB&#x2F;index.tsx</li>
+<li>&#x2F;root&#x2F;src&#x2F;node_modules&#x2F;moduleB&#x2F;index.d.ts</li>
+<li>&#x2F;root&#x2F;node_modules&#x2F;moduleB.ts</li>
+<li>&#x2F;root&#x2F;node_modules&#x2F;moduleB.tsx</li>
+<li>&#x2F;root&#x2F;node_modules&#x2F;moduleB.d.ts</li>
+<li>&#x2F;root&#x2F;node_modules&#x2F;moduleB&#x2F;package.json (if it specifies a “types” property)</li>
+<li>&#x2F;root&#x2F;node_modules&#x2F;moduleB&#x2F;index.ts</li>
+<li>&#x2F;root&#x2F;node_modules&#x2F;moduleB&#x2F;index.tsx</li>
+<li>&#x2F;root&#x2F;node_modules&#x2F;moduleB&#x2F;index.d.ts</li>
+<li>&#x2F;node_modules&#x2F;moduleB.ts</li>
+<li>&#x2F;node_modules&#x2F;moduleB.tsx</li>
+<li>&#x2F;node_modules&#x2F;moduleB.d.ts</li>
+<li>&#x2F;node_modules&#x2F;moduleB&#x2F;package.json (if it specifies a “types” property)</li>
+<li>&#x2F;node_modules&#x2F;moduleB&#x2F;index.ts</li>
+<li>&#x2F;node_modules&#x2F;moduleB&#x2F;index.tsx</li>
+<li>&#x2F;node_modules&#x2F;moduleB&#x2F;index.d.ts</li>
+</ul>
+<p>不要被这里的步骤数吓倒 - TypeScript仍然只在步骤(8)和(15)两次跳过目录。<br>这实际上并不比Node.js本身正在做的复杂。</p>
+<p><strong>附加模块分辨率标志</strong></p>
+<p>项目源布局有时与输出的布局不匹配。<br>通常，一组构建步骤会导致生成最终输出。<br>这些包括将.ts文件编译为.js，以及将不同源位置的依赖项复制到单个输出位置。<br>最终结果是运行时的模块可能具有与包含其定义的源文件不同的名称。<br>或者，在编译时，最终输出中的模块路径可能与其对应的源文件路径不匹配。</p>
+<p>TypeScript编译器具有一组附加标志，用于通知编译器预期发生在源上的转换以生成最终输出。</p>
+<p>重要的是要注意编译器不会执行任何这些转换;<br>它只是使用这些信息来指导将模块导入解析到其定义文件的过程。</p>
+<p>未完待续…</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1230,103 +1418,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/09/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%92%8C%E7%94%9F%E6%88%90%E5%99%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/09/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%92%8C%E7%94%9F%E6%88%90%E5%99%A8.html" class="post-title-link" itemprop="url">TypeScript基础入门之迭代器和生成器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-09 10:43:01 / 修改时间：10:53:07" itemprop="dateCreated datePublished" datetime="2025-07-09T10:43:01+08:00">2025-07-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="迭代性"><a href="#迭代性" class="headerlink" title="迭代性"></a>迭代性</h2><p>如果对象具有Symbol.iterator属性的实现，则该对象被视为可迭代。<br>一些内置类型，如Array，Map，Set，String，Int32Array，Uint32Array等，已经实现了Symbol.iterator属性。<br>对象上的Symbol.iterator函数负责返回值列表以进行迭代。</p>
-<h3 id="for-of语句"><a href="#for-of语句" class="headerlink" title="for..of语句"></a>for..of语句</h3><p><code>for..of</code>循环遍历可迭代对象，调用对象上的Symbol.iterator属性。下面是一个简单的for..of循环数组：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> someArray = [<span class="number">1</span>, <span class="string">&quot;string&quot;</span>, <span class="literal">false</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> entry <span class="keyword">of</span> someArray) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(entry); <span class="comment">// 1, &quot;string&quot;, false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="for-of-vs-for-in语句"><a href="#for-of-vs-for-in语句" class="headerlink" title="for..of vs. for..in语句"></a>for..of vs. for..in语句</h3><p><code>for..of</code>和<code>for..in</code>语句都遍历列表;迭代的值是不同的，for..in返回正在迭代的对象上的键列表，而for..of返回正在迭代的对象的数值属性的值列表。下面展示一个对比的例子：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list = [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">in</span> list) &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">log</span>(i); <span class="comment">// &quot;0&quot;, &quot;1&quot;, &quot;2&quot;,</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">of</span> list) &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">log</span>(i); <span class="comment">// &quot;4&quot;, &quot;5&quot;, &quot;6&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>另一个区别是<code>for..in</code>可以操作任何物体;它用作检查此对象的属性的方法。另一方面，<code>for..of</code>主要关注可迭代对象的值。Map和Set等内置对象实现了Symbol.iterator属性，允许访问存储的值。如下实例演示</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> pets = <span class="keyword">new</span> <span class="title class_">Set</span>([<span class="string">&quot;Cat&quot;</span>, <span class="string">&quot;Dog&quot;</span>, <span class="string">&quot;Hamster&quot;</span>]);</span><br><span class="line">pets[<span class="string">&quot;species&quot;</span>] = <span class="string">&quot;mammals&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> pet <span class="keyword">in</span> pets) &#123;</span><br><span class="line">   <span class="variable language_">console</span>.<span class="title function_">log</span>(pet); <span class="comment">// &quot;species&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> pet <span class="keyword">of</span> pets) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(pet); <span class="comment">// &quot;Cat&quot;, &quot;Dog&quot;, &quot;Hamster&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面这段代码我在运行的时候是报错了的，不知道是不是官方哪里弄错了，也可能是需要做另外一些配置。如果您也遇到了跟我一样的错误，请留言指导</p>
-<h2 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h2><p><em><strong>目标为 ES5 和 ES3</strong></em></p>
-<p>在针对ES5或ES3时，只允许在Array类型的值上使用迭代器。在非数组值上使用for循环是错误的，即使这些非数组值实现了Symbol.iterator属性也是如此。编译器将为<code>for..of</code>循环生成一个简单的for循环，例如：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> num <span class="keyword">of</span> numbers) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(num);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编译后生成的代码如下</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> _i = <span class="number">0</span>; _i &lt; numbers.<span class="property">length</span>; _i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> num = numbers[_i];</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(num);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在针对ECMAScipt 2015兼容引擎时，编译器将生成for..of循环以定位引擎中的内置迭代器实现。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/18/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/114/">114</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/20/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1337,6 +1428,8 @@
   <footer class="footer">
     <div class="footer-inner">
 
+  <div class="beian"><span class="exturl" data-url="aHR0cHM6Ly9iZWlhbi5taWl0Lmdvdi5jbg==">蒙ICP备18003023号-4 </span>
+  </div>
   <div class="copyright">
     &copy; 2014 – 
     <span itemprop="copyrightYear">2025</span>
