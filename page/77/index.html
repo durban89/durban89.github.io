@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1133</span>
+          <span class="site-state-item-count">1134</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">182</span>
+        <span class="site-state-item-count">184</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,98 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/Ubuntu-Server%E5%9C%A8-%E6%88%B4%E5%B0%94PowerEdge-12G-R420-R620-R720--%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/23/Ubuntu-Server%E5%9C%A8-%E6%88%B4%E5%B0%94PowerEdge-12G-R420-R620-R720--%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98.html" class="post-title-link" itemprop="url">Ubuntu  Server在 戴尔PowerEdge 12G(R420/R620/R720) 上的问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-23 15:27:19 / 修改时间：15:39:11" itemprop="dateCreated datePublished" datetime="2025-06-23T15:27:19+08:00">2025-06-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>DELL 12G(R420&#x2F;R620&#x2F;R720) 的服务器在安装 Ubuntu 的时候会出现诸多的问题，原先的 10.04.x LTS 版本已经不支持了，现在非官方还支持的有 12.04，不过依然有不少问题。根据这个帖子的描述，。<br>BIOS 会显示如下的 error log:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Critical CPU1 Status: Processor sensor <span class="keyword">for</span> CPU1, IERR was asserted</span><br><span class="line">Critical PCIE Fatal Err: Critical Event sensor, bus fatal error [Bus 1 Device 0 Function 0] was asserted</span><br></pre></td></tr></table></figure>
+
+<p>在 DELL 的官方博客上，我们也看到了其说明，DELL 12G 并不支持 Ubuntu 发型版本，但是其 12.04 LTS 及以后的版本可以通过修改一些东西来 workaround。</p>
+<p>BIOS 中将 power management 设置为 maximum performance，禁用掉 C-State。</p>
+<p>下面的就全是 ubuntu 这二货的 bug 了，难怪到现在 12G 的服务器也没出现在他的 certification 列表上。</p>
+<p>给 sb_edac 以及 i7core_edac(3.2.0-28.44 修复) 打上 patch 或者加入 blacklist:</p>
+<p>另外 acpi_pad(3.2.0-28.44 修复) 以及 mei(3.2.0-31.50 修复) 模块也要加到 blacklist 中，前者是电源节能的 driver，还在开发中，对于服务器来说也没有必要；后者在 watchdog timer 上会 。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat /etc/modprobe.d/blacklist-dell.conf</span></span><br><span class="line">blacklist acpi_pad</span><br><span class="line">blacklist mei</span><br><span class="line">blacklist sb_edac</span><br><span class="line">blacklist i7core_edac</span><br></pre></td></tr></table></figure>
+
+<p>这里有篇《Doing battle with a Dell R620 and Ubuntu》供欣赏 ;-)</p>
+<p>除了 10.04.x 外，debian-6.0.6 以及 CentOS-6.3 等都会出现一些问题，包括安装过程中找不到网卡(BCM5720)驱动，找不到 RAID 的驱动等问题。换成 Intel 的 I350 的网卡之后，可以找到网卡驱。<br>总之，Ubuntu 既然想做 server 版本，就要把他给做好，最重要的就是跟主流的硬件厂商(Dell, Hp)的支持程度，要么你就直接在网站上挂个『for test only』牌子让大家知道你做 server 只是玩玩？<br>另外一件搞笑的事，12.04 的 kernel 已经不区分 server 跟 generic 了，官方的理由是『便于维护』。默认的 I&#x2F;O 调度也变成了 cfq，这需要人肉改回 deadline；preemption model，tickless 等都会改变。好在这些影响对机器的性能应该不会太大。</p>
+<p>这里有一篇关于 12.04 的不完全测评，可以参考下。在不大可能换硬件的情况下，或者说即使换了硬件，二者的支持如果不和谐的话，我们只能换发型版本。</p>
+<p>结论：戴尔PowerEdge上不适合安装Ubuntu Server</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1141,92 +1233,6 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htmlspecialchars(): Invalid multibyte sequence <span class="keyword">in</span> argument</span><br></pre></td></tr></table></figure>
 
 <p>I have a simple solution for you: Turn <code>display_errors</code> on in your php.ini file!<br>It turns out there’s a weird bug that doesn’t appear to be getting fixed any time soon that causes <code>htmlspecialchars()</code> to display this error only when <code>display_errors</code> is set to Off.</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/20/Yii%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6-upload.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/20/Yii%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6-upload.html" class="post-title-link" itemprop="url">Yii上传文件 upload</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-20 14:33:39 / 修改时间：14:47:03" itemprop="dateCreated datePublished" datetime="2025-06-20T14:33:39+08:00">2025-06-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>yii常规post方式提交表单方式请参考：</p>
-<p><span class="exturl" data-url="aHR0cDovL3d3dy55aWljaGluYS5jb20vZm9ydW0vdG9waWMvNDUv">http://www.yiichina.com/forum/topic/45/<i class="fa fa-external-link-alt"></i></span></p>
-<p>除了常规post提交方式外，还有异步提交方式。<br>原理是使用iframe代替原来的页面跳转，大大提升用户体验。</p>
-<p>1，前端html代码</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">id</span>=<span class="string">&quot;upForm&quot;</span> <span class="attr">action</span>=<span class="string">&quot;&lt;?php echo $this-&gt;createUrl(&#x27;repairUpload&#x27;); ?&gt;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">enctype</span>    =<span class="string">&quot;multipart/form-data&quot;</span> <span class="attr">target</span>=<span class="string">&quot;upload_target&quot;</span>&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;repair_attached_file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;repair_attached_file&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;subm    it&quot;</span> <span class="attr">name</span>=<span class="string">&quot;submitBtn&quot;</span> <span class="attr">value</span>=<span class="string">&quot;立即上传&quot;</span> /&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">&quot;upload_target&quot;</span> <span class="attr">name</span>=<span class="string">&quot;upload_target&quot;</span> <span class="attr">src</span>=<span class="string">&quot;#&quot;</span> <span class="attr">style</span>=<span class="string">&quot;width:0;height:0;border:0px solid #fff;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span>  </span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">&quot;upload_repairinfo_success&quot;</span> <span class="attr">style</span>=<span class="string">&quot;color:blue;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>  </span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript">  </span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">startUpload</span>(<span class="params"></span>) &#123;  </span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> spanObj = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;upload_repairinfo_success&quot;</span>);  </span></span><br><span class="line"><span class="language-javascript">    spanObj.<span class="property">innerHTML</span> = <span class="string">&quot; 开始上传&quot;</span>;  </span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;upForm&quot;</span>).<span class="title function_">sumbit</span>();  </span></span><br><span class="line"><span class="language-javascript">&#125;  </span></span><br><span class="line"><span class="language-javascript"><span class="keyword">function</span> <span class="title function_">stopUpload</span>(<span class="params">responseText</span>)&#123;  </span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">var</span> spanObj = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;upload_repairinfo_success&quot;</span>);  </span></span><br><span class="line"><span class="language-javascript">    <span class="comment">//spanObj.innerHTML = &quot;上传成功&quot;;  </span></span></span><br><span class="line"><span class="language-javascript">    spanObj.<span class="property">innerHTML</span> = responseText;  </span></span><br><span class="line"><span class="language-javascript">&#125;  </span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>2、后端php代码</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">actionRepairUpload</span>(<span class="params"></span>)</span>&#123;  </span><br><span class="line">    <span class="variable">$attach</span> = <span class="title class_">CUploadedFile</span>::<span class="title function_ invoke__">getInstanceByName</span>(<span class="string">&#x27;repair_attached_file&#x27;</span>);  </span><br><span class="line">    <span class="variable">$retValue</span> = <span class="string">&quot;&quot;</span>;  </span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$attach</span>-&gt;size &gt; <span class="number">3</span>*<span class="number">1024</span>*<span class="number">1024</span>)&#123;  </span><br><span class="line">        <span class="variable">$retValue</span> = <span class="string">&quot;提示：文件大小不能超过3M&quot;</span>;  </span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;  </span><br><span class="line">        <span class="variable">$f</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$attach</span>-&gt;tempName);  </span><br><span class="line">        <span class="variable">$a</span> = <span class="keyword">new</span> <span class="title class_">Attachment</span>();  </span><br><span class="line">        <span class="variable">$a</span>-&gt;ref_type = <span class="string">&quot;failParts&quot;</span>;  </span><br><span class="line">        <span class="variable">$a</span>-&gt;data = <span class="variable">$f</span>;  </span><br><span class="line">        <span class="variable">$a</span>-&gt;file_path = <span class="variable">$attach</span>-&gt;name;  </span><br><span class="line">        <span class="variable">$a</span>-&gt;<span class="title function_ invoke__">save</span>();  </span><br><span class="line">        <span class="variable">$retValue</span> = <span class="variable">$a</span>-&gt;id;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;script type=&#x27;text/javascript&#x27;&gt;window.top.window.stopUpload(&#x27;<span class="subst">&#123;$retValue&#125;</span>&#x27;)&lt;/script&gt;&quot;</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>

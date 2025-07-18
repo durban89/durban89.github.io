@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1133</span>
+          <span class="site-state-item-count">1134</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">182</span>
+        <span class="site-state-item-count">184</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,101 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/%E8%A7%A3%E5%86%B3mongo-sort-operation-max.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/14/%E8%A7%A3%E5%86%B3mongo-sort-operation-max.html" class="post-title-link" itemprop="url">解决mongo sort operation max</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-14 16:27:53 / 修改时间：16:31:22" itemprop="dateCreated datePublished" datetime="2025-07-14T16:27:53+08:00">2025-07-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近使用mongodb进行统计查询，遇到了下面的错误提示</p>
+<blockquote>
+<p>mongo 错误提示:OperationFailed: Sort operation used more than the maximum 33554432 bytes of RAM. Add an index, or specify a smaller limit</p>
+</blockquote>
+<p>也许你遇到了跟我一样的问题，不知道如何解决</p>
+<p>其原因是</p>
+<blockquote>
+<p>Mongodb的sort操作是把数据拿到内存中再进行排序的，为了节约内存，默认给sort操作限制了最大内存为32Mb，当数据量越来越大直到超过32Mb的时候就自然抛出异常了.值得注意是,如果你使用 skip 和 limit 联合使用实际也会产生排序.</p>
+</blockquote>
+<p>下面是两种方式，仅供参考</p>
+<p>方法1:增加缓存</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//查询值</span><br><span class="line">db.runCommand(&#123; <span class="string">&quot;getParameter&quot;</span> : 1, <span class="string">&quot;internalQueryExecMaxBlockingSortBytes&quot;</span> : 1 &#125; )</span><br><span class="line">//设置新值</span><br><span class="line">db.adminCommand(&#123;<span class="string">&quot;setParameter&quot;</span>:1, <span class="string">&quot;internalQueryExecMaxBlockingSortBytes&quot;</span>:335544320&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>方法2:增加索引</p>
+<p>根据业务对排序的key进行建立索引</p>
+<p>我采用的方式是第二种方法</p>
+<p>参考文章，<span class="exturl" data-url="aHR0cHM6Ly9nY2xpbnV4LmdpdGh1Yi5pby8yMDE4LzAzLzAxL21vbmdvLXNvcnQtcmFtLWxpbWl0LWVycm9yLw==">点击这里<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1086,99 +1181,6 @@
 <p>答案</p>
 <hr>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type <span class="title class_">First</span>&lt;T <span class="keyword">extends</span> any[]&gt; = T <span class="keyword">extends</span> never[] ? never : T[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/14/%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8NestJS-%E5%8D%81%E4%BA%8C--%E6%8E%A7%E5%88%B6%E5%99%A8%E6%89%80%E6%9C%89%E8%AF%B7%E6%B1%82%E6%96%B9%E5%BC%8F%E5%AE%9E%E4%BE%8B.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/14/%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8NestJS-%E5%8D%81%E4%BA%8C--%E6%8E%A7%E5%88%B6%E5%99%A8%E6%89%80%E6%9C%89%E8%AF%B7%E6%B1%82%E6%96%B9%E5%BC%8F%E5%AE%9E%E4%BE%8B.html" class="post-title-link" itemprop="url">新手入门NestJS（十二）- 控制器所有请求方式实例</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-14 16:21:38 / 修改时间：16:42:26" itemprop="dateCreated datePublished" datetime="2025-07-14T16:21:38+08:00">2025-07-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>这里记录下使用Nest.js中，在控制器中如何添加所有请求方式的方法</p>
-<p>第一种请求方式Get</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title class_">Get</span>()</span><br><span class="line"><span class="title function_">findAll</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">&#x27;This action will return all dogs&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@<span class="title class_">Get</span>(<span class="string">&#x27;:id&#x27;</span>)</span><br><span class="line"><span class="title function_">findOne</span>(<span class="params">@Param(<span class="string">&#x27;id&#x27;</span>) id: string</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">`This action will return one <span class="subst">$&#123;id&#125;</span> dog`</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二种请求方式Post</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title class_">Post</span>()</span><br><span class="line"><span class="title function_">create</span>(<span class="params">@Body() createDogDto: CreateDogDto</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">`This action will add a dog`</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第三种请求方式Put</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title class_">Put</span>(<span class="string">&#x27;:id&#x27;</span>)</span><br><span class="line"><span class="title function_">update</span>(<span class="params">@Param(<span class="string">&#x27;id&#x27;</span>) id: string, @Body() updateDogDto: UpdateDogDto</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">`This action will update a dog`</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第四种请求方式Delete</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title class_">Delete</span>(<span class="string">&#x27;:id&#x27;</span>)</span><br><span class="line"><span class="title function_">remove</span>(<span class="params">@Param(<span class="string">&#x27;id&#x27;</span>) id: string</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">`This action will remote a dog`</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>完整的代码如下</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">Body</span>,</span><br><span class="line">  <span class="title class_">Controller</span>,</span><br><span class="line">  <span class="title class_">Delete</span>,</span><br><span class="line">  <span class="title class_">Get</span>,</span><br><span class="line">  <span class="title class_">Param</span>,</span><br><span class="line">  <span class="title class_">Post</span>,</span><br><span class="line">  <span class="title class_">Put</span>,</span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">CreateDogDto</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;src/create-dog.dto&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">UpdateDogDto</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;src/update-dog.dto&#x27;</span>;</span><br><span class="line"></span><br><span class="line">@<span class="title class_">Controller</span>(<span class="string">&#x27;dogs&#x27;</span>)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">DogsController</span> &#123;</span><br><span class="line">  @<span class="title class_">Get</span>()</span><br><span class="line">  <span class="title function_">findAll</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;This action will return all dogs&#x27;</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @<span class="title class_">Get</span>(<span class="string">&#x27;:id&#x27;</span>)</span><br><span class="line">  <span class="title function_">findOne</span>(<span class="params">@Param(<span class="string">&#x27;id&#x27;</span>) id: string</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`This action will return one <span class="subst">$&#123;id&#125;</span> dog`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @<span class="title class_">Post</span>()</span><br><span class="line">  <span class="title function_">create</span>(<span class="params">@Body() createDogDto: CreateDogDto</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`This action will add a dog`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @<span class="title class_">Put</span>(<span class="string">&#x27;:id&#x27;</span>)</span><br><span class="line">  <span class="title function_">update</span>(<span class="params">@Param(<span class="string">&#x27;id&#x27;</span>) id: string, @Body() updateDogDto: UpdateDogDto</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`This action will update a dog`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @<span class="title class_">Delete</span>(<span class="string">&#x27;:id&#x27;</span>)</span><br><span class="line">  <span class="title function_">remove</span>(<span class="params">@Param(<span class="string">&#x27;id&#x27;</span>) id: string</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">`This action will remote a dog`</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>

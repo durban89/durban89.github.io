@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1133</span>
+          <span class="site-state-item-count">1134</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">182</span>
+        <span class="site-state-item-count">184</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,91 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/02/KoaJS-2-0-0-%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/02/KoaJS-2-0-0-%E8%A1%A8%E5%8D%95%E6%8F%90%E4%BA%A4.html" class="post-title-link" itemprop="url">KoaJS 2.0.0 表单提交</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-02 11:31:55 / 修改时间：14:28:14" itemprop="dateCreated datePublished" datetime="2025-07-02T11:31:55+08:00">2025-07-02</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>对于koa2.0.0的表单提交如何处理，也是费了我很久的时间，在多次尝试与研究之下，可以这样来处理：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">proxy.post(<span class="string">&#x27;/admin/:path&#x27;</span>, (ctx, next) =&gt; &#123;</span><br><span class="line">  const url = ctx.config.hostDomain + <span class="string">&#x27;/admin/&#x27;</span> +ctx.params.path;</span><br><span class="line">  const options = &#123;</span><br><span class="line">    <span class="built_in">timeout</span>: ctx.config.httpTimeout,</span><br><span class="line">    method: ctx.request.method,</span><br><span class="line">    headers: ctx.request.headers,</span><br><span class="line">    data: ctx.request.body</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">return</span> next().<span class="keyword">then</span>(() =&gt; &#123;</span><br><span class="line">    const request = urllib.request(url, options);</span><br><span class="line">    return request.then( (data) =&gt; &#123;</span><br><span class="line">      ctx.body = data.data.toString()</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;).catch((err) =&gt; &#123;</span><br><span class="line">    console.log(err);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>我这里只是做了一个接口的调用，其实最重要的是在获得request后如何去进行对应的promise的操作和获取结果，这里其实很简单的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> request = urllib.<span class="title function_">request</span>(url, options);</span><br><span class="line">  <span class="keyword">return</span> request.<span class="title function_">then</span>( <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">    ctx.<span class="property">body</span> = data.<span class="property">data</span>.<span class="title function_">toString</span>()</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>注意这里的两个return操作，做完request的操作后，直接在开头进行一个return操作就可以了，这样body的值也回调过去了。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -568,7 +653,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>最近koajs更新了一个很重要的版本，就是2.0.0,虽然这个版本是一个还在开发中的版本，但是已经可以下载使用了，当然，我用来下，唉，遗憾的是，虽然koa更新了，但是对应的中间插件并没有更新，这个是为什么呢，其他中间件的人不积极呗，只能试用了下，最重要的一个就是，Router这个中间件，既然也没有更新，不兼容最新版本的koa，好吧，还有在issue中发现了两点，已经有人根据koa-router，自己写了一个koa-66,使用完还不错，下面正式记录一下：</p>
-<p>安装 <span class="exturl" data-url="bWFpbHRvOiYjMTA3OyYjMTExOyYjeDYxOyYjeDQwOyYjNTA7JiM0NjsmI3gzMDsmI3gyZTsmI3gzMDsmIzQ1OyYjOTc7JiN4NmM7JiMxMTI7JiN4Njg7JiN4NjE7JiM0NjsmI3gzMjs=">koa@2.0.0-alpha.2<i class="fa fa-external-link-alt"></i></span></p>
+<p>安装 <span class="exturl" data-url="bWFpbHRvOiYjMTA3OyYjMTExOyYjOTc7JiM2NDsmI3gzMjsmIzQ2OyYjeDMwOyYjNDY7JiM0ODsmI3gyZDsmIzk3OyYjeDZjOyYjeDcwOyYjeDY4OyYjeDYxOyYjNDY7JiN4MzI7">koa@2.0.0-alpha.2<i class="fa fa-external-link-alt"></i></span></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install koa@<span class="number">2.0</span><span class="number">.0</span>-alpha<span class="number">.2</span> --save</span><br></pre></td></tr></table></figure>
 
 <p>安装koa-66</p>
@@ -1052,109 +1137,6 @@
 
 <p>这里主要是函数区域部分，做了一个proxy处理，将所有的js和css文件转到webpack-dev-server服务端</p>
 <p>最后index.html文件里面的js和css静态文件照常处理就好，只要能解析到&#x2F;js&#x2F;out上面就好</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/01/Webpack%E5%88%86%E7%A6%BBcss%E5%8D%95%E7%8B%AC%E6%89%93%E5%8C%85.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/01/Webpack%E5%88%86%E7%A6%BBcss%E5%8D%95%E7%8B%AC%E6%89%93%E5%8C%85.html" class="post-title-link" itemprop="url">webpack分离css单独打包</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-01 15:25:05 / 修改时间：15:27:31" itemprop="dateCreated datePublished" datetime="2025-07-01T15:25:05+08:00">2025-07-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>这个操作很简单的，只需要一个插件就好了，就是extract-text-webpack-plugin</p>
-<p>1，安装extract-text-webpack-plugin</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnpm install extract-text-webpack-plugin --save-dev</span><br></pre></td></tr></table></figure>
-
-<p>2,配置文件添加对应配置</p>
-<p>首先require一下</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">ExtractTextPlugin</span> = <span class="built_in">require</span>(<span class="string">&quot;extract-text-webpack-plugin&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>plugins里面添加</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="title class_">ExtractTextPlugin</span>(<span class="string">&quot;styles.css&quot;</span>),</span><br></pre></td></tr></table></figure>
-
-<p>我这里如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">plugins</span>: [</span><br><span class="line">  <span class="keyword">new</span> webpack.<span class="property">optimize</span>.<span class="title class_">CommonsChunkPlugin</span>(<span class="string">&#x27;common.js&#x27;</span>),</span><br><span class="line">  <span class="keyword">new</span> <span class="title class_">ExtractTextPlugin</span>(<span class="string">&quot;styles.css&quot;</span>),</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
-
-<p>modules里面对css的处理修改为</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">test</span>:<span class="regexp">/\.css$/</span>, <span class="attr">loader</span>: <span class="title class_">ExtractTextPlugin</span>.<span class="title function_">extract</span>(<span class="string">&quot;style-loader&quot;</span>, <span class="string">&quot;css-loader&quot;</span>)&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>千万不要重复了，不然会不起作用的</p>
-<p>我这里如下：</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">module</span>: &#123;</span><br><span class="line">  <span class="attr">loaders</span>: [</span><br><span class="line">    &#123;<span class="attr">test</span>:<span class="regexp">/\.css$/</span>, <span class="attr">loader</span>: <span class="title class_">ExtractTextPlugin</span>.<span class="title function_">extract</span>(<span class="string">&quot;style-loader&quot;</span>, <span class="string">&quot;css-loader&quot;</span>)&#125;,</span><br><span class="line">    &#123;<span class="attr">test</span>: <span class="regexp">/\.scss$/</span>, <span class="attr">loader</span>: <span class="string">&quot;style!css!sass&quot;</span>&#125;,</span><br><span class="line">    &#123;<span class="attr">test</span>: <span class="regexp">/\.less$/</span>, <span class="attr">loader</span>: <span class="string">&quot;style!css!less&quot;</span>&#125;,</span><br><span class="line">  ]</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
-
-<p>3，在引入文件里面添加需要的css，【举例如下】</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;../less/app.less&#x27;</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;./bower_components/bootstrap-select/dist/css/bootstrap-select.min.css&#x27;</span>);</span><br><span class="line"><span class="built_in">require</span>(<span class="string">&#x27;./bower_components/fancybox/source/jquery.fancybox.css&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-
 
       
     </div>

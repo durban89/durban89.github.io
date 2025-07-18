@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1133</span>
+          <span class="site-state-item-count">1134</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">182</span>
+        <span class="site-state-item-count">184</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,127 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/23/PHP%E4%B8%ADPush-%E6%8E%A8%E9%80%81-%E6%8A%80%E6%9C%AF%E7%9A%84%E6%8E%A2%E8%AE%A8.html" class="post-title-link" itemprop="url">PHP中Push(推送)技术的探讨</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-23 16:26:40 / 修改时间：17:18:08" itemprop="dateCreated datePublished" datetime="2025-06-23T16:26:40+08:00">2025-06-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>随着人们对Web即时应用需求的不断上升，Server Push(推送)技术在聊天、消息提醒尤其是社交网络等方面开始兴起，成为实时应用的数据流核心。这篇日志试图探讨的便是各种适合于PHP的Push的实现方式以及其优劣。</p>
+<h3 id="1"><a href="#1" class="headerlink" title="什么是Server Push"></a><a href="#1">什么是Server Push</a></h3><p>想象在聊天应用中，如果使用传统的ajax来承担消息的传入，那么一般是通过每隔一定时间拉取一次信息的方式实现，但是其实这种方式有大量查询是浪费的。聊天等Web应用更需要服务器在特定时间来主动告知前端有新的消息(Push)，而不是前端每时每刻问服务器：“来消息了吗？”(Pull)。这也正是为什么这个技术常被叫做反向ajax。</p>
+<p>其他别名：Comet，反向Ajax</p>
+<h3 id="2"><a href="#2" class="headerlink" title="如何实现Push"></a><a href="#2">如何实现Push</a></h3><p>其实所谓的推送技术也没有多么复杂，目前从大类上有3种，一种仍然建立在ajax基础上，还有一种建立在框架基础上，最后一种抛弃了传统的HTTP协议，使用Flash或者HTML5的WebSockets技术。接下来将对这三种类别产生的不同的方式进行探讨。</p>
+<ol>
+<li>Ajax 长轮询</li>
+</ol>
+<p>Ajax长轮询从本质上来说仍然是一种pull，但是实时性较高，无用请求减少很多，是一种不错的Push实现方案。不过它只减少了网络上的无谓消耗。</p>
+<p>核心: 客户端发起一个ajax请求，服务端将请求搁置(pending)或者说挂起，直到到了超时时间(timeout)或需要推送时返回；客户端则等待ajax返回后处理数据，再发起下一个ajax请求。</p>
+<p>优点: 兼容性较高，实现简单</p>
+<p>缺点: 对于php这种语言来说，如果要做到实时，那么服务端就要承受大得多的压力，因为搁置到什么时候往往是不确定的，这就要php脚本每次搁置都进行一个while循环。<br>当然，如果服务器刷新每秒级，那尚可接受，只是实时性上退化了。</p>
+<p>注意: 浏览器有连接数限制。我得出的结论是如果当前页面上有一个ajax请求处于等待返回状态，那么其他ajax请求都会被搁置(Chrome, Firefox已测)。似乎跟页面标记有关，一个规范的HTML可以同时有多个请求。如果页面有一般ajax需求怎么办？解决方法是开个框架，框架中使在另一个域名下进行Comet长轮询，需要注意跨域问题。</p>
+<p>PHP实现:<span class="exturl" data-url="aHR0cDovL3RlY2gudGVjaHdlYi5jb20uY24vdGhyZWFkLTQzOTEwOC0xLTEuaHRtbA==">Jquery+php实现comet<i class="fa fa-external-link-alt"></i></span></p>
+<p>相关:<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvemFiY2QxMTcvYXJ0aWNsZS9kZXRhaWxzLzIwNjE2Njk=">Ajax跨域和js跨域解决方案<i class="fa fa-external-link-alt"></i></span></p>
+<ol start="2">
+<li>Frame 长连接</li>
+</ol>
+<p>受到ajax启发，出现了框架下的长连接。</p>
+<p>核心: Frame中发起一个普通请求，服务器将其搁置；需要推送时输出直接执行<br>脚本，然后继续保持连接。如果担心超时问题可以改成框架论询。</p>
+<p>优点: 与1一样具有高兼容特性</p>
+<p>缺点: 最大的问题是如果框架在载入，那么浏览器就好一直显示“载入中”，这就弱爆了(解决方法参见文末的相关阅读资源)。同样服务器也要能hold住大量循环……另外，是否有同域连接限制没测试。</p>
+<ol start="3">
+<li>Flash&#x2F;HTML5 WebSockets</li>
+</ol>
+<p>用flash来发起WebSockets，秒杀前面一切问题。</p>
+<p>优点: 标准化, RealTime, Push</p>
+<p>缺点: 服务器需要能应对WebSockets；还有如果既没有Flash又不支持HTML5的怎么办？</p>
+<p>PHP实现:<span class="exturl" data-url="aHR0cDovL25ldC50dXRzcGx1cy5jb20vdHV0b3JpYWxzL2phdmFzY3JpcHQtYWpheC9zdGFydC11c2luZy1odG1sNS13ZWJzb2NrZXRzLXRvZGF5Lw==">Start Using HTML5 WebSockets Today<i class="fa fa-external-link-alt"></i></span></p>
+<ol start="4">
+<li>使用兼容封装层(socket.io)</li>
+</ol>
+<p>以上每种方法都有优劣，那么终极解决方案便是合在一起！能WebSockets时候就WebSockets，不支持HTML5特性就退化到Flash，没有Flash则退化到Ajax长轮询。这也是我的Rainbowfish所采用的方式。</p>
+<p>优点: 高度封装，编写非常容易，几乎不需要关心如何去实现的。实时，超低负载，高并发。</p>
+<p>缺点: 其实算不上缺点，socket.io的服务器端要求是node.js，而不是php。</p>
+<p>个人看法: 如果你是独立主机，能运行程序，那么socket.io配合node.js是个非常高效的选择。为什么呢？因为它还可以避免php的服务端高负载。</p>
+<p>Rainbowfish的消息系统通过这种方式实现: 所有客户端都通过socket.io挂在nodejs服务器上(注意: 只是挂着，不需要任何循环，因为它是事件驱动的)；需要推送消息了，服务器就与nodejs通信(比如访问某个地址来实现)，告诉它推送什么消息到哪里；nodejs收到推送信号后，则通过socket.io实时传输数据给浏览器。这个其实也是一条单向的路，因为nodejs服务器不具备与php通信的能力，实际上也不需要，网页上直接连php就可以了。</p>
+<h3 id="3"><a href="#3" class="headerlink" title="结束语"></a><a href="#3">结束语</a></h3><p>事实上，第一个方法(Ajax Long Pull)是一个不错的方法，只是如果使用php完成的话服务器负载上有点大，但这其实是通病；而最后列举的socket.io方案完全避免了这个问题，因为它属于另一种架构，并且这种组合也可以配合几乎所有的脚本语言实现push。</p>
+<p>对于实时性要求非常高的应用，或许使用php实现实时部分并不是一个好的选择，将会面临非常大的服务器负载(可以通过编写支持等待事件的扩展来解决这个问题)；如果只是消息提示等，则可以调整服务器上刷新的间隔降低到秒的级别，负载尚可接受。不过无论哪种用途，配合那些非阻塞语言或许才是最好的选择。</p>
+<h3 id="4"><a href="#4" class="headerlink" title="相关阅读"></a><a href="#4">相关阅读</a></h3><p><span class="exturl" data-url="aHR0cDovL3d3dy56ZWl0b3VuLm5ldC9hcnRpY2xlcy9jb21ldF9hbmRfcGhwL3N0YXJ0">How to implement COMET with PHP<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL25ldC50dXRzcGx1cy5jb20vdHV0b3JpYWxzL2phdmFzY3JpcHQtYWpheC9zdGFydC11c2luZy1odG1sNS13ZWJzb2NrZXRzLXRvZGF5Lw==">Start Using HTML5 WebSockets Today<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvQ29tZXRfJTI4cHJvZ3JhbW1pbmclMjk=">Comet(Wikipedia)<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvemFiY2QxMTcvYXJ0aWNsZS9kZXRhaWxzLzIwNjE2Njk=">Ajax跨域和js跨域解决方案<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3RlY2gudGVjaHdlYi5jb20uY24vdGhyZWFkLTQzOTEwOC0xLTEuaHRtbA==">Jquery+php实现comet<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1140,114 +1261,6 @@
 <p>UsingStoreProductViewController.m</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  UsingStoreProductViewController.m</span></span><br><span class="line"><span class="comment">//  UsingStoreProduct</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by david on 13-9-23.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;UsingStoreProductViewController.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">UsingStoreProductViewController</span> ()</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UsingStoreProductViewController</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> indicatorView;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">    <span class="comment">//初始化一个按钮</span></span><br><span class="line">    <span class="built_in">UIButton</span> *button = [<span class="built_in">UIButton</span> buttonWithType:<span class="built_in">UIButtonTypeRoundedRect</span>];</span><br><span class="line">    [button setTitle:<span class="string">@&quot;前往寻艺 App Store&quot;</span> forState:<span class="built_in">UIControlStateNormal</span>];</span><br><span class="line">    [button setFrame:<span class="built_in">CGRectMake</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">200.0</span>, <span class="number">44.0</span>)];</span><br><span class="line">    [button setCenter:<span class="keyword">self</span>.view.center];</span><br><span class="line">    [<span class="keyword">self</span>.view addSubview:button];</span><br><span class="line">    [button addTarget:<span class="keyword">self</span></span><br><span class="line">               action:<span class="keyword">@selector</span>(openAppStore:)</span><br><span class="line">     forControlEvents:<span class="built_in">UIControlEventTouchUpInside</span>];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) openAppStore:(<span class="type">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> showIndicator];</span><br><span class="line">    <span class="comment">//初始化Product View Controller</span></span><br><span class="line">    <span class="built_in">SKStoreProductViewController</span> *storeProductViewController = [[<span class="built_in">SKStoreProductViewController</span> alloc] init];</span><br><span class="line">    <span class="comment">//配置View　Controller</span></span><br><span class="line">    [storeProductViewController setDelegate:<span class="keyword">self</span>];</span><br><span class="line">    [storeProductViewController loadProductWithParameters:@&#123;<span class="built_in">SKStoreProductParameterITunesItemIdentifier</span>:<span class="string">@&quot;685836302&quot;</span>&#125;</span><br><span class="line">                                          completionBlock:^(<span class="type">BOOL</span> result, <span class="built_in">NSError</span> *error)&#123;</span><br><span class="line">                                              <span class="keyword">if</span>(error)</span><br><span class="line">                                              &#123;</span><br><span class="line">                                                  <span class="built_in">NSLog</span>(<span class="string">@&quot;Error %@ with User Info %@.&quot;</span>, error, [error userInfo]);</span><br><span class="line">                                              &#125;</span><br><span class="line">                                              <span class="keyword">else</span></span><br><span class="line">                                              &#123;</span><br><span class="line">                                                  [<span class="keyword">self</span> hideIndicator];</span><br><span class="line">                                                  [<span class="keyword">self</span> presentViewController:storeProductViewController</span><br><span class="line">                                                                     animated:<span class="literal">YES</span></span><br><span class="line">                                                                   completion:<span class="literal">nil</span>];</span><br><span class="line">                                              &#125;</span><br><span class="line">                                          &#125;];</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) productViewControllerDidFinish:(<span class="built_in">SKStoreProductViewController</span> *)viewController</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> dismissViewControllerAnimated:<span class="literal">YES</span> completion:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)showIndicator</span><br><span class="line">&#123;</span><br><span class="line">    indicatorView = [[<span class="built_in">UIActivityIndicatorView</span> alloc] initWithActivityIndicatorStyle:<span class="built_in">UIActivityIndicatorViewStyleGray</span>];</span><br><span class="line">    indicatorView.autoresizingMask =</span><br><span class="line">    <span class="built_in">UIViewAutoresizingFlexibleTopMargin</span> | <span class="built_in">UIViewAutoresizingFlexibleBottomMargin</span></span><br><span class="line">    | <span class="built_in">UIViewAutoresizingFlexibleLeftMargin</span> | <span class="built_in">UIViewAutoresizingFlexibleRightMargin</span>;</span><br><span class="line">    [<span class="keyword">self</span>.view addSubview:indicatorView];</span><br><span class="line">    [indicatorView sizeToFit];</span><br><span class="line">    [indicatorView startAnimating];</span><br><span class="line">    indicatorView.center = <span class="keyword">self</span>.view.center;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)hideIndicator</span><br><span class="line">&#123;</span><br><span class="line">    [indicatorView stopAnimating];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)didReceiveMemoryWarning</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> didReceiveMemoryWarning];</span><br><span class="line">    <span class="comment">// Dispose of any resources that can be recreated.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/23/XCode%E5%AE%9E%E7%94%A8%E6%8F%92%E4%BB%B6.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/23/XCode%E5%AE%9E%E7%94%A8%E6%8F%92%E4%BB%B6.html" class="post-title-link" itemprop="url">XCode实用插件</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-23 15:48:58 / 修改时间：16:07:47" itemprop="dateCreated datePublished" datetime="2025-06-23T15:48:58+08:00">2025-06-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>IOS开发会遇到很多的问题，但是如果有一些好的插件的话，应该可以解决很多的问题的，尤其是在项目中，有了一些简便的插件，能够解决很大的问题。</p>
-<h3 id="1"><a href="#1" class="headerlink" title="全能搜索家CodePilot 2.0"></a><a href="#1">全能搜索家CodePilot 2.0</a></h3><p>你要找的是文件？是文件夹？是代码？Never Mind，CMD+SHIFT+X调出CodePilot，输入任何你想到搜的东西吧！想搜 appFinishLaunchingWithOptions？忘记咋拼了？没关系强大的代码搜索能力，appflaun一样也可以找到！超级强大的正则 匹配，匹配任何你所想！</p>
-<p>项目地址：<span class="exturl" data-url="aHR0cDovL2NvZGVwaWxvdC5jYy8=">http://codepilot.cc<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="2"><a href="#2" class="headerlink" title="Vim控必备的XVim"></a><a href="#2">Vim控必备的XVim</a></h3><p>XVim是一个针对Xcode的Vim插件，能让开发者在不放弃任何xcode功能的前提下体验vim的功能。</p>
-<p>项目地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0p1Z2dsZXJTaHUvWFZpbQ==">https://github.com/JugglerShu/XVim<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="3"><a href="#3" class="headerlink" title="YouCompleteMe（vim的插件）"></a><a href="#3">YouCompleteMe（vim的插件）</a></h3><p>如果你比较喜欢用vim来写代码的话，这里有一个非常棒的vim插件——YouCompleteMe——当你在编写OC代码时，可以提升体验。 YouCompleteMe可以在Vim中添加代码自动补全功能，并且不需要你来按某个键来查看代码补全建议——针对OC、OC++、C++以及C该插件 可以自动补全建议。</p>
-<p>项目地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL1ZhbGxvcmljL1lvdUNvbXBsZXRlTWU=">https://github.com/Valloric/YouCompleteMe<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="4"><a href="#4" class="headerlink" title="XCode颜色显示插件ColorSense"></a><a href="#4">XCode颜色显示插件ColorSense</a></h3><p>代码里的那些冷冰冰的颜色数值，到底时什么颜色？如果你经常遇到这个问题，每每不得不运行下模拟器去看看，那么这个插件绝对不容错过。更彪悍的是你甚至可以点击显示的颜色面板，直接通过系统的ColorPicker来自动生成对应颜色代码，再也不用做各种颜色代码转换了！</p>
-<p>项目地址： <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL29tei9Db2xvclNlbnNlLWZvci1YY29kZQ==">https://github.com/omz/ColorSense-for-Xcode<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="5"><a href="#5" class="headerlink" title="大段文本利器HOStringSense"></a><a href="#5">大段文本利器HOStringSense</a></h3><p>经常输入大段文本的时候，如果文本里面有各种换行和特殊字符，经常会让人很头疼，有了HOStringSense，再也不不用为这个问题犯愁了，顺便附送字数统计功能。</p>
-<p>项目地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2hvbHR3aWNrL0hPU3RyaW5nU2Vuc2UtZm9yLVhjb2Rl">https://github.com/holtwick/HOStringSense-for-Xcode<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="6"><a href="#6" class="headerlink" title="规范注释生成器VVDocumenter"></a><a href="#6">规范注释生成器VVDocumenter</a></h3><p>很多时候，为了快速开发，很多的技术文档都是能省则省，这个时候注释就变得异常重要，再配合Doxygen这种注释自动生成文档的，就完美了。但 是每次都要手动输入规范化的注释，着实也麻烦，但有了VVDocumenter，规范化的注释，主需要输入三个斜线“&#x2F;&#x2F;&#x2F;”，就OK啦！ （VVDocumenter在Mac OSX 10.8.5和Xcode 4.6.3上进行开发，应该能支持所有Xcode 4版本，如果想支持Xcode 5，可以对plist文件稍作修改。</p>
-<p>项目地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL29uZXZjYXQvVlZEb2N1bWVudGVyLVhjb2Rl">https://github.com/onevcat/VVDocumenter-Xcode<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="7"><a href="#7" class="headerlink" title="CocoaPods for Xcode"></a><a href="#7">CocoaPods for Xcode</a></h3><p>非常方便的Xcode pods插件。可以很方便的在Xcode通过pods安装各种objective-c第三方库，省去以前还要手动去跑pods命令行的麻烦；此外，还支持 通过cocoaDocs来安装库文档。唯一的遗憾是，它目前只支持Xcode5，4版本还用不了。</p>
-<p>项目地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2thdHRyYWxpL2NvY29hcG9kcy14Y29kZS1wbHVnaW4=">https://github.com/kattrali/cocoapods-xcode-plugin<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="8"><a href="#8" class="headerlink" title="Xcode语法高亮插件"></a><a href="#8">Xcode语法高亮插件</a></h3><p>以前用eclipse开发，自带的有语法高亮的效果。做ios开发也许久了，但是没发现一款语法高亮的插件，因为xcode自己的效果是仅在变量 或类名下面加了个虚线，平时看起代码来十分不舒服，最近果断为xcode写了一款语法高亮的插件，不过功能非常有限，没有eclipse的那么好用，也没 对对象的作用域区分，勉强能使用吧。和有需要的分享一下吧。</p>
-<p>下载附件，解压后放在：你的用户&#x2F;Library&#x2F;Application Support&#x2F;Developer&#x2F;Shared&#x2F;Xcode&#x2F;Plug-ins目录下，有的童鞋还没有Plug-ins这个目录吧，那就手动建一个， 然后把解压后的highlight-Plugin.xcplugin放进去，重启xcode即可。然后就能看到高亮的菜单了。</p>
-<p>项目地址： <span class="exturl" data-url="aHR0cDovL3d3dy5jb2NvYWNoaW5hLmNvbS9iYnMvcmVhZC5waHA/dGlkPTE1MDEwNw==">http://www.cocoachina.com/bbs/read.php?tid=150107<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="9"><a href="#9" class="headerlink" title="KSImageNamed-Xcode"></a><a href="#9">KSImageNamed-Xcode</a></h3><p>为项目中使用的UIImage的imageNamed提供文件名自动补全功能。使用[UIImage imageNamed:@”xxx”]时，该插件会扫描整个workspace中的图片文件。</p>
-<p>项目地址： <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2tzdXRoZXIvS1NJbWFnZU5hbWVkLVhjb2Rl">https://github.com/ksuther/KSImageNamed-Xcode<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="10"><a href="#10" class="headerlink" title="xcode-extend-plug-in"></a><a href="#10">xcode-extend-plug-in</a></h3><p>帮助你快速格式化代码、生成注释、复制一行等。</p>
-<p>项目地址： <span class="exturl" data-url="aHR0cHM6Ly9jb2RlLmdvb2dsZS5jb20vcC94Y29kZS1leHRlbmQtcGx1Zy1pbi8=">https://code.google.com/p/xcode-extend-plug-in/<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="11"><a href="#11" class="headerlink" title="XcodeColors"></a><a href="#11">XcodeColors</a></h3><p>改变调试控制台颜色</p>
-<p>项目地址： <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3JvYmJpZWhhbnNvbi9YY29kZUNvbG9ycw==">https://github.com/robbiehanson/XcodeColors<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="12"><a href="#12" class="headerlink" title="SCXcodeMiniMap"></a><a href="#12">SCXcodeMiniMap</a></h3><p>一个Xcode插件，可以在当前的窗口内创建一个代码迷你地图，并在屏幕上高亮提示。</p>
-<p>项目地址： <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3N0ZWZhbmNlcml1L1NDWGNvZGVNaW5pTWFw">https://github.com/stefanceriu/SCXcodeMiniMap<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="13"><a href="#13" class="headerlink" title="Lin本地化字符串"></a><a href="#13">Lin本地化字符串</a></h3><p>之前我们提到过一个开源的Mac基础工具SCStringsUtility，可以让你在一个清爽的界面编辑不同的语言，简单地输入&#x2F;输出 NSLocalizedString数据。Lin是一款功能相近的Xcode插件，提供了一个非常不错的操作界面，并且为不同的语言提供了不同的区域。</p>
-<p>项目地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3F1ZXN0YmVhdC9MaW4=">https://github.com/questbeat/Lin<i class="fa fa-external-link-alt"></i></span></p>
-<h3 id="14"><a href="#14" class="headerlink" title="插件管理Alcatraz"></a><a href="#14">插件管理Alcatraz</a></h3><p>Alcatraz是一个开源的Xcode 4包管理器，可以让你更便捷地发现、安装以及管理插件、模板和配色方案。只需要简单地点击或者勾选，不需要手工复制和粘贴。</p>
-<p>项目地址： <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL21uZW9yci9BbGNhdHJheg==">https://github.com/mneorr/Alcatraz<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>

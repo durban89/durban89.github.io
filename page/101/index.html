@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1133</span>
+          <span class="site-state-item-count">1134</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">182</span>
+        <span class="site-state-item-count">184</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,94 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/%E5%8E%BB%E6%8E%89UITableViewCell%E8%BE%B9%E6%A1%86%E6%A0%B7%E5%BC%8F.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/12/%E5%8E%BB%E6%8E%89UITableViewCell%E8%BE%B9%E6%A1%86%E6%A0%B7%E5%BC%8F.html" class="post-title-link" itemprop="url">去掉UITableViewCell边框样式</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-12 17:19:10 / 修改时间：17:29:25" itemprop="dateCreated datePublished" datetime="2025-06-12T17:19:10+08:00">2025-06-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="1"><a href="#1" class="headerlink" title="方法 1:"></a><a href="#1">方法 1:</a></h3><p>如果，UITableView的类型为UITableViewStyleGrounped，发现使用<code>_tableView.backgroundColor = [UIColor clearColor]</code>后，tableView的背景色仍然是默认的色，上网查了下：<br><code>_tableView.backgroundView = nil;</code>可以搞定。<br>测试下发现确实可以，但是不知道以前的版本不确定有没有backgroundView的，所以最好加个判断吧：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (mainTableView.backgroundView)</span><br><span class="line">&#123;</span><br><span class="line">    mainTableView.backgroundView =<span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果类型为UITableViewStylePlain，[UIColor clearColor]仍然有效，怪哉！<br>正常情况下grouped样式（UITableViewStyleGrouped）UITableViewCell都是有边框的，如果要去掉边框可以用：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UIView</span> *tempView = [[[<span class="built_in">UIView</span> alloc] init] autorelease];</span><br><span class="line">[cell setBackgroundView:tempView];</span><br><span class="line">[cell setBackgroundColor:[<span class="built_in">UIColor</span> clearColor]];</span><br></pre></td></tr></table></figure>
+
+<p>其实很简单，把backgroundView设置为一个空的View，然后就干净了。看了下UITableViewCell的文档，backgroundView在plain-style的TableView里面是nil，在grouped-style的TableView里面并不是空的，所以这里设置空就ok了，这是目前为止我见到的最完美的解决方案。</p>
+<h3 id="2"><a href="#2" class="headerlink" title="方法 2:"></a><a href="#2">方法 2:</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[tableView setSeparatorColor:[<span class="built_in">UIColor</span> clearColor]];</span><br></pre></td></tr></table></figure>
+
+<h3 id="3"><a href="#3" class="headerlink" title="方法 3:"></a><a href="#3">方法 3:</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cell.backgroundView = [[[<span class="built_in">UIView</span> alloc] initWithFrame:<span class="built_in">CGRectZero</span>] autorelease];</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1040,87 +1128,6 @@
 <li>Apple Documentation: <span class="exturl" data-url="aHR0cDovL2RldmVsb3Blci5hcHBsZS5jb20vaXBob25lL2xpYnJhcnkvZG9jdW1lbnRhdGlvbi9VSUtpdC9SZWZlcmVuY2UvVUlCYXJCdXR0b25JdGVtX0NsYXNzL1JlZmVyZW5jZS9SZWZlcmVuY2UuaHRtbCMvYXBwbGVfcmVmL2RvYy91aWQvVFA0MDAwNzUxOS1DSDMtU1cz">UIBarButtonItem Class Reference<i class="fa fa-external-link-alt"></i></span> says “Typically, the size of a toolbar and navigation bar image is 20 x 20 points.”</li>
 <li>Apple Documentation: <span class="exturl" data-url="aHR0cDovL2RldmVsb3Blci5hcHBsZS5jb20vaXBob25lL2xpYnJhcnkvZG9jdW1lbnRhdGlvbi9VSUtpdC9SZWZlcmVuY2UvVUlUYWJCYXJJdGVtX0NsYXNzL1JlZmVyZW5jZS9SZWZlcmVuY2UuaHRtbCMvYXBwbGVfcmVmL29jYy9pbnN0bS9VSVRhYkJhckl0ZW0vaW5pdFdpdGhUaXRsZTppbWFnZTp0YWc6">UITabBarItem Class Reference<i class="fa fa-external-link-alt"></i></span> says “The size of an tab bar image is typically 30 x 30 points.”</li>
 </ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/12/RDF-Site-Summary-1.0-Modules-Syndication.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/12/RDF-Site-Summary-1.0-Modules-Syndication.html" class="post-title-link" itemprop="url">RDF Site Summary 1.0 Modules: Syndication（RSS联合模块）</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-12 11:49:47 / 修改时间：15:27:14" itemprop="dateCreated datePublished" datetime="2025-06-12T11:49:47+08:00">2025-06-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>RDF Site Summary 1.0 Modules: Syndication</p>
-<p>举个例子:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span> </span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">rdf:RDF</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">xmlns:rdf</span>=<span class="string">&quot;http://www.w3.org/1999/02/22-rdf-syntax-ns#&quot;</span> </span></span><br><span class="line"><span class="tag">  <span class="attr">xmlns:sy</span>=<span class="string">&quot;http://purl.org/rss/1.0/modules/syndication/&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xmlns</span>=<span class="string">&quot;http://purl.org/rss/1.0/&quot;</span></span></span><br><span class="line"><span class="tag">&gt;</span> </span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">channel</span> <span class="attr">rdf:about</span>=<span class="string">&quot;http://meerkat.oreillynet.com/?_fl=rss1.0&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Meerkat<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span>&gt;</span>http://meerkat.oreillynet.com<span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>Meerkat: An Open Wire Service<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">sy:updatePeriod</span>&gt;</span>hourly<span class="tag">&lt;/<span class="name">sy:updatePeriod</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">sy:updateFrequency</span>&gt;</span>2<span class="tag">&lt;/<span class="name">sy:updateFrequency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">sy:updateBase</span>&gt;</span>2000-01-01T12:00+00:00<span class="tag">&lt;/<span class="name">sy:updateBase</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">image</span> <span class="attr">rdf:resource</span>=<span class="string">&quot;http://meerkat.oreillynet.com/icons/meerkat-powered.jpg&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">items</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">rdf:Seq</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">rdf:li</span> <span class="attr">resource</span>=<span class="string">&quot;http://c.moreover.com/click/here.pl?r123&quot;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">rdf:Seq</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">items</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">textinput</span> <span class="attr">rdf:resource</span>=<span class="string">&quot;http://meerkat.oreillynet.com&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;/<span class="name">channel</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">image</span> <span class="attr">rdf:about</span>=<span class="string">&quot;http://meerkat.oreillynet.com/icons/meerkat-powered.jpg&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Meerkat Powered!<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://meerkat.oreillynet.com/icons/meerkat-powered.jpg<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span>&gt;</span>http://meerkat.oreillynet.com<span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">item</span> <span class="attr">rdf:about</span>=<span class="string">&quot;http://c.moreover.com/click/here.pl?r123&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>XML: A Disruptive Technology<span class="tag">&lt;/<span class="name">title</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span>&gt;</span>http://c.moreover.com/click/here.pl?r123<span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span></span><br><span class="line">      XML is placing increasingly heavy loads on the existing technical</span><br><span class="line">      infrastructure of the Internet.</span><br><span class="line">    <span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">item</span>&gt;</span> </span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">textinput</span> <span class="attr">rdf:about</span>=<span class="string">&quot;http://meerkat.oreillynet.com&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Search Meerkat<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>Search Meerkat&#x27;s RSS Database...<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>s<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span>&gt;</span>http://meerkat.oreillynet.com/<span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">textinput</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">rdf:RDF</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
       
     </div>

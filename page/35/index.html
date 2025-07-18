@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1133</span>
+          <span class="site-state-item-count">1134</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">182</span>
+        <span class="site-state-item-count">184</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,112 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/Nodejs-%E4%B9%8B-Koa2-%E6%B7%BB%E5%8A%A0travis-ci-%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%B7%A5%E5%85%B7.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/03/Nodejs-%E4%B9%8B-Koa2-%E6%B7%BB%E5%8A%A0travis-ci-%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%B7%A5%E5%85%B7.html" class="post-title-link" itemprop="url">Nodejs 之 Koa2 添加travis ci 持续集成工具</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-07-03 16:50:05" itemprop="dateCreated datePublished" datetime="2025-07-03T16:50:05+08:00">2025-07-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-07-08 09:41:02" itemprop="dateModified" datetime="2025-07-08T09:41:02+08:00">2025-07-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近使用koa2做项目测试开发，想整合下travis ci,网上资料也比较少，于是自己就整了个，做个记录。</p>
+<p>先来看下travis.yml的配置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">language:</span> <span class="string">node_js</span></span><br><span class="line"><span class="attr">node_js:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&quot;6&quot;</span></span><br><span class="line"><span class="attr">before_script:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">./node_modules/.bin/knex</span> <span class="string">migrate:latest</span> <span class="string">--knexfile=&#x27;./app/knexfile.js&#x27;</span></span><br><span class="line"><span class="attr">script:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">npm</span> <span class="string">run</span> <span class="string">test</span></span><br></pre></td></tr></table></figure>
+
+<p>因为是接口测试，所以首先需要做表创建等操作。</p>
+<p>测试的命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NODE_ENV=production NODE_CONFIG_DIR=<span class="string">&#x27;./app/config/&#x27;</span> ./node_modules/.bin/mocha --require <span class="string">&#x27;babel-polyfill&#x27;</span> --compilers js:babel-register  ./app/test/**/*.js</span><br></pre></td></tr></table></figure>
+
+<p>主要是测试这里，使用了supertest，大概看下是如何调用的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> request = <span class="built_in">require</span>(<span class="string">&#x27;supertest&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> should = <span class="built_in">require</span>(<span class="string">&#x27;should&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> index = <span class="built_in">require</span>(<span class="string">&#x27;../../index&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> app = <span class="title function_">request</span>(index.<span class="title function_">listen</span>());</span><br><span class="line"></span><br><span class="line"><span class="title function_">describe</span>(<span class="string">&#x27;/api/persons&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> personId;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;POST /api/persons - create person success and respond with 200&#x27;</span>, <span class="keyword">function</span>(<span class="params">done</span>) &#123;</span><br><span class="line">    app.<span class="title function_">post</span>(<span class="string">&#x27;/api/persons&#x27;</span>)</span><br><span class="line">      .<span class="title function_">send</span>(&#123;</span><br><span class="line">        <span class="string">&#x27;firstName&#x27;</span>: <span class="string">&#x27;Jennifer&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;lastName&#x27;</span>: <span class="string">&#x27;Lawrence&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;age&#x27;</span>: <span class="number">24</span></span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">200</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="keyword">function</span>(<span class="params">res</span>) &#123;</span><br><span class="line">        (res.<span class="property">body</span>.<span class="property">id</span> &gt; <span class="number">0</span>).<span class="property">should</span>.<span class="property">be</span>.<span class="property">true</span>;</span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">end</span>(<span class="keyword">function</span>(<span class="params">err, res</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">done</span>(err);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> resJson = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(res.<span class="property">text</span>);</span><br><span class="line">        personId = resJson.<span class="property">id</span>;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">done</span>();</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;GET /api/persons - fetch persons item&#x27;</span>, <span class="keyword">function</span>(<span class="params">done</span>) &#123;</span><br><span class="line">    app.<span class="title function_">get</span>(<span class="string">&#x27;/api/persons&#x27;</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">200</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="keyword">function</span>(<span class="params">res</span>) &#123;</span><br><span class="line">        (res.<span class="property">body</span>.<span class="property">length</span> &gt; <span class="number">0</span>).<span class="property">should</span>.<span class="property">be</span>.<span class="property">true</span>;</span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">end</span>(<span class="keyword">function</span>(<span class="params">err, res</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">done</span>(err);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">done</span>();</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;GET /api/persons/:id - fetch a person&#x27;</span>, <span class="keyword">function</span>(<span class="params">done</span>) &#123;</span><br><span class="line">    app.<span class="title function_">get</span>(<span class="string">`/api/persons/<span class="subst">$&#123;personId&#125;</span>`</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">200</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="keyword">function</span>(<span class="params">res</span>) &#123;</span><br><span class="line">        (res.<span class="property">body</span>.<span class="property">id</span> == personId).<span class="property">should</span>.<span class="property">be</span>.<span class="property">true</span>;</span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">end</span>(<span class="keyword">function</span>(<span class="params">err, res</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">done</span>(err);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">done</span>();</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;DELETE /api/persons/:id - delete a person&#x27;</span>, <span class="keyword">function</span>(<span class="params">done</span>) &#123;</span><br><span class="line">    app.<span class="title function_">delete</span>(<span class="string">`/api/persons/<span class="subst">$&#123;personId&#125;</span>`</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">200</span>)</span><br><span class="line">      .<span class="title function_">end</span>(<span class="keyword">function</span>(<span class="params">err, res</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">done</span>(err);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">done</span>();</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="title function_">it</span>(<span class="string">&#x27;GET /api/persons/:id - fetch a person should 404&#x27;</span>, <span class="keyword">function</span>(<span class="params">done</span>) &#123;</span><br><span class="line">    app.<span class="title function_">get</span>(<span class="string">`/api/persons/<span class="subst">$&#123;personId&#125;</span>`</span>)</span><br><span class="line">      .<span class="title function_">expect</span>(<span class="number">404</span>)</span><br><span class="line">      .<span class="title function_">end</span>(<span class="keyword">function</span>(<span class="params">err, res</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (err) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">done</span>(err);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">done</span>();</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里主要注意的是</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> index = <span class="built_in">require</span>(<span class="string">&#x27;../../index&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>需要将koa实例暴漏出来，不然在做travis ci的集成后，启动了项目，测试的时候依然找不到具体访问地址。</p>
+<p>来看下我的index.js</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Knex</span> <span class="keyword">from</span> <span class="string">&#x27;knex&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;</span><br><span class="line">  <span class="title class_">Model</span></span><br><span class="line">&#125; <span class="keyword">from</span> <span class="string">&#x27;objection&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> knexConfig <span class="keyword">from</span> <span class="string">&#x27;./knexfile&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">&#x27;config&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="title class_">Koa</span> <span class="keyword">from</span> <span class="string">&#x27;koa&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> koaLogger <span class="keyword">from</span> <span class="string">&#x27;koa-logger&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> bodyParser <span class="keyword">from</span> <span class="string">&#x27;koa-bodyparser&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> render <span class="keyword">from</span> <span class="string">&#x27;koa-ejs&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> co <span class="keyword">from</span> <span class="string">&#x27;co&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> koaStatic <span class="keyword">from</span> <span class="string">&quot;koa2-static&quot;</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;./router&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// initial knex</span></span><br><span class="line"><span class="keyword">const</span> knex = <span class="title class_">Knex</span>(knexConfig.<span class="property">development</span>);</span><br><span class="line"><span class="title class_">Model</span>.<span class="title function_">knex</span>(knex);</span><br><span class="line"></span><br><span class="line"><span class="comment">// initial app</span></span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> <span class="title class_">Koa</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// initial render</span></span><br><span class="line"><span class="title function_">render</span>(app, &#123;</span><br><span class="line">  <span class="attr">root</span>: path.<span class="title function_">join</span>(__dirname + <span class="string">&#x27;/view&#x27;</span>),</span><br><span class="line">  <span class="attr">layout</span>: <span class="string">&#x27;template&#x27;</span>,</span><br><span class="line">  <span class="attr">viewExt</span>: <span class="string">&#x27;ejs&#x27;</span>,</span><br><span class="line">  <span class="attr">cache</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">debug</span>: <span class="literal">true</span></span><br><span class="line">&#125;);</span><br><span class="line">app.<span class="property">context</span>.<span class="property">render</span> = co.<span class="title function_">wrap</span>(app.<span class="property">context</span>.<span class="property">render</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// initial static</span></span><br><span class="line"></span><br><span class="line">app.<span class="title function_">use</span>(<span class="title function_">koaLogger</span>())</span><br><span class="line">  .<span class="title function_">use</span>(<span class="title function_">bodyParser</span>())</span><br><span class="line">  .<span class="title function_">use</span>(router.<span class="title function_">routes</span>())</span><br><span class="line">  .<span class="title function_">use</span>(<span class="title function_">koaStatic</span>(&#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/web&#x27;</span>,</span><br><span class="line">    <span class="attr">root</span>: __dirname + <span class="string">&quot;/../static&quot;</span></span><br><span class="line">  &#125;));</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = app;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是这里的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = app;</span><br></pre></td></tr></table></figure>
+
+<p>暴漏出来，再supertest中才可以独立启动server测试。好的不明白的加群聊聊吧。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1109,98 +1215,6 @@
 <p>比较有用的参数:</p>
 <p>cron_restart:定时启动，解决重启能解决的问题</p>
 <p>max_memory_restart：解决内容不够用的问题，不过会有风险【数据丢失】</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/03/React-Router-%E4%B9%8B-routerWillLeave-%E5%AE%9E%E7%8E%B0-%E8%87%AA%E5%AE%9A%E4%B9%89Dialog.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/03/React-Router-%E4%B9%8B-routerWillLeave-%E5%AE%9E%E7%8E%B0-%E8%87%AA%E5%AE%9A%E4%B9%89Dialog.html" class="post-title-link" itemprop="url">react-router 之 routerWillLeave 实现 自定义Dialog</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-03 11:59:44 / 修改时间：12:02:12" itemprop="dateCreated datePublished" datetime="2025-07-03T11:59:44+08:00">2025-07-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>react-router 可以在 react中起到路由的作用，同时也有一个routerWillLeave，这个函数帮助我们再处理路由的时候，离开某个路由要做的某个判断起到了很好的作用，但是version 2 才有这个功能，这里记录下如何自定自己弹出框。</p>
-<p>由于react-router自带的功能不是很好，需要我们自己处理一下，于是google参考了stackoverflow上的一篇文章，先建立一个函数</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">setAsyncRouteLeaveHook</span>(<span class="params">router, route, hook</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> withinHook = <span class="literal">false</span></span><br><span class="line">  <span class="keyword">let</span> finalResult = <span class="literal">undefined</span></span><br><span class="line">  <span class="keyword">let</span> finalResultSet = <span class="literal">false</span></span><br><span class="line">  router.<span class="title function_">setRouteLeaveHook</span>(route, <span class="function"><span class="params">nextLocation</span> =&gt;</span> &#123;</span><br><span class="line">    withinHook = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">if</span> (!finalResultSet) &#123;</span><br><span class="line">      <span class="title function_">hook</span>(nextLocation).<span class="title function_">then</span>(<span class="function"><span class="params">result</span> =&gt;</span> &#123;</span><br><span class="line">        finalResult = result</span><br><span class="line">        finalResultSet = <span class="literal">true</span></span><br><span class="line">        <span class="keyword">if</span> (!withinHook &amp;&amp; nextLocation) &#123;</span><br><span class="line">          router.<span class="title function_">replace</span>(nextLocation)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> result = finalResultSet ? finalResult : <span class="literal">false</span></span><br><span class="line">    withinHook = <span class="literal">false</span></span><br><span class="line">    finalResult = <span class="literal">undefined</span></span><br><span class="line">    finalResultSet = <span class="literal">false</span></span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>原来的push，我这里改成了replace，为了适合我自己的逻辑。</p>
-<p>然后添加一下routerWillLeave的逻辑</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">routerWillLeave</span>(<span class="params">nextLocation</span>) &#123;</span><br><span class="line">    <span class="comment">//获取红包相关的信息</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="title class_">Popbox</span>.<span class="title function_">pop</span>(&#123;</span><br><span class="line">        <span class="attr">text</span>: <span class="string">&#x27;你离使用红包只差一步之遥，确定放弃吗？&#x27;</span>,</span><br><span class="line">        <span class="attr">confirmBtnText</span>: <span class="string">&#x27;继续绑卡&#x27;</span>,</span><br><span class="line">        <span class="attr">cancelBtnText</span>: <span class="string">&#x27;放弃&#x27;</span>,</span><br><span class="line">        <span class="attr">cancelFunc</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">          <span class="title function_">resolve</span>(<span class="literal">true</span>);</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里是需要返回一个Promise的，所以自己的代码记得处理一下。</p>
-<p>最后我们跟根据自己的逻辑来设置一下这个Hook。</p>
-<p>我这里是放在了componentDidMount中做的处理</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; type &#125; = <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">params</span>;</span><br><span class="line">      </span><br><span class="line">    <span class="keyword">if</span>(type)&#123;</span><br><span class="line">      <span class="title function_">setAsyncRouteLeaveHook</span>(<span class="variable language_">this</span>.<span class="property">context</span>.<span class="property">router</span>, <span class="variable language_">this</span>.<span class="property">props</span>.<span class="property">route</span>, <span class="variable language_">this</span>.<span class="property">routerWillLeave</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-<p>好了，希望能帮到不了解英文的你，或者是找不到资料的你。</p>
 
       
     </div>
