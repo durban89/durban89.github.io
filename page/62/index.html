@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1134</span>
+          <span class="site-state-item-count">1136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">184</span>
+        <span class="site-state-item-count">188</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,198 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-UIScrollView%E6%BB%9A%E5%8A%A8%E8%A7%86%E5%9B%BE%E5%92%8CUIPageControl%E5%88%86%E9%A1%B5%E6%8E%A7%E4%BB%B6%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS7-UIScrollView%E6%BB%9A%E5%8A%A8%E8%A7%86%E5%9B%BE%E5%92%8CUIPageControl%E5%88%86%E9%A1%B5%E6%8E%A7%E4%BB%B6%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8.html" class="post-title-link" itemprop="url">IOS7 UIScrollView滚动视图和UIPageControl分页控件的简单应用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:10 / 修改时间：16:40:15" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:10+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>我这里是使用故事版（storyboard）实现的。</p>
+<p>创建一个简单的storyboard，在里面添加一个UIViewContoller，在view里面添加一个PageControl和一个ScrollView，并做链接。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UIScrollView</span> *pageScroll;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="keyword">IBOutlet</span> <span class="built_in">UIPageControl</span> *pageControl;</span><br></pre></td></tr></table></figure>
+<p>在监听一个pageControl的value change事件，这里不知道怎么添加的话，请关注这里341268380，我们的技术交流群。</p>
+<p>同时添加一个存储要展示图片的数组变量</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">strong</span>, <span class="keyword">nonatomic</span>) <span class="built_in">NSArray</span> *photoList;</span><br><span class="line">- (<span class="keyword">IBAction</span>)changePage:(<span class="type">id</span>)sender;</span><br></pre></td></tr></table></figure>
+<p>同时要加入</p>
+<p>UIScrollViewDelegate</p>
+<p>代理</p>
+<p>基础工作做完之后，开始我们的过程实现</p>
+<p>初始化的工作如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="variable language_">super</span> viewDidLoad];</span><br><span class="line">	<span class="comment">// Do any additional setup after loading the view.</span></span><br><span class="line">    <span class="built_in">NSString</span> *img1 = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;bg_welcome1&quot;</span></span><br><span class="line">                                                     ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *img2 = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;bg_welcome2&quot;</span></span><br><span class="line">                                                     ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *img3 = [[<span class="built_in">NSBundle</span> mainBundle] pathForResource:<span class="string">@&quot;bg_welcome3&quot;</span></span><br><span class="line">                                                     ofType:<span class="string">@&quot;png&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    _photoList = [[<span class="built_in">NSArray</span> alloc] initWithObjects:</span><br><span class="line">                  [<span class="built_in">UIImage</span> imageWithContentsOfFile:img1],</span><br><span class="line">                  [<span class="built_in">UIImage</span> imageWithContentsOfFile:img2],</span><br><span class="line">                  [<span class="built_in">UIImage</span> imageWithContentsOfFile:img3],</span><br><span class="line">                  [<span class="keyword">self</span> getEmptyUIImage],<span class="literal">nil</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSInteger</span> pageCount = [_photoList count];</span><br><span class="line">    _pageControl.currentPage = <span class="number">0</span>;</span><br><span class="line">    _pageControl.numberOfPages = pageCount;</span><br><span class="line">    </span><br><span class="line">    _pageScroll.frame = <span class="built_in">CGRectMake</span>(<span class="number">0.0</span>,</span><br><span class="line">                                   <span class="number">0.0</span>,</span><br><span class="line">                                   <span class="number">320.0</span>,</span><br><span class="line">                                   <span class="number">568.0</span>);</span><br><span class="line">    _pageScroll.delegate = <span class="keyword">self</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">NSInteger</span> i=<span class="number">0</span>;i&lt;pageCount;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">CGRect</span> frame;</span><br><span class="line">        frame.origin.x = _pageScroll.frame.size.width * i;</span><br><span class="line">        frame.origin.y = <span class="number">0</span>;</span><br><span class="line">        frame.size = _pageScroll.frame.size;</span><br><span class="line"><span class="comment">//        frame = CGRectInset(frame, 10.0, 10.0);</span></span><br><span class="line">        <span class="built_in">UIImageView</span> *pageView = [[<span class="built_in">UIImageView</span> alloc] initWithImage:[_photoList objectAtIndex:i]];</span><br><span class="line">        pageView.contentMode = <span class="built_in">UIViewContentModeScaleAspectFill</span>;</span><br><span class="line">        pageView.frame = frame;</span><br><span class="line">        [_pageScroll addSubview:pageView];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) viewWillAppear:(<span class="type">BOOL</span>)animated</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGSize</span> pageScrollViewSize = _pageScroll.frame.size;</span><br><span class="line">    _pageScroll.contentSize = <span class="built_in">CGSizeMake</span>(pageScrollViewSize.width * _photoList.count, pageScrollViewSize.height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>监控PageControl的方法</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)changePage:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 更新Scroll View到正确的页面</span></span><br><span class="line">    <span class="built_in">CGRect</span> frame;</span><br><span class="line">    frame.origin.x = _pageScroll.frame.size.width * _pageControl.currentPage;</span><br><span class="line">    frame.origin.y = <span class="number">0</span>;</span><br><span class="line">    frame.size = _pageScroll.frame.size;</span><br><span class="line">    [_pageScroll scrollRectToVisible:frame animated:<span class="literal">YES</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>视图滚动的方法</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) scrollViewDidScroll:(<span class="built_in">UIScrollView</span> *)scrollView</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGFloat</span> pageWidth = _pageScroll.frame.size.width;</span><br><span class="line">    <span class="comment">// 在滚动超过页面宽度的50%的时候，切换到新的页面</span></span><br><span class="line">    <span class="type">int</span> page = floor((_pageScroll.contentOffset.x + pageWidth/<span class="number">2</span>)/pageWidth) ;</span><br><span class="line">    _pageControl.currentPage = page;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (page &gt;= <span class="number">3</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//点击登陆按钮后切换到storyboard界面</span></span><br><span class="line">        <span class="built_in">UIStoryboard</span> *storyboard = [<span class="built_in">UIStoryboard</span> storyboardWithName:<span class="string">@&quot;MainStoryboardIOS7Iphone5&quot;</span> bundle:<span class="literal">nil</span>];</span><br><span class="line">        [<span class="keyword">self</span> presentViewController:[storyboard instantiateInitialViewController]</span><br><span class="line">                           animated:<span class="literal">YES</span></span><br><span class="line">                         completion:<span class="literal">nil</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从上面可以看出，其实我是加了一个空白的图片</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="built_in">UIImage</span> *)getEmptyUIImage</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(<span class="built_in">CGSizeMake</span>(_pageScroll.frame.size.width,</span><br><span class="line">                                                      _pageScroll.frame.size.height), <span class="literal">NO</span>, <span class="number">0.0</span>);</span><br><span class="line">    <span class="built_in">UIImage</span> *blank = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> blank;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGColorSpaceRef</span> colorSpace=<span class="built_in">CGColorSpaceCreateDeviceRGB</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGContextRef</span> context=<span class="built_in">CGBitmapContextCreate</span>(<span class="literal">NULL</span>,</span><br><span class="line">                                               _pageScroll.frame.size.width,</span><br><span class="line">                                               _pageScroll.frame.size.height,</span><br><span class="line">                                               <span class="number">0.0</span>,</span><br><span class="line">                                               _pageScroll.frame.size.width*<span class="keyword">sizeof</span>(uint32_t), colorSpace, kCGBitmapByteOrder32Little|kCGImageAlphaNoneSkipLast);</span><br><span class="line">    [[<span class="built_in">UIColor</span> clearColor] setFill];</span><br><span class="line">    <span class="built_in">CGContextSetFillColorWithColor</span>(context, [<span class="built_in">UIColor</span> clearColor].CGColor);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">CGImageRef</span> image=<span class="built_in">CGBitmapContextCreateImage</span>(context);</span><br><span class="line">    <span class="built_in">CGContextRelease</span>(context);</span><br><span class="line">    <span class="built_in">CGColorSpaceRelease</span>(colorSpace);</span><br><span class="line">    <span class="built_in">UIImage</span> *emptyUIImage=[<span class="built_in">UIImage</span> imageWithCGImage:image];</span><br><span class="line">    <span class="built_in">CGImageRelease</span>(image);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> emptyUIImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>基本上就可以了。github代码地址：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3poYW5nZGE4OS9Vc2VyR3VpZC5naXQ=">https://github.com/zhangda89/UserGuid.git<i class="fa fa-external-link-alt"></i></span></p>
+<hr>
+<p>参考文章</p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5lbnRsaWIubmV0Lz9wPTI2Mjc=">http://www.entlib.net/?p=2627<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS%E4%B8%AD%E5%A4%9A%E4%B8%AAUITextField%E7%9A%84%E9%94%AE%E7%9B%98%E5%A4%84%E7%90%86-%E8%A7%86%E5%9B%BE%E4%BD%8D%E7%A7%BB.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/26/iOS%E4%B8%AD%E5%A4%9A%E4%B8%AAUITextField%E7%9A%84%E9%94%AE%E7%9B%98%E5%A4%84%E7%90%86-%E8%A7%86%E5%9B%BE%E4%BD%8D%E7%A7%BB.html" class="post-title-link" itemprop="url">iOS中多个UITextField的键盘处理-视图位移</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-26 14:55:07 / 修改时间：16:41:26" itemprop="dateCreated datePublished" datetime="2025-06-26T14:55:07+08:00">2025-06-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>当有多个UITextField的时候，一个比较好的处理方式就是实现视图移位，实现的方法也很简单。</p>
+<p>首先是加入UITextField的代理UITextFieldDelegate。</p>
+<p>其次，在代理的<code>-(void) textFieldDidBeginEditing:(UITextField *)textField</code>方法中实现</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> keyboardHeight = <span class="number">216.0</span>;</span><br><span class="line"><span class="keyword">if</span> ((textField.frame.origin.y + keyboardHeight + textField.frame.size.height) &gt;= ([[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height - <span class="number">100.0</span>))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//此时，编辑框被键盘盖住，则对视图做对应的位移</span></span><br><span class="line">    <span class="built_in">CGRect</span> frame =  <span class="built_in">CGRectMake</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">320</span>, [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height + <span class="number">120.0</span>);</span><br><span class="line">    frame.origin.y -= textField.frame.origin.y + keyboardHeight + textField.frame.size.height - [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height + <span class="number">120.0</span>;<span class="comment">//偏移量=编辑框原点Y值+键盘高度+编辑框高度-屏幕高度</span></span><br><span class="line">    _scrollView.frame=frame;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里面的具体位置可以自己调整，算法也是不唯一的</p>
+<p>当到达最后一个UITextField的时候，要隐藏键盘，这里如何做呢，如下所示：</p>
+<p>在代理</p>
+<p><code>- (BOOL)textFieldShouldReturn:(UITextField *)textField</code></p>
+<p>方法中</p>
+<p>最后一个失去焦点的时候</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[_bloodTextField resignFirstResponder];</span><br><span class="line"><span class="built_in">CGRect</span> frame =  _scrollView.frame;</span><br><span class="line">frame.size.height = [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height;</span><br><span class="line">frame.origin.y = <span class="number">0.0</span>;</span><br><span class="line">_scrollView.frame=frame;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">YES</span>;</span><br></pre></td></tr></table></figure>
+<p>判断的话我使用这样子实现的</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([_bloodTextField isFirstResponder])</span><br></pre></td></tr></table></figure>
+<p>是不是很简单</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -299,13 +491,10 @@
     <div class="post-body" itemprop="articleBody">
           <p>首先添加一个UITextField。</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">_brithdayTextField = [[<span class="built_in">UITextField</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(birthdayLabelX + birthdayLabelWidth + <span class="number">10.0</span>,</span><br><span class="line">                                                                      birthdayLabelY,</span><br><span class="line">                                                                      textFieldWidth,</span><br><span class="line">                                                                      textFieldHeight)];</span><br><span class="line">_brithdayTextField.text = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@&quot;</span>,[_userinfo valueForKey:<span class="string">@&quot;birthday&quot;</span>]];</span><br><span class="line">_brithdayTextField.textAlignment = <span class="built_in">NSTextAlignmentLeft</span>;</span><br><span class="line">_brithdayTextField.backgroundColor = textFieldDebugColor;</span><br><span class="line">_brithdayTextField.delegate = <span class="keyword">self</span>;</span><br><span class="line">_brithdayTextField.tag = <span class="number">10008</span>;</span><br><span class="line">_brithdayTextField.returnKeyType = <span class="built_in">UIReturnKeyNext</span>;</span><br><span class="line">[_scrollView addSubview:_brithdayTextField];</span><br></pre></td></tr></table></figure>
-
 <p>其次，实现UITextFieldDelegate的代理方法，在<code>-(void) textFieldDidBeginEditing:(UITextField *)textField</code>方法中实现</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([_brithdayTextField isFirstResponder])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 建立 UIDatePicker</span></span><br><span class="line">    _datePicker = [[<span class="built_in">UIDatePicker</span> alloc]init];</span><br><span class="line">    _datelocale = [[<span class="built_in">NSLocale</span> alloc] initWithLocaleIdentifier:<span class="string">@&quot;zh_CN&quot;</span>];</span><br><span class="line">    _datePicker.locale = _datelocale;</span><br><span class="line">    _datePicker.timeZone = [<span class="built_in">NSTimeZone</span> timeZoneWithName:<span class="string">@&quot;GMT&quot;</span>];</span><br><span class="line">    _datePicker.datePickerMode = <span class="built_in">UIDatePickerModeDate</span>;</span><br><span class="line">    _brithdayTextField.inputView = _datePicker;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 建立 UIToolbar</span></span><br><span class="line">    <span class="built_in">UIToolbar</span> *toolBar = [[<span class="built_in">UIToolbar</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">320</span>, <span class="number">44</span>)];</span><br><span class="line">    <span class="built_in">UIBarButtonItem</span> *right = [[<span class="built_in">UIBarButtonItem</span> alloc]initWithBarButtonSystemItem:<span class="built_in">UIBarButtonSystemItemDone</span></span><br><span class="line">                                                                          target:<span class="keyword">self</span></span><br><span class="line">                                                                          action:<span class="keyword">@selector</span>(cancelPicker)];</span><br><span class="line">    <span class="built_in">UIBarButtonItem</span> *space = [[<span class="built_in">UIBarButtonItem</span> alloc] initWithBarButtonSystemItem:<span class="built_in">UIBarButtonSystemItemFixedSpace</span></span><br><span class="line">                                                                           target:<span class="literal">nil</span></span><br><span class="line">                                                                           action:<span class="literal">nil</span>];</span><br><span class="line">    toolBar.items = [<span class="built_in">NSArray</span> arrayWithObjects:space,right,<span class="literal">nil</span>];</span><br><span class="line">    _brithdayTextField.inputAccessoryView = toolBar;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>最后在完成选取的时候，进行下面的操作</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) cancelPicker &#123;</span><br><span class="line">    <span class="built_in">NSDateFormatter</span> *formatter = [[<span class="built_in">NSDateFormatter</span> alloc] init];</span><br><span class="line">    [formatter setDateFormat:<span class="string">@&quot;yyyy-MM-dd&quot;</span>];</span><br><span class="line">    _brithdayTextField.text = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@&quot;</span>,[formatter stringFromDate:_datePicker.date]];</span><br><span class="line">    <span class="built_in">CGRect</span> frame =  _scrollView.frame;</span><br><span class="line">    frame.size.height = [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height;</span><br><span class="line">    frame.origin.y = <span class="number">0.0</span>;</span><br><span class="line">    _scrollView.frame=frame;</span><br><span class="line">    [_brithdayTextField resignFirstResponder];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <hr>
 <p>参考文章</p>
 <p><span class="exturl" data-url="aHR0cDovL2Jsb2cuaHNpbi50dy8yMDEzL2lvcy1kZXYtdGFwLXVpdGV4dGZpZWxkLXBvcHVwLXVpZGF0ZXBpY2tlci10by1waWNrLWRhdGUv">http://blog.hsin.tw/2013/ios-dev-tap-uitextfield-popup-uidatepicker-to-pick-date/<i class="fa fa-external-link-alt"></i></span></p>
@@ -389,22 +578,22 @@
     <div class="post-body" itemprop="articleBody">
           <p>最近看了一些Linux命令行的文章，在系统信息查看方面学到不少命令。 想起以前写过的一篇其实Linux这样用更简单， 发现这些系统信息查看命令也可以总结出一篇小小的东西来了。</p>
 <p>另外这里还有非常多的命令， 可以作为参考。</p>
-<h4 id="1"><a href="#1" class="headerlink" title="系统"></a><a href="#1">系统</a></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># uname -a               # 查看内核/操作系统/CPU信息</span></span><br><span class="line"><span class="comment"># head -n 1 /etc/issue   # 查看操作系统版本</span></span><br><span class="line"><span class="comment"># cat /proc/cpuinfo      # 查看CPU信息</span></span><br><span class="line"><span class="comment"># hostname               # 查看计算机名</span></span><br><span class="line"><span class="comment"># lspci -tv              # 列出所有PCI设备</span></span><br><span class="line"><span class="comment"># lsusb -tv              # 列出所有USB设备</span></span><br><span class="line"><span class="comment"># lsmod                  # 列出加载的内核模块</span></span><br><span class="line"><span class="comment"># env                    # 查看环境变量</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="2"><a href="#2" class="headerlink" title="资源"></a><a href="#2">资源</a></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># free -m                # 查看内存使用量和交换区使用量</span></span><br><span class="line"><span class="comment"># df -h                  # 查看各分区使用情况</span></span><br><span class="line"><span class="comment"># du -sh &lt;目录名&gt;        # 查看指定目录的大小</span></span><br><span class="line"><span class="comment"># grep MemTotal /proc/meminfo   # 查看内存总量</span></span><br><span class="line"><span class="comment"># grep MemFree /proc/meminfo    # 查看空闲内存量</span></span><br><span class="line"><span class="comment"># uptime                 # 查看系统运行时间、用户数、负载</span></span><br><span class="line"><span class="comment"># cat /proc/loadavg      # 查看系统负载</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="3"><a href="#3" class="headerlink" title="磁盘和分区"></a><a href="#3">磁盘和分区</a></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mount | column -t      # 查看挂接的分区状态</span></span><br><span class="line"><span class="comment"># fdisk -l               # 查看所有分区</span></span><br><span class="line"><span class="comment"># swapon -s              # 查看所有交换分区</span></span><br><span class="line"><span class="comment"># hdparm -i /dev/hda     # 查看磁盘参数(仅适用于IDE设备)</span></span><br><span class="line"><span class="comment"># dmesg | grep IDE       # 查看启动时IDE设备检测状况</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="4"><a href="#4" class="headerlink" title="网络"></a><a href="#4">网络</a></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ifconfig               # 查看所有网络接口的属性</span></span><br><span class="line"><span class="comment"># iptables -L            # 查看防火墙设置</span></span><br><span class="line"><span class="comment"># route -n               # 查看路由表</span></span><br><span class="line"><span class="comment"># netstat -lntp          # 查看所有监听端口</span></span><br><span class="line"><span class="comment"># netstat -antp          # 查看所有已经建立的连接</span></span><br><span class="line"><span class="comment"># netstat -s             # 查看网络统计信息</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="5"><a href="#5" class="headerlink" title="进程"></a><a href="#5">进程</a></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ps -ef                 # 查看所有进程</span></span><br><span class="line"><span class="comment"># top                    # 实时显示进程状态</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="6"><a href="#6" class="headerlink" title="用户"></a><a href="#6">用户</a></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># w                      # 查看活动用户</span></span><br><span class="line"><span class="comment"># id &lt;用户名&gt;            # 查看指定用户信息</span></span><br><span class="line"><span class="comment"># last                   # 查看用户登录日志</span></span><br><span class="line"><span class="comment"># cut -d: -f1 /etc/passwd   # 查看系统所有用户</span></span><br><span class="line"><span class="comment"># cut -d: -f1 /etc/group    # 查看系统所有组</span></span><br><span class="line"><span class="comment"># crontab -l             # 查看当前用户的计划任务</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="7"><a href="#7" class="headerlink" title="服务"></a><a href="#7">服务</a></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chkconfig --list       # 列出所有系统服务</span></span><br><span class="line"><span class="comment"># chkconfig --list | grep on    # 列出所有启动的系统服务</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="8"><a href="#8" class="headerlink" title="程序"></a><a href="#8">程序</a></h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -qa                # 查看所有安装的软件包</span></span><br></pre></td></tr></table></figure>
-
+<h4 id="系统"><a href="#1">系统</a></h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># uname -a               # 查看内核/操作系统/CPU信息</span></span><br><span class="line"><span class="comment"># head -n 1 /etc/issue   # 查看操作系统版本</span></span><br><span class="line"><span class="comment"># cat /proc/cpuinfo      # 查看CPU信息</span></span><br><span class="line"><span class="comment"># hostname               # 查看计算机名</span></span><br><span class="line"><span class="comment"># lspci -tv              # 列出所有PCI设备</span></span><br><span class="line"><span class="comment"># lsusb -tv              # 列出所有USB设备</span></span><br><span class="line"><span class="comment"># lsmod                  # 列出加载的内核模块</span></span><br><span class="line"><span class="comment"># env                    # 查看环境变量</span></span><br></pre></td></tr></table></figure>
+<h4 id="资源"><a href="#2">资源</a></h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># free -m                # 查看内存使用量和交换区使用量</span></span><br><span class="line"><span class="comment"># df -h                  # 查看各分区使用情况</span></span><br><span class="line"><span class="comment"># du -sh &lt;目录名&gt;        # 查看指定目录的大小</span></span><br><span class="line"><span class="comment"># grep MemTotal /proc/meminfo   # 查看内存总量</span></span><br><span class="line"><span class="comment"># grep MemFree /proc/meminfo    # 查看空闲内存量</span></span><br><span class="line"><span class="comment"># uptime                 # 查看系统运行时间、用户数、负载</span></span><br><span class="line"><span class="comment"># cat /proc/loadavg      # 查看系统负载</span></span><br></pre></td></tr></table></figure>
+<h4 id="磁盘和分区"><a href="#3">磁盘和分区</a></h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mount | column -t      # 查看挂接的分区状态</span></span><br><span class="line"><span class="comment"># fdisk -l               # 查看所有分区</span></span><br><span class="line"><span class="comment"># swapon -s              # 查看所有交换分区</span></span><br><span class="line"><span class="comment"># hdparm -i /dev/hda     # 查看磁盘参数(仅适用于IDE设备)</span></span><br><span class="line"><span class="comment"># dmesg | grep IDE       # 查看启动时IDE设备检测状况</span></span><br></pre></td></tr></table></figure>
+<h4 id="网络"><a href="#4">网络</a></h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ifconfig               # 查看所有网络接口的属性</span></span><br><span class="line"><span class="comment"># iptables -L            # 查看防火墙设置</span></span><br><span class="line"><span class="comment"># route -n               # 查看路由表</span></span><br><span class="line"><span class="comment"># netstat -lntp          # 查看所有监听端口</span></span><br><span class="line"><span class="comment"># netstat -antp          # 查看所有已经建立的连接</span></span><br><span class="line"><span class="comment"># netstat -s             # 查看网络统计信息</span></span><br></pre></td></tr></table></figure>
+<h4 id="进程"><a href="#5">进程</a></h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ps -ef                 # 查看所有进程</span></span><br><span class="line"><span class="comment"># top                    # 实时显示进程状态</span></span><br></pre></td></tr></table></figure>
+<h4 id="用户"><a href="#6">用户</a></h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># w                      # 查看活动用户</span></span><br><span class="line"><span class="comment"># id &lt;用户名&gt;            # 查看指定用户信息</span></span><br><span class="line"><span class="comment"># last                   # 查看用户登录日志</span></span><br><span class="line"><span class="comment"># cut -d: -f1 /etc/passwd   # 查看系统所有用户</span></span><br><span class="line"><span class="comment"># cut -d: -f1 /etc/group    # 查看系统所有组</span></span><br><span class="line"><span class="comment"># crontab -l             # 查看当前用户的计划任务</span></span><br></pre></td></tr></table></figure>
+<h4 id="服务"><a href="#7">服务</a></h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chkconfig --list       # 列出所有系统服务</span></span><br><span class="line"><span class="comment"># chkconfig --list | grep on    # 列出所有启动的系统服务</span></span><br></pre></td></tr></table></figure>
+<h4 id="程序"><a href="#8">程序</a></h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rpm -qa                # 查看所有安装的软件包</span></span><br></pre></td></tr></table></figure>
 <hr>
 <p>参考文章：</p>
 <p><span class="exturl" data-url="aHR0cDovL3RlY2guaWR2Mi5jb20vMjAwOC8wMS8xMS9saW51eC1zeXNpbmZvLWNtZHMv">http://tech.idv2.com/2008/01/11/linux-sysinfo-cmds/<i class="fa fa-external-link-alt"></i></span></p>
@@ -488,7 +677,6 @@
     <div class="post-body" itemprop="articleBody">
           <p>记录一下，php通过curl提交json数据的方法</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$sandbox</span> != <span class="number">0</span>) &#123;</span><br><span class="line">	<span class="variable">$serviceURL</span> = <span class="string">&#x27;https://sandbox.itunes.apple.com/verifyReceipt&#x27;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	<span class="variable">$serviceURL</span> = <span class="string">&#x27;https://buy.itunes.apple.com/verifyReceipt&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$ch</span> = <span class="title function_ invoke__">curl_init</span> ( <span class="variable">$serviceURL</span> );</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span> ( <span class="variable">$ch</span>, CURLOPT_CUSTOMREQUEST, <span class="string">&quot;POST&quot;</span> );</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span> ( <span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="literal">true</span> );</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span> ( <span class="variable">$ch</span>, CURLOPT_POSTFIELDS, <span class="variable">$data</span> );</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span> ( <span class="variable">$ch</span>, CURLOPT_SSL_VERIFYPEER, <span class="literal">false</span> );</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span> ( <span class="variable">$ch</span>, CURLOPT_SSL_VERIFYHOST, <span class="literal">false</span> );</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span> ( <span class="variable">$ch</span>, CURLOPT_HTTPHEADER, <span class="keyword">array</span> (</span><br><span class="line">		<span class="string">&#x27;Content-Type:application/json&#x27;</span>,</span><br><span class="line">		<span class="string">&#x27;Content-Length: &#x27;</span> . <span class="title function_ invoke__">strlen</span> ( <span class="variable">$data</span> ) </span><br><span class="line">) );</span><br><span class="line"><span class="variable">$result</span> = <span class="title function_ invoke__">curl_exec</span> ( <span class="variable">$ch</span> );</span><br><span class="line"><span class="variable">$errorNo</span> = <span class="title function_ invoke__">curl_errno</span> ( <span class="variable">$ch</span> );</span><br><span class="line"><span class="title function_ invoke__">curl_close</span> ( <span class="variable">$ch</span> );</span><br></pre></td></tr></table></figure>
-
 <hr>
 <p>参考文章：</p>
 <p><span class="exturl" data-url="aHR0cDovL3d3dy5xaW5nbGlhbmdjbi5jb20vMjAxMy8wNS9waHAtcG9zdC1qc29uLWRhdGEv">http://www.qingliangcn.com/2013/05/php-post-json-data/<i class="fa fa-external-link-alt"></i></span></p>
@@ -574,22 +762,16 @@
 <p>代码如下:建立两个类FileHandle和Computer</p>
 <p>Computer.m</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Computer.m</span></span><br><span class="line"><span class="comment">//  FileCopyKVODemo</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-20.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;Computer.h&quot;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;FileHandle.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Computer</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@synthesize</span> filehandle = _filehandle;</span><br><span class="line"></span><br><span class="line">-(<span class="type">id</span>) init</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="variable language_">super</span> init];</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">self</span> != <span class="literal">nil</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSString</span> *homePath = <span class="built_in">NSHomeDirectory</span>();</span><br><span class="line">        <span class="built_in">NSString</span> *srcPath = [homePath stringByAppendingPathComponent:<span class="string">@&quot;android系统框架的介绍.avi&quot;</span>];</span><br><span class="line">        <span class="built_in">NSString</span> *targetPath = [homePath stringByAppendingPathComponent:<span class="string">@&quot;android系统框架的介绍1.avi&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        _filehandle = [[FileHandle alloc] initWithSrcPath:srcPath withTargetPath:targetPath];</span><br><span class="line">        [_filehandle addObserver:<span class="keyword">self</span></span><br><span class="line">                      forKeyPath:<span class="string">@&quot;readSize&quot;</span></span><br><span class="line">                         options:<span class="built_in">NSKeyValueObservingOptionNew</span></span><br><span class="line">                         context:<span class="literal">nil</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) copyAction</span><br><span class="line">&#123;</span><br><span class="line">    [_filehandle runCopy];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) observeValueForKeyPath:(<span class="built_in">NSString</span> *)keyPath ofObject:(<span class="type">id</span>)object change:(<span class="built_in">NSDictionary</span> *)change context:(<span class="type">void</span> *)context</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>([keyPath isEqualToString:<span class="string">@&quot;readSize&quot;</span>])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>([object isKindOfClass:[FileHandle <span class="keyword">class</span>]])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">NSNumber</span> *readSieNum = [change objectForKey:<span class="string">@&quot;new&quot;</span>];</span><br><span class="line">            <span class="type">float</span> readSize = [readSieNum floatValue];</span><br><span class="line">            </span><br><span class="line">            FileHandle *file = (FileHandle *)object;</span><br><span class="line">            <span class="type">float</span> fileSize = file.fileSize;</span><br><span class="line">            </span><br><span class="line">            <span class="type">float</span> ret = readSize / fileSize * <span class="number">100</span>;</span><br><span class="line">            <span class="built_in">NSLog</span>(<span class="string">@&quot;%0.1f%%&quot;</span>,ret);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
 <p>Computer.h</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Computer.h</span></span><br><span class="line"><span class="comment">//  FileCopyKVODemo</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-20.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@class</span> <span class="title">FileHandle</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Computer</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span> , <span class="keyword">strong</span>) FileHandle *filehandle;</span><br><span class="line">-(<span class="type">void</span>) copyAction;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
 <p>FileHandle.m</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  FileHandle.m</span></span><br><span class="line"><span class="comment">//  FileCopyKVODemo</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-20.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&quot;FileHandle.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FileHandle</span></span></span><br><span class="line"><span class="keyword">@synthesize</span> srcPath = _srcPath;</span><br><span class="line"><span class="keyword">@synthesize</span> targetPath = _targetPath;</span><br><span class="line"></span><br><span class="line">-(<span class="type">id</span>) initWithSrcPath:(<span class="built_in">NSString</span> *)srcPath withTargetPath:(<span class="built_in">NSString</span> *)targetPath;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="variable language_">super</span> init];</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">self</span> != <span class="literal">nil</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        _srcPath = [srcPath <span class="keyword">copy</span>];</span><br><span class="line">        _targetPath = [targetPath <span class="keyword">copy</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>) runCopy</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//读取大文件，并写入大文件中</span></span><br><span class="line">    <span class="built_in">NSFileManager</span> *fileManager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line">    </span><br><span class="line"><span class="comment">//    NSString *homePath = NSHomeDirectory();</span></span><br><span class="line"><span class="comment">//    NSString *srcPath = [homePath stringByAppendingPathComponent:@&quot;android学习路线图介绍.avi&quot;];</span></span><br><span class="line"><span class="comment">//    NSString *targetPath = [homePath stringByAppendingPathComponent:@&quot;android学习路线图介绍1.avi&quot;];</span></span><br><span class="line">    </span><br><span class="line">    <span class="type">BOOL</span> success = [fileManager createFileAtPath:_targetPath</span><br><span class="line">                                        contents:<span class="literal">nil</span></span><br><span class="line">                                      attributes:<span class="literal">nil</span>];</span><br><span class="line">    <span class="keyword">if</span>(success)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;成功创建文件 ：%@&quot;</span>,_targetPath);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSFileHandle</span> *infile = [<span class="built_in">NSFileHandle</span> fileHandleForWritingAtPath:_targetPath];</span><br><span class="line">    <span class="built_in">NSFileHandle</span> *outfile = [<span class="built_in">NSFileHandle</span> fileHandleForReadingAtPath:_srcPath];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//获取文件的尺寸</span></span><br><span class="line">    <span class="built_in">NSDictionary</span> *fileAttr = [fileManager attributesOfItemAtPath:_srcPath</span><br><span class="line">                                                           error:<span class="literal">nil</span>];</span><br><span class="line">    <span class="built_in">NSNumber</span> *fileSizeNum = [fileAttr objectForKey:<span class="built_in">NSFileSize</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="type">BOOL</span> isEnd = <span class="literal">NO</span>;</span><br><span class="line">    <span class="keyword">self</span>.fileSize = [fileSizeNum longLongValue];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> (!isEnd) &#123;</span><br><span class="line">        <span class="built_in">NSData</span> *data = <span class="literal">nil</span>;</span><br><span class="line">        <span class="built_in">NSInteger</span> subleng = <span class="keyword">self</span>.fileSize - _readSize;</span><br><span class="line">        <span class="keyword">if</span>(subleng &lt; <span class="number">500</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            isEnd = <span class="literal">YES</span>;</span><br><span class="line">            data = [outfile readDataToEndOfFile];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            data = [outfile readDataOfLength:<span class="number">500</span>];</span><br><span class="line">            <span class="keyword">self</span>.readSize += <span class="number">500</span>;</span><br><span class="line">            [outfile seekToFileOffset:_readSize];</span><br><span class="line">        &#125;</span><br><span class="line">        [infile writeData:data];</span><br><span class="line">    &#125;</span><br><span class="line">    [infile closeFile];</span><br><span class="line">    [outfile closeFile];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
 <p>FileHandle.h</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  FileHandle.h</span></span><br><span class="line"><span class="comment">//  FileCopyKVODemo</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-20.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">FileHandle</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *srcPath;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">NSString</span> *targetPath;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span> ,<span class="keyword">assign</span>) <span class="type">float</span> fileSize;</span><br><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">assign</span>) <span class="type">float</span> readSize;</span><br><span class="line"></span><br><span class="line">-(<span class="type">id</span>) initWithSrcPath:(<span class="built_in">NSString</span> *)srcPath withTargetPath:(<span class="built_in">NSString</span> *)targetPath;</span><br><span class="line">-(<span class="type">void</span>) runCopy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
-
 <p>示例调用的代码-实现过程是这样子的：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  main.m</span></span><br><span class="line"><span class="comment">//  FileCopyKVODemo</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Created by Durban on 13-12-20.</span></span><br><span class="line"><span class="comment">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="string">&quot;Computer.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> main(<span class="type">int</span> argc, <span class="keyword">const</span> <span class="type">char</span> * argv[])</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        Computer *computer = [[Computer alloc] init];</span><br><span class="line">        [computer copyAction];</span><br><span class="line">        <span class="comment">// insert code here...</span></span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Hello, World!&quot;</span>);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>gowhich得到的结果是，文件进行了完整的copy，并且能进行正常使用，没有出现文件损坏。看看结果吧。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">2013-12-20 10:13:43.356 FileCopyKVODemo[8446:303] 成功创建文件 ：/Users/davidzhang/android系统框架的介绍1.avi</span><br><span class="line">2013-12-20 10:13:43.789 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:43.883 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:43.884 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:43.884 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:43.885 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:43.885 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:43.886 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:43.886 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:43.887 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.139 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.140 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.141 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.141 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.142 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.142 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.143 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.143 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.144 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.145 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:44.145 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.041 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.041 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.042 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.043 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.043 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.054 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.055 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.056 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.056 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.057 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.057 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.058 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.058 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.633 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.634 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.635 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.635 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.636 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.636 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.637 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.637 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.638 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.639 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.639 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.640 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.640 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.640 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.641 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.641 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.642 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.642 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">2013-12-20 10:13:46.643 FileCopyKVODemo[8446:303] 0.0%</span><br><span class="line">。。。。。。</span><br></pre></td></tr></table></figure>
-
 <p>这里自己可以进行调整的，比如百分比的小数位可以调整大点，都是可以的。</p>
 
       
@@ -672,16 +854,12 @@
           <p>关于UITextView 退出键盘的方式，google后找到了几个比较好的方法。</p>
 <p>第一种方法：程序是有导航条的，可以在导航条上面加多一个Done的按钮，用来退出键盘，当然要先实UITextViewDelegate。代码如下：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="type">void</span>)textViewDidBeginEditing:(<span class="built_in">UITextView</span> *)textView &#123;</span><br><span class="line">   <span class="built_in">UIBarButtonItem</span> *done =    [[[<span class="built_in">UIBarButtonItem</span> alloc] initWithBarButtonSystemItem:<span class="built_in">UIBarButtonSystemItemDone</span> target:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(leaveEditMode)] autorelease];</span><br><span class="line">   <span class="keyword">self</span>.navigationItem.rightBarButtonItem = done;    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)textViewDidEndEditing:(<span class="built_in">UITextView</span> *)textView &#123;</span><br><span class="line">    <span class="keyword">self</span>.navigationItem.rightBarButtonItem = <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="type">void</span>)leaveEditMode &#123;</span><br><span class="line">    [<span class="keyword">self</span>.textView resignFirstResponder];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>第二种方法：如果UITextview里不用回车键，可以把回车键当做退出键盘的响应键。代码如下：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">pragma</span> mark - UITextView Delegate Methods</span></span><br><span class="line">-(<span class="type">BOOL</span>)textView:(<span class="built_in">UITextView</span> *)textView shouldChangeTextInRange:(<span class="built_in">NSRange</span>)range replacementText:(<span class="built_in">NSString</span> *)text</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([text isEqualToString:<span class="string">@&quot;\n&quot;</span>]) &#123;</span><br><span class="line">        [textView resignFirstResponder];</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>第三种方法：在弹出的键盘上面加一个view来放置退出键盘的Done按钮。代码如下：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> profileX = x + hInterval;</span><br><span class="line"><span class="built_in">CGFloat</span> profileY = y + areaLabel.frame.size.height + areaLabel.frame.origin.y + <span class="number">10.0</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> profileWidth = width - <span class="number">2</span> * hInterval;</span><br><span class="line"><span class="built_in">CGFloat</span> profileHeight = <span class="number">200.0</span>;</span><br><span class="line"><span class="built_in">UITextView</span> *profile = [[<span class="built_in">UITextView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(profileX,</span><br><span class="line">                                                                   profileY,</span><br><span class="line">                                                                   profileWidth,</span><br><span class="line">                                                                   profileHeight)];</span><br><span class="line"></span><br><span class="line">profile.text = <span class="string">@&quot;请输入简介信息&quot;</span>;</span><br><span class="line">[profile.layer setBorderColor:[[<span class="built_in">UIColor</span> lightGrayColor] <span class="built_in">CGColor</span>]];</span><br><span class="line">[profile.layer setBorderWidth:<span class="number">1.0</span>];</span><br><span class="line">[profile.layer setCornerRadius:<span class="number">1.0</span>];</span><br><span class="line">profile.editable = <span class="literal">YES</span>;</span><br><span class="line">profile.delegate = <span class="keyword">self</span>;</span><br><span class="line">[_scrollView addSubview:profile];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">UIToolbar</span> * topView = [[<span class="built_in">UIToolbar</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">320.0</span>, <span class="number">30.0</span>)];</span><br><span class="line">[topView setBarStyle:<span class="built_in">UIBarStyleDefault</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIBarButtonItem</span> * btnSpace = [[<span class="built_in">UIBarButtonItem</span> alloc] initWithBarButtonSystemItem:<span class="built_in">UIBarButtonSystemItemFlexibleSpace</span></span><br><span class="line">                                                                           target:<span class="keyword">self</span></span><br><span class="line">                                                                           action:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">UIBarButtonItem</span> * completeButton = [[<span class="built_in">UIBarButtonItem</span> alloc] initWithTitle:<span class="string">@&quot;完成&quot;</span></span><br><span class="line">                                                                    style:<span class="built_in">UIBarButtonItemStyleDone</span></span><br><span class="line">                                                                   target:<span class="keyword">self</span></span><br><span class="line">                                                                   action:<span class="keyword">@selector</span>(dismissKeyBoard)];</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSArray</span> * buttonsArray = [<span class="built_in">NSArray</span> arrayWithObjects:btnSpace,completeButton,<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">[topView setItems:buttonsArray];</span><br><span class="line">[profile setInputAccessoryView:topView];</span><br></pre></td></tr></table></figure>
-
 <p>隐藏键盘的方法：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)dismissKeyBoard</span><br><span class="line">&#123;</span><br><span class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] sendAction:<span class="keyword">@selector</span>(resignFirstResponder)</span><br><span class="line">                                               to:<span class="literal">nil</span></span><br><span class="line">                                             from:<span class="literal">nil</span></span><br><span class="line">                                         forEvent:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>可以试试吧。</p>
 <hr>
 <p>参考文章：</p>
@@ -768,11 +946,9 @@
 <p>when use KVO，it usually follows below：</p>
 <p>1 注册：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)addObserver:(NSObject *)anObserver forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void*)context</span><br></pre></td></tr></table></figure>
-
 <p>keyPath就是要观察的属性值，options给你观察键值变化的选择，而context方便传输你需要的数据（注意这是一个void型）</p>
 <p>2 实现变化方法：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object</span><br><span class="line">change:(NSDictionary *)change context:(void*)context</span><br></pre></td></tr></table></figure>
-
 <p>change里存储了一些变化的数据，比如变化前的数据，变化后的数据；如果注册时context不为空，这里context就能接收到。</p>
 <p>是不是很简单？kvo的逻辑非常清晰，实现步骤简单。</p>
 <p>说了这么多，大家都要跃跃欲试了吧。可是，在此之前，我们还需要了解KVC机制。看看这篇文章的使用-<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy81MDk=">Object-C KVC的简单概述和示例<i class="fa fa-external-link-alt"></i></span></p>
@@ -781,23 +957,17 @@
 <p>创建两个类Child和Nurse</p>
 <p>Child.h</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  Child.h</span><br><span class="line">//  KVODemo</span><br><span class="line">//</span><br><span class="line">//  Created by Durban on 13-12-19.</span><br><span class="line">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">@interface Child : NSObject</span><br><span class="line"></span><br><span class="line">@property (nonatomic,assign) NSInteger happyVal;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-
 <p>Child.m</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  Child.m</span><br><span class="line">//  KVODemo</span><br><span class="line">//</span><br><span class="line">//  Created by Durban on 13-12-19.</span><br><span class="line">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &quot;Child.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation Child</span><br><span class="line"></span><br><span class="line">-(id) init</span><br><span class="line">&#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if(self != nil)</span><br><span class="line">    &#123;</span><br><span class="line">        _happyVal = 100;</span><br><span class="line">        [NSTimer scheduledTimerWithTimeInterval:1</span><br><span class="line">                                         target:self</span><br><span class="line">                                       selector:@selector(timerAction:)</span><br><span class="line">                                       userInfo:nil</span><br><span class="line">                                        repeats:YES];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void) timerAction:(NSTimer *)timer</span><br><span class="line">&#123;</span><br><span class="line">    self.happyVal--;//必须使用点语法</span><br><span class="line">    //第二种语法</span><br><span class="line">//    _happyVal--;</span><br><span class="line">//    [self setValue:[NSNumber numberWithInteger:_happyVal] forKey:@&quot;happyVal&quot;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-
 <p>Nurse.h</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  Nurse.h</span><br><span class="line">//  KVODemo</span><br><span class="line">//</span><br><span class="line">//  Created by Durban on 13-12-19.</span><br><span class="line">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line"></span><br><span class="line">@class Child;</span><br><span class="line">@interface Nurse : NSObject</span><br><span class="line"></span><br><span class="line">@property (nonatomic, retain) Child *child;</span><br><span class="line">-(id) initWithChild:(Child *)child;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-
 <p>Nurse.m</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  Nurse.m</span><br><span class="line">//  KVODemo</span><br><span class="line">//</span><br><span class="line">//  Created by Durban on 13-12-19.</span><br><span class="line">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &quot;Nurse.h&quot;</span><br><span class="line">#import &quot;Child.h&quot;</span><br><span class="line"></span><br><span class="line">@implementation Nurse</span><br><span class="line">@synthesize child = _child;</span><br><span class="line"></span><br><span class="line">-(id) initWithChild:(Child *)child</span><br><span class="line">&#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if(self != nil)</span><br><span class="line">    &#123;</span><br><span class="line">        _child = child;</span><br><span class="line">        [_child addObserver:self</span><br><span class="line">                 forKeyPath:@&quot;happyVal&quot;</span><br><span class="line">                    options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld</span><br><span class="line">                    context:@&quot;xx&quot;];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context</span><br><span class="line">&#123;</span><br><span class="line">    NSLog(@&quot;change = %@&quot;,change);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
-
 <hr>
 <p>测试实现过程如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">//  main.m</span><br><span class="line">//  KVODemo</span><br><span class="line">//</span><br><span class="line">//  Created by Durban on 13-12-19.</span><br><span class="line">//  Copyright (c) 2013年 WalkerFree. All rights reserved.</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &quot;Child.h&quot;</span><br><span class="line">#import &quot;Nurse.h&quot;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char * argv[])</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    @autoreleasepool &#123;</span><br><span class="line">        Child *child = [[Child alloc] init];</span><br><span class="line">        Nurse *nurse = [[Nurse alloc] initWithChild:child];</span><br><span class="line">        [[NSRunLoop currentRunLoop] run];</span><br><span class="line">        // insert code here...</span><br><span class="line">        NSLog(@&quot;Hello, World!&quot;);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>得到的结果是：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">2013-12-19 10:58:58.364 KVODemo[36662:303] change = &#123;</span><br><span class="line">    kind = 1;</span><br><span class="line">    new = 99;</span><br><span class="line">    old = 100;</span><br><span class="line">&#125;</span><br><span class="line">2013-12-19 10:58:59.359 KVODemo[36662:303] change = &#123;</span><br><span class="line">    kind = 1;</span><br><span class="line">    new = 98;</span><br><span class="line">    old = 99;</span><br><span class="line">&#125;</span><br><span class="line">2013-12-19 10:59:00.359 KVODemo[36662:303] change = &#123;</span><br><span class="line">    kind = 1;</span><br><span class="line">    new = 97;</span><br><span class="line">    old = 98;</span><br><span class="line">&#125;</span><br><span class="line">2013-12-19 10:59:01.358 KVODemo[36662:303] change = &#123;</span><br><span class="line">    kind = 1;</span><br><span class="line">    new = 96;</span><br><span class="line">    old = 97;</span><br><span class="line">&#125;</span><br><span class="line">Program ended with <span class="built_in">exit</span> code: 9</span><br></pre></td></tr></table></figure>
-
 <p>如果得到如上的结果，说明使用是正确的</p>
 <hr>
 <p>参考文章：</p>
@@ -881,16 +1051,20 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>之所以看到这篇文章也是自己出于好奇“inodes”,自己毕竟并非专业计算机出身，对这个不是很理解，但是知道这个东西也是需要空间，也是在容量满地时候，会倒是系统出现问题的。根据google的搜索，得到了张宴同志的一篇文章，如下：</p>
-<p>一、发现问题：<br>　　在一台配置较低的Linux服务器（内存、硬盘比较小）的&#x2F;data分区内创建文件时，系统提示磁盘空间不足，用df -h命令查看了一下磁盘使用情况，发现&#x2F;data分区只使用了66%，还有12G的剩余空间，按理说不会出现这种问题。<br>二、分析问题：<br>　　后来用df -i查看了一下&#x2F;data分区的索引节点(inode)，发现已经用满(IUsed&#x3D;100%)，导致系统无法创建新目录和文件。inode译成中文就是索引节点，每个存储设备（例如硬盘）或存储设备的分区被格式化为文件系统后，应该有两部份，一部份是inode，另一部份是Block，Block是用来存储数据用的。</p>
+<p>一、发现问题：<br>
+　　在一台配置较低的Linux服务器（内存、硬盘比较小）的/data分区内创建文件时，系统提示磁盘空间不足，用df -h命令查看了一下磁盘使用情况，发现/data分区只使用了66%，还有12G的剩余空间，按理说不会出现这种问题。<br>
+二、分析问题：<br>
+　　后来用df -i查看了一下/data分区的索引节点(inode)，发现已经用满(IUsed=100%)，导致系统无法创建新目录和文件。inode译成中文就是索引节点，每个存储设备（例如硬盘）或存储设备的分区被格式化为文件系统后，应该有两部份，一部份是inode，另一部份是Block，Block是用来存储数据用的。</p>
 <p>而inode呢，就是用来存储这些数据的信息，这些信息包括文件大小、属主、归属的用户组、读写权限等。inode为每个文件进行信息索引，所以就有了inode的数值。</p>
 <p>操作系统根据指令，能通过inode值最快的找到相对应的文件。而这台服务器的Block虽然还有剩余，但inode已经用满，因此在创建新目录或文件时，系统提示磁盘空间不足。</p>
 <p>三、查找原因：</p>
 <p><code>/data/cache</code>目录中存在数量非常多的小字节缓存文件，占用的Block不多，但是占用了大量的inode。</p>
 <p>四、解决方案：</p>
 <blockquote>
-<p>　　1、删除<code>/data/cache</code>目录中的部分文件，释放出&#x2F;data分区的一部分inode。  </p>
-<p>　　2、用软连接将空闲分区&#x2F;opt中的newcache目录连接到&#x2F;data&#x2F;cache，使用&#x2F;opt分区的inode来缓解&#x2F;data分区inode不足的问题：<br>　　<code>ln -s /opt/newcache /data/cache</code></p>
-<p>　　3、更换服务器，用高配置的服务器替换低配置的服务器。很多时候用钱去解决问题比用技术更有效，堆在我办公桌上5台全新的 DELL PowerEdge 1950 服务器即将运往IDC机房。</p>
+<p>1、删除<code>/data/cache</code>目录中的部分文件，释放出/data分区的一部分inode。</p>
+<p>2、用软连接将空闲分区/opt中的newcache目录连接到/data/cache，使用/opt分区的inode来缓解/data分区inode不足的问题：<br>
+　　<code>ln -s /opt/newcache /data/cache</code></p>
+<p>3、更换服务器，用高配置的服务器替换低配置的服务器。很多时候用钱去解决问题比用技术更有效，堆在我办公桌上5台全新的 DELL PowerEdge 1950 服务器即将运往IDC机房。</p>
 </blockquote>
 <hr>
 <p>参考文章：</p>
@@ -974,253 +1148,40 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>关于UITextField的几种常用的方法，隐藏自身软键盘、点击Return自动转到下个文本框、轻触背景隐藏软键盘，经过google的查找，现在总结如下：</p>
-<h4 id="1"><a href="#1" class="headerlink" title="一、隐藏自身软键盘"></a><a href="#1">一、隐藏自身软键盘</a></h4><p>　　当对于有多个UITextField控件都想通过点击“Return”来隐藏自身软键盘的情况，这时的最好办法是使用Did End on Exit事件。在点击软键盘右下角的“Return”按钮后，会触发该事件。</p>
-<p>　　该事件有一个sender参数表示当前文本框，这样便可以编写一个通用的事件处理方法（.m文件）——</p>
+<h4 id="一、隐藏自身软键盘"><a href="#1">一、隐藏自身软键盘</a></h4>
+<p>当对于有多个UITextField控件都想通过点击“Return”来隐藏自身软键盘的情况，这时的最好办法是使用Did End on Exit事件。在点击软键盘右下角的“Return”按钮后，会触发该事件。</p>
+<p>该事件有一个sender参数表示当前文本框，这样便可以编写一个通用的事件处理方法（.m文件）——</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)TextField_DidEndOnExit:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 隐藏键盘.</span></span><br><span class="line">    [sender resignFirstResponder];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>　　然后在.h文件中填写该方法的声明——</p>
+<p>然后在.h文件中填写该方法的声明——</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)TextField_DidEndOnExit:(<span class="type">id</span>)sender;</span><br></pre></td></tr></table></figure>
-
-<p>　　回到storyboard，并按command+option+enter打开辅助窗口，使辅助窗口显示.h文件。</p>
-<p>　　选中一个UITextField控件，点击鼠标右键弹出面板，鼠标左键按住Did End on Exit事件旁边的圆圈，然后拖曳到右侧.h文件的TextField_DidEndOnExit方法上，便会建立好事件连接。</p>
-<p>　　随后按照同样的做法，将其他UITextField控件的Did End on Exit事件也连接到TextField_DidEndOnExit方法。</p>
-<p>　　运行一下，可发现每个文本框的软键盘都可以通过点击“Return”来隐藏了。</p>
-<h4 id="2"><a href="#2" class="headerlink" title="二、点击Return自动转到下个文本框"></a><a href="#2">二、点击Return自动转到下个文本框</a></h4><p>　　当页面中有很多个文本框时，如果每次都需要点文本框激活软键盘、输入后点击Return隐藏软键盘、再点击下一个文本框……这样操作起来太繁琐了。</p>
-<p>　　于是我们希望能够实现点击Return时能够自动转到下一个文本框。尤其是对于最后一个文本框，希望能够在点击Return时执行下一步操作。</p>
-<p>　　例如对于登录页面。它上面有 账号文本框（nameTextField）、密码文本框（passTextField）、登录按钮（loginButton）。</p>
-<p>　　我们希望——点击账号文本框软键盘的Return时跳转到密码文本框，点击密码文本框软键盘的Return时执行登录。</p>
-<p>　　因为这两个文本框的功能不同，不能像上一节那样写一个TextField_DidEndOnExit做统一处理，而应该分别建立各自的事件处理方法。</p>
-<p>　　回到storyboard，右击账号文本框（nameTextField）弹出面板，按住Did End on Exit事件旁边的圆圈，然后拖曳到右侧.h文件的空白地方，此时会弹出一个对话框给方法命名。输入名称（nameTextField_DidEndOnExit）后回车确定，便自动生成了该事件方法。</p>
-<p>　　随后按照同样的做法，为密码文本框（passTextField）的Did End on Exit事件连接方法（passTextField_DidEndOnExit）。</p>
-<p>　　来到.m文件，填写具体代码——</p>
+<p>回到storyboard，并按command+option+enter打开辅助窗口，使辅助窗口显示.h文件。</p>
+<p>选中一个UITextField控件，点击鼠标右键弹出面板，鼠标左键按住Did End on Exit事件旁边的圆圈，然后拖曳到右侧.h文件的TextField_DidEndOnExit方法上，便会建立好事件连接。</p>
+<p>随后按照同样的做法，将其他UITextField控件的Did End on Exit事件也连接到TextField_DidEndOnExit方法。</p>
+<p>运行一下，可发现每个文本框的软键盘都可以通过点击“Return”来隐藏了。</p>
+<h4 id="二、点击Return自动转到下个文本框"><a href="#2">二、点击Return自动转到下个文本框</a></h4>
+<p>当页面中有很多个文本框时，如果每次都需要点文本框激活软键盘、输入后点击Return隐藏软键盘、再点击下一个文本框……这样操作起来太繁琐了。</p>
+<p>于是我们希望能够实现点击Return时能够自动转到下一个文本框。尤其是对于最后一个文本框，希望能够在点击Return时执行下一步操作。</p>
+<p>例如对于登录页面。它上面有 账号文本框（nameTextField）、密码文本框（passTextField）、登录按钮（loginButton）。</p>
+<p>我们希望——点击账号文本框软键盘的Return时跳转到密码文本框，点击密码文本框软键盘的Return时执行登录。</p>
+<p>因为这两个文本框的功能不同，不能像上一节那样写一个TextField_DidEndOnExit做统一处理，而应该分别建立各自的事件处理方法。</p>
+<p>回到storyboard，右击账号文本框（nameTextField）弹出面板，按住Did End on Exit事件旁边的圆圈，然后拖曳到右侧.h文件的空白地方，此时会弹出一个对话框给方法命名。输入名称（nameTextField_DidEndOnExit）后回车确定，便自动生成了该事件方法。</p>
+<p>随后按照同样的做法，为密码文本框（passTextField）的Did End on Exit事件连接方法（passTextField_DidEndOnExit）。</p>
+<p>来到.m文件，填写具体代码——</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)nameTextField_DidEndOnExit:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 将焦点移至下一个文本框.</span></span><br><span class="line">    [_passTextField becomeFirstResponder];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>　　对于账号文本框转密码文本框，不需要隐藏软键盘，只需要调用becomeFirstResponder激活新的文本框就行了。</p>
-<p>　　对于密码文本框Return后执行登录。因为不再需要显示软键盘，所以还是得调用resignFirstResponder隐藏软键盘，然后触发登录按钮（loginButton）的UIControlEventTouchUpInside事件进行登录。</p>
-<p>　　运行一下，可发现已经达到我们希望的效果了。点击账号文本框软键盘的Return时跳转到密码文本框，点击密码文本框软键盘的Return时执行登录。</p>
-<p>　　怎么都是“Return”，转换文本框与执行登录明明是不同的功能？</p>
-<p>　　于是将账号文本框的Return Key属性设为“Next”，将密码文本框的Return Key属性设为“Done”，使界面与功能一致。</p>
-<h4 id="3"><a href="#3" class="headerlink" title="三、轻触背景隐藏软键盘"></a><a href="#3">三、轻触背景隐藏软键盘</a></h4><p>　　只能通过Return关闭软键盘太不灵活了，应该提供轻触背景隐藏软键盘的功能。</p>
-<p>　　在storyboard，点击背景View，将它的Custom Class设置为UIControl，这样才会出现Touch Down事件。</p>
-<p>　　右击背景View弹出面板，按住Touch Down事件旁边的圆圈，然后拖曳到右侧.h文件的空白地方建立该事件的处理方法。</p>
-<p>　　来到.m文件，填写具体代码——</p>
+<p>对于账号文本框转密码文本框，不需要隐藏软键盘，只需要调用becomeFirstResponder激活新的文本框就行了。</p>
+<p>对于密码文本框Return后执行登录。因为不再需要显示软键盘，所以还是得调用resignFirstResponder隐藏软键盘，然后触发登录按钮（loginButton）的UIControlEventTouchUpInside事件进行登录。</p>
+<p>运行一下，可发现已经达到我们希望的效果了。点击账号文本框软键盘的Return时跳转到密码文本框，点击密码文本框软键盘的Return时执行登录。</p>
+<p>怎么都是“Return”，转换文本框与执行登录明明是不同的功能？</p>
+<p>于是将账号文本框的Return Key属性设为“Next”，将密码文本框的Return Key属性设为“Done”，使界面与功能一致。</p>
+<h4 id="三、轻触背景隐藏软键盘"><a href="#3">三、轻触背景隐藏软键盘</a></h4>
+<p>只能通过Return关闭软键盘太不灵活了，应该提供轻触背景隐藏软键盘的功能。</p>
+<p>在storyboard，点击背景View，将它的Custom Class设置为UIControl，这样才会出现Touch Down事件。</p>
+<p>右击背景View弹出面板，按住Touch Down事件旁边的圆圈，然后拖曳到右侧.h文件的空白地方建立该事件的处理方法。</p>
+<p>来到.m文件，填写具体代码——</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)View_TouchDown:(<span class="type">id</span>)sender &#123;</span><br><span class="line">    <span class="comment">// 发送resignFirstResponder.</span></span><br><span class="line">    [[<span class="built_in">UIApplication</span> sharedApplication] sendAction:<span class="keyword">@selector</span>(resignFirstResponder) to:<span class="literal">nil</span> from:<span class="literal">nil</span> forEvent:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <hr>
 <p>参考文章：</p>
 <p><span class="exturl" data-url="aHR0cDovL3d3dy5jbmJsb2dzLmNvbS96eWw5MTAvYXJjaGl2ZS8yMDEzLzAzLzI5L2lvc190ZXh0ZmllbGRfa2V5Ym9hcmQuaHRtbA==">http://www.cnblogs.com/zyl910/archive/2013/03/29/ios_textfield_keyboard.html<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E4%B8%ADNSPredicate%E7%9A%84%E7%94%A8%E6%B3%95.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E4%B8%ADNSPredicate%E7%9A%84%E7%94%A8%E6%B3%95.html" class="post-title-link" itemprop="url">iOS7 中NSPredicate的用法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:37:41 / 修改时间：12:01:15" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:41+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在其他的语言项目开发中，都会经常使用到正则，在ios中关于正则的话，就要考虑一下NSPredicate，关于NSPredicate的使用方法，一般来说这种情况还是蛮多的，比如你从文件中读入了一个array1，然后想把程序中的一个array2中符合array1中内容的元素过滤出来。</p>
-<p>正常傻瓜一点就是两个for循环，一个一个进行比较，这样效率不高，而且代码也不好看。</p>
-<p>其实一个循环或者无需循环就可以搞定了，那就需要用搞 NSPredicate这个类了</p>
-<p><em><strong>1）例子一，一个循环</strong></em></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *arrayFilter = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;pict&quot;</span>, <span class="string">@&quot;blackrain&quot;</span>, <span class="string">@&quot;ip&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *arrayContents = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;I am a picture.&quot;</span>, <span class="string">@&quot;I am a guy&quot;</span>, <span class="string">@&quot;I am gagaga&quot;</span>, <span class="string">@&quot;ipad&quot;</span>, <span class="string">@&quot;iphone&quot;</span>, <span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
-
-<p>我想过滤arrayContents的话只要循环 arrayFilter就好了</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> i = <span class="number">0</span>, count = [arrayFilter count];</span><br><span class="line"><span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; count; i ++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *arrayItem = (<span class="built_in">NSString</span> *)[arrayFilter objectAtIndex:i];</span><br><span class="line">    <span class="built_in">NSPredicate</span> *filterPredicate = [[<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF CONTAINS %@&quot;</span>, arrayItem];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Filtered array with filter %@, %@&quot;</span>, arrayItem, [arrayContents filteredArrayUsingPredicate:filterPredicate]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当然以上代码中arrayContent最好用mutable 的，这样就可以直接filter了，NSArray是不可修改的。</p>
-<p><em><strong>2）例子二，无需循环</strong></em></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSArray</span> *arrayFilter = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;abc1&quot;</span>, <span class="string">@&quot;abc2&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSArray</span> *arrayContent = [<span class="built_in">NSArray</span> arrayWithObjects:<span class="string">@&quot;a1&quot;</span>, <span class="string">@&quot;abc1&quot;</span>, <span class="string">@&quot;abc4&quot;</span>, <span class="string">@&quot;abc2&quot;</span>, <span class="literal">nil</span>];</span><br><span class="line"><span class="built_in">NSPredicate</span> *thePredicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;NOT (SELF in %@)&quot;</span>, arrayFilter];</span><br><span class="line">[arrayContent filterUsingPredicate:thePredicate];</span><br></pre></td></tr></table></figure>
-
-<p>这样arrayContent过滤出来的就是不包含 arrayFilter中的所有item了。</p>
-<p><em><strong>3）生成文件路径下文件集合列表</strong></em></p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSFileManager</span> *fileManager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"><span class="built_in">NSString</span> *defaultPath = [[<span class="built_in">NSBundle</span> mainBundle] resourcePath];</span><br><span class="line"><span class="built_in">NSError</span> *error;</span><br><span class="line"><span class="built_in">NSArray</span> *directoryContents = [fileManager contentsOfDirectoryAtPath:defaultPath error:&amp;error]</span><br></pre></td></tr></table></figure>
-
-<p><em><strong>4）match的用法</strong></em></p>
-<ol>
-<li>简单比较</li>
-</ol>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz-999.png&quot;</span>;</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF == %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>match里like的用法（类似Sql中的用法）</li>
-</ol>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz*.png&quot;</span>;</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF like %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>大小写比较</li>
-</ol>
-<p>[c]表示忽略大小写，[d]表示忽略重音，可以在一起使用，如下：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz*.png&quot;</span>;</span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF like[cd] %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
-<p>4.使用正则</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *match = <span class="string">@&quot;imagexyz-\\d&#123;3&#125;\\.png&quot;</span>;  <span class="comment">//imagexyz－123.png</span></span><br><span class="line"><span class="built_in">NSPredicate</span> *predicate = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF matches %@&quot;</span>, match];</span><br><span class="line"><span class="built_in">NSArray</span> *results = [directoryContents filteredArrayUsingPredicate:predicate]; </span><br></pre></td></tr></table></figure>
-
-<hr>
-<p><em>总结：</em></p>
-<blockquote>
-<p>1） 当使用聚合类的操作符时是可以不需要循环的</p>
-<p>2）当使用单个比较类的操作符时可以一个循环来搞定</p>
-<p>PS，例子 一中尝试使用[@”SELF CONTAINS %@”, arrayFilter] 来过滤会挂调，因为CONTAINS时字符串比较操作符，不是集合操作。</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/26/iOS7-%E9%AA%8C%E8%AF%81%E9%82%AE%E7%AE%B1%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/26/iOS7-%E9%AA%8C%E8%AF%81%E9%82%AE%E7%AE%B1%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7.html" class="post-title-link" itemprop="url">iOS7 验证邮箱的合法性</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-26 11:37:36 / 修改时间：12:10:52" itemprop="dateCreated datePublished" datetime="2025-06-26T11:37:36+08:00">2025-06-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>关于用于输入的邮箱地址的内容的合法性，在IOS7中的做法与之前的是一样的。</p>
-<p>第一种方法：最简单的就是利用系统的NSPredicate</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//利用正则表达式验证</span></span><br><span class="line">-(<span class="type">BOOL</span>)isValidateEmail:(<span class="built_in">NSString</span> *)email &#123;</span><br><span class="line">    <span class="built_in">NSString</span> *emailRegex = <span class="string">@&quot;[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]&#123;2,4&#125;&quot;</span>; </span><br><span class="line">    <span class="built_in">NSPredicate</span> *emailTest = [<span class="built_in">NSPredicate</span> predicateWithFormat:<span class="string">@&quot;SELF MATCHES %@&quot;</span>, emailRegex]; </span><br><span class="line">    <span class="keyword">return</span> [emailTest evaluateWithObject:email];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二种方法：通过区分字符串</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>)validateEmail:(<span class="built_in">NSString</span>*)email</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>((<span class="number">0</span> != [email rangeOfString:<span class="string">@&quot;@&quot;</span>].length) &amp;&amp;</span><br><span class="line">       (<span class="number">0</span> != [email rangeOfString:<span class="string">@&quot;.&quot;</span>].length))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">NSCharacterSet</span>* tmpInvalidCharSet = [[<span class="built_in">NSCharacterSet</span> alphanumericCharacterSet] invertedSet];</span><br><span class="line">        <span class="built_in">NSMutableCharacterSet</span>* tmpInvalidMutableCharSet = [[tmpInvalidCharSet mutableCopy] autorelease];</span><br><span class="line">        [tmpInvalidMutableCharSet removeCharactersInString:<span class="string">@&quot;_-&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         *使用compare option 来设定比较规则，如</span></span><br><span class="line"><span class="comment">         *NSCaseInsensitiveSearch是不区分大小写</span></span><br><span class="line"><span class="comment">         *NSLiteralSearch 进行完全比较,区分大小写</span></span><br><span class="line"><span class="comment">         *NSNumericSearch 只比较定符串的个数，而不比较字符串的字面值</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="built_in">NSRange</span> range1 = [email rangeOfString:<span class="string">@&quot;@&quot;</span></span><br><span class="line">                                      options:<span class="built_in">NSCaseInsensitiveSearch</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//取得用户名部分</span></span><br><span class="line">        <span class="built_in">NSString</span>* userNameString = [email substringToIndex:range1.location];</span><br><span class="line">        <span class="built_in">NSArray</span>* userNameArray   = [userNameString componentsSeparatedByString:<span class="string">@&quot;.&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">NSString</span>* string <span class="keyword">in</span> userNameArray)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">NSRange</span> rangeOfInavlidChars = [string rangeOfCharacterFromSet: tmpInvalidMutableCharSet];</span><br><span class="line">            <span class="keyword">if</span>(rangeOfInavlidChars.length != <span class="number">0</span> || [string isEqualToString:<span class="string">@&quot;&quot;</span>])</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//取得域名部分</span></span><br><span class="line">        <span class="built_in">NSString</span> *domainString = [email substringFromIndex:range1.location+<span class="number">1</span>];</span><br><span class="line">        <span class="built_in">NSArray</span> *domainArray   = [domainString componentsSeparatedByString:<span class="string">@&quot;.&quot;</span>];</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">NSString</span> *string <span class="keyword">in</span> domainArray)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">NSRange</span> rangeOfInavlidChars=[string rangeOfCharacterFromSet:tmpInvalidMutableCharSet];</span><br><span class="line">            <span class="keyword">if</span>(rangeOfInavlidChars.length !=<span class="number">0</span> || [string isEqualToString:<span class="string">@&quot;&quot;</span>])</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<p>经过测试第一种方法好用。第二种方法尚未测试。</p>
-<hr>
-<p>参考文章：</p>
-<p><span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvanVzdGluamluZzA2MTIvYXJ0aWNsZS9kZXRhaWxzLzczMTAyMzc=">http://blog.csdn.net/justinjing0612/article/details/7310237<i class="fa fa-external-link-alt"></i></span></p>
 
       
     </div>

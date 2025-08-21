@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1134</span>
+          <span class="site-state-item-count">1136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">184</span>
+        <span class="site-state-item-count">188</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -314,16 +314,12 @@
 <p>下面列出主要的实现过程</p>
 <p>第一步：组件的添加</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@property</span> (<span class="keyword">nonatomic</span>, <span class="keyword">strong</span>) <span class="built_in">UIRefreshControl</span>* refreshControl;</span><br></pre></td></tr></table></figure>
-
 <p>viewDidLoad的初始化</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//添加刷新</span></span><br><span class="line">_refreshControl = [[<span class="built_in">UIRefreshControl</span> alloc] init];</span><br><span class="line">[_refreshControl addTarget:<span class="keyword">self</span></span><br><span class="line">                  action:<span class="keyword">@selector</span>(refreshView:)</span><br><span class="line">        forControlEvents:<span class="built_in">UIControlEventValueChanged</span>];</span><br><span class="line">[_refreshControl setAttributedTitle:[[<span class="built_in">NSAttributedString</span> alloc] initWithString:<span class="string">@&quot;松手更新数据&quot;</span>]];</span><br><span class="line">[_dataTableView addSubview:_refreshControl];</span><br></pre></td></tr></table></figure>
-
 <p>这里的<code>_dataTableView</code>是要自己添加的</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGFloat</span> tableViewX = <span class="number">0.0</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> tableViewY = <span class="number">0.0</span>;</span><br><span class="line"><span class="built_in">CGFloat</span> tableWidth = <span class="keyword">self</span>.navigationController.navigationBar.frame.size.width;</span><br><span class="line"><span class="built_in">CGFloat</span> tableHeight = [[<span class="built_in">UIScreen</span> mainScreen] bounds].size.height;</span><br><span class="line">_dataTableView = [[<span class="built_in">UITableView</span> alloc] initWithFrame:<span class="built_in">CGRectMake</span>(tableViewX,</span><br><span class="line">                                                               tableViewY,</span><br><span class="line">                                                               tableWidth,</span><br><span class="line">                                                               tableHeight)</span><br><span class="line">                                              style:<span class="built_in">UITableViewStylePlain</span>];</span><br><span class="line"></span><br><span class="line">_cellHeight = <span class="number">70.0</span>;</span><br><span class="line">_dataTableView.delegate = <span class="keyword">self</span>;</span><br><span class="line">_dataTableView.dataSource = <span class="keyword">self</span>;</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:_dataTableView];</span><br></pre></td></tr></table></figure>
-
 <p>第二步：实现下拉刷新的动作</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) refreshView:(<span class="built_in">UIRefreshControl</span> *)refresh</span><br><span class="line">&#123;</span><br><span class="line">    refresh.attributedTitle = [[<span class="built_in">NSAttributedString</span> alloc] initWithString:<span class="string">@&quot;更新数据中...&quot;</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">NSDateFormatter</span> *formatter = [[<span class="built_in">NSDateFormatter</span> alloc] init];</span><br><span class="line">    [formatter setDateFormat:<span class="string">@&quot;MMM d, h:mm a&quot;</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *lastUpdated = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;上次更新日期 %@&quot;</span>,</span><br><span class="line">                             [formatter stringFromDate:[<span class="built_in">NSDate</span> date]]];</span><br><span class="line">    refresh.attributedTitle = [[<span class="built_in">NSAttributedString</span> alloc] initWithString:lastUpdated];</span><br><span class="line">    [<span class="keyword">self</span> initData];</span><br><span class="line">    [_dataTableView reloadData];</span><br><span class="line">    [refresh endRefreshing];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>结果不是很完美，因为有遮挡的现象，不过流程走通了，下面开始自己的制作吧，如果有需要的帮助的话，请看下面的QQ群，加群交流</p>
 <hr>
 <p>参考文章：</p>

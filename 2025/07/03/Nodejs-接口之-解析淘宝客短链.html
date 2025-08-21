@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1134</span>
+          <span class="site-state-item-count">1136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">184</span>
+        <span class="site-state-item-count">188</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -317,18 +317,14 @@
 <p>第一步：解析出这个短链最终的真实地址</p>
 <p>我的第一个想法是，是不是需要啥啥接口才可以哇。但是我又想，这也太麻烦了，如果我访问了这个链接是不是就可以得到真实的链接了。好，到网上找到了一个request库，还是有实例哦，简单的不要不要的，赶紧弄了下，果然是有结果的。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> r = <span class="title function_">request</span>(url, <span class="keyword">function</span>(<span class="params">err, res, body</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> uri = res.<span class="property">request</span>.<span class="property">uri</span>.<span class="property">href</span>;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(uri);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>可以了。地址拿到了，用浏览器打开试试，结果还是有问题，这个地址不是产品的真实地址，还是要做一个跳转的，好吧。</p>
 <p>我又想，这个页面究竟是个啥，打开一看，其实里面就是个js函数，执行了就简单了，这个对于node来说真实小菜一碟哇。</p>
 <p>突然让我想起来urllib这个库，嗯，不错很好用的。</p>
 <p>开始用的时候，直接请求就以为能得到结果了，结果不是的，还需要在请求中加上referer，哈哈，也许是个漏洞吧，这样我就能解析出真实的地址了。</p>
 <p>那先解决第一个问题就是node如何营造一个dom的环境，玩过dom的人肯定知道jsdom啦，然后在进行urllib请求根据302跳转获取到。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jsdom.<span class="title function_">env</span>(uri, <span class="keyword">function</span>(<span class="params">err, <span class="variable language_">window</span></span>) &#123;</span><br><span class="line">  <span class="comment">//都有window了，想干嘛就干嘛吧</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>之后就是获取最终headers里面的location</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> urlRes = urllib.<span class="title function_">request</span>(real_jump_address, &#123;</span><br><span class="line">  <span class="attr">method</span>: <span class="string">&#x27;GET&#x27;</span>,</span><br><span class="line">  <span class="attr">headers</span>: &#123;</span><br><span class="line">    <span class="string">&#x27;User-Agent&#x27;</span>: <span class="string">&#x27;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Upgrade-Insecure-Requests&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">&#x27;Host&#x27;</span>: <span class="string">&#x27;s.click.taobao.com&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Referer&#x27;</span>: uri</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="keyword">function</span>(<span class="params">err, data, res</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="keyword">throw</span> err; <span class="comment">// you need to handle error</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// console.log(res.statusCode);</span></span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(res.<span class="property">headers</span>.<span class="property">location</span>);</span><br><span class="line">  <span class="comment">// data is Buffer instance</span></span><br><span class="line">  <span class="comment">// console.log(&#x27;body &#x27;, data.toString());</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-
 
     </div>
 

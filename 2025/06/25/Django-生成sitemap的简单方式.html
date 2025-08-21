@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1134</span>
+          <span class="site-state-item-count">1136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">184</span>
+        <span class="site-state-item-count">188</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -315,18 +315,17 @@
 <hr>
 <p>Django sitemap 框架的使用和设置</p>
 <p>Django 的 contrib 包带了对网站地图协议的支持，使用起来非常方便，几行代码就可以搞定了。</p>
-<p>首先需要在 <code>settings.py</code> 的 <code>INSTALLED_APPS</code> 列表中增加 <code>app &#39;django.contrib.sitemaps&#39;</code>。</p>
-<p>随后在 urls.py 文件中追加如下代码：</p>
+<p>首先需要在 <code>settings.py</code> 的 <code>INSTALLED_APPS</code> 列表中增加 <code>app 'django.contrib.sitemaps'</code>。</p>
+<p>随后在 <span class="exturl" data-url="aHR0cDovL3VybHMucHk=">urls.py<i class="fa fa-external-link-alt"></i></span> 文件中追加如下代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># django.contrib.sitemaps</span></span><br><span class="line"><span class="keyword">from</span> django.contrib.sitemaps <span class="keyword">import</span> GenericSitemap</span><br><span class="line"><span class="keyword">from</span> blogs.models <span class="keyword">import</span> Blog</span><br><span class="line"><span class="keyword">from</span> news.models <span class="keyword">import</span> News</span><br><span class="line"></span><br><span class="line">blogs_dict = &#123;</span><br><span class="line">    <span class="string">&#x27;queryset&#x27;</span>: Blog.objects.<span class="built_in">all</span>(),</span><br><span class="line">    <span class="string">&#x27;date_field&#x27;</span>: <span class="string">&#x27;modified_date&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line">news_dict = &#123;</span><br><span class="line">    <span class="string">&#x27;queryset&#x27;</span>: News.objects.<span class="built_in">all</span>(),</span><br><span class="line">    <span class="string">&#x27;date_field&#x27;</span>: <span class="string">&#x27;modified_date&#x27;</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sitemaps = &#123;</span><br><span class="line">    <span class="comment"># &#x27;flatpages&#x27;: FlatPageSitemap,</span></span><br><span class="line">    <span class="string">&#x27;blogs&#x27;</span>: GenericSitemap(blogs_dict, priority=<span class="number">0.6</span>),</span><br><span class="line">    <span class="string">&#x27;news&#x27;</span>: GenericSitemap(news_dict, priority=<span class="number">0.5</span>),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">urlpatterns += patterns(<span class="string">&#x27;django.contrib.sitemaps.views&#x27;</span>,</span><br><span class="line">    (<span class="string">r&#x27;^sitemap\.xml$&#x27;</span>, <span class="string">&#x27;index&#x27;</span>, &#123;<span class="string">&#x27;sitemaps&#x27;</span>: sitemaps&#125;),</span><br><span class="line">    (<span class="string">r&#x27;^sitemap-(?P&lt;section&gt;.+)\.xml$&#x27;</span>, <span class="string">&#x27;sitemap&#x27;</span>, &#123;<span class="string">&#x27;sitemaps&#x27;</span>: sitemaps&#125;),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-
-<p>Blog 和 News 换成需要为其建立地图的 Model 即可，其中 ‘<code>date_field</code>‘ 对应于网站地图协议的 lastmod（最后修改时间），所以值 <code>modified_date</code> 要换成对应 Model 用来保存最后修改时间的数据库字段。</p>
+<p>Blog 和 News 换成需要为其建立地图的 Model 即可，其中 ‘<code>date_field</code>’ 对应于网站地图协议的 lastmod（最后修改时间），所以值 <code>modified_date</code> 要换成对应 Model 用来保存最后修改时间的数据库字段。</p>
 <hr>
 <p><em><strong>测试</strong></em></p>
 <p>重启测试服务器后访问：<span class="exturl" data-url="aHR0cDovLzEyNy4wLjAuMTo4MDAwL3NpdGVtYXAueG1s">http://127.0.0.1:8000/sitemap.xml<i class="fa fa-external-link-alt"></i></span> 显示的是一个包含若干网站地图的索引（sitemap index）。</p>
 <p>Google 和百度均支持网站地图索引，可以放心使用。使用网站地图索引的主要原因是，网站内容非常多时，生成的网站地图索引会非常大，检索效率低，搜索引擎为了分批检索，规定单个网站地图的条目不能超过 5 万个 URL 链接，总大小不超过 10M。</p>
 <hr>
 <p>注意问题</p>
-<p>django.contrib.sitemaps 依赖 django.contrib.sites app，必须启用。启用后需要到 “Sites” 中把缺省的 example.com 设置成真实域名；</p>
+<p>django.contrib.sitemaps 依赖 django.contrib.sites app，必须启用。启用后需要到 “Sites” 中把缺省的 <span class="exturl" data-url="aHR0cDovL2V4YW1wbGUuY29t">example.com<i class="fa fa-external-link-alt"></i></span> 设置成真实域名；</p>
 <p>Django 是动态生成网站地图，因此如果要提高搜索引擎的检索速度，获得更好的排名，应考虑将其静态化（django-static-sitemaps）。</p>
 <hr>
 <p>参考链接</p>

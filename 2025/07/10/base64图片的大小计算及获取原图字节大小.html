@@ -27,12 +27,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="实现原理：根据base64,做区分，前面部分是类型，后面部分是真实的的图片字符串 比如下面的base64图片字符串 &#x2F;&#x2F; 这里只是做了一个例子 var base64DataStr &#x3D; &#39;data:image&#x2F;png;base64,iVBORw0KGgoAAAANSUhEUgAABNoAAAigCAY ... pw52VLv8&#x2F;zk3Uc3CN6sgAAAAASUVORK">
+    <meta name="description" content="实现原理：根据base64,做区分，前面部分是类型，后面部分是真实的的图片字符串 比如下面的base64图片字符串 &#x2F;&#x2F; 这里只是做了一个例子 var base64DataStr &#x3D; &#39;data:image&#x2F;png;base64,iVBORw0KGgoAAAANSUhEUgAABNoAAAigCAY ... pw52VLv8&#x2F;zk3Uc3CN6sgAAAAASUVORK5CYII&#x3D;&#39;; 12345">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="base64图片的大小计算及获取原图字节大小">
 <meta property="og:url" content="https://blog.gowhich.com/2025/07/10/base64%E5%9B%BE%E7%89%87%E7%9A%84%E5%A4%A7%E5%B0%8F%E8%AE%A1%E7%AE%97%E5%8F%8A%E8%8E%B7%E5%8F%96%E5%8E%9F%E5%9B%BE%E5%AD%97%E8%8A%82%E5%A4%A7%E5%B0%8F.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="实现原理：根据base64,做区分，前面部分是类型，后面部分是真实的的图片字符串 比如下面的base64图片字符串 &#x2F;&#x2F; 这里只是做了一个例子 var base64DataStr &#x3D; &#39;data:image&#x2F;png;base64,iVBORw0KGgoAAAANSUhEUgAABNoAAAigCAY ... pw52VLv8&#x2F;zk3Uc3CN6sgAAAAASUVORK">
+<meta property="og:description" content="实现原理：根据base64,做区分，前面部分是类型，后面部分是真实的的图片字符串 比如下面的base64图片字符串 &#x2F;&#x2F; 这里只是做了一个例子 var base64DataStr &#x3D; &#39;data:image&#x2F;png;base64,iVBORw0KGgoAAAANSUhEUgAABNoAAAigCAY ... pw52VLv8&#x2F;zk3Uc3CN6sgAAAAASUVORK5CYII&#x3D;&#39;; 12345">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-10T03:52:40.000Z">
 <meta property="article:modified_time" content="2025-07-10T04:08:06.486Z">
@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1134</span>
+          <span class="site-state-item-count">1136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">184</span>
+        <span class="site-state-item-count">188</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -308,13 +308,11 @@
     
     <div class="post-body" itemprop="articleBody"><p>实现原理：根据<code>base64,</code>做区分，前面部分是类型，后面部分是真实的的图片字符串</p>
 <p>比如下面的base64图片字符串</p>
-<p>&#x2F;&#x2F; 这里只是做了一个例子</p>
-<p><code>var base64DataStr = &#39;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABNoAAAigCAY ... pw52VLv8/zk3Uc3CN6sgAAAAASUVORK5CYII=&#39;;</code></p>
+<p>// 这里只是做了一个例子</p>
+<p><code>var base64DataStr = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABNoAAAigCAY ... pw52VLv8/zk3Uc3CN6sgAAAAASUVORK5CYII=';</code></p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getBase64ImgSize</span>(<span class="params">base64DataStr</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> tag = <span class="string">&quot;base64,&quot;</span>;</span><br><span class="line">  <span class="keyword">var</span> base64Data = <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 截取字符串 获取&quot;base64,&quot;后面的字符串</span></span><br><span class="line">  base64DataStr = base64Data = base64DataStr.<span class="title function_">substring</span>(base64DataStr.<span class="title function_">indexOf</span>(tag) + tag.<span class="property">length</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 根据末尾等号（&#x27;=&#x27;）来再次确认真实base64图片字符串</span></span><br><span class="line">  <span class="keyword">var</span> eqTagIndex = base64DataStr.<span class="title function_">indexOf</span>(<span class="string">&quot;=&quot;</span>);</span><br><span class="line">  base64DataStr = eqTagIndex != -<span class="number">1</span> ? base64DataStr.<span class="title function_">substring</span>(<span class="number">0</span>, eqTagIndex) : base64DataStr;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算大小</span></span><br><span class="line">  <span class="keyword">var</span> strLen = base64DataStr.<span class="property">length</span>;</span><br><span class="line">  <span class="keyword">var</span> fileSize = strLen - (strLen / <span class="number">8</span>) * <span class="number">2</span>; <span class="comment">// 这里的原理可以想一下为什么要这样做</span></span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">fileSize</span>: fileSize,</span><br><span class="line">    <span class="attr">base64Data</span>: base64Data,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>使用方式如下</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">getBase64ImgSize</span>(base64DataStr)</span><br></pre></td></tr></table></figure>
-
 <p>运行后得到的结果</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;fileSize: 57, base64Data: <span class="string">&quot;iVBORw0KGgoAAAANSUhEUgAABNoAAAigCAY ... pw52VLv8/zk3Uc3CN6sgAAAAASUVORK5CYII=&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
 

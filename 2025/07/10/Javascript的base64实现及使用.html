@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1134</span>
+          <span class="site-state-item-count">1136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">184</span>
+        <span class="site-state-item-count">188</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -308,10 +308,8 @@
     
     <div class="post-body" itemprop="articleBody"><p>实例及实现原理如下</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> uploadKey = <span class="string">&#x27;avatar/20191212/userid-1.png&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// key 进行base64处理</span></span><br><span class="line"><span class="comment">// 第一步使用encodeURIComponent() 函数把字符串作为 URI 组件进行编码</span></span><br><span class="line"><span class="comment">// 第二步使用unescape() 函数对通过 escape() 编码的字符串进行解码</span></span><br><span class="line"><span class="comment">// 第三步使用btoa() 方法用于创建一个 base-64 编码的字符串。该方法使用 &quot;A-Z&quot;, &quot;a-z&quot;, &quot;0-9&quot;, &quot;+&quot;, &quot;/&quot; 和 &quot;=&quot; 字符来编码字符串。base64 解码使用方法是 atob() 。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> key = <span class="title function_">btoa</span>(<span class="built_in">unescape</span>(<span class="built_in">encodeURIComponent</span>(uploadKey)));</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> url = <span class="string">&quot;http://upload.qiniup.com/putb64/12&quot;</span> + <span class="string">&#x27;/key/&#x27;</span> + key;</span><br></pre></td></tr></table></figure>
-
 <p>运行上面代码结果如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; var uploadKey = <span class="string">&#x27;avatar/20191212/userid-1.png&#x27;</span>;</span><br><span class="line">&lt; undefined</span><br><span class="line">&gt; var key = btoa(unescape(encodeURIComponent(uploadKey)));</span><br><span class="line">&lt; undefined</span><br><span class="line">&gt; var url = <span class="string">&quot;http://upload.qiniup.com/putb64/12&quot;</span>+<span class="string">&#x27;/key/&#x27;</span>+key; </span><br><span class="line">&lt; undefined</span><br><span class="line">&gt; console.log(url)</span><br><span class="line">  VM7861:1 http://upload.qiniup.com/putb64/12/key/YXZhdGFyLzIwMTkxMjEyL3VzZXJpZC0xLnBuZw==</span><br><span class="line">&gt; undefined</span><br></pre></td></tr></table></figure>
-
 <p>参考如下 <span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMjQ2ODAxL2hvdy1jYW4teW91LWVuY29kZS1hLXN0cmluZy10by1iYXNlNjQtaW4tamF2YXNjcmlwdA==">https://stackoverflow.com/questions/246801/how-can-you-encode-a-string-to-base64-in-javascript<i class="fa fa-external-link-alt"></i></span></p>
 <p>我们分解执行下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt; var a = encodeURIComponent(uploadKey)</span><br><span class="line">&lt; undefined</span><br><span class="line">&gt; console.log(a)</span><br><span class="line">&lt; avatar%2F20191212%2Fuserid-1.png</span><br><span class="line">&gt; undefined</span><br><span class="line">&lt; var b = unescape(a);</span><br><span class="line">&gt; undefined</span><br><span class="line">&lt; console.log(b)</span><br><span class="line">  avatar/20191212/userid-1.png</span><br><span class="line">&gt; undefined</span><br><span class="line">&lt; var c = btoa(b)</span><br><span class="line">&gt; undefined</span><br><span class="line">&lt; console.log(c)</span><br><span class="line">  YXZhdGFyLzIwMTkxMjEyL3VzZXJpZC0xLnBuZw==</span><br><span class="line">&gt; undefined</span><br></pre></td></tr></table></figure>

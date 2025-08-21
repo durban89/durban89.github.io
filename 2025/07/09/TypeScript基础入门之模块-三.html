@@ -27,12 +27,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="可选模块加载和其他高级加载方案在某些情况下，您可能只想在某些条件下加载模块。在TypeScript中，我们可以使用下面显示的模式来实现此模式和其他高级加载方案，以直接调用模块加载器而不会丢失类型安全性。 编译器检测是否生成的JavaScript中使用了每个模块。如果模块标识符仅用作类型注释的一部分而从不用作表达式，则不会为该模块生成require调用。这种未使用的引用的省略是一种良好的性能优化，并">
+    <meta name="description" content="可选模块加载和其他高级加载方案 在某些情况下，您可能只想在某些条件下加载模块。在TypeScript中，我们可以使用下面显示的模式来实现此模式和其他高级加载方案，以直接调用模块加载器而不会丢失类型安全性。 编译器检测是否生成的JavaScript中使用了每个模块。如果模块标识符仅用作类型注释的一部分而从不用作表达式，则不会为该模块生成require调用。这种未使用的引用的省略是一种良好的性能优化，">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="TypeScript基础入门之模块(三)">
 <meta property="og:url" content="https://blog.gowhich.com/2025/07/09/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E6%A8%A1%E5%9D%97-%E4%B8%89.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="可选模块加载和其他高级加载方案在某些情况下，您可能只想在某些条件下加载模块。在TypeScript中，我们可以使用下面显示的模式来实现此模式和其他高级加载方案，以直接调用模块加载器而不会丢失类型安全性。 编译器检测是否生成的JavaScript中使用了每个模块。如果模块标识符仅用作类型注释的一部分而从不用作表达式，则不会为该模块生成require调用。这种未使用的引用的省略是一种良好的性能优化，并">
+<meta property="og:description" content="可选模块加载和其他高级加载方案 在某些情况下，您可能只想在某些条件下加载模块。在TypeScript中，我们可以使用下面显示的模式来实现此模式和其他高级加载方案，以直接调用模块加载器而不会丢失类型安全性。 编译器检测是否生成的JavaScript中使用了每个模块。如果模块标识符仅用作类型注释的一部分而从不用作表达式，则不会为该模块生成require调用。这种未使用的引用的省略是一种良好的性能优化，">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-09T02:43:12.000Z">
 <meta property="article:modified_time" content="2025-07-09T02:46:07.249Z">
@@ -197,7 +197,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1134</span>
+          <span class="site-state-item-count">1136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -208,7 +208,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">184</span>
+        <span class="site-state-item-count">188</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -307,15 +307,19 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h2 id="可选模块加载和其他高级加载方案"><a href="#可选模块加载和其他高级加载方案" class="headerlink" title="可选模块加载和其他高级加载方案"></a>可选模块加载和其他高级加载方案</h2><p>在某些情况下，您可能只想在某些条件下加载模块。在TypeScript中，我们可以使用下面显示的模式来实现此模式和其他高级加载方案，以直接调用模块加载器而不会丢失类型安全性。</p>
+    <div class="post-body" itemprop="articleBody"><h2 id="可选模块加载和其他高级加载方案">可选模块加载和其他高级加载方案</h2>
+<p>在某些情况下，您可能只想在某些条件下加载模块。在TypeScript中，我们可以使用下面显示的模式来实现此模式和其他高级加载方案，以直接调用模块加载器而不会丢失类型安全性。</p>
 <p>编译器检测是否生成的JavaScript中使用了每个模块。如果模块标识符仅用作类型注释的一部分而从不用作表达式，则不会为该模块生成require调用。这种未使用的引用的省略是一种良好的性能优化，并且还允许可选地加载这些模块。</p>
-<p>该模式的核心思想是<code>import id = require(&quot;...&quot;)</code>语句使我们能够访问模块公开的类型。<br>模块加载器是动态调用的(通过require)，如下面的if块所示。<br>这利用了参考省略优化，因此模块仅在需要时加载。<br>为了使这个模式起作用，重要的是通过导入定义的符号仅用于类型位置(即从不在将被生成到JavaScript中的位置)。<br>为了保持类型安全，我们可以使用typeof关键字。<br>typeof关键字在类型位置使用时会生成值的类型，在本例中为模块的类型。</p>
+<p>该模式的核心思想是<code>import id = require(&quot;...&quot;)</code>语句使我们能够访问模块公开的类型。<br>
+模块加载器是动态调用的(通过require)，如下面的if块所示。<br>
+这利用了参考省略优化，因此模块仅在需要时加载。<br>
+为了使这个模式起作用，重要的是通过导入定义的符号仅用于类型位置(即从不在将被生成到JavaScript中的位置)。<br>
+为了保持类型安全，我们可以使用typeof关键字。<br>
+typeof关键字在类型位置使用时会生成值的类型，在本例中为模块的类型。</p>
 <p><strong>**示例：Node.js里的动态模块加载**</strong></p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="keyword">function</span> <span class="title function_">require</span>(<span class="params"><span class="attr">moduleName</span>: <span class="built_in">string</span></span>): <span class="built_in">any</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ZipCodeValidator</span> <span class="keyword">as</span> <span class="title class_">Zip</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./ZipCodeValidator&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (needZipValidation) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="title class_">ZipCodeValidator</span>: <span class="keyword">typeof</span> <span class="title class_">Zip</span> = <span class="built_in">require</span>(<span class="string">&quot;./ZipCodeValidator&quot;</span>);</span><br><span class="line">    <span class="keyword">let</span> validator = <span class="keyword">new</span> <span class="title class_">ZipCodeValidator</span>();</span><br><span class="line">    <span class="keyword">if</span> (validator.<span class="title function_">isAcceptable</span>(<span class="string">&quot;...&quot;</span>)) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><strong>**示例：require.js里的动态模块加载**</strong></p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="keyword">function</span> <span class="title function_">require</span>(<span class="params"><span class="attr">moduleNames</span>: <span class="built_in">string</span>[], <span class="attr">onLoad</span>: (...args: <span class="built_in">any</span>[]) =&gt; <span class="built_in">void</span></span>): <span class="built_in">void</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> <span class="title class_">Zip</span> <span class="keyword">from</span> <span class="string">&quot;./ZipCodeValidator&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (needZipValidation) &#123;</span><br><span class="line">    <span class="built_in">require</span>([<span class="string">&quot;./ZipCodeValidator&quot;</span>], <span class="function">(<span class="params"><span class="title class_">ZipCodeValidator</span>: <span class="keyword">typeof</span> <span class="title class_">Zip</span></span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> validator = <span class="keyword">new</span> <span class="title class_">ZipCodeValidator</span>.<span class="title class_">ZipCodeValidator</span>();</span><br><span class="line">        <span class="keyword">if</span> (validator.<span class="title function_">isAcceptable</span>(<span class="string">&quot;...&quot;</span>)) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><strong>**示例：System.js里的动态模块加载**</strong></p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="keyword">const</span> <span class="title class_">System</span>: <span class="built_in">any</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">ZipCodeValidator</span> <span class="keyword">as</span> <span class="title class_">Zip</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./ZipCodeValidator&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (needZipValidation) &#123;</span><br><span class="line">    <span class="title class_">System</span>.<span class="keyword">import</span>(<span class="string">&quot;./ZipCodeValidator&quot;</span>).<span class="title function_">then</span>(<span class="function">(<span class="params"><span class="title class_">ZipCodeValidator</span>: <span class="keyword">typeof</span> <span class="title class_">Zip</span></span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> x = <span class="keyword">new</span> <span class="title class_">ZipCodeValidator</span>();</span><br><span class="line">        <span class="keyword">if</span> (x.<span class="title function_">isAcceptable</span>(<span class="string">&quot;...&quot;</span>)) &#123; <span class="comment">/* ... */</span> &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 

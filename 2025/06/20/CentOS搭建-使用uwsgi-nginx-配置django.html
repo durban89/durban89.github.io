@@ -27,12 +27,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="记录这篇文章的前提是，uwsgi的环境，nginx的环境和django框架都已经搭建完毕了。不会的自己可以去google 1，项目创建 1sudo django-admin.py startproject walkerfree  2,配置nginx server 123456789101112131415161718192021222324252627server        &#123;">
+    <meta name="description" content="记录这篇文章的前提是，uwsgi的环境，nginx的环境和django框架都已经搭建完毕了。不会的自己可以去google 1，项目创建 1sudo django-admin.py startproject walkerfree 2,配置nginx server 123456789101112131415161718192021222324252627server        &#123;">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="CentOS搭建 使用uwsgi+nginx 配置django">
 <meta property="og:url" content="https://blog.gowhich.com/2025/06/20/CentOS%E6%90%AD%E5%BB%BA-%E4%BD%BF%E7%94%A8uwsgi-nginx-%E9%85%8D%E7%BD%AEdjango.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="记录这篇文章的前提是，uwsgi的环境，nginx的环境和django框架都已经搭建完毕了。不会的自己可以去google 1，项目创建 1sudo django-admin.py startproject walkerfree  2,配置nginx server 123456789101112131415161718192021222324252627server        &#123;">
+<meta property="og:description" content="记录这篇文章的前提是，uwsgi的环境，nginx的环境和django框架都已经搭建完毕了。不会的自己可以去google 1，项目创建 1sudo django-admin.py startproject walkerfree 2,配置nginx server 123456789101112131415161718192021222324252627server        &#123;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-06-20T03:07:34.000Z">
 <meta property="article:modified_time" content="2025-06-20T03:17:26.728Z">
@@ -199,7 +199,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1134</span>
+          <span class="site-state-item-count">1136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -210,7 +210,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">184</span>
+        <span class="site-state-item-count">188</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -312,16 +312,12 @@
     <div class="post-body" itemprop="articleBody"><p>记录这篇文章的前提是，uwsgi的环境，nginx的环境和django框架都已经搭建完毕了。不会的自己可以去google</p>
 <p>1，项目创建</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> django-admin.py startproject walkerfree</span><br></pre></td></tr></table></figure>
-
 <p>2,配置nginx server</p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span></span><br><span class="line">        &#123;</span><br><span class="line">                <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">                <span class="attribute">server_name</span> www.walkerfree.com;</span><br><span class="line">                <span class="attribute">index</span> index.html index.htm default.html default.htm;</span><br><span class="line">                <span class="attribute">root</span>  /home/wwwroot/walkerfree/walkerfree;</span><br><span class="line"></span><br><span class="line">                <span class="attribute">access_log</span> /home/wwwlogs/www.walkerfree.access.log;</span><br><span class="line">                <span class="attribute">error_log</span> /home/wwwlogs/www.walkerfree.<span class="literal">error</span>.log;</span><br><span class="line"></span><br><span class="line">                <span class="section">location</span> / &#123;</span><br><span class="line">                        <span class="attribute">include</span> uwsgi_params;</span><br><span class="line">                        <span class="attribute">uwsgi_pass</span>      unix://tmp/walkerfree.socket;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="section">location</span><span class="regexp"> ^~</span> /static/ &#123;</span><br><span class="line">                        <span class="attribute">root</span>    /home/wwwroot/walkerfree/;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="section">location</span> <span class="regexp">~ ^.+\.(gif|jpg|png|ico|jpeg)$</span> &#123;</span><br><span class="line">                        <span class="attribute">expires</span> <span class="number">3d</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="section">location</span> <span class="regexp">~ ^.+\.(css|js)$</span> &#123;</span><br><span class="line">                   <span class="attribute">expires</span> <span class="number">12h</span>;</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
-
 <p>3,配置项目的uwsgi启动设置</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[uwsgi]</span></span><br><span class="line"><span class="attr">socket</span> = /tmp/walkerfree.socket</span><br><span class="line"><span class="comment">#http=127.0.0.1:9090</span></span><br><span class="line"><span class="attr">chdir</span>=/home/wwwroot/walkerfree</span><br><span class="line"><span class="attr">module</span>=walkerfree.wsgi</span><br><span class="line"><span class="attr">master</span>=<span class="literal">True</span></span><br><span class="line"><span class="attr">pidfile</span>=/tmp/uwsgi.pid</span><br><span class="line"><span class="attr">vacuum</span>=<span class="literal">True</span></span><br><span class="line"><span class="attr">max-requests</span>=<span class="number">5000</span></span><br><span class="line"><span class="attr">daemonize</span>=/home/wwwlogs/walkerfree-uwsgi.log</span><br></pre></td></tr></table></figure>
-
 <p>4，启动uwsgi，启动nginx(root角色)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx -s reload</span><br><span class="line">uwsgi --ini /usr/local/etc/uwsgi/walkerfree-uwsgi.ini</span><br></pre></td></tr></table></figure>
-
 <p>5,启动成功</p>
 
     </div>

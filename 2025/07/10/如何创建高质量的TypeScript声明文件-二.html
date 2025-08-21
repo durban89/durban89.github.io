@@ -197,7 +197,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1134</span>
+          <span class="site-state-item-count">1136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -208,7 +208,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">184</span>
+        <span class="site-state-item-count">188</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -312,22 +312,18 @@
 <p>有些库只能在模块加载器环境中工作。 例如，因为express仅适用于Node.js，必须使用CommonJS require函数加载。</p>
 <p>ECMAScript 2015（也称为ES2015，ECMAScript 6和ES6），CommonJS和RequireJS具有类似的导入模块的概念。 例如，在JavaScript CommonJS（Node.js）中，您可以编写</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>);</span><br></pre></td></tr></table></figure>
-
 <p>在TypeScript或ES6中，import关键字用于相同的目的：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> fs = <span class="built_in">require</span>(<span class="string">&quot;fs&quot;</span>);</span><br></pre></td></tr></table></figure>
-
 <p>您通常会看到模块化库在其文档中包含以下行之一：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> someLib = <span class="built_in">require</span>(<span class="string">&#x27;someLib&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
 <p>或</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">define</span>(..., [<span class="string">&#x27;someLib&#x27;</span>], <span class="keyword">function</span>(<span class="params">someLib</span>) &#123;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
 <p>与全局模块一样，您可能会在UMD模块的文档中看到这些示例，因此请务必查看代码或文档。</p>
 <p><em>从代码中识别模块库</em></p>
 <p>模块化库通常至少具有以下某些功能：</p>
 <ul>
 <li>无条件调用require或define</li>
-<li>import * as a from ‘b’的声明，或export c;</li>
+<li>import * as a from 'b’的声明，或export c;</li>
 <li>对exports或module.exports的赋值</li>
 </ul>
 <p>他们很少会：</p>
@@ -336,29 +332,25 @@
 </ul>
 <p><em>模块化库的示例</em></p>
 <p>许多流行的Node.js库都在模块系列中，例如express，gulp和request。</p>
-<h3 id="UMD"><a href="#UMD" class="headerlink" title="UMD"></a>UMD</h3><p>UMD模块可以用作模块（通过导入），也可以用作全局模块（在没有模块加载器的环境中运行）。 许多流行的库，如Moment.js，都是以这种方式编写的。 例如，在Node.js中或使用RequireJS，您可以编写：</p>
+<h3 id="UMD">UMD</h3>
+<p>UMD模块可以用作模块（通过导入），也可以用作全局模块（在没有模块加载器的环境中运行）。 许多流行的库，如Moment.js，都是以这种方式编写的。 例如，在Node.js中或使用RequireJS，您可以编写：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> moment = <span class="built_in">require</span>(<span class="string">&quot;moment&quot;</span>);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(moment.<span class="title function_">format</span>());</span><br></pre></td></tr></table></figure>
-
 <p>而在vanilla浏览器环境中，你会写：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(moment.<span class="title function_">format</span>());</span><br></pre></td></tr></table></figure>
-
 <p><strong>识别UMD库</strong></p>
 <p>UMD模块检查是否存在模块加载器环境。 这是一个易于查看的模式，看起来像这样：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">function</span> (<span class="params">root, factory</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> define === <span class="string">&quot;function&quot;</span> &amp;&amp; define.<span class="property">amd</span>) &#123;</span><br><span class="line">        <span class="title function_">define</span>([<span class="string">&quot;libName&quot;</span>], factory);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="variable language_">module</span> === <span class="string">&quot;object&quot;</span> &amp;&amp; <span class="variable language_">module</span>.<span class="property">exports</span>) &#123;</span><br><span class="line">        <span class="variable language_">module</span>.<span class="property">exports</span> = <span class="title function_">factory</span>(<span class="built_in">require</span>(<span class="string">&quot;libName&quot;</span>));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        root.<span class="property">returnExports</span> = <span class="title function_">factory</span>(root.<span class="property">libName</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;(<span class="variable language_">this</span>, <span class="keyword">function</span> (<span class="params">b</span>) &#123;</span><br></pre></td></tr></table></figure>
-
 <p>如果您在库的代码中看到typeof define，typeof window或typeof module的测试，特别是在文件的顶部，它几乎总是一个UMD库。</p>
-<p>UMD库的文档通常还会演示一个”Using in Node.js”示例，其中显示了require，以及一个”Using in the browser”示例，该示例显示了使用<code>&lt;script&gt;</code>标记加载脚本。</p>
+<p>UMD库的文档通常还会演示一个&quot;Using in Node.js&quot;示例，其中显示了require，以及一个&quot;Using in the browser&quot;示例，该示例显示了使用<code>&lt;script&gt;</code>标记加载脚本。</p>
 <p><strong>UMD库的示例</strong></p>
 <p>大多数流行的库现在都可以作为UMD包使用。 示例包括jQuery，Moment.js，lodash等等。</p>
 <p><em>模板</em></p>
 <p>模块有三个模板，module.d.ts，module-class.d.ts和module-function.d.ts。</p>
 <p>如果您的模块可以像函数一样被调用，请使用module-function.d.ts：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="built_in">require</span>(<span class="string">&quot;foo&quot;</span>);</span><br><span class="line"><span class="comment">// Note: calling &#x27;x&#x27; as a function</span></span><br><span class="line"><span class="keyword">var</span> y = <span class="title function_">x</span>(<span class="number">42</span>);</span><br></pre></td></tr></table></figure>
-
-<p>请务必阅读脚注”<span class="exturl" data-url="aHR0cDovL3d3dy50eXBlc2NyaXB0bGFuZy5vcmcvZG9jcy9oYW5kYm9vay9kZWNsYXJhdGlvbi1maWxlcy9saWJyYXJ5LXN0cnVjdHVyZXMuaHRtbCN0aGUtaW1wYWN0LW9mLWVzNi1vbi1tb2R1bGUtcGx1Z2lucw==">ES6对模块调用签名的影响<i class="fa fa-external-link-alt"></i></span>“</p>
+<p>请务必阅读脚注&quot;<span class="exturl" data-url="aHR0cDovL3d3dy50eXBlc2NyaXB0bGFuZy5vcmcvZG9jcy9oYW5kYm9vay9kZWNsYXJhdGlvbi1maWxlcy9saWJyYXJ5LXN0cnVjdHVyZXMuaHRtbCN0aGUtaW1wYWN0LW9mLWVzNi1vbi1tb2R1bGUtcGx1Z2lucw==">ES6对模块调用签名的影响<i class="fa fa-external-link-alt"></i></span>&quot;</p>
 <p>如果您的模块可以使用new构建，请使用module-class.d.ts：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="built_in">require</span>(<span class="string">&quot;bar&quot;</span>);</span><br><span class="line"><span class="comment">// Note: using &#x27;new&#x27; operator on the imported variable</span></span><br><span class="line"><span class="keyword">var</span> y = <span class="keyword">new</span> <span class="title function_">x</span>(<span class="string">&quot;hello&quot;</span>);</span><br></pre></td></tr></table></figure>
-
 <p>同样的脚注适用于这些模块。</p>
 <p>如果您的模块不可调用或可构造，请使用module.d.ts文件。</p>
 <p>未完待续…</p>

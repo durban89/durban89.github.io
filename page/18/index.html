@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1134</span>
+          <span class="site-state-item-count">1136</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">184</span>
+        <span class="site-state-item-count">188</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,266 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8BMixins.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/10/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8BMixins.html" class="post-title-link" itemprop="url">TypeScript基础入门之Mixins</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-10 10:24:12 / 修改时间：10:26:09" itemprop="dateCreated datePublished" datetime="2025-07-10T10:24:12+08:00">2025-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="介绍">介绍</h3>
+<p>与传统的OO层次结构一起，另一种从可重用组件构建类的流行方法是通过组合更简单的部分类来构建它们。<br>
+您可能熟悉Scala等语言的mixin或traits的概念，并且该模式在JavaScript社区中也已经普及。</p>
+<h3 id="Mixin示例">Mixin示例</h3>
+<p>在下面的代码中，我们将展示如何在TypeScript中对mixin进行建模。<br>
+在代码之后，我们将分解其工作原理。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Disposable Mixin</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Disposable</span> &#123;</span><br><span class="line">    <span class="attr">isDisposed</span>: <span class="built_in">boolean</span>;</span><br><span class="line">    <span class="title function_">dispose</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">isDisposed</span> = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Activatable Mixin</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Activatable</span> &#123;</span><br><span class="line">    <span class="attr">isActive</span>: <span class="built_in">boolean</span>;</span><br><span class="line">    <span class="title function_">activate</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">isActive</span> = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">deactivate</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">isActive</span> = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SmartObject</span> <span class="keyword">implements</span> <span class="title class_">Disposable</span>, <span class="title class_">Activatable</span> &#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">isActive</span> + <span class="string">&quot; : &quot;</span> + <span class="variable language_">this</span>.<span class="property">isDisposed</span>), <span class="number">500</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">interact</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">activate</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Disposable</span></span><br><span class="line">    <span class="attr">isDisposed</span>: <span class="built_in">boolean</span> = <span class="literal">false</span>;</span><br><span class="line">    <span class="attr">dispose</span>: <span class="function">() =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">    <span class="comment">// Activatable</span></span><br><span class="line">    <span class="attr">isActive</span>: <span class="built_in">boolean</span> = <span class="literal">false</span>;</span><br><span class="line">    <span class="attr">activate</span>: <span class="function">() =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">    <span class="attr">deactivate</span>: <span class="function">() =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">applyMixins</span>(<span class="title class_">SmartObject</span>, [<span class="title class_">Disposable</span>, <span class="title class_">Activatable</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> smartObj = <span class="keyword">new</span> <span class="title class_">SmartObject</span>();</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> smartObj.<span class="title function_">interact</span>(), <span class="number">1000</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">////////////////////////////////////////</span></span><br><span class="line"><span class="comment">// In your runtime library somewhere</span></span><br><span class="line"><span class="comment">////////////////////////////////////////</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">applyMixins</span>(<span class="params"><span class="attr">derivedCtor</span>: <span class="built_in">any</span>, <span class="attr">baseCtors</span>: <span class="built_in">any</span>[]</span>) &#123;</span><br><span class="line">    baseCtors.<span class="title function_">forEach</span>(<span class="function"><span class="params">baseCtor</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">Object</span>.<span class="title function_">getOwnPropertyNames</span>(baseCtor.<span class="property"><span class="keyword">prototype</span></span>).<span class="title function_">forEach</span>(<span class="function"><span class="params">name</span> =&gt;</span> &#123;</span><br><span class="line">            derivedCtor.<span class="property"><span class="keyword">prototype</span></span>[name] = baseCtor.<span class="property"><span class="keyword">prototype</span></span>[name];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="理解示例">理解示例</h3>
+<p>代码示例以两个类作为我们的mixins开始。<br>
+您可以看到每个人都专注于特定的活动或能力。<br>
+我们稍后将它们混合在一起，形成两种功能的新类。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Disposable Mixin</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Disposable</span> &#123;</span><br><span class="line">    <span class="attr">isDisposed</span>: boolean;</span><br><span class="line">    <span class="title function_">dispose</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">isDisposed</span> = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Activatable Mixin</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Activatable</span> &#123;</span><br><span class="line">    <span class="attr">isActive</span>: boolean;</span><br><span class="line">    <span class="title function_">activate</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">isActive</span> = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">deactivate</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">isActive</span> = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接下来，我们将创建将处理两个mixin组合的类。<br>
+让我们更详细地看一下它是如何做到的：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">SmartObject</span> <span class="keyword">implements</span> <span class="title class_">Disposable</span>, <span class="title class_">Activatable</span> &#123;</span><br></pre></td></tr></table></figure>
+<p>您可能在上面注意到的第一件事是，我们使用工具而不是使用扩展。<br>
+这将类视为接口，并且仅使用Disposable和Activatable后面的类型而不是实现。<br>
+这意味着我们必须在课堂上提供实现。<br>
+除此之外，这正是我们想要通过使用mixins避免的。</p>
+<p>为了满足这一要求，我们为来自mixin的成员创建了替身属性及其类型。<br>
+这使编译器满足这些成员在运行时可用。<br>
+这让我们仍然可以获得mixins的好处，尽管有一些簿记开销。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Disposable</span></span><br><span class="line"><span class="attr">isDisposed</span>: <span class="built_in">boolean</span> = <span class="literal">false</span>;</span><br><span class="line"><span class="attr">dispose</span>: <span class="function">() =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line"><span class="comment">// Activatable</span></span><br><span class="line"><span class="attr">isActive</span>: <span class="built_in">boolean</span> = <span class="literal">false</span>;</span><br><span class="line"><span class="attr">activate</span>: <span class="function">() =&gt;</span> <span class="built_in">void</span>;</span><br><span class="line"><span class="attr">deactivate</span>: <span class="function">() =&gt;</span> <span class="built_in">void</span>;</span><br></pre></td></tr></table></figure>
+<p>最后，我们将mixin混合到类中，创建完整的实现。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">applyMixins</span>(<span class="title class_">SmartObject</span>, [<span class="title class_">Disposable</span>, <span class="title class_">Activatable</span>]);</span><br></pre></td></tr></table></figure>
+<p>最后，我们创建了一个辅助函数，它将为我们进行混合。<br>
+这将贯穿每个mixin的属性并将它们复制到mixins的目标，并使用它们的实现填充替代属性。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">applyMixins</span>(<span class="params"><span class="attr">derivedCtor</span>: <span class="built_in">any</span>, <span class="attr">baseCtors</span>: <span class="built_in">any</span>[]</span>) &#123;</span><br><span class="line">    baseCtors.<span class="title function_">forEach</span>(<span class="function"><span class="params">baseCtor</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="title class_">Object</span>.<span class="title function_">getOwnPropertyNames</span>(baseCtor.<span class="property"><span class="keyword">prototype</span></span>).<span class="title function_">forEach</span>(<span class="function"><span class="params">name</span> =&gt;</span> &#123;</span><br><span class="line">            derivedCtor.<span class="property"><span class="keyword">prototype</span></span>[name] = baseCtor.<span class="property"><span class="keyword">prototype</span></span>[name];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8-%E4%B8%89.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/10/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E8%A3%85%E9%A5%B0%E5%99%A8-%E4%B8%89.html" class="post-title-link" itemprop="url">TypeScript基础入门之装饰器(三)</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-10 10:24:09 / 修改时间：10:26:57" itemprop="dateCreated datePublished" datetime="2025-07-10T10:24:09+08:00">2025-07-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>继续上篇文章[<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy85NTU=">TypeScript基础入门之装饰器(二)<i class="fa fa-external-link-alt"></i></span>]</p>
+<h3 id="访问器装饰器">访问器装饰器</h3>
+<p>Accessor Decorator在访问器声明之前声明。 访问器装饰器应用于访问器的属性描述符，可用于观察，修改或替换访问者的定义。 访问器装饰器不能在声明文件中使用，也不能在任何其他环境上下文中使用（例如在声明类中）。</p>
+<blockquote>
+<p>注意: TypeScript不允许为单个成员装饰get和set访问器。相反，该成员的所有装饰器必须应用于按文档顺序指定的第一个访问器。这是因为装饰器适用于属性描述符，它结合了get和set访问器，而不是单独的每个声明。</p>
+</blockquote>
+<p>访问器装饰器的表达式将在运行时作为函数调用，具有以下三个参数：</p>
+<ol>
+<li>静态成员的类的构造函数，或实例成员的类的原型。</li>
+<li>成员的名字。</li>
+<li>会员的财产描述。</li>
+</ol>
+<blockquote>
+<p>注意: 如果脚本目标小于ES5，则属性描述符将不确定。</p>
+</blockquote>
+<p>如果访问器装饰器返回一个值，它将用作该成员的属性描述符。</p>
+<blockquote>
+<p>注意: 如果脚本目标小于ES5，则忽略返回值。</p>
+</blockquote>
+<p>以下是应用于Point类成员的访问器装饰器(<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2NvbmZpZ3VyYWJsZQ==">@configurable<i class="fa fa-external-link-alt"></i></span>)的示例：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">_x</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">_y</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"><span class="attr">x</span>: <span class="built_in">number</span>, <span class="attr">y</span>: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">_x</span> = x;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">_y</span> = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@configurable</span>(<span class="literal">false</span>)</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">x</span>() &#123; <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">_x</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@configurable</span>(<span class="literal">false</span>)</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">y</span>() &#123; <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">_y</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以使用以下函数声明定义@configurable装饰器：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">configurable</span>(<span class="params"><span class="attr">value</span>: <span class="built_in">boolean</span></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params"><span class="attr">target</span>: <span class="built_in">any</span>, <span class="attr">propertyKey</span>: <span class="built_in">string</span>, <span class="attr">descriptor</span>: <span class="title class_">PropertyDescriptor</span></span>) &#123;</span><br><span class="line">        descriptor.<span class="property">configurable</span> = value;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="属性装饰器">属性装饰器</h3>
+<p>Property Decorator在属性声明之前声明。 属性修饰器不能在声明文件中使用，也不能在任何其他环境上下文中使用（例如在声明类中）。</p>
+<p>属性装饰器的表达式将在运行时作为函数调用，具有以下两个参数：</p>
+<ol>
+<li>静态成员的类的构造函数，或实例成员的类的原型。</li>
+<li>成员的名字。</li>
+</ol>
+<blockquote>
+<p>注意: 由于在TypeScript中如何初始化属性装饰器，因此不提供属性描述符作为属性装饰器的参数。这是因为在定义原型的成员时，当前没有机制来描述实例属性，也无法观察或修改属性的初始化程序。返回值也会被忽略。因此，属性装饰器只能用于观察已为类声明特定名称的属性。</p>
+</blockquote>
+<p>我们可以使用此信息来记录有关属性的元数据，如以下示例所示：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Greeter</span> &#123;</span><br><span class="line">    <span class="meta">@format</span>(<span class="string">&quot;Hello, %s&quot;</span>)</span><br><span class="line">    <span class="attr">greeting</span>: <span class="built_in">string</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"><span class="attr">message</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">greeting</span> = message;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">greet</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> formatString = <span class="title function_">getFormat</span>(<span class="variable language_">this</span>, <span class="string">&quot;greeting&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> formatString.<span class="title function_">replace</span>(<span class="string">&quot;%s&quot;</span>, <span class="variable language_">this</span>.<span class="property">greeting</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们可以使用以下函数声明定义@format装饰器和getFormat函数：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;reflect-metadata&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> formatMetadataKey = <span class="title class_">Symbol</span>(<span class="string">&quot;format&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">format</span>(<span class="params">formatString: string</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Reflect</span>.<span class="title function_">metadata</span>(formatMetadataKey, formatString);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">getFormat</span>(<span class="params">target: any, propertyKey: string</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Reflect</span>.<span class="title function_">getMetadata</span>(formatMetadataKey, target, propertyKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2Zvcm1hdA==">@format<i class="fa fa-external-link-alt"></i></span>(“Hello，％s”)装饰器是一个装饰工厂。 当调用<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2Zvcm1hdA==">@format<i class="fa fa-external-link-alt"></i></span>(“Hello，％s”)时，它会使用reflect-metadata库中的Reflect.metadata函数为该属性添加元数据条目。 调用getFormat时，它会读取格式的元数据值。</p>
+<p>注意此示例需要reflect-metadata库。 有关reflect-metadata库的更多信息，请参阅元数据。</p>
+<h3 id="参数装饰器">参数装饰器</h3>
+<p>参数装饰器在参数声明之前声明。 参数装饰器应用于类构造函数或方法声明的函数。 参数装饰器不能用于声明文件，重载或任何其他环境上下文（例如声明类中）。</p>
+<p>参数装饰器的表达式将在运行时作为函数调用，具有以下三个参数：</p>
+<ol>
+<li>静态成员的类的构造函数，或实例成员的类的原型。</li>
+<li>成员的名字。</li>
+<li>函数参数列表中参数的序数索引。</li>
+</ol>
+<blockquote>
+<p>注意: 参数装饰器只能用于观察已在方法上声明参数。</p>
+</blockquote>
+<p>将忽略参数装饰器的返回值。</p>
+<p>以下是应用于Greeter类成员参数的参数装饰器(<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3JlcXVpcmVk">@required<i class="fa fa-external-link-alt"></i></span>)的示例：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Greeter</span> &#123;</span><br><span class="line">    <span class="attr">greeting</span>: <span class="built_in">string</span>;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"><span class="attr">message</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">greeting</span> = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@validate</span></span><br><span class="line">    <span class="title function_">greet</span>(<span class="params"><span class="meta">@required</span> <span class="attr">name</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello &quot;</span> + name + <span class="string">&quot;, &quot;</span> + <span class="variable language_">this</span>.<span class="property">greeting</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们可以使用以下函数声明定义@required和@validate装饰器：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;reflect-metadata&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> requiredMetadataKey = <span class="title class_">Symbol</span>(<span class="string">&quot;required&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">required</span>(<span class="params"><span class="attr">target</span>: <span class="title class_">Object</span>, <span class="attr">propertyKey</span>: <span class="built_in">string</span> | <span class="built_in">symbol</span>, <span class="attr">parameterIndex</span>: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> <span class="attr">existingRequiredParameters</span>: <span class="built_in">number</span>[] = <span class="title class_">Reflect</span>.<span class="title function_">getOwnMetadata</span>(requiredMetadataKey, target, propertyKey) || [];</span><br><span class="line">    existingRequiredParameters.<span class="title function_">push</span>(parameterIndex);</span><br><span class="line">    <span class="title class_">Reflect</span>.<span class="title function_">defineMetadata</span>(requiredMetadataKey, existingRequiredParameters, target, propertyKey);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">validate</span>(<span class="params"><span class="attr">target</span>: <span class="built_in">any</span>, <span class="attr">propertyName</span>: <span class="built_in">string</span>, <span class="attr">descriptor</span>: <span class="title class_">TypedPropertyDescriptor</span>&lt;<span class="title class_">Function</span>&gt;</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> method = descriptor.<span class="property">value</span>;</span><br><span class="line">    descriptor.<span class="property">value</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="attr">requiredParameters</span>: <span class="built_in">number</span>[] = <span class="title class_">Reflect</span>.<span class="title function_">getOwnMetadata</span>(requiredMetadataKey, target, propertyName);</span><br><span class="line">        <span class="keyword">if</span> (requiredParameters) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> parameterIndex <span class="keyword">of</span> requiredParameters) &#123;</span><br><span class="line">                <span class="keyword">if</span> (parameterIndex &gt;= <span class="variable language_">arguments</span>.<span class="property">length</span> || <span class="variable language_">arguments</span>[parameterIndex] === <span class="literal">undefined</span>) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>(<span class="string">&quot;Missing required argument.&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> method.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>@required装饰器添加一个元数据条目，根据需要标记参数。 然后，@validate装饰器将现有的greet方法包装在一个函数中，该函数在调用原始方法之前验证参数。</p>
+<blockquote>
+<p>注意: 此示例需要reflect-metadata库。有关reflect-metadata库的更多信息，请参阅元数据。</p>
+</blockquote>
+<h3 id="元数据">元数据</h3>
+<p>一些示例使用reflect-metadata库，它为实验元数据API添加了polyfill。 该库尚未成为ECMAScript（JavaScript）标准的一部分。 但是，一旦装饰器被正式采用为ECMAScript标准的一部分，这些扩展将被提议采用。</p>
+<p>您可以通过npm安装此库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i reflect-metadata --save</span><br></pre></td></tr></table></figure>
+<p>TypeScript包含实验支持，用于为具有装饰器的声明发出某些类型的元数据。 要启用此实验性支持，必须在命令行或tsconfig.json中设置emitDecoratorMetadata编译器选</p>
+<p><em>命令行：</em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tsc --target ES5 --experimentalDecorators --emitDecoratorMetadata</span><br></pre></td></tr></table></figure>
+<p>tsconfig.json:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;compilerOptions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;target&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ES5&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;experimentalDecorators&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;emitDecoratorMetadata&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>启用后，只要导入了reflect-metadata库，就会在运行时公开其他设计时类型信息。</p>
+<p>我们可以在以下示例中看到这一点：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;reflect-metadata&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="attr">x</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="attr">y</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Line</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">_p0</span>: <span class="title class_">Point</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">_p1</span>: <span class="title class_">Point</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@validate</span></span><br><span class="line">    <span class="keyword">set</span> <span class="title function_">p0</span>(<span class="params"><span class="attr">value</span>: <span class="title class_">Point</span></span>) &#123; <span class="variable language_">this</span>.<span class="property">_p0</span> = value; &#125;</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">p0</span>() &#123; <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">_p0</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@validate</span></span><br><span class="line">    <span class="keyword">set</span> <span class="title function_">p1</span>(<span class="params"><span class="attr">value</span>: <span class="title class_">Point</span></span>) &#123; <span class="variable language_">this</span>.<span class="property">_p1</span> = value; &#125;</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">p1</span>() &#123; <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">_p1</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> validate&lt;T&gt;(<span class="attr">target</span>: <span class="built_in">any</span>, <span class="attr">propertyKey</span>: <span class="built_in">string</span>, <span class="attr">descriptor</span>: <span class="title class_">TypedPropertyDescriptor</span>&lt;T&gt;) &#123;</span><br><span class="line">    <span class="keyword">let</span> set = descriptor.<span class="property">set</span>;</span><br><span class="line">    descriptor.<span class="property">set</span> = <span class="keyword">function</span> (<span class="params"><span class="attr">value</span>: T</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">type</span> = <span class="title class_">Reflect</span>.<span class="title function_">getMetadata</span>(<span class="string">&quot;design:type&quot;</span>, target, propertyKey);</span><br><span class="line">        <span class="keyword">if</span> (!(value <span class="keyword">instanceof</span> <span class="keyword">type</span>)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">TypeError</span>(<span class="string">&quot;Invalid type.&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="title function_">set</span>(value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>TypeScript编译器将使用@ Reflect.metadata装饰器注入设计时类型信息。 你可以认为它相当于以下TypeScript：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Line</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">_p0</span>: <span class="title class_">Point</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="attr">_p1</span>: <span class="title class_">Point</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@validate</span></span><br><span class="line">    <span class="meta">@Reflect</span>.<span class="title function_">metadata</span>(<span class="string">&quot;design:type&quot;</span>, <span class="title class_">Point</span>)</span><br><span class="line">    <span class="keyword">set</span> <span class="title function_">p0</span>(<span class="params"><span class="attr">value</span>: <span class="title class_">Point</span></span>) &#123; <span class="variable language_">this</span>.<span class="property">_p0</span> = value; &#125;</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">p0</span>() &#123; <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">_p0</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@validate</span></span><br><span class="line">    <span class="meta">@Reflect</span>.<span class="title function_">metadata</span>(<span class="string">&quot;design:type&quot;</span>, <span class="title class_">Point</span>)</span><br><span class="line">    <span class="keyword">set</span> <span class="title function_">p1</span>(<span class="params"><span class="attr">value</span>: <span class="title class_">Point</span></span>) &#123; <span class="variable language_">this</span>.<span class="property">_p1</span> = value; &#125;</span><br><span class="line">    <span class="keyword">get</span> <span class="title function_">p1</span>() &#123; <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">_p1</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意: 装饰器元数据是一个实验性功能，可能会在将来的版本中引入重大更改。</p>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -297,14 +557,18 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="装饰器求值"><a href="#装饰器求值" class="headerlink" title="装饰器求值"></a>装饰器求值</h3><p>如何应用装饰器应用于类内的各种声明的顺序：</p>
+          <h3 id="装饰器求值">装饰器求值</h3>
+<p>如何应用装饰器应用于类内的各种声明的顺序：</p>
 <ol>
-<li>对每个实例成员应用参数装饰器，后跟Method，Accessor或Property Decorators。  </li>
-<li>对每个静态成员应用参数装饰器，后跟Method，Accessor或Property Decorators。  </li>
-<li>参数装饰器应用于构造函数。  </li>
+<li>对每个实例成员应用参数装饰器，后跟Method，Accessor或Property Decorators。</li>
+<li>对每个静态成员应用参数装饰器，后跟Method，Accessor或Property Decorators。</li>
+<li>参数装饰器应用于构造函数。</li>
 <li>类装饰器适用于该类。</li>
 </ol>
-<h3 id="类装饰器"><a href="#类装饰器" class="headerlink" title="类装饰器"></a>类装饰器</h3><p>类装饰器在类声明之前声明。<br>类装饰器应用于类的构造函数，可用于观察，修改或替换类定义。<br>类装饰器不能在声明文件中使用，也不能在任何其他环境上下文中使用（例如在声明类上）。</p>
+<h3 id="类装饰器">类装饰器</h3>
+<p>类装饰器在类声明之前声明。<br>
+类装饰器应用于类的构造函数，可用于观察，修改或替换类定义。<br>
+类装饰器不能在声明文件中使用，也不能在任何其他环境上下文中使用（例如在声明类上）。</p>
 <p>类装饰器的表达式将在运行时作为函数调用，装饰类的构造函数作为其唯一参数。</p>
 <p>如果类装饰器返回一个值，它将使用提供的构造函数替换类声明。</p>
 <blockquote>
@@ -312,19 +576,19 @@
 </blockquote>
 <p>以下是应用于Greeter类的类装饰器（@sealed）的示例：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@sealed</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Greeter</span> &#123;</span><br><span class="line">    <span class="attr">greeting</span>: <span class="built_in">string</span>;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"><span class="attr">message</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">greeting</span> = message;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">greet</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello, &quot;</span> + <span class="variable language_">this</span>.<span class="property">greeting</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>我们可以使用以下函数声明定义@sealed装饰器：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">sealed</span>(<span class="params"><span class="attr">constructor</span>: <span class="title class_">Function</span></span>) &#123;</span><br><span class="line">    <span class="title class_">Object</span>.<span class="title function_">seal</span>(constructor);</span><br><span class="line">    <span class="title class_">Object</span>.<span class="title function_">seal</span>(constructor.<span class="property"><span class="keyword">prototype</span></span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>当执行@sealed时，它将密封构造函数及其原型。</p>
 <p>接下来，我们有一个如何覆盖构造函数的示例。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> classDecorator&lt;T <span class="keyword">extends</span> &#123;<span class="title function_">new</span>(...<span class="attr">args</span>:<span class="built_in">any</span>[]):&#123;&#125;&#125;&gt;(<span class="attr">constructor</span>:T) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">class</span> <span class="title class_">extends</span> constructor &#123;</span><br><span class="line">        newProperty = <span class="string">&quot;new property&quot;</span>;</span><br><span class="line">        hello = <span class="string">&quot;override&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@classDecorator</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Greeter</span> &#123;</span><br><span class="line">    property = <span class="string">&quot;property&quot;</span>;</span><br><span class="line">    <span class="attr">hello</span>: <span class="built_in">string</span>;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"><span class="attr">m</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">hello</span> = m;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="keyword">new</span> <span class="title class_">Greeter</span>(<span class="string">&quot;world&quot;</span>));</span><br></pre></td></tr></table></figure>
-
-<h3 id="方法装饰器"><a href="#方法装饰器" class="headerlink" title="方法装饰器"></a>方法装饰器</h3><p>方法装饰器在方法声明之前声明。<br>装饰器应用于方法的属性描述符，可用于观察，修改或替换方法定义。<br>方法装饰器不能用于声明文件，重载或任何其他环境上下文（例如声明类）中。</p>
+<h3 id="方法装饰器">方法装饰器</h3>
+<p>方法装饰器在方法声明之前声明。<br>
+装饰器应用于方法的属性描述符，可用于观察，修改或替换方法定义。<br>
+方法装饰器不能用于声明文件，重载或任何其他环境上下文（例如声明类）中。</p>
 <p>方法装饰器的表达式将在运行时作为函数调用，具有以下三个参数：</p>
 <ol>
-<li>静态成员的类的构造函数，或实例成员的类的原型。  </li>
-<li>会员的名字。  </li>
+<li>静态成员的类的构造函数，或实例成员的类的原型。</li>
+<li>会员的名字。</li>
 <li>会员的属性描述</li>
 </ol>
 <blockquote>
@@ -336,11 +600,10 @@
 </blockquote>
 <p>以下是应用于Greeter类上的方法的方法装饰器（@enumerable）的示例：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Greeter</span> &#123;</span><br><span class="line">    <span class="attr">greeting</span>: <span class="built_in">string</span>;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"><span class="attr">message</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">greeting</span> = message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@enumerable</span>(<span class="literal">false</span>)</span><br><span class="line">    <span class="title function_">greet</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello, &quot;</span> + <span class="variable language_">this</span>.<span class="property">greeting</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>我们可以使用以下函数声明定义@enumerable装饰器：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">enumerable</span>(<span class="params"><span class="attr">value</span>: <span class="built_in">boolean</span></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params"><span class="attr">target</span>: <span class="built_in">any</span>, <span class="attr">propertyKey</span>: <span class="built_in">string</span>, <span class="attr">descriptor</span>: <span class="title class_">PropertyDescriptor</span></span>) &#123;</span><br><span class="line">        descriptor.<span class="property">enumerable</span> = value;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这里的@enumerable(false)装饰器是一个装饰工厂。<br>当调用@enumerable(false)装饰器时，它会修改属性描述符的可枚举属性。</p>
+<p>这里的@enumerable(false)装饰器是一个装饰工厂。<br>
+当调用@enumerable(false)装饰器时，它会修改属性描述符的可枚举属性。</p>
 <p>未完待续…</p>
 
       
@@ -420,54 +683,55 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>随着TypeScript和ES6中Classes的引入，现在存在某些场景需要额外的功能来支持注释或修改类和类成员。<br>装饰器提供了一种为类声明和成员添加注释和元编程语法的方法。<br>装饰器是JavaScript的第2阶段提案，可作为TypeScript的实验性功能使用。</p>
+          <h3 id="介绍">介绍</h3>
+<p>随着TypeScript和ES6中Classes的引入，现在存在某些场景需要额外的功能来支持注释或修改类和类成员。<br>
+装饰器提供了一种为类声明和成员添加注释和元编程语法的方法。<br>
+装饰器是JavaScript的第2阶段提案，可作为TypeScript的实验性功能使用。</p>
 <blockquote>
 <p>注意: 装饰器是一种实验性功能，可能在将来的版本中发生变化。</p>
 </blockquote>
 <p>要为装饰器启用实验支持，必须在命令行或tsconfig.json中启用experimentalDecorators编译器选项：</p>
 <p>命令行：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tsc --target ES5 --experimentalDecorators</span><br></pre></td></tr></table></figure>
-
 <p>tsconfig.json:</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;compilerOptions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;target&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ES5&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;experimentalDecorators&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="装饰器"><a href="#装饰器" class="headerlink" title="装饰器"></a>装饰器</h3><p>装饰器是一种特殊的声明，可以附加到类声明，方法，访问器，属性或参数。<br>装饰器使用@expression形式，其中expression必须求值为一个函数，该函数将在运行时调用有关装饰声明的信息。</p>
+<h3 id="装饰器">装饰器</h3>
+<p>装饰器是一种特殊的声明，可以附加到类声明，方法，访问器，属性或参数。<br>
+装饰器使用@expression形式，其中expression必须求值为一个函数，该函数将在运行时调用有关装饰声明的信息。</p>
 <p>例如，给定装饰器@sealed，我们可以编写<code>sealed</code>函数，如下所示：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">sealed</span>(<span class="params">target</span>) &#123;</span><br><span class="line">    <span class="comment">// do something with &#x27;target&#x27; ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>注意: 您可以在下面的类装饰器中看到更详细的装饰器示例。</p>
 </blockquote>
-<h3 id="装饰器工厂"><a href="#装饰器工厂" class="headerlink" title="装饰器工厂"></a>装饰器工厂</h3><p>如果我们想自定义装饰器如何应用于声明，我们可以编写一个装饰器工厂。<br>装饰器工厂只是一个函数，它返回装饰器在运行时调用的表达式。</p>
+<h3 id="装饰器工厂">装饰器工厂</h3>
+<p>如果我们想自定义装饰器如何应用于声明，我们可以编写一个装饰器工厂。<br>
+装饰器工厂只是一个函数，它返回装饰器在运行时调用的表达式。</p>
 <p>我们可以用以下方式编写装饰工厂：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">color</span>(<span class="params"><span class="attr">value</span>: <span class="built_in">string</span></span>) &#123; <span class="comment">// this is the decorator factory</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params">target</span>) &#123; <span class="comment">// this is the decorator</span></span><br><span class="line">        <span class="comment">// do something with &#x27;target&#x27; and &#x27;value&#x27;...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>注意: 您可以在下面的方法装饰器中看到装饰器工厂的更详细示例。</p>
 </blockquote>
-<h3 id="装饰器组成"><a href="#装饰器组成" class="headerlink" title="装饰器组成"></a>装饰器组成</h3><p>可以将多个装饰器应用于声明，如以下示例所示：</p>
+<h3 id="装饰器组成">装饰器组成</h3>
+<p>可以将多个装饰器应用于声明，如以下示例所示：</p>
 <ol>
 <li>单行：</li>
 </ol>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@f</span> <span class="meta">@g</span> x</span><br></pre></td></tr></table></figure>
-
 <ol start="2">
 <li>多行：</li>
 </ol>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@f</span></span><br><span class="line"><span class="meta">@g</span></span><br><span class="line">x</span><br></pre></td></tr></table></figure>
-
-<p>当多个装饰器应用于单个声明时，它们的评估类似于数学中的函数组合。<br>在该模型中，当组成函数f和g时，得到的复合(f ∘ g)(x)等于f(g(x))。</p>
+<p>当多个装饰器应用于单个声明时，它们的评估类似于数学中的函数组合。<br>
+在该模型中，当组成函数f和g时，得到的复合(f ∘ g)(x)等于f(g(x))。</p>
 <p>因此，在TypeScript中评估单个声明上的多个装饰器时，将执行以下步骤：</p>
 <ol>
-<li>每个装饰器的表达式都是从上到下进行评估的。  </li>
+<li>每个装饰器的表达式都是从上到下进行评估的。</li>
 <li>然后将结果从底部到顶部称为函数。</li>
 </ol>
 <p>如果我们要使用装饰器工厂，我们可以通过以下示例观察此评估顺序：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">f</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;f(): evaluated&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params">target, <span class="attr">propertyKey</span>: <span class="built_in">string</span>, <span class="attr">descriptor</span>: <span class="title class_">PropertyDescriptor</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;f(): called&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">g</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;g(): evaluated&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params">target, <span class="attr">propertyKey</span>: <span class="built_in">string</span>, <span class="attr">descriptor</span>: <span class="title class_">PropertyDescriptor</span></span>) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;g(): called&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span> &#123;</span><br><span class="line">    <span class="meta">@f</span>()</span><br><span class="line">    <span class="meta">@g</span>()</span><br><span class="line">    <span class="title function_">method</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>运行后输出到控制台如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f(): evaluated</span><br><span class="line">g(): evaluated</span><br><span class="line">g(): called</span><br><span class="line">f(): called</span><br></pre></td></tr></table></figure>
-
 <p>未完待续…</p>
 
       
@@ -547,48 +811,64 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="属性类型检查"><a href="#属性类型检查" class="headerlink" title="属性类型检查"></a>属性类型检查</h3><p>键入检查属性的第一步是确定元素属性类型。<br>内在元素和基于价值的元素之间略有不同。</p>
+          <h3 id="属性类型检查">属性类型检查</h3>
+<p>键入检查属性的第一步是确定元素属性类型。<br>
+内在元素和基于价值的元素之间略有不同。</p>
 <p>对于内部元素，它是JSX.IntrinsicElements上的属性类型</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> <span class="title class_">JSX</span> &#123;</span><br><span class="line">  <span class="keyword">interface</span> <span class="title class_">IntrinsicElements</span> &#123;</span><br><span class="line">    <span class="attr">foo</span>: &#123; <span class="attr">bar</span>?: <span class="built_in">boolean</span> &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// element attributes type for &#x27;foo&#x27; is &#x27;&#123;bar?: boolean&#125;&#x27;</span></span><br><span class="line">&lt;foo bar /&gt;;</span><br></pre></td></tr></table></figure>
-
-<p>对于基于价值的元素，它有点复杂。<br>它由先前确定的元素实例类型上的属性类型确定。<br>使用哪个属性由JSX.ElementAttributesProperty确定。<br>它应该用单个属性声明。<br>然后使用该属性的名称。<br>从TypeScript 2.8开始，如果未提供JSX.ElementAttributesProperty，则将使用类元素的构造函数或SFC调用的第一个参数的类型。</p>
+<p>对于基于价值的元素，它有点复杂。<br>
+它由先前确定的元素实例类型上的属性类型确定。<br>
+使用哪个属性由JSX.ElementAttributesProperty确定。<br>
+它应该用单个属性声明。<br>
+然后使用该属性的名称。<br>
+从TypeScript 2.8开始，如果未提供JSX.ElementAttributesProperty，则将使用类元素的构造函数或SFC调用的第一个参数的类型。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> <span class="title class_">JSX</span> &#123;</span><br><span class="line">  <span class="keyword">interface</span> <span class="title class_">ElementAttributesProperty</span> &#123;</span><br><span class="line">    props; <span class="comment">// specify the property name to use</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyComponent</span> &#123;</span><br><span class="line">  <span class="comment">// specify the property on the element instance type</span></span><br><span class="line">  <span class="attr">props</span>: &#123;</span><br><span class="line">    <span class="attr">foo</span>?: <span class="built_in">string</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// element attributes type for &#x27;MyComponent&#x27; is &#x27;&#123;foo?: string&#125;&#x27;</span></span><br><span class="line">&lt;<span class="title class_">MyComponent</span> foo=<span class="string">&quot;bar&quot;</span> /&gt;</span><br></pre></td></tr></table></figure>
-
-<p>元素属性类型用于键入检查JSX中的属性。<br>支持可选和必需的属性。</p>
+<p>元素属性类型用于键入检查JSX中的属性。<br>
+支持可选和必需的属性。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> <span class="title class_">JSX</span> &#123;</span><br><span class="line">  <span class="keyword">interface</span> <span class="title class_">IntrinsicElements</span> &#123;</span><br><span class="line">    <span class="attr">foo</span>: &#123; <span class="attr">requiredProp</span>: <span class="built_in">string</span>; <span class="attr">optionalProp</span>?: <span class="built_in">number</span> &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;foo requiredProp=<span class="string">&quot;bar&quot;</span> /&gt;; <span class="comment">// ok</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">foo</span> <span class="attr">requiredProp</span>=<span class="string">&quot;bar&quot;</span> <span class="attr">optionalProp</span>=<span class="string">&#123;0&#125;</span> /&gt;</span></span>; <span class="comment">// ok</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">foo</span> /&gt;</span></span>; <span class="comment">// error, requiredProp is missing</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">foo</span> <span class="attr">requiredProp</span>=<span class="string">&#123;0&#125;</span> /&gt;</span></span>; <span class="comment">// error, requiredProp should be a string</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">foo</span> <span class="attr">requiredProp</span>=<span class="string">&quot;bar&quot;</span> <span class="attr">unknownProp</span> /&gt;</span></span>; <span class="comment">// error, unknownProp does not exist</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">foo</span> <span class="attr">requiredProp</span>=<span class="string">&quot;bar&quot;</span> <span class="attr">some-unknown-prop</span> /&gt;</span></span>; <span class="comment">// ok, because &#x27;some-unknown-prop&#x27; is not a valid identifier</span></span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>注意：如果属性名称不是有效的JS标识符（如<code>data-*</code>属性），则如果在元素属性类型中找不到它，则不会将其视为错误。</p>
 </blockquote>
-<p>此外，JSX.IntrinsicAttributes接口可用于指定JSX框架使用的额外属性，这些属性通常不被组件的props或参数使用 - 例如React中的键。<br>进一步说，通用JSX.IntrinsicClassAttributes <T>类型也可用于为类组件（而不是SFC）指定相同类型的额外属性。<br>在此类型中，泛型参数对应于类实例类型。<br>在React中，这用于允许类型为Ref <T>的ref属性。<br>一般来说，这些接口上的所有属性都应该是可选的，除非您打算让JSX框架的用户需要在每个标记上提供一些属性。<br>扩展操作符也是有效的：</p>
+<p>此外，JSX.IntrinsicAttributes接口可用于指定JSX框架使用的额外属性，这些属性通常不被组件的props或参数使用 - 例如React中的键。<br>
+进一步说，通用JSX.IntrinsicClassAttributes <T>类型也可用于为类组件（而不是SFC）指定相同类型的额外属性。<br>
+在此类型中，泛型参数对应于类实例类型。<br>
+在React中，这用于允许类型为Ref <T>的ref属性。<br>
+一般来说，这些接口上的所有属性都应该是可选的，除非您打算让JSX框架的用户需要在每个标记上提供一些属性。<br>
+扩展操作符也是有效的：</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> props = &#123; <span class="attr">requiredProp</span>: <span class="string">&quot;bar&quot;</span> &#125;;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">foo</span> &#123;<span class="attr">...props</span>&#125; /&gt;</span></span>; <span class="comment">// ok</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> badProps = &#123;&#125;;</span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">foo</span> &#123;<span class="attr">...badProps</span>&#125; /&gt;</span></span>; <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="子类型检查"><a href="#子类型检查" class="headerlink" title="子类型检查"></a>子类型检查</h3><p>在TypeScript 2.3中，TS引入了子类型检查。<br>children是元素属性类型中的特殊属性，其中子JSXExpressions被插入到属性中。<br>类似于TS使用JSX.ElementAttributesProperty来确定props的名称，TS使用JSX.ElementChildrenAttribute来确定这些props中的子项名称。<br>应使用单个属性声明JSX.ElementChildrenAttribute。</p>
+<h3 id="子类型检查">子类型检查</h3>
+<p>在TypeScript 2.3中，TS引入了子类型检查。<br>
+children是元素属性类型中的特殊属性，其中子JSXExpressions被插入到属性中。<br>
+类似于TS使用JSX.ElementAttributesProperty来确定props的名称，TS使用JSX.ElementChildrenAttribute来确定这些props中的子项名称。<br>
+应使用单个属性声明JSX.ElementChildrenAttribute。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> <span class="title class_">JSX</span> &#123;</span><br><span class="line">  <span class="keyword">interface</span> <span class="title class_">ElementChildrenAttribute</span> &#123;</span><br><span class="line">    <span class="attr">children</span>: &#123;&#125;;  <span class="comment">// specify children name to use</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">&lt;/div&gt;;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  World</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">CustomComp</span> = (<span class="params">props</span>) =&gt; <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>props.children<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">CustomComp</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  &#123;&quot;This is just a JS expression...&quot; + 1000&#125;</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">CustomComp</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>您可以像任何其他属性一样指定子类型。<br>这将覆盖默认类型，例如React typings（如果您使用它们）。</p>
+<p>您可以像任何其他属性一样指定子类型。<br>
+这将覆盖默认类型，例如React typings（如果您使用它们）。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">PropsType</span> &#123;</span><br><span class="line">  <span class="attr">children</span>: <span class="variable constant_">JSX</span>.<span class="property">Element</span></span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Component</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span>&lt;<span class="title class_">PropsType</span>, &#123;&#125;&gt; &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      <span class="language-xml"><span class="tag">&lt;<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;this.props.children&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// OK</span></span><br><span class="line">&lt;<span class="title class_">Component</span>&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">&lt;/<span class="title class_">Component</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Error: children is of type JSX.Element not array of JSX.Element</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">Component</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">h2</span>&gt;</span>Hello World<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">Component</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Error: children is of type JSX.Element not array of JSX.Element or string.</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">Component</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Hello<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  World</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">Component</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<h3 id="JSX结果类型"><a href="#JSX结果类型" class="headerlink" title="JSX结果类型"></a>JSX结果类型</h3><p>默认情况下，JSX表达式的结果键入为any。您可以通过指定JSX.Element接口来自定义类型。但是，无法从此接口检索有关JSX的元素，属性或子级的类型信息。这是一个黑盒子。</p>
-<h3 id="嵌入表达式"><a href="#嵌入表达式" class="headerlink" title="嵌入表达式"></a>嵌入表达式</h3><p>JSX允许您通过用大括号（{}）包围表达式来在标记之间嵌入表达式。</p>
+<h3 id="JSX结果类型">JSX结果类型</h3>
+<p>默认情况下，JSX表达式的结果键入为any。您可以通过指定JSX.Element接口来自定义类型。但是，无法从此接口检索有关JSX的元素，属性或子级的类型信息。这是一个黑盒子。</p>
+<h3 id="嵌入表达式">嵌入表达式</h3>
+<p>JSX允许您通过用大括号（{}）包围表达式来在标记之间嵌入表达式。</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  &#123;[&quot;foo&quot;, &quot;bar&quot;].map(i =&gt; <span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;i / 2&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>)&#125;</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>上面的代码将导致错误，因为您不能将字符串除以数字。<br>使用preserve选项时，输出如下所示：</p>
+<p>上面的代码将导致错误，因为您不能将字符串除以数字。<br>
+使用preserve选项时，输出如下所示：</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="language-xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  &#123;[&quot;foo&quot;, &quot;bar&quot;].map(function (i) &#123; return <span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;i / 2&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>; &#125;)&#125;</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
-
-<h3 id="React整合"><a href="#React整合" class="headerlink" title="React整合"></a>React整合</h3><p>要将JSX与React一起使用，您应该使用React类型。<br>这些类型适当地定义了JSX名称空间以与React一起使用。</p>
+<h3 id="React整合">React整合</h3>
+<p>要将JSX与React一起使用，您应该使用React类型。<br>
+这些类型适当地定义了JSX名称空间以与React一起使用。</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// &lt;reference path=&quot;react.d.ts&quot; /&gt;</span></span><br><span class="line"></span><br><span class="line">interface <span class="title class_">Props</span> &#123;</span><br><span class="line">  <span class="attr">foo</span>: string;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyComponent</span> <span class="keyword">extends</span> <span class="title class_ inherited__">React.Component</span>&lt;<span class="title class_">Props</span>, &#123;&#125;&gt; &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">span</span>&gt;</span>&#123;this.props.foo&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;<span class="title class_">MyComponent</span> foo=<span class="string">&quot;bar&quot;</span> /&gt;; <span class="comment">// ok</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">MyComponent</span> <span class="attr">foo</span>=<span class="string">&#123;0&#125;</span> /&gt;</span></span>; <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="工厂函数"><a href="#工厂函数" class="headerlink" title="工厂函数"></a>工厂函数</h3><p>jsx：react编译器选项使用的确切工厂函数是可配置的。<br>可以使用jsxFactory命令行选项或内联@jsx注释编译指示来设置它以基于每个文件进行设置。<br>例如，如果将jsxFactory设置为createElement，则<div />将作为createElement(“div”)而不是React.createElement(“div”)来编译。</p>
+<h3 id="工厂函数">工厂函数</h3>
+<p>jsx：react编译器选项使用的确切工厂函数是可配置的。<br>
+可以使用jsxFactory命令行选项或内联@jsx注释编译指示来设置它以基于每个文件进行设置。<br>
+例如，如果将jsxFactory设置为createElement，则<div />将作为createElement(“div”)而不是React.createElement(“div”)来编译。</p>
 <p>注释pragma版本可以像这样使用（在TypeScript 2.8中）：</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> preact = <span class="built_in">require</span>(<span class="string">&quot;preact&quot;</span>);</span><br><span class="line"><span class="comment">/* @jsx preact.h */</span></span><br><span class="line"><span class="keyword">const</span> x = <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> /&gt;</span></span>;</span><br></pre></td></tr></table></figure>
-
 <p>编译为</p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> preact = <span class="built_in">require</span>(<span class="string">&quot;preact&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> x = preact.<span class="title function_">h</span>(<span class="string">&quot;div&quot;</span>, <span class="literal">null</span>);</span><br></pre></td></tr></table></figure>
-
-<p>选择的工厂也将影响JSX命名空间的查找位置(用于类型检查信息)，然后再回退到全局命名空间。<br>如果工厂定义为React.createElement(默认值)，编译器将在检查全局JSX之前检查React.JSX。<br>如果工厂定义为h，它将在全局JSX之前检查h.JSX。</p>
+<p>选择的工厂也将影响JSX命名空间的查找位置(用于类型检查信息)，然后再回退到全局命名空间。<br>
+如果工厂定义为React.createElement(默认值)，编译器将在检查全局JSX之前检查React.JSX。<br>
+如果工厂定义为h，它将在全局JSX之前检查h.JSX。</p>
 
       
     </div>
@@ -667,8 +947,10 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>JSX是一种可嵌入的类似XML的语法。 它旨在转换为有效的JavaScript，尽管该转换的语义是特定于实现的。 JSX在React框架中越来越受欢迎，但此后也看到了其他实现。 TypeScript支持嵌入，类型检查和直接编译JSX到JavaScript。</p>
-<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>要使用JSX，您必须做两件事。 1. 使用.tsx扩展名命名您的文件 2. 启用jsx选项</p>
+          <h3 id="介绍">介绍</h3>
+<p>JSX是一种可嵌入的类似XML的语法。 它旨在转换为有效的JavaScript，尽管该转换的语义是特定于实现的。 JSX在React框架中越来越受欢迎，但此后也看到了其他实现。 TypeScript支持嵌入，类型检查和直接编译JSX到JavaScript。</p>
+<h3 id="基本用法">基本用法</h3>
+<p>要使用JSX，您必须做两件事。 1. 使用.tsx扩展名命名您的文件 2. 启用jsx选项</p>
 <p>TypeScript附带三种JSX模式：preserve, react 和 react-native。 这些模式仅影响编译阶段 - 类型检查不受影响。 preserve模式将保持JSX作为输出的一部分，以便由另一个变换步骤（例如Babel）进一步编译。 此外，输出将具有.jsx文件扩展名。 react模式将编译React.createElement，在使用之前不需要经过JSX转换，输出将具有.js文件扩展名。 react-native模式相当于保留，因为它保留了所有JSX，但输出将具有.js文件扩展名。</p>
 <table>
 <thead>
@@ -679,7 +961,8 @@
 <th>Output File Extension</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>preserve</td>
 <td></td>
 <td></td>
@@ -697,20 +980,21 @@
 <td></td>
 <td>.js</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>您可以使用–jsx命令行标志或tsconfig.json文件中的相应选项指定此模式。</p>
 <blockquote>
 <p>注意：标识符React是硬编码的，因此必须使用大写的R使React可用</p>
 </blockquote>
-<h3 id="as-操作符"><a href="#as-操作符" class="headerlink" title="as 操作符"></a>as 操作符</h3><p>回想一下如何写一个类型断言：</p>
+<h3 id="as-操作符">as 操作符</h3>
+<p>回想一下如何写一个类型断言：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = &lt;foo&gt;bar;</span><br></pre></td></tr></table></figure>
-
 <p>声明变量bar的类型为foo。 由于TypeScript还对类型断言使用尖括号，因此将其与JSX的语法结合会引入某些解析困难。 因此，TypeScript不允许.tsx文件中的尖括号类型断言。</p>
 <p>由于上述语法不能在.tsx文件中使用，因此应使用备用类型断言运算符：as。 可以使用as运算符轻松重写该示例。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = bar <span class="keyword">as</span> foo;</span><br></pre></td></tr></table></figure>
-
 <p>as运算符在.ts和.tsx文件中均可用，并且行为与尖括号类型断言样式相同。</p>
-<h3 id="类型检查"><a href="#类型检查" class="headerlink" title="类型检查"></a>类型检查</h3><p>为了理解使用JSX进行类型检查，您必须首先了解内部元素和基于值的元素之间的区别。 给定JSX表达式，expr可以引用环境固有的东西（例如DOM环境中的div或span）或者您创建的自定义组件。 这有两个重要原因：</p>
+<h3 id="类型检查">类型检查</h3>
+<p>为了理解使用JSX进行类型检查，您必须首先了解内部元素和基于值的元素之间的区别。 给定JSX表达式，expr可以引用环境固有的东西（例如DOM环境中的div或span）或者您创建的自定义组件。 这有两个重要原因：</p>
 <ol>
 <li>对于React，内部元素以字符串形式发出(React.createElement(“div”))，而您创建的组件则不是(React.createElement(MyComponent))。</li>
 <li>应该以不同的方式查找在JSX元素中传递的属性的类型。内在元素属性本质上应该是已知的，而组件可能想要指定它们自己的属性集。</li>
@@ -718,15 +1002,12 @@
 <p>TypeScript使用与React相同的约定来区分它们。内部元素始终以小写字母开头，而基于值的元素始终以大写字母开头。</p>
 <p><strong>内在元素</strong> 在特殊接口JSX.IntrinsicElements上查找内部元素。 默认情况下，如果未指定此接口，则会执行任何操作，并且不会对内部元素进行类型检查。 但是，如果存在此接口，则将内部元素的名称作为JSX.IntrinsicElements接口上的属性进行查找。 例如：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> <span class="title class_">JSX</span> &#123;</span><br><span class="line">    <span class="keyword">interface</span> <span class="title class_">IntrinsicElements</span> &#123;</span><br><span class="line">        <span class="attr">foo</span>: <span class="built_in">any</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;foo /&gt;; <span class="comment">// ok</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">bar</span> /&gt;</span></span>; <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
-
 <p>在上面的示例中，将正常工作，但将导致错误，因为它尚未在JSX.IntrinsicElements上指定。</p>
 <p>注意：您还可以在JSX.IntrinsicElements上指定catch-all字符串索引器，如下所示：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> <span class="title class_">JSX</span> &#123;</span><br><span class="line">   <span class="keyword">interface</span> <span class="title class_">IntrinsicElements</span> &#123;</span><br><span class="line">       [<span class="attr">elemName</span>: <span class="built_in">string</span>]: <span class="built_in">any</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><strong>基于值的要素</strong></p>
 <p>基于值的元素只需通过范围内的标识符进行查找。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">MyComponent</span> <span class="keyword">from</span> <span class="string">&quot;./myComponent&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">MyComponent</span> /&gt;</span></span>; <span class="comment">// ok</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">SomeOtherComponent</span> /&gt;</span></span>; <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
-
 <p>有两种方法可以定义基于值的元素：</p>
 <ol>
 <li>无状态功能组件（SFC）</li>
@@ -736,16 +1017,13 @@
 <p><em>无状态功能组件</em></p>
 <p>顾名思义，该组件被定义为JavaScript函数，其第一个参数是props对象。 TS强制其返回类型必须可分配给JSX.Element。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">FooProp</span> &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">X</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="attr">Y</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="keyword">function</span> <span class="title function_">AnotherComponent</span>(<span class="params"><span class="attr">prop</span>: &#123;name: <span class="built_in">string</span>&#125;</span>);</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ComponentFoo</span>(<span class="params"><span class="attr">prop</span>: <span class="title class_">FooProp</span></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">AnotherComponent</span> <span class="attr">name</span>=<span class="string">&#123;prop.name&#125;</span> /&gt;</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">Button</span> = (<span class="params"><span class="attr">prop</span>: &#123;value: <span class="built_in">string</span>&#125;, <span class="attr">context</span>: &#123; color: <span class="built_in">string</span> &#125;</span>) =&gt; &lt;button&gt;</span><br></pre></td></tr></table></figure>
-
 <p>因为SFC只是一个JavaScript函数，所以这里也可以使用函数重载：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">ClickableProps</span> &#123;</span><br><span class="line">  <span class="attr">children</span>: <span class="variable constant_">JSX</span>.<span class="property">Element</span>[] | <span class="variable constant_">JSX</span>.<span class="property">Element</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">HomeProps</span> <span class="keyword">extends</span> <span class="title class_">ClickableProps</span> &#123;</span><br><span class="line">  <span class="attr">home</span>: <span class="variable constant_">JSX</span>.<span class="property">Element</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">SideProps</span> <span class="keyword">extends</span> <span class="title class_">ClickableProps</span> &#123;</span><br><span class="line">  <span class="attr">side</span>: <span class="variable constant_">JSX</span>.<span class="property">Element</span> | <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">MainButton</span>(<span class="params"><span class="attr">prop</span>: <span class="title class_">HomeProps</span></span>): <span class="variable constant_">JSX</span>.<span class="property">Element</span>;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">MainButton</span>(<span class="params"><span class="attr">prop</span>: <span class="title class_">SideProps</span></span>): <span class="variable constant_">JSX</span>.<span class="property">Element</span> &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p><em>类组件</em></p>
 <p>可以定义类组件的类型。 但是，要这样做，最好理解两个新术语：元素类类型和元素实例类型。</p>
 <p>给定，元素类类型是Expr的类型。 因此，在上面的示例中，如果MyComponent是ES6类，则类类型将是该类的构造函数和静态。 如果MyComponent是工厂函数，则类类型将是该函数。</p>
 <p>一旦建立了类类型，实例类型就由类类型构造的返回类型或调用签名（无论哪个存在）的并集决定。 同样，在ES6类的情况下，实例类型将是该类的实例的类型，并且在工厂函数的情况下，它将是从函数返回的值的类型。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyComponent</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// use a construct signature</span></span><br><span class="line"><span class="keyword">var</span> myComponent = <span class="keyword">new</span> <span class="title class_">MyComponent</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// element class type =&gt; MyComponent</span></span><br><span class="line"><span class="comment">// element instance type =&gt; &#123; render: () =&gt; void &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">MyFactoryFunction</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">render</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// use a call signature</span></span><br><span class="line"><span class="keyword">var</span> myComponent = <span class="title class_">MyFactoryFunction</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// element class type =&gt; FactoryFunction</span></span><br><span class="line"><span class="comment">// element instance type =&gt; &#123; render: () =&gt; void &#125;</span></span><br></pre></td></tr></table></figure>
-
 <p>元素实例类型很有趣，因为它必须可以赋值给JSX.ElementClass，否则会导致错误。 默认情况下，JSX.ElementClass是{}，但可以对其进行扩充，以将JSX的使用仅限于那些符合正确接口的类型。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">declare</span> <span class="keyword">namespace</span> <span class="title class_">JSX</span> &#123;</span><br><span class="line">  <span class="keyword">interface</span> <span class="title class_">ElementClass</span> &#123;</span><br><span class="line">    <span class="attr">render</span>: <span class="built_in">any</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyComponent</span> &#123;</span><br><span class="line">  <span class="title function_">render</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">MyFactoryFunction</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">render</span>: <span class="function">() =&gt;</span> &#123;&#125; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;<span class="title class_">MyComponent</span> /&gt;; <span class="comment">// ok</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">MyFactoryFunction</span> /&gt;</span></span>; <span class="comment">// ok</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NotAValidComponent</span> &#123;&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">NotAValidFactoryFunction</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;<span class="title class_">NotAValidComponent</span> /&gt;; <span class="comment">// error</span></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">NotAValidFactoryFunction</span> /&gt;</span></span>; <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
 
@@ -826,29 +1104,40 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="声明合并"><a href="#声明合并" class="headerlink" title="声明合并"></a>声明合并</h2><h3 id="将命名空间与类，函数和枚举合并"><a href="#将命名空间与类，函数和枚举合并" class="headerlink" title="将命名空间与类，函数和枚举合并"></a>将命名空间与类，函数和枚举合并</h3><p>命名空间足够灵活，也可以与其他类型的声明合并。<br>为此，命名空间声明必须遵循它将与之合并的声明。<br>生成的声明具有两种声明类型的属性。<br>TypeScript使用此功能来模拟JavaScript以及其他编程语言中的某些模式。</p>
+          <h2 id="声明合并">声明合并</h2>
+<h3 id="将命名空间与类，函数和枚举合并">将命名空间与类，函数和枚举合并</h3>
+<p>命名空间足够灵活，也可以与其他类型的声明合并。<br>
+为此，命名空间声明必须遵循它将与之合并的声明。<br>
+生成的声明具有两种声明类型的属性。<br>
+TypeScript使用此功能来模拟JavaScript以及其他编程语言中的某些模式。</p>
 <p><strong>将命名空间与类合并</strong></p>
 <p>这为用户提供了一种描述内部类的方法。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Album</span> &#123;</span><br><span class="line">    <span class="attr">label</span>: <span class="title class_">Album</span>.<span class="property">AlbumLabel</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">Album</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AlbumLabel</span> &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>合并成员的可见性规则与”合并命名空间”部分中描述的相同，因此我们必须导出合并类的AlbumLabel类才能看到它。<br>最终结果是在另一个类内部管理的类。<br>您还可以使用命名空间向现有类添加更多静态成员。</p>
-<p>除了内部类的模式之外，您还可能熟悉创建函数的JavaScript实践，然后通过向函数添加属性来进一步扩展函数。<br>TypeScript使用声明合并以类型安全的方式构建这样的定义。</p>
+<p>合并成员的可见性规则与&quot;合并命名空间&quot;部分中描述的相同，因此我们必须导出合并类的AlbumLabel类才能看到它。<br>
+最终结果是在另一个类内部管理的类。<br>
+您还可以使用命名空间向现有类添加更多静态成员。</p>
+<p>除了内部类的模式之外，您还可能熟悉创建函数的JavaScript实践，然后通过向函数添加属性来进一步扩展函数。<br>
+TypeScript使用声明合并以类型安全的方式构建这样的定义。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">buildLabel</span>(<span class="params"><span class="attr">name</span>: <span class="built_in">string</span></span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> buildLabel.<span class="property">prefix</span> + name + buildLabel.<span class="property">suffix</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">buildLabel</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">let</span> suffix = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">let</span> prefix = <span class="string">&quot;Hello, &quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title function_">buildLabel</span>(<span class="string">&quot;Sam Smith&quot;</span>));</span><br></pre></td></tr></table></figure>
-
 <p>同样，名称空间可用于扩展具有静态成员的枚举：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> &#123;</span><br><span class="line">    red = <span class="number">1</span>,</span><br><span class="line">    green = <span class="number">2</span>,</span><br><span class="line">    blue = <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">Color</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">mixColor</span>(<span class="params"><span class="attr">colorName</span>: <span class="built_in">string</span></span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (colorName == <span class="string">&quot;yellow&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title class_">Color</span>.<span class="property">red</span> + <span class="title class_">Color</span>.<span class="property">green</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (colorName == <span class="string">&quot;white&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title class_">Color</span>.<span class="property">red</span> + <span class="title class_">Color</span>.<span class="property">green</span> + <span class="title class_">Color</span>.<span class="property">blue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (colorName == <span class="string">&quot;magenta&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title class_">Color</span>.<span class="property">red</span> + <span class="title class_">Color</span>.<span class="property">blue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (colorName == <span class="string">&quot;cyan&quot;</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="title class_">Color</span>.<span class="property">green</span> + <span class="title class_">Color</span>.<span class="property">blue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="不允许合并"><a href="#不允许合并" class="headerlink" title="不允许合并"></a>不允许合并</h3><p>并非TypeScript中允许所有合并。<br>目前，类不能与其他类或变量合并。<br>有关模拟类合并的信息，请参阅TypeScript中的Mixins部分。</p>
-<h3 id="模块扩展"><a href="#模块扩展" class="headerlink" title="模块扩展"></a>模块扩展</h3><p>虽然JavaScript模块不支持合并，但您可以通过导入然后更新它们来修补现有对象。<br>让我们看一下玩具Observable示例：</p>
+<h3 id="不允许合并">不允许合并</h3>
+<p>并非TypeScript中允许所有合并。<br>
+目前，类不能与其他类或变量合并。<br>
+有关模拟类合并的信息，请参阅TypeScript中的Mixins部分。</p>
+<h3 id="模块扩展">模块扩展</h3>
+<p>虽然JavaScript模块不支持合并，但您可以通过导入然后更新它们来修补现有对象。<br>
+让我们看一下玩具Observable示例：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// observable.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Observable</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="comment">// ... implementation left as an exercise for the reader ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// map.js</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Observable</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./observable&quot;</span>;</span><br><span class="line"><span class="title class_">Observable</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">map</span> = <span class="keyword">function</span> (<span class="params">f</span>) &#123;</span><br><span class="line">    <span class="comment">// ... another exercise for the reader</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这在TypeScript中也可以正常工作，但编译器不了解Observable.prototype.map。<br>您可以使用模块扩充来告诉编译器：</p>
+<p>这在TypeScript中也可以正常工作，但编译器不了解Observable.prototype.map。<br>
+您可以使用模块扩充来告诉编译器：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// observable.ts stays the same</span></span><br><span class="line"><span class="comment">// map.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Observable</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./observable&quot;</span>;</span><br><span class="line"><span class="keyword">declare</span> <span class="variable language_">module</span> <span class="string">&quot;./observable&quot;</span> &#123;</span><br><span class="line">    <span class="keyword">interface</span> <span class="title class_">Observable</span>&lt;T&gt; &#123;</span><br><span class="line">        map&lt;U&gt;(<span class="attr">f</span>: <span class="function">(<span class="params"><span class="attr">x</span>: T</span>) =&gt;</span> U): <span class="title class_">Observable</span>&lt;U&gt;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Observable</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">map</span> = <span class="keyword">function</span> (<span class="params">f</span>) &#123;</span><br><span class="line">    <span class="comment">// ... another exercise for the reader</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// consumer.ts</span></span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Observable</span> &#125; <span class="keyword">from</span> <span class="string">&quot;./observable&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;./map&quot;</span>;</span><br><span class="line"><span class="keyword">let</span> <span class="attr">o</span>: <span class="title class_">Observable</span>&lt;<span class="built_in">number</span>&gt;;</span><br><span class="line">o.<span class="title function_">map</span>(<span class="function"><span class="params">x</span> =&gt;</span> x.<span class="title function_">toFixed</span>());</span><br></pre></td></tr></table></figure>
-
-<p>模块名称的解析方式与导入&#x2F;导出中的模块说明符相同。<br>有关更多信息，请参阅模块<br>然后合并扩充中的声明，就好像它们在与原始文件相同的文件中声明一样。<br>但是，您无法在扩充中声明新的顶级声明 - 只是现有声明的补丁。</p>
+<p>模块名称的解析方式与导入/导出中的模块说明符相同。<br>
+有关更多信息，请参阅模块<br>
+然后合并扩充中的声明，就好像它们在与原始文件相同的文件中声明一样。<br>
+但是，您无法在扩充中声明新的顶级声明 - 只是现有声明的补丁。</p>
 <p><strong>全局扩展</strong>您还可以从模块内部向全局范围添加声明：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// observable.ts</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Observable</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="comment">// ... still no implementation ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">declare</span> <span class="variable language_">global</span> &#123;</span><br><span class="line">    <span class="keyword">interface</span> <span class="title class_">Array</span>&lt;T&gt; &#123;</span><br><span class="line">        <span class="title function_">toObservable</span>(): <span class="title class_">Observable</span>&lt;T&gt;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">toObservable</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>全局扩展与模块扩展具有相同的行为和限制。</p>
 
       
@@ -928,20 +1217,23 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="声明合并"><a href="#声明合并" class="headerlink" title="声明合并"></a>声明合并</h2><h3 id="合并命名空间"><a href="#合并命名空间" class="headerlink" title="合并命名空间"></a>合并命名空间</h3><p>与接口类似，同名的命名空间也将合并其成员。<br>由于名称空间同时创建了名称空间和值，因此我们需要了解它们是如何合并的。</p>
+          <h2 id="声明合并">声明合并</h2>
+<h3 id="合并命名空间">合并命名空间</h3>
+<p>与接口类似，同名的命名空间也将合并其成员。<br>
+由于名称空间同时创建了名称空间和值，因此我们需要了解它们是如何合并的。</p>
 <p>要合并命名空间，每个命名空间中声明的导出接口的类型定义本身已合并，形成一个内部具有合并接口定义的命名空间。</p>
 <p>要合并命名空间值，在每个声明站点，如果已存在具有给定名称的命名空间，则通过获取现有命名空间并将第二个命名空间的导出成员添加到第一个命名空间来进一步扩展它。</p>
 <p>在此示例中，Animals的声明合并：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title class_">Animals</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Zebra</span> &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">Animals</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">Legged</span> &#123; <span class="attr">numberOfLegs</span>: <span class="built_in">number</span>; &#125;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Dog</span> &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>相当于：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title class_">Animals</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">interface</span> <span class="title class_">Legged</span> &#123; <span class="attr">numberOfLegs</span>: <span class="built_in">number</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Zebra</span> &#123; &#125;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Dog</span> &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这种命名空间合并模型是一个有用的起点，但我们还需要了解非导出成员会发生什么。<br>非导出成员仅在原始（未合并）命名空间中可见。<br>这意味着在合并之后，来自其他声明的合并成员无法看到未导出的成员。</p>
+<p>这种命名空间合并模型是一个有用的起点，但我们还需要了解非导出成员会发生什么。<br>
+非导出成员仅在原始（未合并）命名空间中可见。<br>
+这意味着在合并之后，来自其他声明的合并成员无法看到未导出的成员。</p>
 <p>在这个例子中我们可以更清楚地看到这一点：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> haveMuscles = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">animalsHaveMuscles</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> haveMuscles;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    <span class="keyword">export</span> <span class="keyword">function</span> <span class="title function_">doAnimalsHaveMuscles</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> haveMuscles;  <span class="comment">// Error, because haveMuscles is not accessible here</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>由于未导出hasMuscles，因此只有共享相同未合并命名空间的animalsHaveMuscles函数才能看到该符号。<br>doAnimalsHaveMuscles函数，即使它是合并的Animal命名空间的一部分，也无法看到此未导出的成员。</p>
+<p>由于未导出hasMuscles，因此只有共享相同未合并命名空间的animalsHaveMuscles函数才能看到该符号。<br>
+doAnimalsHaveMuscles函数，即使它是合并的Animal命名空间的一部分，也无法看到此未导出的成员。</p>
 <p>未完待续…</p>
 
       
@@ -1021,9 +1313,21 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="声明合并"><a href="#声明合并" class="headerlink" title="声明合并"></a>声明合并</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>TypeScript中的一些独特概念描述了类型级别的JavaScript对象的形状。<br>TypeScript特别独特的一个例子是”声明合并”的概念。<br>在使用现有JavaScript时，理解此概念将为您提供优势。<br>它还为更高级的抽象概念打开了大门。</p>
-<p>出于本文的目的，”声明合并”意味着编译器将使用相同名称声明的两个单独声明合并到单个定义中。<br>此合并定义具有两个原始声明的功能。<br>可以合并任意数量的声明;<br>它不仅限于两个声明。</p>
-<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>在TypeScript中，声明在三个组中的至少一个中创建实体：名称空间，类型或值。<br>命名空间创建声明创建一个命名空间，其中包含使用点符号表示法访问的名称。<br>类型创建声明就是这样做的：它们创建一个可以使用声明的形状显示并绑定到给定名称的类型。<br>最后，创建值的声明会创建在输出JavaScript中可见的值。</p>
+          <h2 id="声明合并">声明合并</h2>
+<h3 id="介绍">介绍</h3>
+<p>TypeScript中的一些独特概念描述了类型级别的JavaScript对象的形状。<br>
+TypeScript特别独特的一个例子是&quot;声明合并&quot;的概念。<br>
+在使用现有JavaScript时，理解此概念将为您提供优势。<br>
+它还为更高级的抽象概念打开了大门。</p>
+<p>出于本文的目的，&quot;声明合并&quot;意味着编译器将使用相同名称声明的两个单独声明合并到单个定义中。<br>
+此合并定义具有两个原始声明的功能。<br>
+可以合并任意数量的声明;<br>
+它不仅限于两个声明。</p>
+<h3 id="基本概念">基本概念</h3>
+<p>在TypeScript中，声明在三个组中的至少一个中创建实体：名称空间，类型或值。<br>
+命名空间创建声明创建一个命名空间，其中包含使用点符号表示法访问的名称。<br>
+类型创建声明就是这样做的：它们创建一个可以使用声明的形状显示并绑定到给定名称的类型。<br>
+最后，创建值的声明会创建在输出JavaScript中可见的值。</p>
 <table>
 <thead>
 <tr>
@@ -1033,7 +1337,8 @@
 <th></th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Declaration Type</td>
 <td>Namespace</td>
 <td>Type</td>
@@ -1081,27 +1386,29 @@
 <td></td>
 <td>X</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>了解每个声明创建的内容将帮助您了解执行声明合并时合并的内容。</p>
-<h3 id="合并接口"><a href="#合并接口" class="headerlink" title="合并接口"></a>合并接口</h3><p>最简单，也许是最常见的声明合并类型是接口合并。<br>在最基本的层面上，合并机械地将两个声明的成员连接到具有相同名称的单个接口。</p>
+<h3 id="合并接口">合并接口</h3>
+<p>最简单，也许是最常见的声明合并类型是接口合并。<br>
+在最基本的层面上，合并机械地将两个声明的成员连接到具有相同名称的单个接口。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Box</span> &#123;</span><br><span class="line">    <span class="attr">height</span>: <span class="built_in">number</span>;</span><br><span class="line">    <span class="attr">width</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Box</span> &#123;</span><br><span class="line">    <span class="attr">scale</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> <span class="attr">box</span>: <span class="title class_">Box</span> = &#123;<span class="attr">height</span>: <span class="number">5</span>, <span class="attr">width</span>: <span class="number">6</span>, <span class="attr">scale</span>: <span class="number">10</span>&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>接口的非功能成员应该是唯一的。<br>如果它们不是唯一的，则它们必须属于同一类型。<br>如果接口都声明了具有相同名称但具有不同类型的非函数成员，则编译器将发出错误。</p>
-<p>对于函数成员，同名的每个函数成员都被视为描述同一函数的重载。<br>值得注意的是，在接口A与后面的接口A合并的情况下，第二接口将具有比第一接口更高的优先级。</p>
+<p>接口的非功能成员应该是唯一的。<br>
+如果它们不是唯一的，则它们必须属于同一类型。<br>
+如果接口都声明了具有相同名称但具有不同类型的非函数成员，则编译器将发出错误。</p>
+<p>对于函数成员，同名的每个函数成员都被视为描述同一函数的重载。<br>
+值得注意的是，在接口A与后面的接口A合并的情况下，第二接口将具有比第一接口更高的优先级。</p>
 <p>也就是说，在示例中：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Cloner</span> &#123;</span><br><span class="line">    <span class="title function_">clone</span>(<span class="attr">animal</span>: <span class="title class_">Animal</span>): <span class="title class_">Animal</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Cloner</span> &#123;</span><br><span class="line">    <span class="title function_">clone</span>(<span class="attr">animal</span>: <span class="title class_">Sheep</span>): <span class="title class_">Sheep</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Cloner</span> &#123;</span><br><span class="line">    <span class="title function_">clone</span>(<span class="attr">animal</span>: <span class="title class_">Dog</span>): <span class="title class_">Dog</span>;</span><br><span class="line">    <span class="title function_">clone</span>(<span class="attr">animal</span>: <span class="title class_">Cat</span>): <span class="title class_">Cat</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>三个接口将合并以创建单个声明，如下所示：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Cloner</span> &#123;</span><br><span class="line">    <span class="title function_">clone</span>(<span class="attr">animal</span>: <span class="title class_">Dog</span>): <span class="title class_">Dog</span>;</span><br><span class="line">    <span class="title function_">clone</span>(<span class="attr">animal</span>: <span class="title class_">Cat</span>): <span class="title class_">Cat</span>;</span><br><span class="line">    <span class="title function_">clone</span>(<span class="attr">animal</span>: <span class="title class_">Sheep</span>): <span class="title class_">Sheep</span>;</span><br><span class="line">    <span class="title function_">clone</span>(<span class="attr">animal</span>: <span class="title class_">Animal</span>): <span class="title class_">Animal</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>请注意，每个组的元素保持相同的顺序，但组本身与稍后排序的后续重载集合在一起。</p>
-<p>此规则的一个例外是专门签名。<br>如果签名的参数类型是单个字符串文字类型（例如，不是字符串文字的并集），那么它将被冒泡到其合并的重载列表的顶部。</p>
+<p>此规则的一个例外是专门签名。<br>
+如果签名的参数类型是单个字符串文字类型（例如，不是字符串文字的并集），那么它将被冒泡到其合并的重载列表的顶部。</p>
 <p>例如，以下接口将合并在一起：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Document</span> &#123;</span><br><span class="line">    <span class="title function_">createElement</span>(<span class="attr">tagName</span>: <span class="built_in">any</span>): <span class="title class_">Element</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Document</span> &#123;</span><br><span class="line">    <span class="title function_">createElement</span>(<span class="attr">tagName</span>: <span class="string">&quot;div&quot;</span>): <span class="title class_">HTMLDivElement</span>;</span><br><span class="line">    <span class="title function_">createElement</span>(<span class="attr">tagName</span>: <span class="string">&quot;span&quot;</span>): <span class="title class_">HTMLSpanElement</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Document</span> &#123;</span><br><span class="line">    <span class="title function_">createElement</span>(<span class="attr">tagName</span>: <span class="built_in">string</span>): <span class="title class_">HTMLElement</span>;</span><br><span class="line">    <span class="title function_">createElement</span>(<span class="attr">tagName</span>: <span class="string">&quot;canvas&quot;</span>): <span class="title class_">HTMLCanvasElement</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>由此产生的合并声明文件将如下:</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Document</span> &#123;</span><br><span class="line">    <span class="title function_">createElement</span>(<span class="attr">tagName</span>: <span class="string">&quot;canvas&quot;</span>): <span class="title class_">HTMLCanvasElement</span>;</span><br><span class="line">    <span class="title function_">createElement</span>(<span class="attr">tagName</span>: <span class="string">&quot;div&quot;</span>): <span class="title class_">HTMLDivElement</span>;</span><br><span class="line">    <span class="title function_">createElement</span>(<span class="attr">tagName</span>: <span class="string">&quot;span&quot;</span>): <span class="title class_">HTMLSpanElement</span>;</span><br><span class="line">    <span class="title function_">createElement</span>(<span class="attr">tagName</span>: <span class="built_in">string</span>): <span class="title class_">HTMLElement</span>;</span><br><span class="line">    <span class="title function_">createElement</span>(<span class="attr">tagName</span>: <span class="built_in">any</span>): <span class="title class_">Element</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>未完待续…</p>
 
       
@@ -1182,282 +1489,56 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>继续上文[<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy85NDY=">TypeScript基础入门之模块解析(二)<i class="fa fa-external-link-alt"></i></span>]</p>
-<h2 id="跟踪模块解析"><a href="#跟踪模块解析" class="headerlink" title="跟踪模块解析"></a>跟踪模块解析</h2><p>如前所述，编译器可以在解析模块时访问当前文件夹之外的文件。<br>在诊断模块未解析的原因或解析为错误定义时，这可能很难。<br>使用–traceResolution启用编译器模块分辨率跟踪可以深入了解模块解析过程中发生的情况。</p>
-<p>假设我们有一个使用typescript模块的示例应用程序。<br>app.ts有一个导入，比如import * as ts from “typescript”。</p>
+<h2 id="跟踪模块解析">跟踪模块解析</h2>
+<p>如前所述，编译器可以在解析模块时访问当前文件夹之外的文件。<br>
+在诊断模块未解析的原因或解析为错误定义时，这可能很难。<br>
+使用–traceResolution启用编译器模块分辨率跟踪可以深入了解模块解析过程中发生的情况。</p>
+<p>假设我们有一个使用typescript模块的示例应用程序。<br>
+app.ts有一个导入，比如import * as ts from “typescript”。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">│   tsconfig.json</span><br><span class="line">├───node_modules</span><br><span class="line">│   └───typescript</span><br><span class="line">│       └───lib</span><br><span class="line">│               typescript.d.ts</span><br><span class="line">└───src</span><br><span class="line">    └───app.ts</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用–traceResolution调用编译器"><a href="#使用–traceResolution调用编译器" class="headerlink" title="使用–traceResolution调用编译器"></a>使用–traceResolution调用编译器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tsc --traceResolution</span><br></pre></td></tr></table></figure>
-
+<h3 id="使用–traceResolution调用编译器">使用–traceResolution调用编译器</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tsc --traceResolution</span><br></pre></td></tr></table></figure>
 <p>输出结果如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">======== Resolving module <span class="string">&#x27;typescript&#x27;</span> from <span class="string">&#x27;src/app.ts&#x27;</span>. ========</span><br><span class="line">Module resolution kind is not specified, using <span class="string">&#x27;NodeJs&#x27;</span>.</span><br><span class="line">Loading module <span class="string">&#x27;typescript&#x27;</span> from <span class="string">&#x27;node_modules&#x27;</span> folder.</span><br><span class="line">File <span class="string">&#x27;src/node_modules/typescript.ts&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;src/node_modules/typescript.tsx&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;src/node_modules/typescript.d.ts&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;src/node_modules/typescript/package.json&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;node_modules/typescript.ts&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;node_modules/typescript.tsx&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;node_modules/typescript.d.ts&#x27;</span> does not exist.</span><br><span class="line">Found <span class="string">&#x27;package.json&#x27;</span> at <span class="string">&#x27;node_modules/typescript/package.json&#x27;</span>.</span><br><span class="line"><span class="string">&#x27;package.json&#x27;</span> has <span class="string">&#x27;types&#x27;</span> field <span class="string">&#x27;./lib/typescript.d.ts&#x27;</span> that references <span class="string">&#x27;node_modules/typescript/lib/typescript.d.ts&#x27;</span>.</span><br><span class="line">File <span class="string">&#x27;node_modules/typescript/lib/typescript.d.ts&#x27;</span> exist - use it as a module resolution result.</span><br><span class="line">======== Module name <span class="string">&#x27;typescript&#x27;</span> was successfully resolved to <span class="string">&#x27;node_modules/typescript/lib/typescript.d.ts&#x27;</span>. ========</span><br></pre></td></tr></table></figure>
-
 <p>值得关注的事情</p>
 <ol>
 <li>导入的名称和位置</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">======== Resolving module <span class="string">&#x27;typescript&#x27;</span> from <span class="string">&#x27;src/app.ts&#x27;</span>. ========</span><br></pre></td></tr></table></figure>
-
 <ol start="2">
 <li>编译器遵循的策略</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Module resolution kind is not specified, using <span class="string">&#x27;NodeJs&#x27;</span>.</span><br></pre></td></tr></table></figure>
-
 <ol start="3">
 <li>从npm包加载类型</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;package.json&#x27;</span> has <span class="string">&#x27;types&#x27;</span> field <span class="string">&#x27;./lib/typescript.d.ts&#x27;</span> that references <span class="string">&#x27;node_modules/typescript/lib/typescript.d.ts&#x27;</span>.</span><br></pre></td></tr></table></figure>
-
 <ol start="4">
 <li>最后结果</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">======== Module name ‘typescript’ was successfully resolved to ‘node_modules/typescript/lib/typescript.d.ts’. ========</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用–noResolve"><a href="#使用–noResolve" class="headerlink" title="使用–noResolve"></a>使用–noResolve</h3><p>通常，编译器将在启动编译过程之前尝试解析所有模块导入。<br>每次成功解析导入到文件时，该文件都会添加到编译器稍后将处理的文件集中。</p>
-<p>–noResolve编译器选项指示编译器不要将任何文件”add”到未在命令行上传递的编译中。<br>它仍将尝试将模块解析为文件，但如果未指定该文件，则不会包含该文件。</p>
+<h3 id="使用–noResolve">使用–noResolve</h3>
+<p>通常，编译器将在启动编译过程之前尝试解析所有模块导入。<br>
+每次成功解析导入到文件时，该文件都会添加到编译器稍后将处理的文件集中。</p>
+<p>–noResolve编译器选项指示编译器不要将任何文件&quot;add&quot;到未在命令行上传递的编译中。<br>
+它仍将尝试将模块解析为文件，但如果未指定该文件，则不会包含该文件。</p>
 <p>例如:</p>
 <p>app.ts</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> A <span class="keyword">from</span> <span class="string">&quot;moduleA&quot;</span> <span class="comment">// OK, &#x27;moduleA&#x27; passed on the command-line</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> B <span class="keyword">from</span> <span class="string">&quot;moduleB&quot;</span> <span class="comment">// Error TS2307: Cannot find module &#x27;moduleB&#x27;.</span></span><br></pre></td></tr></table></figure>
-
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tsc app.ts moduleA.ts --noResolve</span><br></pre></td></tr></table></figure>
-
-<p>使用–noResolve编译app.ts应该导致：  </p>
+<p>使用–noResolve编译app.ts应该导致：</p>
 <ol>
-<li>正确查找在命令行上传递的moduleA。  </li>
+<li>正确查找在命令行上传递的moduleA。</li>
 <li>找不到未通过的moduleB时出错。</li>
 </ol>
-<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><p>为什么排除列表中的模块仍然被编译器拾取？</p>
-<p>tsconfig.json将文件夹转换为”project”。如果不指定任何”exclude”或”files”条目，则包含tsconfig.json及其所有子目录的文件夹中的所有文件都包含在编译中。<br>如果要排除某些文件使用”exclude”，如果您希望指定所有文件而不是让编译器查找它们，请使用”files”。</p>
-<p>那是tsconfig.json自动包含。<br>这并没有嵌入上面讨论的模块解析。<br>如果编译器将文件标识为模块导入的目标，则无论它是否在前面的步骤中被排除，它都将包含在编译中。</p>
+<h3 id="常见问题">常见问题</h3>
+<p>为什么排除列表中的模块仍然被编译器拾取？</p>
+<p>tsconfig.json将文件夹转换为&quot;project&quot;。如果不指定任何&quot;exclude&quot;或&quot;files&quot;条目，则包含tsconfig.json及其所有子目录的文件夹中的所有文件都包含在编译中。<br>
+如果要排除某些文件使用&quot;exclude&quot;，如果您希望指定所有文件而不是让编译器查找它们，请使用&quot;files&quot;。</p>
+<p>那是tsconfig.json自动包含。<br>
+这并没有嵌入上面讨论的模块解析。<br>
+如果编译器将文件标识为模块导入的目标，则无论它是否在前面的步骤中被排除，它都将包含在编译中。</p>
 <p>因此，要从编译中排除文件，您需要将其和所有具有import或<code>/// &lt;reference path =&quot;...&quot;/&gt;</code>指令的文件排除在外。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/nginx-express-%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/nginx-express-%E4%BB%A3%E7%90%86%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">nginx + express 代理配置</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-10 10:23:34 / 修改时间：10:36:24" itemprop="dateCreated datePublished" datetime="2025-07-10T10:23:34+08:00">2025-07-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在node项目中，经常会有遇到需要获取访问URL地址的时候，同时也会遇到协议的问题，有时候，当我们的网站是https的时候，也希望在express中或者其他的node框架中获取到的URL地址协议也是https。<br>但是奇怪的是express通过req.protocol获取到的仍然是http，经过试验通过nginx的配合能够很好的解决此方案。</p>
-<p>示例如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    proxy_pass http://127.0.0.1:8080/;</span><br><span class="line">    proxy_set_header Host <span class="variable">$host</span>;</span><br><span class="line">    proxy_set_header X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    proxy_set_header X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    proxy_set_header X-Forwarded-Proto https;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>希望对看到的你有一些帮助。</p>
-<p>类似的，在其他node框架中，比如koajs中，也会遇到类似的问题，配置方式也可以参考此方式，具体是否见效，需要读者自己去实践了，果然是实践出真知，按照正常来说，这些逻辑本不应该这么复杂，但是从代理的角度的来考虑的话，既然做了代理，就需要做的完整一些，需要我们对nginx代理有更多的了解。 本次的分享主要是结合了上次TypeScript + Express的一篇文章，我在进行线上部署的时候遇到的一些小知识点。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/10/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90-%E4%BA%8C.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/10/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90-%E4%BA%8C.html" class="post-title-link" itemprop="url">TypeScript基础入门之模块解析(二)</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-10 10:23:31 / 修改时间：10:37:34" itemprop="dateCreated datePublished" datetime="2025-07-10T10:23:31+08:00">2025-07-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>继续上文[<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy85NDQ=">TypeScript基础入门之模块解析(一)<i class="fa fa-external-link-alt"></i></span>]</p>
-<h2 id="模块解析"><a href="#模块解析" class="headerlink" title="模块解析"></a>模块解析</h2><h3 id="Base-URL"><a href="#Base-URL" class="headerlink" title="Base URL"></a>Base URL</h3><p>使用baseUrl是使用AMD模块加载器的应用程序中的常见做法，其中模块在运行时”deployed”到单个文件夹。<br>这些模块的源代码可以存在于不同的目录中，但构建脚本会将它们放在一起。</p>
-<p>设置baseUrl通知编译器在哪里可以找到模块。<br>假定所有具有非相对名称的模块导入都相对于baseUrl</p>
-<p>baseUrl的值确定为：</p>
-<ol>
-<li>baseUrl命令行参数的值（如果给定的路径是相对的，则根据当前目录计算）  </li>
-<li>‘tsconfig.json’中baseUrl属性的值（如果给定的路径是相对的，则根据’tsconfig.json’的位置计算）</li>
-</ol>
-<p>请注意，设置baseUrl不会影响相对模块导入，因为它们始终相对于导入文件进行解析。<br>您可以在RequireJS和SystemJS文档中找到有关baseUrl的更多文档。</p>
-<h3 id="路径映射-Path-mapping"><a href="#路径映射-Path-mapping" class="headerlink" title="路径映射(Path mapping)"></a>路径映射(Path mapping)</h3><p>有时模块不直接位于baseUrl下。<br>例如，对模块”jquery”的导入将在运行时转换为”node_modules&#x2F;jquery&#x2F;dist&#x2F;jquery.slim.min.js”。<br>加载程序使用映射配置在运行时将模块名称映射到文件，请参阅RequireJs文档和SystemJS文档</p>
-<p>TypeScript编译器支持使用tsconfig.json文件中的”paths”属性声明此类映射。<br>以下是如何为jquery指定”paths”属性的示例。</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;compilerOptions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;baseUrl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;.&quot;</span><span class="punctuation">,</span> <span class="comment">// This must be specified if &quot;paths&quot; is.</span></span><br><span class="line">    <span class="attr">&quot;paths&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;jquery&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;node_modules/jquery/dist/jquery&quot;</span><span class="punctuation">]</span> <span class="comment">// This mapping is relative to &quot;baseUrl&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>请注意，相对于”baseUrl”解析”paths”。<br>当将”baseUrl”设置为”.”之外的另一个值，即tsconfig.json的目录时，必须相应地更改映射。<br>比如说，你在上面的例子中设置了”baseUrl”: “.&#x2F;src”，然后jquery应该映射到”..&#x2F;node_modules&#x2F;jquery&#x2F;dist&#x2F;jquery”</p>
-<p>使用”paths”还允许更复杂的映射，包括多个后退位置。<br>考虑一个项目配置，其中只有一些模块在一个位置可用，其余模块在另一个位置。<br>构建步骤将它们放在一个地方。<br>项目布局可能如下所示：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">projectRoot</span><br><span class="line">├── folder1</span><br><span class="line">│   ├── file1.ts (imports <span class="string">&#x27;folder1/file2&#x27;</span> and <span class="string">&#x27;folder2/file3&#x27;</span>)</span><br><span class="line">│   └── file2.ts</span><br><span class="line">├── generated</span><br><span class="line">│   ├── folder1</span><br><span class="line">│   └── folder2</span><br><span class="line">│       └── file3.ts</span><br><span class="line">└── tsconfig.json</span><br></pre></td></tr></table></figure>
-
-<p>相应的tsconfig.json如下所示：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;compilerOptions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;baseUrl&quot;</span><span class="punctuation">:</span> <span class="string">&quot;.&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;paths&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;*&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;*&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="string">&quot;generated/*&quot;</span></span><br><span class="line">      <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>这告诉编译器任何与模式”*“（即所有值）匹配的模块导入，以查看两个位置：</p>
-<ol>
-<li>“*“表示同名不变，因此map <code>&lt;moduleName&gt; =&gt; &lt;baseUrl&gt;/&lt;moduleName&gt;</code>  </li>
-<li>“generated&#x2F;*“表示带有附加前缀”generated”的模块名称，因此map <code>&lt;moduleName&gt; =&gt; &lt;baseUrl&gt;/generated/&lt;moduleName&gt;</code></li>
-</ol>
-<p>遵循此逻辑，编译器将尝试解析这两个导入：</p>
-<ol>
-<li><p>import ‘folder1&#x2F;file2’  </p>
-<ol>
-<li>模式’*‘匹配，通配符捕获整个模块名称  </li>
-<li>尝试列表中的第一个替换：’*‘ -&gt; folder1&#x2F;file2  </li>
-<li>替换结果是非相对名称 - 将其与<code>baseUrl -&gt; projectRoot/folder1/file2.ts</code>结合使用。  </li>
-<li>文件已存在。完成。</li>
-</ol>
-</li>
-<li><p>import ‘folder2&#x2F;file3’  </p>
-<ol>
-<li>模式’*‘匹配，通配符捕获整个模块名称  </li>
-<li>尝试列表中的第一个替换：’*‘ -&gt; folder2&#x2F;file3  </li>
-<li>替换结果是非相对名称 - 将其与<code>baseUrl -&gt; projectRoot/folder2/file3.ts</code>结合使用。  </li>
-<li>文件不存在，移动到第二个替换  </li>
-<li>第二次替换’generated&#x2F;*‘ -&gt; generated&#x2F;folder2&#x2F;file3  </li>
-<li>替换结果是非相对名称 - 将它与baseUrl -&gt; projectRoot&#x2F;generated&#x2F;folder2&#x2F;file3.ts结合使用  </li>
-<li>文件已存在。完成。</li>
-</ol>
-</li>
-</ol>
-<h3 id="使用rootDirs的虚拟目录"><a href="#使用rootDirs的虚拟目录" class="headerlink" title="使用rootDirs的虚拟目录"></a>使用rootDirs的虚拟目录</h3><p>有时，编译时来自多个目录的项目源都被组合在一起以生成单个输出目录。<br>这可以看作是一组源目录创建一个”虚拟”目录。</p>
-<p>使用’rootDirs’，您可以通知编译器构成此”虚拟”目录的根;<br>因此编译器可以解析这些”虚拟”目录中的相关模块导入，就像在一个目录中合并在一起一样。</p>
-<p>例如，考虑这个项目结构：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">src</span><br><span class="line">└── views</span><br><span class="line">     └── view1.ts (imports <span class="string">&#x27;./template1&#x27;</span>)</span><br><span class="line">     └── view2.ts</span><br><span class="line"></span><br><span class="line">generated</span><br><span class="line">└── templates</span><br><span class="line">    └── views</span><br><span class="line">        └── template1.ts (imports <span class="string">&#x27;./view2&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
-<p>src&#x2F;views中的文件是某些UI控件的用户代码。<br>生成&#x2F;模板中的文件是由模板生成器自动生成的UI模板绑定代码，作为构建的一部分。<br>构建步骤会将&#x2F;src&#x2F;views和&#x2F;generated&#x2F;templates&#x2F;views中的文件复制到输出中的同一目录。<br>在运行时，视图可以期望其模板存在于其旁边，因此应使用相对名称”.&#x2F;template”将其导入。</p>
-<p>要指定与编译器的此关系，请使用”rootDirs”。<br>“rootDirs”指定一个根列表，其内容应在运行时合并。<br>因此，按照我们的示例，tsconfig.json文件应如下所示：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;compilerOptions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;rootDirs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;src/views&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;generated/templates/views&quot;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>每次编译器在其中一个rootDirs的子文件夹中看到相对模块导入时，它将尝试在rootDirs的每个条目中查找此导入。</p>
-<p>rootDirs的灵活性不仅限于指定逻辑合并的物理源目录列表。<br>所提供的阵列可以包括任意数量的ad hoc，任意目录名，而不管它们是否存在。<br>这允许编译器以类型安全的方式捕获复杂的捆绑和运行时功能，例如条件包含和项目特定的加载器插件。</p>
-<p>考虑一种国际化场景，其中构建工具通过插入特殊路径令牌（例如＃{locale}）自动生成特定于语言环境的包，作为相对模块路径的一部分，例如.&#x2F;#{locale}&#x2F;messages。<br>在此假设设置中，该工具枚举支持的语言环境，将抽象的路径映射到.&#x2F;zh&#x2F;messages,.&#x2F;de&#x2F;messages等。</p>
-<p>假设每个模块都导出一个字符串数组。<br>例如.&#x2F;zh&#x2F;messages可能包含：</p>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> [</span><br><span class="line">    <span class="string">&quot;您好吗&quot;</span>,</span><br><span class="line">    <span class="string">&quot;很高兴认识你&quot;</span></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-
-<p>通过利用rootDirs，我们可以通知编译器这个映射，从而允许它安全地解析.&#x2F;#{locale}&#x2F;messages，即使该目录永远不存在。<br>例如，使用以下tsconfig.json配置：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;compilerOptions&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;rootDirs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="string">&quot;src/zh&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;src/de&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="string">&quot;src/#&#123;locale&#125;&quot;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>编译器现在将解析来自’.&#x2F;#{locale}&#x2F;messages’的导入消息，以便从工具中导入来自’.&#x2F;zh&#x2F;messages’的消息，允许以区域设置无关的方式进行开发，而不会影响设计时支持。</p>
-<p>未完待续…</p>
 
       
     </div>
