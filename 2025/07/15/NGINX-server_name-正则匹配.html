@@ -27,12 +27,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="测试服务器动态绑定多个域名 比如我现在有一个 1api.domain.com 但是测试需要给不同分支代码绑定一个不同的域名方便访问 需求类似如下 123api1.domain.comapi2.domain.comapi2.domain.com 可以像下面这样添加nginx配置 1234567server &#123;    listen 80;    server_name ~^api(?&lt;">
+    <meta name="description" content="测试服务器动态绑定多个域名 比如我现在有一个 1api.domain.com  但是测试需要给不同分支代码绑定一个不同的域名方便访问 需求类似如下 123api1.domain.comapi2.domain.comapi2.domain.com  可以像下面这样添加nginx配置 1234567server &#123;    listen 80;    server_name ~^api(?&amp;l">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="NGINX server_name 正则匹配">
 <meta property="og:url" content="https://blog.gowhich.com/2025/07/15/NGINX-server_name-%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="测试服务器动态绑定多个域名 比如我现在有一个 1api.domain.com 但是测试需要给不同分支代码绑定一个不同的域名方便访问 需求类似如下 123api1.domain.comapi2.domain.comapi2.domain.com 可以像下面这样添加nginx配置 1234567server &#123;    listen 80;    server_name ~^api(?&lt;">
+<meta property="og:description" content="测试服务器动态绑定多个域名 比如我现在有一个 1api.domain.com  但是测试需要给不同分支代码绑定一个不同的域名方便访问 需求类似如下 123api1.domain.comapi2.domain.comapi2.domain.com  可以像下面这样添加nginx配置 1234567server &#123;    listen 80;    server_name ~^api(?&amp;l">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-15T01:50:53.000Z">
 <meta property="article:modified_time" content="2025-07-15T02:10:16.299Z">
@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -309,27 +309,36 @@
     <div class="post-body" itemprop="articleBody"><p>测试服务器动态绑定多个域名</p>
 <p>比如我现在有一个</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">api.domain.com</span><br></pre></td></tr></table></figure>
+
 <p>但是测试需要给不同分支代码绑定一个不同的域名方便访问</p>
 <p>需求类似如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">api1.domain.com</span><br><span class="line">api2.domain.com</span><br><span class="line">api2.domain.com</span><br></pre></td></tr></table></figure>
+
 <p>可以像下面这样添加nginx配置</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name ~^api(?&lt;which_domain_id&gt;\d*)\.domain\.com$;</span><br><span class="line">    access_log  logs/api.domain.com.access.log main;</span><br><span class="line">    error_log   logs/api.domain.error.log;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 443 ssl;</span><br><span class="line">    server_name ~^api(?&lt;which_domain_id&gt;\d*)\.domain\.com$;</span><br><span class="line">    access_log  logs/api.domain.com.443.access.log main;</span><br><span class="line">    error_log   logs/api.domain.443.error.log;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>这样我们就可以拿到<code>$which_domain_id</code>变量，为后面的测试提供用途</p>
 <p>比如upstream的配置</p>
 <p>比如root的配置</p>
 <p>比如我们配置三个upsteam</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">upsteam api1 &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">upsteam api2 &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">upstream api3 &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>在用location做转发的时候，可以像下面这样使用了</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location = /api/xxx/info &#123;</span><br><span class="line">    proxy_pass http://api<span class="variable">$which_domain_id</span>;</span><br><span class="line">    proxy_set_header X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    proxy_set_header X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    proxy_set_header Host <span class="variable">$host</span>;</span><br><span class="line">    proxy_send_timeout 120s;</span><br><span class="line">    proxy_read_timeout 120s;</span><br><span class="line">    keepalive_timeout 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>不过你如果用到了<code>proxy_redirect</code>的话，就不能<code>proxy_redirect default</code>这样的配置了，可以改为类似下面的配置</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">location = /api/xxx/info &#123;</span><br><span class="line">    proxy_pass http://api<span class="variable">$which_domain_id</span>;</span><br><span class="line">    proxy_redirect /api/xxx/info /api/xxx/info;</span><br><span class="line">    proxy_set_header X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    proxy_set_header X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    proxy_set_header Host <span class="variable">$host</span>;</span><br><span class="line">    proxy_send_timeout 120s;</span><br><span class="line">    proxy_read_timeout 120s;</span><br><span class="line">    keepalive_timeout 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>像上面如果是转发到同一个路由的话其实也可以不用加<code>proxy_redirect</code>的</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location = /api/xxx/info &#123;</span><br><span class="line">    proxy_pass http://api<span class="variable">$which_domain_id</span>;</span><br><span class="line">    proxy_set_header X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">    proxy_set_header X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    proxy_set_header Host <span class="variable">$host</span>;</span><br><span class="line">    proxy_send_timeout 120s;</span><br><span class="line">    proxy_read_timeout 120s;</span><br><span class="line">    keepalive_timeout 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>在配置root的时候可以参考下面</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  ~^api(?&lt;which_domain_id&gt;\d*)\.domain\.com$;</span><br><span class="line">    root  /var/www/api.domain.com/<span class="variable">$which_domain_id</span>/public/;</span><br><span class="line">    index  index.html index.htm index.php;</span><br><span class="line"></span><br><span class="line">    error_log   logs/api.domain.access.log main;</span><br><span class="line">    error_log   logs/api.domain.error.log;</span><br><span class="line"></span><br><span class="line">    client_max_body_size 3M;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.php?<span class="variable">$args</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass   php:9000;</span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        fastcgi_param  SCRIPT_FILENAME $document_root<span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">        include        fastcgi_params;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>最后声明这个<code>which_domain_id</code>只是我这里的需要可以用作id操作，你可以改为字符串参数</p>
-<p>文章参考：<span class="exturl" data-url="aHR0cDovL25naW54Lm9yZy9lbi9kb2NzL2h0dHAvc2VydmVyJTVDX25hbWVzLmh0bWw=">http://nginx.org/en/docs/http/server\_names.html<i class="fa fa-external-link-alt"></i></span></p>
+<p>文章参考：<span class="exturl" data-url="aHR0cDovL25naW54Lm9yZy9lbi9kb2NzL2h0dHAvc2VydmVyL19uYW1lcy5odG1s">http://nginx.org/en/docs/http/server\_names.html<i class="fa fa-external-link-alt"></i></span></p>
 
     </div>
 

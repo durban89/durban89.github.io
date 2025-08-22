@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,101 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/iOS6-UI%E7%8A%B6%E6%80%81%E4%BF%9D%E6%8C%81%E5%92%8C%E6%81%A2%E5%A4%8D.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/19/iOS6-UI%E7%8A%B6%E6%80%81%E4%BF%9D%E6%8C%81%E5%92%8C%E6%81%A2%E5%A4%8D.html" class="post-title-link" itemprop="url">iOS6 UI状态保持和恢复</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-19 10:48:24 / 修改时间：10:55:32" itemprop="dateCreated datePublished" datetime="2025-06-19T10:48:24+08:00">2025-06-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>关于iOS6 UI状态保持和恢复，是最近看到几个例子，里面有这个方法<code>encodeRestorableStateWithCoder</code>和<code>decodeRestorableStateWithCoder</code>，感觉很奇怪，都怪自己知识浅薄啊</p>
+<p>其实呢使用这个是有原因的.</p>
+<p>iOS设计规范中要求，当应用退出的时候（包括被终止运行时候），画面中UI元素状态需要保持的，当再次进来的时候看状态与退出是一样的。iOS6之后苹果提供以下API使得UI状态保持和恢复变得很容易了。<br>在iOS6中我们可以在3地方实现状态保持和恢复：  </p>
+<p>1,应用程序委托对象  </p>
+<p>2,视图控制器  </p>
+<p>3,自定义视图  </p>
+<p>恢复标识是iOS6为了实现UI状态保持和恢复添加的设置项目。我们需要在应用程序委托对象AppDelegate代码部分做一些修改，添加的代码如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>) application:(<span class="built_in">UIApplication</span> *)application shouldSaveApplicationState:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">-(<span class="type">BOOL</span>) application:(<span class="built_in">UIApplication</span> *)application shouldRestoreApplicationState:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">- (<span class="type">void</span>)application:(<span class="built_in">UIApplication</span> *)application willEncodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    [coder encodeFloat:<span class="number">2.0</span> forKey:<span class="string">@&quot;Version&quot;</span>];  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">- (<span class="type">void</span>)application:(<span class="built_in">UIApplication</span> *)application didDecodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="type">float</span> lastVer = [coder decodeFloatForKey:<span class="string">@&quot;Version&quot;</span>];  </span><br><span class="line">  </span><br><span class="line">    <span class="built_in">NSLog</span>(@”lastVer = %f”,lastVer);  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>application:shouldSaveApplicationState:</code>在应用退出的时候调用，负责控制是否允许保存状态，返回YES情况是可以保存，NO是不保存。  </p>
+<p><code>application:shouldRestoreApplicationState:</code>是应用启动时候调用，负责控制是否恢复上次退出的时候的状态，返回YES情况是可以恢复，NO是不恢复。  </p>
+<p><code>application:willEncodeRestorableStateWithCoder:</code>方法是保存时候调用，在这个方法中实现UI状态或数据的保存，其中<code>[coder encodeFloat:2.0 forKey:@&quot;Version&quot;]</code>是保存简单数据。  </p>
+<p><code>application:didDecodeRestorableStateWithCoder:</code>方法是恢复时候调用，在这个方法中实现UI状态或数据的恢复，其中<code>[coder decodeFloatForKey:@&quot;Version&quot;]</code>语句是恢复上次保存的数据。  </p>
+<p>要想实现具体画面中控件的保持和恢复，还需要在它视图控制器中添加一些代码，ViewController.m中添加的代码如下：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)encodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">    [<span class="variable language_">super</span> encodeRestorableStateWithCoder:coder];  </span><br><span class="line">    [coder encodeObject:<span class="keyword">self</span>.txtField.text forKey:kSaveKey];  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>)decodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">    [<span class="variable language_">super</span> decodeRestorableStateWithCoder:coder];  </span><br><span class="line">    <span class="keyword">self</span>.txtField.text = [coder decodeObjectForKey:kSaveKey];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在iOS6之后视图控制器都添加了两个：<code>encodeRestorableStateWithCoder:</code>和<code>decodeRestorableStateWithCoder:</code>用来实现该控制器中的控件或数据的保存和恢复。其中<code>encodeRestorableStateWithCoder:</code> 方法是在保存时候调用，<code>[coder encodeObject:self.txtField.text forKey:kSaveKey]</code>语句是按照指定的键保存文本框的内容，<code>decodeRestorableStateWithCoder:</code>方法是在恢复时候调用，<code>[coder decodeObjectForKey:kSaveKey]</code>是恢复文本框内容时候调用，保存和恢复事实上就是向一个归档文件中编码和解码的过程。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -377,9 +472,8 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>axure rp pro 5.6 以上</p>
-<p>用户名：IloveyouAxure<br>
-注册码：UChpuxwbDW6eAIaAf9UujEFSBwN3vpEz9snHvlCQVJGQy4p7WrCyKLLvV5QLvqva</p>
+          <p>axure rp pro 5.6 以上  </p>
+<p>用户名：IloveyouAxure<br>注册码：UChpuxwbDW6eAIaAf9UujEFSBwN3vpEz9snHvlCQVJGQy4p7WrCyKLLvV5QLvqva</p>
 <p>我的是Axure RP Pro 6版本，key网上找的是5.6的，也能用</p>
 
       
@@ -459,39 +553,29 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><code>{% for %}</code> 允许我们在一个序列上迭代。与Python的for 语句的情形类似，循环语法是 for X in Y ，Y是要迭代的序列<br>
-而X是在每一个特定的循环中使用的变量名称。每一次循环中，模板系统会渲染在{% for %} and {% endfor %}  中的所有内<br>
-容。<br>
-例如，给定一个运动员列表athlete_list 变量，我们可以使用下面的代码来显示这个列表：</p>
+          <p><code>{% for %}</code> 允许我们在一个序列上迭代。与Python的for 语句的情形类似，循环语法是 for X in Y ，Y是要迭代的序列<br>而X是在每一个特定的循环中使用的变量名称。每一次循环中，模板系统会渲染在{% for %} and {% endfor %}  中的所有内<br>容。<br>例如，给定一个运动员列表athlete_list 变量，我们可以使用下面的代码来显示这个列表：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">&#123;% for athlete in athlete_list %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;&#123; athlete.name &#125;&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>给标签增加一个reversed 使得该列表被反向迭代：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for athlete in athlete_list reversed %&#125;</span><br><span class="line">...</span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
 <p>可以嵌套使用 <code>{% for %}</code> 标签：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for country in countries %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;&#123; country.name &#125;&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line"></span><br><span class="line">&#123;% for city in country.city_list %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;&#123; city &#125;&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-<p>Django不支持退出循环操作。如果我们想退出循环，可以改变正在迭代的变量，让其仅仅包含需要迭代的项目。同<br>
-理，Django也不支持continue语句，我们无法让当前迭代操作跳回到循环头部。<br>
-<code>{% for %}</code> 标签在循环中设置了一个特殊的 <code>forloop</code> 模板变量。这个变量能提供一些当前循环进展的信息：<br>
-forloop.counter 总是一个表示当前循环的执行次数的整数计数器。这个计数器是从1开始的，<br>
-所以在第一次循环时<code>forloop.counter</code> 将会被设置为1。例子如下：</p>
+
+<p>Django不支持退出循环操作。如果我们想退出循环，可以改变正在迭代的变量，让其仅仅包含需要迭代的项目。同<br>理，Django也不支持continue语句，我们无法让当前迭代操作跳回到循环头部。<br><code>{% for %}</code> 标签在循环中设置了一个特殊的 <code>forloop</code> 模板变量。这个变量能提供一些当前循环进展的信息：<br>forloop.counter 总是一个表示当前循环的执行次数的整数计数器。这个计数器是从1开始的，<br>所以在第一次循环时<code>forloop.counter</code> 将会被设置为1。例子如下：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for item in todo_list %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123; forloop.counter &#125;&#125;: &#123;&#123; item &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-<p><code>forloop.counter0</code> 类似于 <code>forloop.counter</code> ，但是它是从0计数的。第一次执行循环时这个变量会被设置为0。<br>
-<code>forloop.revcounter</code> 是表示循环中剩余项的整型变量。在循环初次执行时 <code>forloop.revcounter</code> 将被设置为序列中项的总<br>
-数。最后一次循环执行中，这个变量将被置1。<br>
-<code>forloop.revcounter0</code> 类似于 <code>forloop.revcounter</code> ，但它以0做为结束索引。在第一次执行循环时，该变量会被置为序<br>
-列的项的个数减1。在最后一次迭代时，该变量为0。<br>
-<code>forloop.first</code> 是一个布尔值。在第一次执行循环时该变量为True，在下面的情形中这个变量是很有用的。</p>
+
+<p><code>forloop.counter0</code> 类似于 <code>forloop.counter</code> ，但是它是从0计数的。第一次执行循环时这个变量会被设置为0。<br><code>forloop.revcounter</code> 是表示循环中剩余项的整型变量。在循环初次执行时 <code>forloop.revcounter</code> 将被设置为序列中项的总<br>数。最后一次循环执行中，这个变量将被置1。<br><code>forloop.revcounter0</code> 类似于 <code>forloop.revcounter</code> ，但它以0做为结束索引。在第一次执行循环时，该变量会被置为序<br>列的项的个数减1。在最后一次迭代时，该变量为0。<br><code>forloop.first</code> 是一个布尔值。在第一次执行循环时该变量为True，在下面的情形中这个变量是很有用的。</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for object in objects %&#125;</span><br><span class="line">&#123;% if forloop.first %&#125;<span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">&quot;first&quot;</span>&gt;</span>&#123;% else %&#125;<span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;% endif %&#125;</span><br><span class="line">&#123;&#123; object &#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
 <p><code>forloop.last</code> 是一个布尔值；在最后一次执行循环时被置为True。一个常见的用法是在一系列的链接之间放置管道符<code>（|）</code></p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for link in links %&#125;&#123;&#123; link &#125;&#125;&#123;% if not forloop.last %&#125; | &#123;% endif %&#125;&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-<p>The above template code might output something like this::<br>
-<code>Link1 | Link2 | Link3 | Link4 </code></p>
+
+<p>The above template code might output something like this::<br><code>Link1 | Link2 | Link3 | Link4 </code> </p>
 <p><code>forloop.parentloop</code> 是一个指向当前循环的上一级循环的 forloop 对象的引用（在嵌套循环的情况下）。例子在此：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for country in countries %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">&#123;% for city in country.city_list %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span>Country #&#123;&#123; forloop.parentloop.counter &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span>City #&#123;&#123; forloop.counter &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">td</span>&gt;</span>&#123;&#123; city &#125;&#125;<span class="tag">&lt;/<span class="name">td</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
-<p>forloop 变量仅仅能够在循环中使用，在模板解析器碰到 <code>&#123;% endfor %&#125;</code> 标签时， forloop 就不可访问了。<br>
-Context和forloop变量<br>
-在一个<code>{% for %}</code> 块中，已存在的变量会被移除，以避免 forloop 变量被覆盖。Django会把这个变量移动到<br>
-<code>forloop.parentloop</code> 中。通常我们不用担心这个问题，但是一旦我们在模板中定义了 forloop 这个变量（当然我们反对这<br>
-样做），在<code>{% for %}</code> 块中它会在 <code>forloop.parentloop</code> 被重新命名。</p>
+
+<p>forloop 变量仅仅能够在循环中使用，在模板解析器碰到 <code>&#123;% endfor %&#125;</code> 标签时， forloop 就不可访问了。<br>Context和forloop变量<br>在一个<code>{% for %}</code> 块中，已存在的变量会被移除，以避免 forloop 变量被覆盖。Django会把这个变量移动到<br><code>forloop.parentloop</code> 中。通常我们不用担心这个问题，但是一旦我们在模板中定义了 forloop 这个变量（当然我们反对这<br>样做），在<code>{% for %}</code> 块中它会在 <code>forloop.parentloop</code> 被重新命名。</p>
 
       
     </div>
@@ -574,15 +658,14 @@ Context和forloop变量<br>
 <p>三步：</p>
 <ol>
 <li>创建一个 favicon.ico 文件</li>
-<li>修改 <span class="exturl" data-url="aHR0cDovL3VybHMucHk=">urls.py<i class="fa fa-external-link-alt"></i></span> ， 添加 “/favicon.ico” 路径。</li>
+<li>修改 urls.py ， 添加 “&#x2F;favicon.ico” 路径。</li>
 <li>修改 html 模版</li>
 </ol>
 <p>下面看实现步骤</p>
 <p>第一步：创建一个 favicon.ico 文件</p>
-<p>创建了一个 16x16 像素的透明画布，在添加一个text图层（写上“Y”），保存为 png 格式文件 favicon.png ， 重命名为 favicon.ico 即可: &quot; &quot;<br>
-第二步：修改 <span class="exturl" data-url="aHR0cDovL3VybHMucHk=">urls.py<i class="fa fa-external-link-alt"></i></span><br>
-在 URL 里添加：</p>
+<p>创建了一个 16x16 像素的透明画布，在添加一个text图层（写上“Y”），保存为 png 格式文件 favicon.png ， 重命名为 favicon.ico 即可: “ “<br>第二步：修改 urls.py<br>在 URL 里添加：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="string">r&#x27;^favicon\.ico$&#x27;</span>, <span class="string">&#x27;django.views.generic.simple.redirect_to&#x27;</span>, &#123;<span class="string">&#x27;url&#x27;</span>: settings.MEDIA_URL+<span class="string">&#x27;images/favicon.ico&#x27;</span>&#125;),</span><br></pre></td></tr></table></figure>
+
 <p>第三步：修改 html 模版</p>
 <p>在 html 模版的 head 部分添加：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">REL</span>=<span class="string">&quot;SHORTCUT ICON&quot;</span> <span class="attr">HREF</span>=<span class="string">&quot;&#123;&#123; MEDIA_URL &#125;&#125;images/favicon.ico&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -664,87 +747,55 @@ Context和forloop变量<br>
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><strong>语法规则： location [=|~|~*|^~] /uri/ { … }</strong></p>
-<p><code>=</code> 开头表示精确匹配</p>
-<p><code>^~</code> 开头表示uri以某个常规字符串开头，理解为匹配 url路径即可。nginx不对url做编码，因此请求为/static/20%/aa，可以被规则^~ /static/ /aa匹配到（注意是空格）。</p>
-<p><code>~</code> 开头表示区分大小写的正则匹配</p>
-<p><code>~\*</code>  开头表示不区分大小写的正则匹配</p>
-<p><code>!~</code>和<code>!~\*</code>分别为区分大小写不匹配及不区分大小写不匹配 的正则</p>
-<p><code>/</code> 通用匹配，任何请求都会匹配到。</p>
-<p>多个location配置的情况下匹配顺序为（参考资料而来，还未实际验证，试试就知道了，不必拘泥，仅供参考）：</p>
-<p>首先匹配 =，其次匹配^~, 其次是按文件中顺序的正则匹配，最后是交给 / 通用匹配。当有匹配成功时候，停止匹配，按当前匹配规则处理请求。</p>
+          <p><strong>语法规则： location [&#x3D;|<del>|</del>*|^~] &#x2F;uri&#x2F; { … }</strong>  </p>
+<p><code>=</code> 开头表示精确匹配  </p>
+<p><code>^~</code> 开头表示uri以某个常规字符串开头，理解为匹配 url路径即可。nginx不对url做编码，因此请求为&#x2F;static&#x2F;20%&#x2F;aa，可以被规则^~ &#x2F;static&#x2F; &#x2F;aa匹配到（注意是空格）。  </p>
+<p><code>~</code> 开头表示区分大小写的正则匹配  </p>
+<p><code>~\*</code>  开头表示不区分大小写的正则匹配  </p>
+<p><code>!~</code>和<code>!~\*</code>分别为区分大小写不匹配及不区分大小写不匹配 的正则  </p>
+<p><code>/</code> 通用匹配，任何请求都会匹配到。  </p>
+<p>多个location配置的情况下匹配顺序为（参考资料而来，还未实际验证，试试就知道了，不必拘泥，仅供参考）：  </p>
+<p>首先匹配 &#x3D;，其次匹配^~, 其次是按文件中顺序的正则匹配，最后是交给 &#x2F; 通用匹配。当有匹配成功时候，停止匹配，按当前匹配规则处理请求。  </p>
 <p>例子，有如下匹配规则：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">location = / &#123;</span><br><span class="line">    <span class="comment">#规则A</span></span><br><span class="line">&#125;</span><br><span class="line">location = /login &#123;</span><br><span class="line">    <span class="comment">#规则B</span></span><br><span class="line">&#125;</span><br><span class="line">location ^~ /static/ &#123;</span><br><span class="line">    <span class="comment">#规则C</span></span><br><span class="line">&#125;</span><br><span class="line">location ~ \.(gif|jpg|png|js|css)$ &#123;</span><br><span class="line">    <span class="comment">#规则D</span></span><br><span class="line">&#125;</span><br><span class="line">location ~* \.png$ &#123;</span><br><span class="line">    <span class="comment">#规则E</span></span><br><span class="line">&#125;</span><br><span class="line">location !~ \.xhtml$ &#123;</span><br><span class="line">    <span class="comment">#规则F</span></span><br><span class="line">&#125;</span><br><span class="line">location !~* \.xhtml$ &#123;</span><br><span class="line">    <span class="comment">#规则G</span></span><br><span class="line">&#125;</span><br><span class="line">location / &#123;</span><br><span class="line">    <span class="comment">#规则H</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>那么产生的效果如下：</p>
-<p>访问根目录/， 比如<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC8=">http://localhost/<i class="fa fa-external-link-alt"></i></span> 将匹配规则A</p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9sb2dpbg==">http://localhost/login<i class="fa fa-external-link-alt"></i></span> 将匹配规则B，<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9yZWdpc3Rlcg==">http://localhost/register<i class="fa fa-external-link-alt"></i></span> 则匹配规则H</p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9zdGF0aWMvYS5odG1s">http://localhost/static/a.html<i class="fa fa-external-link-alt"></i></span> 将匹配规则C</p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLmdpZg==">http://localhost/a.gif<i class="fa fa-external-link-alt"></i></span>, <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9iLmpwZw==">http://localhost/b.jpg<i class="fa fa-external-link-alt"></i></span> 将匹配规则D和规则E，但是规则D顺序优先，规则E不起作用， 而 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9zdGF0aWMvYy5wbmc=">http://localhost/static/c.png<i class="fa fa-external-link-alt"></i></span> 则优先匹配到 规则C</p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLlBORw==">http://localhost/a.PNG<i class="fa fa-external-link-alt"></i></span> 则匹配规则E， 而不会匹配规则D，因为规则E不区分大小写。</p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLnhodG1s">http://localhost/a.xhtml<i class="fa fa-external-link-alt"></i></span> 不会匹配规则F和规则G，<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLlhIVE1M">http://localhost/a.XHTML<i class="fa fa-external-link-alt"></i></span> 不会匹配规则G，因为不区分大小写。规则F，规则G属于排除法，符合匹配规则但是不会匹配到，所以想想看实际应用中哪里会用到。</p>
-<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9jYXRlZ29yeS9pZC8xMTEx">http://localhost/category/id/1111<i class="fa fa-external-link-alt"></i></span> 则最终匹配到规则H，因为以上规则都不匹配，这个时候应该是nginx转发请求给后端应用服务器，比如FastCGI（php），tomcat（jsp），nginx作为方向代理服务器存在。</p>
+
+<p>那么产生的效果如下：  </p>
+<p>访问根目录&#x2F;， 比如<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC8=">http://localhost/<i class="fa fa-external-link-alt"></i></span> 将匹配规则A  </p>
+<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9sb2dpbg==">http://localhost/login<i class="fa fa-external-link-alt"></i></span> 将匹配规则B，<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9yZWdpc3Rlcg==">http://localhost/register<i class="fa fa-external-link-alt"></i></span> 则匹配规则H  </p>
+<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9zdGF0aWMvYS5odG1s">http://localhost/static/a.html<i class="fa fa-external-link-alt"></i></span> 将匹配规则C  </p>
+<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLmdpZg==">http://localhost/a.gif<i class="fa fa-external-link-alt"></i></span>, <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9iLmpwZw==">http://localhost/b.jpg<i class="fa fa-external-link-alt"></i></span> 将匹配规则D和规则E，但是规则D顺序优先，规则E不起作用， 而 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9zdGF0aWMvYy5wbmc=">http://localhost/static/c.png<i class="fa fa-external-link-alt"></i></span> 则优先匹配到 规则C  </p>
+<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLlBORw==">http://localhost/a.PNG<i class="fa fa-external-link-alt"></i></span> 则匹配规则E， 而不会匹配规则D，因为规则E不区分大小写。  </p>
+<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLnhodG1s">http://localhost/a.xhtml<i class="fa fa-external-link-alt"></i></span> 不会匹配规则F和规则G，<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9hLlhIVE1M">http://localhost/a.XHTML<i class="fa fa-external-link-alt"></i></span> 不会匹配规则G，因为不区分大小写。规则F，规则G属于排除法，符合匹配规则但是不会匹配到，所以想想看实际应用中哪里会用到。  </p>
+<p>访问 <span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdC9jYXRlZ29yeS9pZC8xMTEx">http://localhost/category/id/1111<i class="fa fa-external-link-alt"></i></span> 则最终匹配到规则H，因为以上规则都不匹配，这个时候应该是nginx转发请求给后端应用服务器，比如FastCGI（php），tomcat（jsp），nginx作为方向代理服务器存在。  </p>
 <p><strong>实际应用中常用的几个规则，如下：</strong></p>
 <p>直接匹配网站根，通过域名访问网站首页比较频繁，使用这个会加速处理，官网如是说。 这里是直接转发给后端应用服务器了，也可以是一个静态首页 第一个必选规则</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location = / &#123;</span><br><span class="line">    proxy_pass http://tomcat:8080/index</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>第二个必选规则是处理静态文件请求，这是nginx作为http服务器的强项 有两种配置模式，目录匹配或后缀匹配,任选其一或搭配使用</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">location ^~ /static/ &#123;</span><br><span class="line">    <span class="comment"># 请求/static/a.txt 将被映射到实际目录文件: /webroot/res/static/a.txt</span></span><br><span class="line">    root /webroot/res/;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location ~* \.(gif|jpg|jpeg|png|css|js|ico)$ &#123;</span><br><span class="line">    root /webroot/res/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>第三个规则就是通用规则，用来转发动态请求到后端应用服务器 非静态文件请求就默认是动态请求，自己根据实际把握 毕竟目前的一些框架的流行，带.php,.jsp后缀的情况很少了</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    proxy_pass http://tomcat:8080/</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>对于以上基础推荐配置，有一个补充，就是关于转发有一点需要注意。例如下面配置，对一个目录转发：</p>
-<p>关键在于最后的/，访问localhost/outer/in.html，其中case A 会转发到tomcat:8080/in.html， 而case B 会转发到 tomcat:8080/outer/in.html，所以务必注意了。</p>
-<p><strong>未试验过的其他信息：</strong></p>
-<p>三、ReWrite语法<br>
-last – 基本上都用这个Flag。<br>
-break – 中止Rewirte，不在继续匹配<br>
-redirect – 返回临时重定向的HTTP状态302<br>
-permanent – 返回永久重定向的HTTP状态301<br>
-1、下面是可以用来判断的表达式：<br>
--f和!-f用来判断是否存在文件<br>
--d和!-d用来判断是否存在目录<br>
--e和!-e用来判断是否存在文件或目录<br>
--x和!-x用来判断文件是否可执行<br>
-2、下面是可以用作判断的全局变量<br>
-例：<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4OC90ZXN0MS90ZXN0Mi90ZXN0LnBocA==">http://localhost:88/test1/test2/test.php<i class="fa fa-external-link-alt"></i></span><br>
-$host：localhost<br>
-$server_port：88<br>
-$request_uri：<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4OC90ZXN0MS90ZXN0Mi90ZXN0LnBocA==">http://localhost:88/test1/test2/test.php<i class="fa fa-external-link-alt"></i></span><br>
-$document_uri：/test1/test2/test.php<br>
-$document_root：D:\nginx/html<br>
-$request_filename：D:\nginx/html/test1/test2/test.php<br>
-四、Redirect语法</p>
+
+<p>对于以上基础推荐配置，有一个补充，就是关于转发有一点需要注意。例如下面配置，对一个目录转发：  </p>
+<p>关键在于最后的&#x2F;，访问localhost&#x2F;outer&#x2F;in.html，其中case A 会转发到tomcat:8080&#x2F;in.html， 而case B 会转发到 tomcat:8080&#x2F;outer&#x2F;in.html，所以务必注意了。  </p>
+<p><strong>未试验过的其他信息：</strong>  </p>
+<p>三、ReWrite语法<br>last – 基本上都用这个Flag。<br>break – 中止Rewirte，不在继续匹配<br>redirect – 返回临时重定向的HTTP状态302<br>permanent – 返回永久重定向的HTTP状态301<br>1、下面是可以用来判断的表达式：<br>-f和!-f用来判断是否存在文件<br>-d和!-d用来判断是否存在目录<br>-e和!-e用来判断是否存在文件或目录<br>-x和!-x用来判断文件是否可执行<br>2、下面是可以用作判断的全局变量<br>例：<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4OC90ZXN0MS90ZXN0Mi90ZXN0LnBocA==">http://localhost:88/test1/test2/test.php<i class="fa fa-external-link-alt"></i></span><br>$host：localhost<br>$server_port：88<br>$request_uri：<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4OC90ZXN0MS90ZXN0Mi90ZXN0LnBocA==">http://localhost:88/test1/test2/test.php<i class="fa fa-external-link-alt"></i></span><br>$document_uri：&#x2F;test1&#x2F;test2&#x2F;test.php<br>$document_root：D:\nginx&#x2F;html<br>$request_filename：D:\nginx&#x2F;html&#x2F;test1&#x2F;test2&#x2F;test.php<br>四、Redirect语法</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line">  server_name www.gowhich.com;</span><br><span class="line">  index index.html index.php;</span><br><span class="line">  root html;</span><br><span class="line">  <span class="keyword">if</span> (<span class="variable">$http_host</span> !~ <span class="string">&quot;^www\.gowhich\.com$&quot;</span> &#123;</span><br><span class="line">    rewrite ^(.*) http://gowhich.com<span class="variable">$1</span> redirect;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>五、防盗链</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location ~* \.(gif|jpg|swf)$ &#123;</span><br><span class="line">  valid_referers none blocked gowhich.com www.gowhich.com;</span><br><span class="line">  <span class="keyword">if</span> (<span class="variable">$invalid_referer</span>) &#123;</span><br><span class="line">    rewrite ^/ http://<span class="variable">$host</span>/logo.png;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>六、根据文件类型设置过期时间</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location ~* \.(js|css|jpg|jpeg|gif|png|swf)$ &#123;</span><br><span class="line">  <span class="keyword">if</span> (-f <span class="variable">$request_filename</span>) &#123;</span><br><span class="line">    expires 1h;</span><br><span class="line">    <span class="built_in">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>七、禁止访问某个目录</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location ~* \.(txt|doc)<span class="variable">$&#123;</span></span><br><span class="line"><span class="variable">  root /data/www/wwwroot/test;</span></span><br><span class="line"><span class="variable">  deny all;</span></span><br><span class="line"><span class="variable">&#125;</span></span><br></pre></td></tr></table></figure>
+
 <p>八、直接访问某个指定文件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location = ads.txt &#123;</span><br><span class="line">  <span class="comment"># /data/www/wwwroot/目录下要有ads.txt文件</span></span><br><span class="line">  root /data/www/wwwroot/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>一些可用的全局变量</strong><br>
-$args<br>
-$content_length<br>
-$content_type<br>
-$document_root<br>
-$document_uri<br>
-$host<br>
-$http_user_agent<br>
-$http_cookie<br>
-$limit_rate<br>
-$request_body_file<br>
-$request_method<br>
-$remote_addr<br>
-$remote_port<br>
-$remote_user<br>
-$request_filename<br>
-$request_uri<br>
-$query_string<br>
-$scheme<br>
-$server_protocol<br>
-$server_addr<br>
-$server_name<br>
-$server_port<br>
-$uri</p>
+
+<p><strong>一些可用的全局变量</strong><br>$args<br>$content_length<br>$content_type<br>$document_root<br>$document_uri<br>$host<br>$http_user_agent<br>$http_cookie<br>$limit_rate<br>$request_body_file<br>$request_method<br>$remote_addr<br>$remote_port<br>$remote_user<br>$request_filename<br>$request_uri<br>$query_string<br>$scheme<br>$server_protocol<br>$server_addr<br>$server_name<br>$server_port<br>$uri</p>
 
       
     </div>
@@ -831,10 +882,13 @@ $uri</p>
     <div class="post-body" itemprop="articleBody">
           <p>第一步：介绍我的文件目录结构</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">walkerfree  </span><br><span class="line">----walkerfree</span><br><span class="line">--------__init__.py  </span><br><span class="line">--------settings.py  </span><br><span class="line">--------urls.py  </span><br><span class="line">--------wsgi.py  </span><br><span class="line">----blog  </span><br><span class="line">--------__init__.py  </span><br><span class="line">--------models.py  </span><br><span class="line">--------views.py  </span><br><span class="line">--------test.py  </span><br><span class="line">----static  </span><br><span class="line">--------css  </span><br><span class="line">------------style.css  </span><br><span class="line">--------js  </span><br><span class="line">------------jquery.js  </span><br><span class="line">--------images  </span><br><span class="line">------------me.jpg</span><br><span class="line">----media</span><br><span class="line">--------upload</span><br><span class="line">----manage.py</span><br></pre></td></tr></table></figure>
+
 <p>第二步：settings文件的配置的简介</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># Django settings for walkerfree project.</span></span><br><span class="line"></span><br><span class="line">DEBUG = <span class="literal">True</span></span><br><span class="line">TEMPLATE_DEBUG = DEBUG</span><br><span class="line"></span><br><span class="line">ADMINS = (</span><br><span class="line">    (<span class="string">&#x27;漫步者Feeling&#x27;</span>, <span class="string">&#x27;xx@xx&#x27;</span>),</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">MANAGERS = ADMINS</span><br><span class="line"></span><br><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>, <span class="comment"># Add &#x27;postgresql_psycopg2&#x27;, &#x27;mysql&#x27;, &#x27;sqlite3&#x27; or &#x27;oracle&#x27;.</span></span><br><span class="line">        <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;walkerfree&#x27;</span>,                      <span class="comment"># Or path to database file if using sqlite3.</span></span><br><span class="line">        <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;root&#x27;</span>,                      <span class="comment"># Not used with sqlite3.</span></span><br><span class="line">        <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;zhangda890126;;&#x27;</span>,                  <span class="comment"># Not used with sqlite3.</span></span><br><span class="line">        <span class="string">&#x27;HOST&#x27;</span>: <span class="string">&#x27;localhost&#x27;</span>,                      <span class="comment"># Set to empty string for localhost. Not used with sqlite3.</span></span><br><span class="line">        <span class="string">&#x27;PORT&#x27;</span>: <span class="string">&#x27;3306&#x27;</span>,                      <span class="comment"># Set to empty string for default. Not used with sqlite3.</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Local time zone for this installation. Choices can be found here:</span></span><br><span class="line"><span class="comment"># http://en.wikipedia.org/wiki/List_of_tz_zones_by_name</span></span><br><span class="line"><span class="comment"># although not all choices may be available on all operating systems.</span></span><br><span class="line"><span class="comment"># In a Windows environment this must be set to your system time zone.</span></span><br><span class="line">TIME_ZONE = <span class="string">&#x27;Asia/Chongqing&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Language code for this installation. All choices can be found here:</span></span><br><span class="line"><span class="comment"># http://www.i18nguy.com/unicode/language-identifiers.html</span></span><br><span class="line">LANGUAGE_CODE = <span class="string">&#x27;en-us&#x27;</span></span><br><span class="line"></span><br><span class="line">SITE_ID = <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If you set this to False, Django will make some optimizations so as not</span></span><br><span class="line"><span class="comment"># to load the internationalization machinery.</span></span><br><span class="line">USE_I18N = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If you set this to False, Django will not format dates, numbers and</span></span><br><span class="line"><span class="comment"># calendars according to the current locale.</span></span><br><span class="line">USE_L10N = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># If you set this to False, Django will not use timezone-aware datetimes.</span></span><br><span class="line">USE_TZ = <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Absolute filesystem path to the directory that will hold user-uploaded files.</span></span><br><span class="line"><span class="comment"># Example: &quot;/home/media/media.lawrence.com/media/&quot;</span></span><br><span class="line">MEDIA_ROOT = <span class="string">&#x27;/home/davidzhang/walkerfree/media&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># URL that handles the media served from MEDIA_ROOT. Make sure to use a</span></span><br><span class="line"><span class="comment"># trailing slash.</span></span><br><span class="line"><span class="comment"># Examples: &quot;http://media.lawrence.com/media/&quot;, &quot;http://example.com/media/&quot;</span></span><br><span class="line">MEDIA_URL = <span class="string">&#x27;/media/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Absolute path to the directory static files should be collected to.</span></span><br><span class="line"><span class="comment"># Don&#x27;t put anything in this directory yourself; store your static files</span></span><br><span class="line"><span class="comment"># in apps&#x27; &quot;static/&quot; subdirectories and in STATICFILES_DIRS.</span></span><br><span class="line"><span class="comment"># Example: &quot;/home/media/media.lawrence.com/static/&quot;</span></span><br><span class="line">STATIC_ROOT =<span class="string">&#x27;/home/davidzhang/walkerfree/static/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># URL prefix for static files.</span></span><br><span class="line"><span class="comment"># Example: &quot;http://media.lawrence.com/static/&quot;</span></span><br><span class="line">STATIC_URL = <span class="string">&#x27;/static/&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Additional locations of static files</span></span><br><span class="line">STATICFILES_DIRS = (</span><br><span class="line">    <span class="comment"># Put strings here, like &quot;/home/html/static&quot; or &quot;C:/www/django/static&quot;.</span></span><br><span class="line">    <span class="comment"># Always use forward slashes, even on Windows.</span></span><br><span class="line">    <span class="comment"># Don&#x27;t forget to use absolute paths, not relative paths.    </span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># List of finder classes that know how to find static files in</span></span><br><span class="line"><span class="comment"># various locations.</span></span><br><span class="line">STATICFILES_FINDERS = (</span><br><span class="line">    <span class="string">&#x27;django.contrib.staticfiles.finders.FileSystemFinder&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.staticfiles.finders.AppDirectoriesFinder&#x27;</span>,</span><br><span class="line"><span class="comment">#    &#x27;django.contrib.staticfiles.finders.DefaultStorageFinder&#x27;,</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Make this unique, and don&#x27;t share it with anybody.</span></span><br><span class="line">SECRET_KEY = <span class="string">&#x27;0h&amp;amp;*b8sw)*fu_oy+jj_%bun3*&amp;amp;3v&amp;amp;*!5#79un!do71eq4su86x&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># List of callables that know how to import templates from various sources.</span></span><br><span class="line">TEMPLATE_LOADERS = (</span><br><span class="line">    <span class="string">&#x27;django.template.loaders.filesystem.Loader&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.template.loaders.app_directories.Loader&#x27;</span>,</span><br><span class="line"><span class="comment">#     &#x27;django.template.loaders.eggs.Loader&#x27;,</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">MIDDLEWARE_CLASSES = (</span><br><span class="line">    <span class="string">&#x27;django.middleware.common.CommonMiddleware&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.sessions.middleware.SessionMiddleware&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.middleware.csrf.CsrfViewMiddleware&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.auth.middleware.AuthenticationMiddleware&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.messages.middleware.MessageMiddleware&#x27;</span>,</span><br><span class="line">    <span class="comment"># Uncomment the next line for simple clickjacking protection:</span></span><br><span class="line">    <span class="comment"># &#x27;django.middleware.clickjacking.XFrameOptionsMiddleware&#x27;,</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">ROOT_URLCONF = <span class="string">&#x27;walkerfree.urls&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Python dotted path to the WSGI application used by Django&#x27;s runserver.</span></span><br><span class="line">WSGI_APPLICATION = <span class="string">&#x27;walkerfree.wsgi.application&#x27;</span></span><br><span class="line"></span><br><span class="line">TEMPLATE_DIRS = (</span><br><span class="line">    <span class="comment"># Put strings here, like &quot;/home/html/django_templates&quot; or &quot;C:/www/django/templates&quot;.</span></span><br><span class="line">    <span class="comment"># Always use forward slashes, even on Windows.</span></span><br><span class="line">    <span class="comment"># Don&#x27;t forget to use absolute paths, not relative paths.</span></span><br><span class="line">    <span class="string">&quot;/home/davidzhang/walkerfree/templates&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">INSTALLED_APPS = (</span><br><span class="line">    <span class="string">&#x27;django.contrib.auth&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.contenttypes&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.sessions&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.sites&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.messages&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;django.contrib.staticfiles&#x27;</span>,</span><br><span class="line">    <span class="comment"># Uncomment the next line to enable the admin:</span></span><br><span class="line">    <span class="comment"># &#x27;django.contrib.admin&#x27;,</span></span><br><span class="line">    <span class="comment"># Uncomment the next line to enable admin documentation:</span></span><br><span class="line">    <span class="comment"># &#x27;django.contrib.admindocs&#x27;,</span></span><br><span class="line">    <span class="string">&#x27;walkerfree&#x27;</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># A sample logging configuration. The only tangible logging</span></span><br><span class="line"><span class="comment"># performed by this configuration is to send an email to</span></span><br><span class="line"><span class="comment"># the site admins on every HTTP 500 error when DEBUG=False.</span></span><br><span class="line"><span class="comment"># See http://docs.djangoproject.com/en/dev/topics/logging for</span></span><br><span class="line"><span class="comment"># more details on how to customize your logging configuration.</span></span><br><span class="line">LOGGING = &#123;</span><br><span class="line">    <span class="string">&#x27;version&#x27;</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="string">&#x27;disable_existing_loggers&#x27;</span>: <span class="literal">False</span>,</span><br><span class="line">    <span class="string">&#x27;filters&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;require_debug_false&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;()&#x27;</span>: <span class="string">&#x27;django.utils.log.RequireDebugFalse&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&#x27;handlers&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;mail_admins&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;level&#x27;</span>: <span class="string">&#x27;ERROR&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;filters&#x27;</span>: [<span class="string">&#x27;require_debug_false&#x27;</span>],</span><br><span class="line">            <span class="string">&#x27;class&#x27;</span>: <span class="string">&#x27;django.utils.log.AdminEmailHandler&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">&#x27;loggers&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;django.request&#x27;</span>: &#123;</span><br><span class="line">            <span class="string">&#x27;handlers&#x27;</span>: [<span class="string">&#x27;mail_admins&#x27;</span>],</span><br><span class="line">            <span class="string">&#x27;level&#x27;</span>: <span class="string">&#x27;ERROR&#x27;</span>,</span><br><span class="line">            <span class="string">&#x27;propagate&#x27;</span>: <span class="literal">True</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>第三步：nginx的配置</p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span>   <span class="number">80</span>; <span class="comment">## listen for ipv4; this line is default and implied</span></span><br><span class="line">        <span class="attribute">root</span> /home/davidzhang/walkerfree/walkerfree;</span><br><span class="line">        <span class="attribute">index</span>   index.html index.htm;</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Make site accessible from http://localhost/</span></span><br><span class="line">        <span class="attribute">server_name</span> local.ubuntu.walkerfree.com;</span><br><span class="line"></span><br><span class="line">        <span class="attribute">access_log</span> /var/log/uwsgi/local.ubuntu.walkerfree.access.log;</span><br><span class="line">        <span class="attribute">error_log</span> /var/log/uwsgi/local.ubuntu.walkerfree.<span class="literal">error</span>.log;</span><br><span class="line"></span><br><span class="line">        <span class="section">location</span> / &#123;</span><br><span class="line">                <span class="attribute">include</span> uwsgi_params;</span><br><span class="line">                <span class="attribute">uwsgi_pass</span>      unix:///tmp/mysite.socket;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#here is important</span></span><br><span class="line">        <span class="section">location</span><span class="regexp"> ^~</span> /static/ &#123;</span><br><span class="line">                <span class="attribute">root</span>    /home/davidzhang/walkerfree/;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>ok，搞定了</p>
 <p>想要我uwsgi配置的，请期待下篇文章</p>
 
@@ -924,9 +978,11 @@ $uri</p>
           <p>在使用django的时候，会遇到一个问题，就是“Non-ASCII character ‘\xe6’”这个错误</p>
 <p>原因是如下，是我的配置文件中的一部分代码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">DEBUG = <span class="literal">True</span></span><br><span class="line">TEMPLATE_DEBUG = DEBUG</span><br><span class="line"></span><br><span class="line">ADMINS = (</span><br><span class="line">    (<span class="string">&#x27;漫步者Feeling&#x27;</span>, <span class="string">&#x27;xx@xx&#x27;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
 <p>提示一下，这里有中文，就是这个原因</p>
 <p>修改一下，如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># Django settings for walkerfree project.</span></span><br><span class="line"></span><br><span class="line">DEBUG = <span class="literal">True</span></span><br><span class="line">TEMPLATE_DEBUG = DEBUG</span><br><span class="line"></span><br><span class="line">ADMINS = (</span><br><span class="line">    (<span class="string">&#x27;漫步者Feeling&#x27;</span>, <span class="string">&#x27;xx@xx&#x27;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
 <p>就是这句代码：<code># -*- coding: utf-8 -*-  </code></p>
 <p>解决了。</p>
 
@@ -1091,92 +1147,6 @@ $uri</p>
 <p>看下面‍</p>
 <p>在虚拟主机最前面加上如下即可，记住一定要以它开头（不然不生效）。如下,返回值404，可以改403等。</p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">         <span class="attribute">server_name</span>  _;  <span class="comment">#default</span></span><br><span class="line">         <span class="attribute">return</span> <span class="number">404</span>;</span><br><span class="line">         &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">server&#123;</span><br><span class="line">    <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">server_name</span>  .test.com;  <span class="comment">#(域名前加点，不然可能访问不了)</span></span><br><span class="line">    <span class="attribute">index</span> main.php index.php;</span><br><span class="line">    <span class="attribute">root</span>  /var/htdocs/www/test;</span><br><span class="line"></span><br><span class="line">    <span class="section">location</span> <span class="regexp">~ .*\.(php|php5)?$</span>&#123;</span><br><span class="line">      <span class="comment">#fastcgi_pass  unix:/tmp/php-cgi.sock;</span></span><br><span class="line">      <span class="attribute">fastcgi_pass</span>  <span class="number">127.0.0.1:9000</span>;</span><br><span class="line">      <span class="attribute">fastcgi_index</span> index.php;</span><br><span class="line">      <span class="attribute">include</span> fcgi.conf;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">log_format</span>  testlogs  <span class="string">&#x27;<span class="variable">$remote_addr</span> - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] &quot;<span class="variable">$request</span>&quot; &#x27;</span></span><br><span class="line">               <span class="string">&#x27;<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> &quot;<span class="variable">$http_referer</span>&quot; &#x27;</span></span><br><span class="line">               <span class="string">&#x27;&quot;<span class="variable">$http_user_agent</span>&quot; <span class="variable">$http_x_forwarded_for</span>&#x27;</span>;</span><br><span class="line">    <span class="attribute">access_log</span>  /var/htdocs/logs/testlogs.log  testlogs;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/19/Objective-C%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F-%E4%BB%A3%E7%A0%81%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/19/Objective-C%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F-%E4%BB%A3%E7%A0%81%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.html" class="post-title-link" itemprop="url">Objective-C的实例变量，局部变量，代码的执行过程</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-19 10:29:17 / 修改时间：10:36:04" itemprop="dateCreated datePublished" datetime="2025-06-19T10:29:17+08:00">2025-06-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>实例变量是在类里面的变量<br>
-比如：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">FindPerformersViewController</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>i就是实例变量</p>
-<p>局部变量是在方法里面的变量<br>
-比如：</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>) getVariable &#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里的i就是局部变量</p>
 
       
     </div>

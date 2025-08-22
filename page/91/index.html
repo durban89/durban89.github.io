@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,94 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/17/Xcode-4-%E8%AE%BE%E7%BD%AEApp%E7%89%88%E6%9C%AC%E5%8F%B7.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/06/17/Xcode-4-%E8%AE%BE%E7%BD%AEApp%E7%89%88%E6%9C%AC%E5%8F%B7.html" class="post-title-link" itemprop="url">Xcode 4 设置App版本号</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-17 17:20:42 / 修改时间：17:25:35" itemprop="dateCreated datePublished" datetime="2025-06-17T17:20:42+08:00">2025-06-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>刚接触ios开发的童鞋应该会对于app版本号吗有些疑问，因为target不仅仅在summary中有版本号，同样在Info.plist等地方也有版本号码的地方，一头乱码，不知吗？其实xcode在summary中已经将app最基本的设置进行了全面的封装，其余的plist，build setting等地方会跟着summary设置的改变而改变。  </p>
+<p>一个version，一个build，都是设置版本的地方，有什么区别呢？  </p>
+<p>在ios中(Android等工程中也一样),有两种version，一种是 CFBundleVersion (“Bundle Version”)，也就是我们看到的version,另一种是CFBundleShortVersionString (“Bundle version string, short”)，也就是我们看到的Build。  </p>
+<p>普通情况下，我们只使用version即可，设置为”1.0”, “1.1”, “2.0” , etc，但如果你要使用两个版本号时候，需要将build设置为1,2,3…等递增的整数，有什么用呢？  </p>
+<p>version我们可以通过AppStore、itunes或其它软件看到，是给用户看的，而build是我们在团队开发中内部只用的，只有我们自己可以看到。比如团队打算发布1.0版本的时候，会发布很多build版本供测试或QA团队进行测试，你发布了很多build，因为一直在修改着代码，因此当你收到一条bug信息时候，你怎么知道是那个build引起的问题呢，这时候build版本号的有点就可以体现出来了，不是吗。  </p>
+<p>我这里有一段代码，可以在xcode编译时候自动增加build号码。  </p>
+<p>先把 Info.plist 里的版本号改成某个数字，然后 Targets → your target → Build Phases → Run Script 的地方加上：</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">version=`/usr/libexec/PlistBuddy -c <span class="string">&quot;Print CFBundleVersion&quot;</span> $PRODUCT_SETTINGS_PATH`</span><br><span class="line">version=`expr $version + <span class="number">1</span>`</span><br><span class="line">/usr/libexec/PlistBuddy -c <span class="string">&quot;Set :CFBundleVersion $version&quot;</span> $PRODUCT_SETTINGS_PATH</span><br><span class="line">#/usr/libexec/PlistBuddy -c <span class="string">&quot;Set :CFBundleShortVersionString $version&quot;</span> $PRODUCT_SETTINGS_PATH 这行代码会让version也自增，一般不需要</span><br></pre></td></tr></table></figure>
+
+<p>参考：<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2hlbmNhaWZlaXhpYTEvYXJ0aWNsZS9kZXRhaWxzLzgyMjEyNzMj">http://blog.csdn.net/shencaifeixia1/article/details/8221273#<i class="fa fa-external-link-alt"></i></span></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -297,9 +385,9 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>在Xcode中当你在更新了你得证书而再重新编译你的程序，真机调试一直会出现 Code Sign error: Provisioning profile ‘XXXX’ can’t be found是不是会另你很恼火。下面说说解决方法，让你很好的解决这个问题。</p>
-<p>1.关闭你的项目，找到项目文件XXXX.xcodeproj，在文件上点击右键，选择“显示包内容”（Show Package Contents）。会新打开一个Finder。注：其实XXXX.xcodeproj就是一个文件夹，这里新打开的一个Finder里面的三个文件就是该XXXX.xcodeproj文件夹里面的文件。</p>
-<p>2.在新打开的Finder中找到project.pbxproj，并且打开。在这之中找到你之前的证书的编码信息。我之前报的错误信息是</p>
+          <p>在Xcode中当你在更新了你得证书而再重新编译你的程序，真机调试一直会出现 Code Sign error: Provisioning profile ‘XXXX’ can’t be found是不是会另你很恼火。下面说说解决方法，让你很好的解决这个问题。  </p>
+<p>1.关闭你的项目，找到项目文件XXXX.xcodeproj，在文件上点击右键，选择“显示包内容”（Show Package Contents）。会新打开一个Finder。注：其实XXXX.xcodeproj就是一个文件夹，这里新打开的一个Finder里面的三个文件就是该XXXX.xcodeproj文件夹里面的文件。  </p>
+<p>2.在新打开的Finder中找到project.pbxproj，并且打开。在这之中找到你之前的证书的编码信息。我之前报的错误信息是  </p>
 <p>Code Sign error: Provisioning profile ‘37D44E7F-0339-4277-9A82-C146A944CD46’，所以我用查找的方式找到了所有包括37D44E7F-0339-4277-9A82-C146A944CD46的行，并且删除。</p>
 <p>3.保存，重新启动你的项目，再编译。就OK了。</p>
 <p>参考：<span class="exturl" data-url="aHR0cDovL3d3dy5kb3ViYW4uY29tL25vdGUvMTMxMDA5NDIyLw==">http://www.douban.com/note/131009422/<i class="fa fa-external-link-alt"></i></span></p>
@@ -381,55 +469,67 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>如果是 // 就会默认去调用protected/views/layouts，//代表 绝对路径<br>
-其实 就是 绝对和相对的关系/代表相对路径,如module/user下的layout<br>
-用单斜杠的话默认会先找当前已经激活的模块底下的view,若当前未有激活的模块则从系统根目录下开始找,双斜杠的话就直接从系统根下开始找</p>
-<h3 id="Yii-framework已经定义的命名空间常量"><a href="#1">Yii framework已经定义的命名空间常量</a></h3>
-<p><strong>system: 指向Yii框架目录; YII\framework</strong><br>
-<strong>zii: 指向zii library 目录; YII\framework\zii</strong><br>
-*<em>application : 指向应用程序基本目录; protected*</em><br>
-*<em>webroot: 指向包含里入口脚本 文件的目录. 此别名自 1.0.3 版起生效. *</em><br>
-<strong>ext : 指向包含所有第三方扩展的目录, 从版本 1.0.8 可用; \protected\extensions</strong></p>
+          <p>如果是 &#x2F;&#x2F; 就会默认去调用protected&#x2F;views&#x2F;layouts，&#x2F;&#x2F;代表 绝对路径<br>其实 就是 绝对和相对的关系&#x2F;代表相对路径,如module&#x2F;user下的layout<br>用单斜杠的话默认会先找当前已经激活的模块底下的view,若当前未有激活的模块则从系统根目录下开始找,双斜杠的话就直接从系统根下开始找</p>
+<h3 id="1"><a href="#1" class="headerlink" title="Yii framework已经定义的命名空间常量"></a><a href="#1">Yii framework已经定义的命名空间常量</a></h3><p><strong>system: 指向Yii框架目录; YII\framework</strong><br><strong>zii: 指向zii library 目录; YII\framework\zii</strong><br>*<em>application : 指向应用程序基本目录; protected*</em><br>*<em>webroot: 指向包含里入口脚本 文件的目录. 此别名自 1.0.3 版起生效. *</em><br><strong>ext : 指向包含所有第三方扩展的目录, 从版本 1.0.8 可用; \protected\extensions</strong></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">getPathOfAlias</span>(<span class="string">&#x27;zii&#x27;</span>); </span><br><span class="line"><span class="title class_">Yii</span>::<span class="variable constant_">import</span> (<span class="string">&#x27;zii.*&#x27;</span>);</span><br><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">setPathOfAlias</span>(<span class="string">&#x27;backend&#x27;</span>, <span class="variable">$backend</span>); </span><br><span class="line"><span class="string">&#x27;import&#x27;</span> =&gt; [</span><br><span class="line">    <span class="string">&#x27;backend.models.*&#x27;</span>, </span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>应用的主目录是指包含所有安全系数比较高的PHP代码和数据的根目录。在默认情况下，这个目录一般是入口代码所在目录的一个目录： protected 。这个路径可以通过在application configuration里设置 basePath来改变.<br>
-YII framework路径</p>
+
+<p>应用的主目录是指包含所有安全系数比较高的PHP代码和数据的根目录。在默认情况下，这个目录一般是入口代码所在目录的一个目录： protected 。这个路径可以通过在application configuration里设置 basePath来改变.<br>YII framework路径</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">getFrameworkPath</span>()</span><br></pre></td></tr></table></figure>
-<p>protected/runtime</p>
+
+<p>protected&#x2F;runtime</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;<span class="title function_ invoke__">getRuntimePath</span>();</span><br></pre></td></tr></table></figure>
-<p>protected/venders目录</p>
+
+<p>protected&#x2F;venders目录</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">import</span>(<span class="string">&#x27;application.venders.*&#x27;</span>);</span><br></pre></td></tr></table></figure>
-<p>或在protected/config/main.php说明</p>
+
+<p>或在protected&#x2F;config&#x2F;main.php说明</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;import &#x27;</span>=&gt; [   </span><br><span class="line">    <span class="comment">// ......    </span></span><br><span class="line">    <span class="string">&#x27;application.venders.*&#x27;</span>,    </span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
 <p>插入meta信息</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;clientScript-&gt;<span class="title function_ invoke__">registerMetaTag</span>(<span class="string">&#x27;关键字&#x27;</span>,<span class="string">&#x27;keywords&#x27;</span>);  </span><br><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;clientScript-&gt;<span class="title function_ invoke__">registerMetaTag</span>(<span class="string">&#x27;一些描述&#x27;</span>,<span class="string">&#x27;description&#x27;</span>);  </span><br><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;clientScript-&gt;<span class="title function_ invoke__">registerMetaTag</span>(<span class="string">&#x27;作者&#x27;</span>,<span class="string">&#x27;author&#x27;</span>);  </span><br><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;clientScript-&gt;<span class="title function_ invoke__">registerMetaTag</span>(<span class="string">&#x27; text/html;charset=utf-8&#x27;</span>, <span class="literal">null</span>, <span class="string">&#x27;Content-Type&#x27;</span>);  </span><br><span class="line"><span class="comment">//&lt;link rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; href=&quot;http://www.dreamdu.com/feed/&quot; /&gt;</span></span><br><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;clientScript-&gt;<span class="title function_ invoke__">registerLinkTag</span>(<span class="string">&#x27;alternate&#x27;</span>,<span class="string">&#x27;application/rss+xml&#x27;</span>,<span class="variable">$this</span>-&gt;<span class="title function_ invoke__">createUrl</span>(<span class="string">&#x27;/feed&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
 <p>如何在控制器添加CSS文件或JavaScript文件</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;clientScript-&gt;<span class="title function_ invoke__">registerCssFile</span>(<span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;baseUrl.<span class="string">&#x27;/css/my.css&#x27;</span>);  </span><br><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;clientScript-&gt;<span class="title function_ invoke__">registerScriptFile</span>(<span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;baseUrl.<span class="string">&#x27;/css/my.js&#x27;</span>);  </span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;module-&gt;assetsUrl; <span class="meta">?&gt;</span>/css/main.css  </span><br><span class="line"><span class="comment">//调用YII框架中framework/web/js/source的js,其中registerCoreScript key调用的文件在framework/web/js/packages.php列表中可以查看</span></span><br><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;clientScript-&gt;<span class="title function_ invoke__">registerCoreScript</span>(<span class="string">&#x27;jquery&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
 <p>在view中得到当前controller的ID方法：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;<span class="title function_ invoke__">getController</span>()-&gt;id;  </span><br></pre></td></tr></table></figure>
+
 <p>在view中得到当前action的ID方法：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;<span class="title function_ invoke__">getController</span>()-&gt;<span class="title function_ invoke__">getAction</span>()-&gt;id;  </span><br></pre></td></tr></table></figure>
+
 <p>yii获取ip地址</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;request-&gt;userHostAddress; </span><br></pre></td></tr></table></figure>
+
 <p>yii判断提交方式</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;request-&gt;isPostRequest </span><br></pre></td></tr></table></figure>
+
 <p>得到当前域名:</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;request-&gt;hostInfo</span><br></pre></td></tr></table></figure>
+
 <p>得到proteced目录的物理路径</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">YII::<span class="title function_ invoke__">app</span>()-&gt;basePath; </span><br></pre></td></tr></table></figure>
+
 <p>获得上一页的url以返回</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;request-&gt;urlReferrer; </span><br></pre></td></tr></table></figure>
+
 <p>得到当前url</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;request-&gt;url; </span><br></pre></td></tr></table></figure>
+
 <p>得到当前home url</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;homeUrl </span><br></pre></td></tr></table></figure>
+
 <p>得到当前return url</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;user-&gt;returnUrl </span><br></pre></td></tr></table></figure>
+
 <p>项目路径</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">dirname</span>(<span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;BasePath)  </span><br><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;<span class="title function_ invoke__">getBaseUrl</span>(<span class="literal">true</span>);  </span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getLayoutFile</span>(<span class="string">&#x27;main&#x27;</span>); <span class="meta">?&gt;</span></span><br><span class="line"><span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">redirect</span>(<span class="string">&#x27;index.php?r=admin/manage&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
 <p><code>createUrl()</code></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">createUrl</span>(<span class="string">&#x27;urlBoyLeeTest&#x27;</span>);  </span><br><span class="line"><span class="comment">//out =&gt; /yii_lab/index.php?r=lab/urlBoyLeeTest  </span></span><br><span class="line"><span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">createUrl</span>(<span class="string">&#x27;post/read&#x27;</span>) <span class="comment">// /index.php/post/read  </span></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;request-&gt;baseUrl; <span class="meta">?&gt;</span>/css/screen.css  </span><br><span class="line"><span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;theme-&gt;baseUrl.<span class="string">&#x27;/images/FileName.gif&#x27;</span></span><br></pre></td></tr></table></figure>
+
 <p><code>createAbsoluteUrl()</code></p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">createAbsoluteUrl</span>(<span class="string">&#x27;urlBoyLeeTest&#x27;</span>);  </span><br><span class="line"><span class="comment">//out =&gt; http://localhost/yii_lab/index.php?r=lab/urlBoyLeeTest</span></span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -513,10 +613,12 @@ YII framework路径</p>
 <li>获取控制器名</li>
 </ol>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">$this</span>-&gt;controller = <span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;controller-&gt;id;</span><br></pre></td></tr></table></figure>
+
 <ol start="2">
 <li>获取动作名</li>
 </ol>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">$this</span>-&gt;action = <span class="title class_">Yii</span>::<span class="title function_ invoke__">app</span>()-&gt;controller-&gt;action-&gt;id;</span><br></pre></td></tr></table></figure>
+
 <p>参考的原文是这样的：</p>
 <blockquote>
 <ol>
@@ -527,13 +629,13 @@ YII framework路径</p>
 <p>在控制器中获取控制器名:</p>
 </blockquote>
 <blockquote>
-<p>$name = $this-&gt;getId();</p>
+<p>$name &#x3D; $this-&gt;getId();</p>
 </blockquote>
 <blockquote>
 <p>在视图中获取控制器名:</p>
 </blockquote>
 <blockquote>
-<p>$name = Yii::app()-&gt;controller-&gt;id;</p>
+<p>$name &#x3D; Yii::app()-&gt;controller-&gt;id;</p>
 </blockquote>
 <blockquote>
 <ol start="2">
@@ -544,13 +646,13 @@ YII framework路径</p>
 <p>在控制器beforeAction()回调函数中获取动作名:</p>
 </blockquote>
 <blockquote>
-<p>$name = $action-&gt;id;</p>
+<p>$name &#x3D; $action-&gt;id;</p>
 </blockquote>
 <blockquote>
 <p>在其他地方获取动作名:</p>
 </blockquote>
 <blockquote>
-<p>$name = $this-&gt;getAction()-&gt;getId();</p>
+<p>$name &#x3D; $this-&gt;getAction()-&gt;getId();</p>
 </blockquote>
 <p>我试过几个，有几个不是很好用，但是我的总结里面是绝对可以使用的，因为是一个全局变量。</p>
 
@@ -634,6 +736,7 @@ YII framework路径</p>
           <p>写描述方法：</p>
 <p>正确的方法是子类化UIToolbar，设置其backgroundColor</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">TranslucentToolbar</span> : <span class="title">UIToolbar</span>  </span></span><br><span class="line">  </span><br><span class="line"><span class="keyword">@end</span>  </span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">TranslucentToolbar</span>  </span></span><br><span class="line">  </span><br><span class="line">- (<span class="type">void</span>)drawRect:(<span class="built_in">CGRect</span>)rect &#123;  </span><br><span class="line">    <span class="comment">// do nothing   </span></span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">- (<span class="type">id</span>)initWithFrame:(<span class="built_in">CGRect</span>)aRect &#123;  </span><br><span class="line">    <span class="keyword">if</span> ((<span class="keyword">self</span> = [<span class="variable language_">super</span> initWithFrame:aRect])) &#123;  </span><br><span class="line">        <span class="keyword">self</span>.opaque = <span class="literal">NO</span>;  </span><br><span class="line">        <span class="keyword">self</span>.backgroundColor = [<span class="built_in">UIColor</span> clearColor];  </span><br><span class="line">        <span class="keyword">self</span>.clearsContextBeforeDrawing = <span class="literal">YES</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+
 <p>在需要创建的地方使用子类化的UIToolbar</p>
 <p>如果你说不知道这些代码放在哪里。好吧我告诉你，其实这个就在自定义的UIoolbar中，如果你还不知道的话，请联系我好了，或者留言</p>
 
@@ -720,10 +823,9 @@ YII framework路径</p>
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>安装express之后访问<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4MDgw">http://localhost:8080<i class="fa fa-external-link-alt"></i></span> 。</p>
-<p>会出现500 Error: Cannot find module 'jade’错误</p>
-<p>解决方案：<br>
-确定package.json里有添加相应的jade依赖配置</p>
+          <p>安装express之后访问<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDo4MDgwLw==">http://localhost:8080<i class="fa fa-external-link-alt"></i></span> 。</p>
+<p>会出现500 Error: Cannot find module ‘jade’错误</p>
+<p>解决方案：<br>确定package.json里有添加相应的jade依赖配置</p>
 <p>使用npm install -d 可以自动配置package.json，并安装所有需要依赖的包</p>
 <p>命令行下执行：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -d</span><br></pre></td></tr></table></figure>
@@ -814,60 +916,49 @@ YII framework路径</p>
 <p><strong>移动文件；</strong></p>
 <p><strong>比较两个文件的内容；</strong></p>
 <p><strong>测试文件的存在性；</strong></p>
-<p><strong>读取/更改文件的属性… …</strong></p>
-<p>Just alloc/init an instance and start performing operations. Thread safe.</p>
-<h3 id="常见的NSFileManager处理文件的方法如下："><a href="#0-1">常见的NSFileManager处理文件的方法如下：</a></h3>
-<p><strong>NSFileManager *fileManager = [[NSFileManager alloc]init]; //最好不要用defaultManager。</strong><br>
-<strong>NSData *myData = [fileManager contentsAtPath:path]; // 从一个文件中读取数据</strong><br>
-<strong>[fileManager createFileAtPath:path contents:myData attributes:dict];//向一个文件中写入数据，属性字典允许你制定要创建</strong><br>
-<strong>[fileManager removeItemAtPath:path error:err];</strong><br>
-<strong>[fileManager moveItemAtPath:path toPath:path2 error:err];</strong><br>
-<strong>[fileManager copyItemAtPath:path toPath:path2 error:err];</strong><br>
-<strong>[fileManager contentsEqualAtPath:path andPath:path2];</strong><br>
-<strong>[fileManager fileExistsAtPath:path]; … …</strong></p>
-<h3 id="常见的NSFileManager处理目录的方法如下："><a href="#0-2">常见的NSFileManager处理目录的方法如下：</a></h3>
-<p><strong>[fileManager currentDirectoryPath];</strong><br>
-<strong>[fileManager changeCurrentDirectoryPath:path];</strong><br>
-<strong>[fileManager copyItemAtPath:path toPath:path2 error:err];</strong><br>
-<strong>[fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:err];</strong><br>
-<strong>[fileManager fileExistsAtPath:path isDirectory:YES];</strong><br>
-<strong>[fileManager enumeratorAtPath:path]; //获取目录的内容列表。一次可以枚举指定目录中的每个文件。 … …</strong><br>
-<strong>Has a delegate with lots of “should” methods (to do an operation or proceed after an error).</strong><br>
-<strong>And plenty more. Check out the documentation.</strong></p>
-<h3 id="1、文件的创建">1、<a href="#1">文件的创建</a></h3>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">IBAction</span>) CreateFile&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//对于错误信息</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSError</span> *error;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建文件管理器</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSFileManager</span> *fileMgr = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//指向文件目录</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *documentsDirectory= [<span class="built_in">NSHomeDirectory</span>() stringByAppendingPathComponent:<span class="string">@&quot;Documents&quot;</span>];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建一个目录</span></span><br><span class="line"></span><br><span class="line">    [[<span class="built_in">NSFileManager</span> defaultManager]   createDirectoryAtPath: [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@/myFolder&quot;</span>, <span class="built_in">NSHomeDirectory</span>()] attributes:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// File we want to create in the documents directory我们想要创建的文件将会出现在文件目录中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Result is: /Documents/file1.txt结果为：/Documents/file1.txt</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *filePath= [documentsDirectory</span><br><span class="line"></span><br><span class="line">    stringByAppendingPathComponent:<span class="string">@&quot;file2.txt&quot;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//需要写入的字符串</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *str= <span class="string">@&quot;iPhoneDeveloper Tips\nhttp://iPhoneDevelopTips,com&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//写入文件</span></span><br><span class="line"></span><br><span class="line">    [str writeToFile:filePath atomically:<span class="literal">YES</span> encoding:<span class="built_in">NSUTF8StringEncoding</span> error:&amp;error];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//显示文件目录的内容</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Documentsdirectory: %@&quot;</span>,[fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&amp;error]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="2、对文件重命名">2、<a href="#2">对文件重命名</a></h3>
-<p>对一个文件重命名,想要重命名一个文件，我们需要把文件移到一个新的路径下。下面的代码创建了我们所期望的目标文件的路径，然后请求移动文件以及在移动之后显示文件目录。</p>
+<p><strong>读取&#x2F;更改文件的属性… …</strong></p>
+<p>Just alloc&#x2F;init an instance and start performing operations. Thread safe.</p>
+<h3 id="0-1"><a href="#0-1" class="headerlink" title="常见的NSFileManager处理文件的方法如下："></a><a href="#0-1">常见的NSFileManager处理文件的方法如下：</a></h3><p><strong>NSFileManager *fileManager &#x3D; [[NSFileManager alloc]init]; &#x2F;&#x2F;最好不要用defaultManager。</strong><br><strong>NSData *myData &#x3D; [fileManager contentsAtPath:path]; &#x2F;&#x2F; 从一个文件中读取数据</strong><br><strong>[fileManager createFileAtPath:path contents:myData attributes:dict];&#x2F;&#x2F;向一个文件中写入数据，属性字典允许你制定要创建</strong><br><strong>[fileManager removeItemAtPath:path error:err];</strong><br><strong>[fileManager moveItemAtPath:path toPath:path2 error:err];</strong><br><strong>[fileManager copyItemAtPath:path toPath:path2 error:err];</strong><br><strong>[fileManager contentsEqualAtPath:path andPath:path2];</strong><br><strong>[fileManager fileExistsAtPath:path]; … …</strong></p>
+<h3 id="0-2"><a href="#0-2" class="headerlink" title="常见的NSFileManager处理目录的方法如下："></a><a href="#0-2">常见的NSFileManager处理目录的方法如下：</a></h3><p><strong>[fileManager currentDirectoryPath];</strong><br><strong>[fileManager changeCurrentDirectoryPath:path];</strong><br><strong>[fileManager copyItemAtPath:path toPath:path2 error:err];</strong><br><strong>[fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:err];</strong><br><strong>[fileManager fileExistsAtPath:path isDirectory:YES];</strong><br><strong>[fileManager enumeratorAtPath:path]; &#x2F;&#x2F;获取目录的内容列表。一次可以枚举指定目录中的每个文件。 … …</strong><br><strong>Has a delegate with lots of “should” methods (to do an operation or proceed after an error).</strong><br><strong>And plenty more. Check out the documentation.</strong></p>
+<h3 id="1、文件的创建"><a href="#1、文件的创建" class="headerlink" title="1、文件的创建"></a>1、<a href="#1">文件的创建</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">IBAction</span>) CreateFile&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//对于错误信息</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSError</span> *error;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建文件管理器</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSFileManager</span> *fileMgr = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//指向文件目录</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *documentsDirectory= [<span class="built_in">NSHomeDirectory</span>() stringByAppendingPathComponent:<span class="string">@&quot;Documents&quot;</span>];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//创建一个目录</span></span><br><span class="line"></span><br><span class="line">    [[<span class="built_in">NSFileManager</span> defaultManager]   createDirectoryAtPath: [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@&quot;%@/myFolder&quot;</span>, <span class="built_in">NSHomeDirectory</span>()] attributes:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// File we want to create in the documents directory我们想要创建的文件将会出现在文件目录中</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Result is: /Documents/file1.txt结果为：/Documents/file1.txt</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *filePath= [documentsDirectory</span><br><span class="line"></span><br><span class="line">    stringByAppendingPathComponent:<span class="string">@&quot;file2.txt&quot;</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//需要写入的字符串</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *str= <span class="string">@&quot;iPhoneDeveloper Tips\nhttp://iPhoneDevelopTips,com&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//写入文件</span></span><br><span class="line"></span><br><span class="line">    [str writeToFile:filePath atomically:<span class="literal">YES</span> encoding:<span class="built_in">NSUTF8StringEncoding</span> error:&amp;error];</span><br><span class="line"></span><br><span class="line">    <span class="comment">//显示文件目录的内容</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;Documentsdirectory: %@&quot;</span>,[fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&amp;error]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、对文件重命名"><a href="#2、对文件重命名" class="headerlink" title="2、对文件重命名"></a>2、<a href="#2">对文件重命名</a></h3><p>对一个文件重命名,想要重命名一个文件，我们需要把文件移到一个新的路径下。下面的代码创建了我们所期望的目标文件的路径，然后请求移动文件以及在移动之后显示文件目录。</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//通过移动该文件对文件重命名</span></span><br><span class="line"><span class="built_in">NSString</span> *filePath2= [documentsDirectory</span><br><span class="line">stringByAppendingPathComponent:<span class="string">@&quot;file2.txt&quot;</span>];</span><br><span class="line"><span class="comment">//判断是否移动</span></span><br><span class="line"><span class="keyword">if</span> ([fileMgr moveItemAtPath:filePath toPath:filePath2 error:&amp;error] != <span class="literal">YES</span>)</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Unable to move file: %@&quot;</span>, [error localizedDescription]);</span><br><span class="line"><span class="comment">//显示文件目录的内容</span></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Documentsdirectory: %@&quot;</span>,</span><br><span class="line">[fileMgr contentsOfDirectoryAtPath:documentsDirectoryerror:&amp;error]);</span><br></pre></td></tr></table></figure>
-<h3 id="3、删除一个文件">3、<a href="#3">删除一个文件</a></h3>
-<p>为了使这个技巧完整，让我们再一起看下如何删除一个文件：</p>
+
+<h3 id="3、删除一个文件"><a href="#3、删除一个文件" class="headerlink" title="3、删除一个文件"></a>3、<a href="#3">删除一个文件</a></h3><p>为了使这个技巧完整，让我们再一起看下如何删除一个文件：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在filePath2中判断是否删除这个文件</span></span><br><span class="line"><span class="keyword">if</span> ([fileMgr removeItemAtPath:filePath2 error:&amp;error] != <span class="literal">YES</span>)</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Unable to delete file: %@&quot;</span>, [error localizedDescription]);</span><br><span class="line"><span class="comment">//显示文件目录的内容</span></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Documentsdirectory: %@&quot;</span>,</span><br><span class="line">[fileMgr contentsOfDirectoryAtPath:documentsDirectoryerror:&amp;error]);</span><br></pre></td></tr></table></figure>
-<p>一旦文件被删除了，正如你所预料的那样，文件目录就会被自动清空：<br>
-这些示例能教你的，仅仅只是文件处理上的一些皮毛。想要获得更全面、详细的讲解，你就需要掌握NSFileManager文件的知识。</p>
-<h3 id="4、删除目录下所有文件">4、<a href="#4">删除目录下所有文件</a></h3>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取文件路径</span></span><br><span class="line">- (<span class="built_in">NSString</span> *)attchmentFolder&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *document = [<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) objectAtIndex:<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *path = [document stringByAppendingPathComponent:<span class="string">@&quot;Attchments&quot;</span>];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSFileManager</span> *manager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(![manager contentsOfDirectoryAtPath:path error:<span class="literal">nil</span>])&#123;</span><br><span class="line"></span><br><span class="line">        [manager createDirectoryAtPath:path withIntermediateDirectories:<span class="literal">NO</span> attributes:<span class="literal">nil</span> error:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> path;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一旦文件被删除了，正如你所预料的那样，文件目录就会被自动清空：<br>这些示例能教你的，仅仅只是文件处理上的一些皮毛。想要获得更全面、详细的讲解，你就需要掌握NSFileManager文件的知识。</p>
+<h3 id="4、删除目录下所有文件"><a href="#4、删除目录下所有文件" class="headerlink" title="4、删除目录下所有文件"></a>4、<a href="#4">删除目录下所有文件</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取文件路径</span></span><br><span class="line">- (<span class="built_in">NSString</span> *)attchmentFolder&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *document = [<span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>) objectAtIndex:<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSString</span> *path = [document stringByAppendingPathComponent:<span class="string">@&quot;Attchments&quot;</span>];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSFileManager</span> *manager = [<span class="built_in">NSFileManager</span> defaultManager];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(![manager contentsOfDirectoryAtPath:path error:<span class="literal">nil</span>])&#123;</span><br><span class="line"></span><br><span class="line">        [manager createDirectoryAtPath:path withIntermediateDirectories:<span class="literal">NO</span> attributes:<span class="literal">nil</span> error:<span class="literal">nil</span>];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> path;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>–清除附件</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">BOOL</span> result = [[<span class="built_in">NSFileManager</span> defaultManager] removeItemAtPath:[[MOPAppDelegate instance] attchmentFolder] error:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
-<h3 id="5、判断文件是否存在">5、<a href="#5">判断文件是否存在</a></h3>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *filePath = [<span class="keyword">self</span> dataFilePath];</span><br><span class="line"><span class="keyword">if</span> ([[<span class="built_in">NSFileManager</span> defaultManager]fileExistsAtPath:filePath]) </span><br><span class="line">｛</span><br><span class="line">  <span class="comment">//do some thing</span></span><br><span class="line">｝</span><br><span class="line"></span><br><span class="line">-(<span class="built_in">NSString</span> *)dataFilePath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *paths = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>);</span><br><span class="line">    <span class="built_in">NSString</span> *documentDirectory = [paths objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">return</span> [documentDirectory stringByAppendingPathComponent:<span class="string">@&quot;data.plist&quot;</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、判断文件是否存在"><a href="#5、判断文件是否存在" class="headerlink" title="5、判断文件是否存在"></a>5、<a href="#5">判断文件是否存在</a></h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *filePath = [<span class="keyword">self</span> dataFilePath];</span><br><span class="line"><span class="keyword">if</span> ([[<span class="built_in">NSFileManager</span> defaultManager]fileExistsAtPath:filePath]) </span><br><span class="line">｛</span><br><span class="line">  <span class="comment">//do some thing</span></span><br><span class="line">｝</span><br><span class="line"></span><br><span class="line">-(<span class="built_in">NSString</span> *)dataFilePath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *paths = <span class="built_in">NSSearchPathForDirectoriesInDomains</span>(<span class="built_in">NSDocumentDirectory</span>, <span class="built_in">NSUserDomainMask</span>, <span class="literal">YES</span>);</span><br><span class="line">    <span class="built_in">NSString</span> *documentDirectory = [paths objectAtIndex:<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">return</span> [documentDirectory stringByAppendingPathComponent:<span class="string">@&quot;data.plist&quot;</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>常用路径工具函数</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> * <span class="built_in">NSUserName</span>（）； 返回当前用户的登录名 </span><br><span class="line"><span class="built_in">NSString</span> * <span class="built_in">NSFullUserName</span>（）； 返回当前用户的完整用户名 </span><br><span class="line"><span class="built_in">NSString</span> * <span class="built_in">NSHomeDirectory</span>（）； 返回当前用户主目录的路径 </span><br><span class="line"><span class="built_in">NSString</span> * <span class="built_in">NSHomeDirectoryForUser</span>（）； 返回用户user的主目录 </span><br><span class="line"><span class="built_in">NSString</span> * <span class="built_in">NSTemporaryDirectory</span>（）； 返回可用于创建临时文件的路径目录</span><br></pre></td></tr></table></figure>
+
 <p>常用路径工具方法</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-（<span class="built_in">NSString</span> *） pathWithComponents：components    根据components（<span class="built_in">NSArray</span>对象）中元素构造有效路径 </span><br><span class="line">-（<span class="built_in">NSArray</span> *）pathComponents                                          析构路径，获取路径的各个部分 </span><br><span class="line">-（<span class="built_in">NSString</span> *）lastPathComponent                                       提取路径的最后一个组成部分 </span><br><span class="line">-（<span class="built_in">NSString</span> *）pathExtension                                           路径扩展名 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByAppendingPathComponent：path                    将path添加到现有路径末尾 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByAppendingPathExtension：ext           将拓展名添加的路径最后一个组成部分 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByDeletingPathComponent                           删除路径的最后一个部分 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByDeletingPathExtension                           删除路径的最后一个部分 的扩展名 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByExpandingTildeInPath          将路径中的代字符扩展成用户主目录（~）或指定用户主目录（~user） </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByResolvingSymlinksInPath                         尝试解析路径中的符号链接 </span><br><span class="line">-（<span class="built_in">NSString</span> *）stringByStandardizingPath            通过尝试解析~、..、.、和符号链接来标准化路径</span><br></pre></td></tr></table></figure>
+
 <p>使用路径NSPathUtilities.h</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tempdir = <span class="built_in">NSTemporaryDirectory</span>(); 临时文件的目录名 </span><br><span class="line">path = [fm currentDirectoryPath];</span><br><span class="line">[path lastPathComponent]; 从路径中提取最后一个文件名 </span><br><span class="line">fullpath = [path stringByAppendingPathComponent:fname];将文件名附加到路劲的末尾 </span><br><span class="line">extenson = [fullpath pathExtension]; 路径名的文件扩展名 </span><br><span class="line">homedir = <span class="built_in">NSHomeDirectory</span>();用户的主目录 </span><br><span class="line">component = [homedir pathComponents];  路径的每个部分</span><br></pre></td></tr></table></figure>
+
 <p>NSProcessInfo类：允许你设置或检索正在运行的应用程序的各种类型信息</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">（<span class="built_in">NSProcessInfo</span> *）processInfo                                  返回当前进程的信息</span><br><span class="line">-（<span class="built_in">NSArray</span>*）arguments                                           以<span class="built_in">NSString</span>对象数字的形式返回当前进程的参数</span><br><span class="line">-（<span class="built_in">NSDictionary</span> *）environment                                   返回变量/值对词典。描述当前的环境变量</span><br><span class="line">-（<span class="type">int</span>）processIdentity                                          返回进程标识</span><br><span class="line">-（<span class="built_in">NSString</span> *）processName                                       返回进程名称</span><br><span class="line">-（<span class="built_in">NSString</span> *）globallyUniqueString   每次调用该方法都会返回不同的单值字符串，可以用这个字符串生成单值临时文件名   </span><br><span class="line">-（<span class="built_in">NSString</span> *）hostname                                          返回主机系统的名称 </span><br><span class="line">-（<span class="type">unsigned</span> <span class="type">int</span>）operatingSystem                                 返回表示操作系统的数字 </span><br><span class="line">-（<span class="built_in">NSString</span> *）operatingSystemName                                     返回操作系统名称 </span><br><span class="line">-（<span class="built_in">NSString</span> *）operatingSystemVersionString                                     返回操作系统当前版本</span><br><span class="line">-（<span class="type">void</span>）setProcessName：（<span class="built_in">NSString</span> *）name                                将当前进程名称设置为name</span><br></pre></td></tr></table></figure>
+
 <p>NSFileHandle类允许更有效地使用文件。</p>
 <p>可以实现如下功能：</p>
 <p>1、打开一个文件，执行读、写或更新（读写）操作；</p>
 <p>2、在文件中查找指定位置；</p>
 <p>3、从文件中读取特定数目的字节，或将特定数目的字节写入文件中</p>
 <p>另外，NSFileHandle类提供的方法也可以用于各种设备或套接字。一般而言，我们处理文件时都要经历以下三个步骤：</p>
-<p>1、打开文件，获取一个NSFileHandle对象（以便在后面的I/O操作中引用该文件）。</p>
-<p>2、对打开文件执行I/O操作。</p>
+<p>1、打开文件，获取一个NSFileHandle对象（以便在后面的I&#x2F;O操作中引用该文件）。</p>
+<p>2、对打开文件执行I&#x2F;O操作。</p>
 <p>3、关闭文件。</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSFileHandle</span> *fileHandle = [[<span class="built_in">NSFileHandle</span> alloc]init]; </span><br><span class="line">fileHandle = [<span class="built_in">NSFileHandle</span> fileHandleForReadingAtPath:path]; <span class="comment">//打开一个文件准备读取</span></span><br><span class="line">fileHandle = [<span class="built_in">NSFileHandle</span> fileHandleForWritingAtPath:path]; </span><br><span class="line">fileHandle = [<span class="built_in">NSFileHandle</span> fileHandleForUpdatingAtPath:path]; </span><br><span class="line">fileData = [fileHandle availableData]; <span class="comment">// 从设备或者通道返回可用的数据 </span></span><br><span class="line">fileData = [fileHandle readDataToEndOfFile]; </span><br><span class="line">[fileHandle writeData:fileData]; <span class="comment">//将NSData数据写入文件 </span></span><br><span class="line">[fileHandle closeFile]; <span class="comment">//关闭文件 ... ...</span></span><br></pre></td></tr></table></figure>
+
 <p>注：NSFileHandle类没有提供创建文件的功能，所以必须使用NSFileManager来创建文件</p>
 <p>参考：<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvemh1emhpaGFpMTk4OC9hcnRpY2xlL2RldGFpbHMvNzkwNDMzMw==">http://blog.csdn.net/zhuzhihai1988/article/details/7904333<i class="fa fa-external-link-alt"></i></span></p>
 
@@ -951,19 +1042,12 @@ YII framework路径</p>
           <p>最近搞数据展示，需要将数字展示为用千分号分割的字符串，让我好找呀，结果还是被我找到了。</p>
 <p>在iOS中我们可以通过NSDateFormatter来设置输出NSDate的格式。相比NSDateFormatter的大名鼎鼎，NSNumberFormatter好像知道的人就不多了。其实通过NSNumberFormatter，同样可以设置NSNumber输出的格式。例如如下代码：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSNumberFormatter</span> *formatter = [[<span class="built_in">NSNumberFormatter</span> alloc] init];</span><br><span class="line">formatter.numberStyle = <span class="built_in">NSNumberFormatterDecimalStyle</span>;</span><br><span class="line"><span class="built_in">NSString</span> *string = [formatter stringFromNumber:[<span class="built_in">NSNumber</span> numberWithInt:<span class="number">123456789</span>]];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;Formatted number string:%@&quot;</span>,string);</span><br></pre></td></tr></table></figure>
+
 <p>输出结果为：<code>[1223:403] Formatted number string:123,456,789</code></p>
-<p>其中NSNumberFormatter类有个属性numberStyle，它是一个枚举型，设置不同的值可以输出不同的数字格式。该枚举包括：<br>
-<strong>enum {</strong><br>
-<strong>NSNumberFormatterNoStyle = kCFNumberFormatterNoStyle,</strong><br>
-<strong>NSNumberFormatterDecimalStyle = kCFNumberFormatterDecimalStyle,</strong><br>
-<strong>NSNumberFormatterCurrencyStyle = kCFNumberFormatterCurrencyStyle,</strong><br>
-<strong>NSNumberFormatterPercentStyle = kCFNumberFormatterPercentStyle,</strong><br>
-<strong>NSNumberFormatterScientificStyle = kCFNumberFormatterScientificStyle,</strong><br>
-<strong>NSNumberFormatterSpellOutStyle = kCFNumberFormatterSpellOutStyle</strong><br>
-<strong>};</strong><br>
-typedef NSUInteger NSNumberFormatterStyle;</p>
+<p>其中NSNumberFormatter类有个属性numberStyle，它是一个枚举型，设置不同的值可以输出不同的数字格式。该枚举包括：<br><strong>enum {</strong><br><strong>NSNumberFormatterNoStyle &#x3D; kCFNumberFormatterNoStyle,</strong><br><strong>NSNumberFormatterDecimalStyle &#x3D; kCFNumberFormatterDecimalStyle,</strong><br><strong>NSNumberFormatterCurrencyStyle &#x3D; kCFNumberFormatterCurrencyStyle,</strong><br><strong>NSNumberFormatterPercentStyle &#x3D; kCFNumberFormatterPercentStyle,</strong><br><strong>NSNumberFormatterScientificStyle &#x3D; kCFNumberFormatterScientificStyle,</strong><br><strong>NSNumberFormatterSpellOutStyle &#x3D; kCFNumberFormatterSpellOutStyle</strong><br><strong>};</strong><br>typedef NSUInteger NSNumberFormatterStyle;</p>
 <p>各个枚举对应输出数字格式的效果如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[1243:403] Formatted number string:123456789</span><br><span class="line">[1243:403] Formatted number string:123,456,789</span><br><span class="line">[1243:403] Formatted number string:￥123,456,789.00</span><br><span class="line">[1243:403] Formatted number string:-539,222,988%</span><br><span class="line">[1243:403] Formatted number string:1.23456789E8</span><br><span class="line">[1243:403] Formatted number string:一亿二千三百四十五万六千七百八十九</span><br></pre></td></tr></table></figure>
+
 <p>其中第三项和最后一项的输出会根据系统设置的语言区域的不同而不同。</p>
 
       
@@ -1045,7 +1129,7 @@ typedef NSUInteger NSNumberFormatterStyle;</p>
     <div class="post-body" itemprop="articleBody">
           <p>一直想搞明白nonatomic和atomic的区别，由于时间的问题一直没有去合理的看一下，最近搜索资料无意间被自己发现了，简答的记录一下</p>
 <blockquote>
-<p>atomic的意思就是setter/getter这两个函数的一个原语操作。如果有多个线程同时调用setter的话，不会出现某一个线程执行setter全部语句之前，另一个线程开始执行setter情况，相当于函数头尾加了锁一样。 nonatomic不保证setter/getter的原语行，所以你可能会取到不完整的东西。 比如setter函数里面改变两个成员变量，如果你用nonatomic的话，getter可能会取到只更改了其中一个变量时候的状态。 atomic是线程安全的,nonatomic是线程不安全的。如果只是单线程操作的话用nonatomic最好,因为后者效率高一些。</p>
+<p>atomic的意思就是setter&#x2F;getter这两个函数的一个原语操作。如果有多个线程同时调用setter的话，不会出现某一个线程执行setter全部语句之前，另一个线程开始执行setter情况，相当于函数头尾加了锁一样。 nonatomic不保证setter&#x2F;getter的原语行，所以你可能会取到不完整的东西。 比如setter函数里面改变两个成员变量，如果你用nonatomic的话，getter可能会取到只更改了其中一个变量时候的状态。 atomic是线程安全的,nonatomic是线程不安全的。如果只是单线程操作的话用nonatomic最好,因为后者效率高一些。</p>
 </blockquote>
 <p>上面是引用自参考资料的</p>
 <p>我的理解就是，为了追求获取变量值的安全性的话就使用atomic,如果追求效率而不是安全性的话就是使用nonatomic</p>
@@ -1130,88 +1214,8 @@ typedef NSUInteger NSNumberFormatterStyle;</p>
     <div class="post-body" itemprop="articleBody">
           <p>struct结构体中的数据不能赋初值,所以赋值只能通过声明加入的方式。</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="keyword">enum</span> sex&#123;</span><br><span class="line">    male=<span class="number">0</span>,</span><br><span class="line">    female=<span class="number">1</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span>&#123;</span><br><span class="line">    c=<span class="number">3</span>,</span><br><span class="line">    d=<span class="number">4</span></span><br><span class="line">&#125;test2;</span><br><span class="line"><span class="keyword">struct</span> student &#123;</span><br><span class="line">    <span class="type">char</span>* name;</span><br><span class="line">    <span class="keyword">enum</span> sex sex;</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> student stu;</span><br><span class="line"><span class="type">int</span> main(<span class="type">int</span> argc, <span class="keyword">const</span> <span class="type">char</span> * argv[])</span><br><span class="line">&#123;</span><br><span class="line">    stu su;</span><br><span class="line">    su.name=<span class="string">&quot;wen&quot;</span>;</span><br><span class="line">    su.sex=male;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@&quot;name=%s,sex=%d&quot;</span>,su.name,su.sex);</span><br><span class="line">    <span class="keyword">@autoreleasepool</span> &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// insert code here...</span></span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@&quot;Hello, World!&quot;</span>);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>参考：<span class="exturl" data-url="aHR0cDovL2Jsb2cuY3Nkbi5uZXQvd2Vud2VpMTk4NjExMDYvYXJ0aWNsZS9kZXRhaWxzLzg5NTg4MDA=">http://blog.csdn.net/wenwei19861106/article/details/8958800<i class="fa fa-external-link-alt"></i></span></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/06/17/iOS-%E8%8E%B7%E5%8F%96%E6%89%8B%E6%9C%BA%E7%9A%84%E5%9E%8B%E5%8F%B7-%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC-%E8%BD%AF%E4%BB%B6%E5%90%8D%E7%A7%B0-%E8%BD%AF%E4%BB%B6%E7%89%88%E6%9C%AC.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/06/17/iOS-%E8%8E%B7%E5%8F%96%E6%89%8B%E6%9C%BA%E7%9A%84%E5%9E%8B%E5%8F%B7-%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC-%E8%BD%AF%E4%BB%B6%E5%90%8D%E7%A7%B0-%E8%BD%AF%E4%BB%B6%E7%89%88%E6%9C%AC.html" class="post-title-link" itemprop="url">iOS 获取手机的型号，系统版本，软件名称，软件版本</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-06-17 16:45:59 / 修改时间：17:08:12" itemprop="dateCreated datePublished" datetime="2025-06-17T16:45:59+08:00">2025-06-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//手机序列号</span></span><br><span class="line"><span class="built_in">NSString</span>* identifierNumber = [[<span class="built_in">UIDevice</span> currentDevice] uniqueIdentifier];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;手机序列号: %@&quot;</span>,identifierNumber);</span><br><span class="line"><span class="comment">//手机别名： 用户定义的名称</span></span><br><span class="line"><span class="built_in">NSString</span>* userPhoneName = [[<span class="built_in">UIDevice</span> currentDevice] name];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;手机别名: %@&quot;</span>, userPhoneName);</span><br><span class="line"><span class="comment">//设备名称</span></span><br><span class="line"><span class="built_in">NSString</span>* deviceName = [[<span class="built_in">UIDevice</span> currentDevice] systemName];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;设备名称: %@&quot;</span>,deviceName );</span><br><span class="line"><span class="comment">//手机系统版本</span></span><br><span class="line"><span class="built_in">NSString</span>* phoneVersion = [[<span class="built_in">UIDevice</span> currentDevice] systemVersion];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;手机系统版本: %@&quot;</span>, phoneVersion);</span><br><span class="line"><span class="comment">//手机型号</span></span><br><span class="line"><span class="built_in">NSString</span>* phoneModel = [[<span class="built_in">UIDevice</span> currentDevice] model];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;手机型号: %@&quot;</span>,phoneModel );</span><br><span class="line"><span class="comment">//地方型号  （国际化区域名称）</span></span><br><span class="line"><span class="built_in">NSString</span>* localPhoneModel = [[<span class="built_in">UIDevice</span> currentDevice] localizedModel];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;国际化区域名称: %@&quot;</span>,localPhoneModel );</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSDictionary</span> *infoDictionary = [[<span class="built_in">NSBundle</span> mainBundle] infoDictionary];</span><br><span class="line"><span class="comment">// 当前应用名称</span></span><br><span class="line"><span class="built_in">NSString</span> *appCurName = [infoDictionary objectForKey:<span class="string">@&quot;CFBundleDisplayName&quot;</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;当前应用名称：%@&quot;</span>,appCurName);</span><br><span class="line"><span class="comment">// 当前应用软件版本  比如：1.0.1</span></span><br><span class="line"><span class="built_in">NSString</span> *appCurVersion = [infoDictionary objectForKey:<span class="string">@&quot;CFBundleShortVersionString&quot;</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;当前应用软件版本:%@&quot;</span>,appCurVersion);</span><br><span class="line"><span class="comment">// 当前应用版本号码   int类型</span></span><br><span class="line"><span class="built_in">NSString</span> *appCurVersionNum = [infoDictionary objectForKey:<span class="string">@&quot;CFBundleVersion&quot;</span>];</span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@&quot;当前应用版本号码：%@&quot;</span>,appCurVersionNum);</span><br></pre></td></tr></table></figure>
-<p>输入的结果：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">2013-06-27 18:08:30.608 xx[21014:c07] 手机序列号: ef4dd99784b05114b4d894964599892c00000000</span><br><span class="line">2013-06-27 18:08:30.610 xx[21014:c07] 手机别名: iPhone Simulator</span><br><span class="line">2013-06-27 18:08:30.610 xx[21014:c07] 设备名称: iPhone OS</span><br><span class="line">2013-06-27 18:08:30.611 xx[21014:c07] 手机系统版本: 6.1</span><br><span class="line">2013-06-27 18:08:30.612 xx[21014:c07] 手机型号: iPhone Simulator</span><br><span class="line">2013-06-27 18:08:30.612 xx[21014:c07] 国际化区域名称: iPhone Simulator</span><br><span class="line">2013-06-27 18:08:30.613 xx[21014:c07] 当前应用名称：寻艺</span><br><span class="line">2013-06-27 18:08:30.614 xx[21014:c07] 当前应用软件版本:1.0</span><br><span class="line">2013-06-27 18:08:30.614 xx[21014:c07] 当前应用版本号码：1</span><br></pre></td></tr></table></figure>
 
       
     </div>

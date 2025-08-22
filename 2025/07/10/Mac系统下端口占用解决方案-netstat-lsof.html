@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -309,6 +309,7 @@
     <div class="post-body" itemprop="articleBody"><p>最近启动nginx，总是提示我8080端口内占用了，但是我就想知道具体是哪个程序占用了这个端口，这个技术点困扰了我很久，一想我又不搞服务器部署，出问题肯定会有人处理的，怎奈我自己的服务器也遇到了这个问题，没办法，必须解决掉。本以为都是命令直接搜索一个拿来用用不就可以了嘛，但是！但是！但是！在不同系统的环境下，命令的使用方式居然不一样。</p>
 <p>先看个常用的命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ netstat -anvp |grep 8080</span><br><span class="line">netstat: option requires an argument -- p</span><br><span class="line">Usage:	netstat [-AaLlnW] [-f address_family | -p protocol]</span><br><span class="line">	netstat [-gilns] [-f address_family]</span><br><span class="line">	netstat -i | -I interface [-w <span class="built_in">wait</span>] [-abdgRtS]</span><br><span class="line">	netstat -s [-s] [-f address_family | -p protocol] [-w <span class="built_in">wait</span>]</span><br><span class="line">	netstat -i | -I interface -s [-f address_family | -p protocol]</span><br><span class="line">	netstat -m [-m]</span><br><span class="line">	netstat -r [-Aaln] [-f address_family]</span><br><span class="line">	netstat -rs [-s]</span><br></pre></td></tr></table></figure>
+
 <p>这个命令提示我<code>netstat: option requires an argument -- p</code></p>
 <p>其实是缺少协议</p>
 <p>在Mac上正确使用的方法是：即-f需要加上地址族，-p需要加上协议TCP或者UDP等</p>
@@ -319,14 +320,17 @@
 </ul>
 <p>于是将上面的命令调整为下面</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ netstat -anvp tcp |grep 8080</span><br><span class="line">tcp4       0      0  172.18.0.71.56891      180.163.32.172.8080    ESTABLISHED 262144 131920  51388      0</span><br><span class="line">tcp4       0      0  172.18.0.71.56816      114.221.144.160.8080   ESTABLISHED 262144 131072  98268      0</span><br><span class="line">tcp46      0      0  *.8080                 *.*                    LISTEN      131072 131072  45216      0</span><br></pre></td></tr></table></figure>
+
 <p>当然<code>netstat</code>只是查找占用端口命令中的一个命令而已</p>
 <p>下面看看另外一个命令<code>lsof</code></p>
 <p><strong>lsof</strong> 是一个列出当前系统打开文件的工具</p>
 <p>使用 lsof 如果不传任何参数会列出所有端口占用的列表，不过不建议直接使用lsof，太多看不过来 可以使用<code>lsof | less</code>，然后一下一下点击空格键，会一屏一屏的列出</p>
 <p>如果查询占用的端口号，可以使用如下命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsod -i:8080</span><br></pre></td></tr></table></figure>
+
 <p>比如我当前占用8080端口的程序</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ lsof -i:8080</span><br><span class="line">COMMAND     PID   USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME</span><br><span class="line">QQBrowser 51388 durban  106u  IPv4 0xeed752c692289c43      0t0  TCP 172.18.0.71:56891-&gt;180.163.32.172:http-alt (ESTABLISHED)</span><br><span class="line">QQBrowser 51388 durban  115u  IPv4 0xeed752c692289c43      0t0  TCP 172.18.0.71:56891-&gt;180.163.32.172:http-alt (ESTABLISHED)</span><br><span class="line">QQ        98268 durban   17u  IPv4 0xeed752c6923d2213      0t0  TCP 172.18.0.71:56816-&gt;114.221.144.160:http-alt (ESTABLISHED)</span><br><span class="line">QQ</span><br></pre></td></tr></table></figure>
+
 <p>这里只要拿到PID就可以进行kill或者是其他的操作了。</p>
 
     </div>

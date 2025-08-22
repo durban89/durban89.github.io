@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -319,25 +319,33 @@
 <p>所以我们的开发阶段最好是安装一下supervisor</p>
 <p>安装</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev supervisor</span><br></pre></td></tr></table></figure>
+
 <p>启动</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">supervisor app.js or supervisor www/bin</span><br></pre></td></tr></table></figure>
+
 <p>【此种方法启动，需要作为一个全局去安装supervisor】</p>
 <p>我的实践是把package.json里的start</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;d&quot;</span>: <span class="string">&quot;node-debug app.js&quot;</span>,</span><br><span class="line">  <span class="string">&quot;start&quot;</span>: <span class="string">&quot;./node_modules/.bin/supervisor app.js&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>然后</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm start</span><br></pre></td></tr></table></figure>
+
 <hr>
 <p>调试阶段，我们肯定是希望监测每个请求的响应结果，一旦出现问题可以直接更加友好的展示给我们：</p>
 <p>推荐node-inspector</p>
 <p>安装</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save node-inspector</span><br></pre></td></tr></table></figure>
+
 <p>启动</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node-inspector app.js or node-debug www/bin</span><br></pre></td></tr></table></figure>
+
 <p>【此种方法启动，需要作为一个全局去安装supervisor】</p>
 <p>我的实践是把package.json里的d里</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;scripts&quot;</span>: &#123;</span><br><span class="line">  <span class="string">&quot;d&quot;</span>: <span class="string">&quot;./node_modules/.bin/node-debug app.js&quot;</span>,</span><br><span class="line">  <span class="string">&quot;start&quot;</span>: <span class="string">&quot;./node_modules/.bin/supervisor app.js&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>然后执行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run d</span><br></pre></td></tr></table></figure>
+
 <hr>
 <p>部署阶段就是我们通常所说的生产环境或者是产品上线</p>
 <p>推荐使用pm2</p>
@@ -346,7 +354,7 @@
 <p>内置的负载均衡器（使用nodecluster module）</p>
 <p>以守护进程运行</p>
 <p>0s(不间断)重启</p>
-<p>为ubuntu/ CentOS 提供启动脚本</p>
+<p>为ubuntu&#x2F; CentOS 提供启动脚本</p>
 <p>关闭不稳定的进程（避免无限死循环）</p>
 <p>基于控制台监控</p>
 <p>HTTP API</p>
@@ -355,9 +363,10 @@
 <p>pm2使用nodecluster构建一个内置的负载均衡器。部署多个app的实例来达到分流的目的以减轻单app处理的压力。</p>
 <p>安装pm2</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g pm2</span><br></pre></td></tr></table></figure>
+
 <p>查看基本帮助文档</p>
 <blockquote>
-<p>Basic Examples:</p>
+<p>  Basic Examples:</p>
 <pre><code>Start an app using all CPUs available + set a name :
 
 $ pm2 start app.js -i 0 --name &quot;api&quot;
@@ -388,28 +397,36 @@ $ npm install pm2@latest -g ; pm2 updatePM2
 
 More examples in https://github.com/Unitech/pm2#usagefeatures
 </code></pre>
-<p>Deployment help:</p>
+<p>  Deployment help:</p>
 <pre><code>$ pm2 deploy help
 </code></pre>
 </blockquote>
 <p>上面基本是我们比较常用的</p>
 <p>我们也可以把启动信息写入到json配置文件中-&gt;ecosystem.json</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;apps&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;web.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;max_memory_restart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1024M&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;log_date_format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;YYYY-MM-DD HH:mm:ss SSS&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;script&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/www/web/bundle/main.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;out_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/app.0.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;error_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/err.0.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8080&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;CDN_PREFIX&quot;</span><span class="punctuation">:</span> <span class="string">&quot;//dbde4sd21oahf.cloudfront.net&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/web&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_OPLOG_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/local&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ROOT_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://web.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;PORT&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8080&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;web.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;max_memory_restart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1024M&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;log_date_format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;YYYY-MM-DD HH:mm:ss SSS&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;script&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/www/web/bundle/main.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;out_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/app.1.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;error_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/err.1.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8081&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;CDN_PREFIX&quot;</span><span class="punctuation">:</span> <span class="string">&quot;//dbde4sd21oahf.cloudfront.net&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/web&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_OPLOG_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/local&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ROOT_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://web.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;PORT&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8081&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;web.2&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;max_memory_restart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1024M&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;log_date_format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;YYYY-MM-DD HH:mm:ss SSS&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;script&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/www/web/bundle/main.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;out_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/app.2.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;error_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/err.2.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8082&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;CDN_PREFIX&quot;</span><span class="punctuation">:</span> <span class="string">&quot;//dbde4sd21oahf.cloudfront.net&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/web&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_OPLOG_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/local&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ROOT_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://web.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;PORT&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8082&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;web.3&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;max_memory_restart&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1024M&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;log_date_format&quot;</span><span class="punctuation">:</span> <span class="string">&quot;YYYY-MM-DD HH:mm:ss SSS&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;script&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/www/web/bundle/main.js&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;out_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/app.3.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;error_file&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/var/log/web/err.3.log&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8083&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;env&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;CDN_PREFIX&quot;</span><span class="punctuation">:</span> <span class="string">&quot;//dbde4sd21oahf.cloudfront.net&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/web&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;MONGO_OPLOG_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;mongodb://localhost:27017/local&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;ROOT_URL&quot;</span><span class="punctuation">:</span> <span class="string">&quot;http://web.com&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;PORT&quot;</span><span class="punctuation">:</span> <span class="string">&quot;8083&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
 <p>pm2的当然还有一些其他的用法：</p>
 <p>1、pm2远程部署</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 deploy ecosystem.json production setup</span><br></pre></td></tr></table></figure>
+
 <p>2、pm2 cluster启动</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start app.js -i 0 --name <span class="string">&quot;apps&quot;</span></span><br></pre></td></tr></table></figure>
+
 <p>3、pm2 重启实例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 reload &lt;name&gt;</span><br></pre></td></tr></table></figure>
+
 <p>4、pm2 命令行监测</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 monit</span><br></pre></td></tr></table></figure>
+
 <p>5、pm2 查看实例日志</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 logs 或 pm2 logs &lt;name&gt; 或 pm2 flush</span><br></pre></td></tr></table></figure>
+
 <p>6、pm2 开机启动</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 startup &lt;ubuntu|centos|gentoo|systemd&gt;</span><br></pre></td></tr></table></figure>
+
 <p>7、pm2 web方式监测</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 web</span><br></pre></td></tr></table></figure>
+
 <p>之后要考虑的就是服务器的监测以及如果给node做反向代理</p>
 <p>比如：</p>
 <blockquote>

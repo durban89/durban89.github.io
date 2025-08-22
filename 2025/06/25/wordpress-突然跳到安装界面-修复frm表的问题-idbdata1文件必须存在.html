@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -308,18 +308,24 @@
     
     <div class="post-body" itemprop="articleBody"><p>朋友一网站使用wordpress搭建的，我很少使用这种东西，突然出现这种情况还真的很难找，因为要去理解什么逻辑实现要重新安装表的结构，很苦恼啊，最终google找到一篇文章说是wordpress使用的表都是innodb引擎，表损坏导致的，于是我打算修复一下，可以使用phpMyAdmin打开数据库发现只有库没有表了，经过一番的折腾我找到了几篇帖子，具体过程就是先新建一个表，然后在新建的表里面建立所有wordpress需要的表，建立完所有需要的表之后，关闭mysql</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysql stop</span><br></pre></td></tr></table></figure>
+
 <p>修改mysql的配置文件</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">innodb_force_recovery = 4</span><br></pre></td></tr></table></figure>
+
 <p>然后将旧库里面的表的结果copy一份到新库，之后修改两个库的名字，将两个库的名字对调。然后启动数据库</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysql start</span><br></pre></td></tr></table></figure>
+
 <p>看看数据库的表里面的数据吧，全部都回来了。嘿嘿</p>
 <p>再次关闭mysql</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysql stop</span><br></pre></td></tr></table></figure>
+
 <p>将</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">innodb_force_recovery = 4</span><br></pre></td></tr></table></figure>
+
 <p>注释掉</p>
 <p>重新启动mysql</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service mysql start</span><br></pre></td></tr></table></figure>
+
 <p>回复完毕。</p>
 <p>之后想了想，是以为最近一次服务器空间满了，当时误以为是表坏了，又由于对数据库的不了解，本来只是删除ib_logfile0和ib_logfile1两个文件，结果删除后还是没有用，于是将ibdata1做了一个临时备份，还好没有删掉，今天按照上面的操作做了多次，最后是将ibdata1文件重新copy回来后，数据才回来的。因为新的ibdata1没有相关数据的点，找不到数据吧，所以如果没有或者ibdata1这个文件不是原来的是无法恢复数据的。</p>
 <p>参考文章：</p>

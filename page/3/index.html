@@ -194,7 +194,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -205,7 +205,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -236,6 +236,96 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/15/NestJS%E4%B8%AD%E7%9A%84async-await%E7%9A%84%E4%BD%BF%E7%94%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="durban">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gowhich">
+      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | Gowhich">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2025/07/15/NestJS%E4%B8%AD%E7%9A%84async-await%E7%9A%84%E4%BD%BF%E7%94%A8.html" class="post-title-link" itemprop="url">NestJS中的async/await的使用</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-07-15 09:52:23 / 修改时间：09:53:09" itemprop="dateCreated datePublished" datetime="2025-07-15T09:52:23+08:00">2025-07-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>前景</p>
+<p>最近在试驾Nestjs，感觉还不错，但是知识点满多的，嗯，暂时还没放弃</p>
+<p>在试驾的过程中，遇到一个获取数据逻辑，现在的逻辑这样的，函数如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title class_">Get</span>(<span class="string">&#x27;/index&#x27;</span>)</span><br><span class="line"><span class="title function_">index</span>(<span class="params">@Res() res: Response</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> <span class="attr">cats</span>: <span class="title class_">Promise</span>&lt;<span class="title class_">Cats</span>[]&gt; = <span class="variable language_">this</span>.<span class="property">catsService</span>.<span class="title function_">findAll</span>();</span><br><span class="line"></span><br><span class="line">  cats.<span class="title function_">then</span>(<span class="function"><span class="params">data</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> res.<span class="title function_">render</span>(<span class="string">&#x27;cats/index&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">message</span>: <span class="string">&#x27;Cats&#x27;</span>,</span><br><span class="line">      <span class="attr">data</span>: data</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;).<span class="title function_">catch</span>(<span class="function"><span class="params">error</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写完之后，发现then…catch，让我想起来，我用Reactjs开发的时候，曾经把这玩意换成了async&#x2F;await于是，函数修改成如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title class_">Get</span>(<span class="string">&#x27;/index&#x27;</span>)</span><br><span class="line"><span class="keyword">async</span> <span class="title function_">index</span>(<span class="params">@Res() res: Response</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> <span class="attr">cats</span>: <span class="title class_">Promise</span>&lt;<span class="title class_">Cats</span>[]&gt; = <span class="variable language_">this</span>.<span class="property">catsService</span>.<span class="title function_">findAll</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> data = <span class="keyword">await</span> cats;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> res.<span class="title function_">render</span>(<span class="string">&#x27;cats/index&#x27;</span>, &#123;</span><br><span class="line">    <span class="attr">message</span>: <span class="string">&#x27;Cats&quot;,</span></span><br><span class="line"><span class="string">    data: data,</span></span><br><span class="line"><span class="string">  &#125;)</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>该写完之后，又让我想起来，我在用Nodejs写接口的时候，需要对await cats的执行做下异常捕获，不然访问的时候直接崩溃，对终端不太友好，于是该写如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@<span class="title class_">Get</span>(<span class="string">&#x27;/index&#x27;</span>)</span><br><span class="line"><span class="keyword">async</span> <span class="title function_">index</span>(<span class="params">@Res() res: Response</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> <span class="attr">cats</span>: <span class="title class_">Promise</span>&lt;<span class="title class_">Cats</span>[]&gt; = <span class="variable language_">this</span>.<span class="property">catsService</span>.<span class="title function_">findAll</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> cats;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> res.<span class="title function_">render</span>(<span class="string">&#x27;cats/index&#x27;</span>, &#123;</span><br><span class="line">      <span class="attr">message</span>: <span class="string">&#x27;Cats&quot;,</span></span><br><span class="line"><span class="string">      data: data,</span></span><br><span class="line"><span class="string">    &#125;)</span></span><br><span class="line"><span class="string">  &#125; catch (err) &#123;</span></span><br><span class="line"><span class="string">    // 处理异常逻辑</span></span><br><span class="line"><span class="string">    console.log(err);</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>建议：使用async&#x2F;await的情况下，如果遇到异常会导致接口异常，为了能够正常处理逻辑，可以使用try…catch</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -302,8 +392,10 @@
 <p>Linux在启动一个进程的时候，系统会在<code>/proc</code>目录下面创建一个以<code>PID</code>命名的文件夹</p>
 <p>比如以nginx为例</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ps -ef | grep nginx</span><br><span class="line">root      3882  3865  0  2020 pts/0    00:00:00 nginx: master process /usr/bin/openresty -g daemon off;</span><br><span class="line">nobody    3969  3882  0  2020 pts/0    00:00:03 nginx: worker process</span><br><span class="line">nobody    3970  3882  0  2020 pts/0    00:00:05 nginx: worker process</span><br><span class="line">nobody    3971  3882  0  2020 pts/0    00:00:10 nginx: worker process</span><br><span class="line">nobody    3972  3882  0  2020 pts/0    00:00:57 nginx: worker process</span><br></pre></td></tr></table></figure>
+
 <p>我们拿<code>PID 3882</code>查看下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">ls</span> /proc/3882</span><br><span class="line">attr       cgroup      <span class="built_in">comm</span>             cwd      fd       io        map_files  mountinfo   net        oom_adj        pagemap      root       sessionid  stack  status   timers</span><br><span class="line">autogroup  clear_refs  coredump_filter  environ  fdinfo   limits    maps       mounts      ns         oom_score      personality  <span class="built_in">sched</span>      setgroups  <span class="built_in">stat</span>   syscall  uid_map</span><br><span class="line">auxv       cmdline     cpuset           exe      gid_map  loginuid  mem        mountstats  numa_maps  oom_score_adj  projid_map   schedstat  smaps      statm  task     wchan</span><br></pre></td></tr></table></figure>
+
 <p>其中包括一个名为exe的文件，这个文件即记录了绝对路径，通过<code>ll</code>或<code>ls -l</code>命令即可查看。</p>
 <p>里面的文件的含义，如下</p>
 <ul>
@@ -399,6 +491,7 @@
 </blockquote>
 <p>解决办法</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">rm</span> -rf vendor</span><br><span class="line">composer require kylekatarnls/update-helper:<span class="string">&quot;^1.2.1&quot;</span></span><br></pre></td></tr></table></figure>
+
 <p>composer版本：<code>composer@2.0.8</code></p>
 <p>参考文章：<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2t5bGVrYXRhcm5scy91cGRhdGUtaGVscGVyL2lzc3Vlcy83">https://github.com/kylekatarnls/update-helper/issues/7<i class="fa fa-external-link-alt"></i></span></p>
 
@@ -479,14 +572,16 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>Nestjs中为了连接数据库，提供了@nestjs/typeorm包</p>
+          <p>Nestjs中为了连接数据库，提供了@nestjs&#x2F;typeorm包</p>
 <p>在使用之前如果没有安装的话，需要安装下，安装命令如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save @nestjs/typeorm typeorm mysql</span><br></pre></td></tr></table></figure>
+
 <p>这里使用MySQL，当然TypeORM也是支持其他关系型数据库的，如PostgreSQL，Oracle，Microsoft SQL Server，还有NoSQL数据库如MongoDB</p>
 <p>如果TypeORM安装成功之后，就可以导入TypeOrmModule了</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">TypeOrmModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/typeorm&#x27;</span>;</span><br></pre></td></tr></table></figure>
-<h3 id="如何配置MySQL的参数（比如连接的数据库地址、用户名、密码、数据库）">如何配置MySQL的参数（比如连接的数据库地址、用户名、密码、数据库）</h3>
-<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Module</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">TypeOrmModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/typeorm&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AppController</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.controller&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AppService</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.service&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Module</span>(&#123;</span><br><span class="line">  <span class="attr">imports</span>: [</span><br><span class="line">    <span class="title class_">TypeOrmModule</span>.<span class="title function_">forRoot</span>(&#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="string">&#x27;mysql&#x27;</span>,</span><br><span class="line">      <span class="attr">host</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,</span><br><span class="line">      <span class="attr">port</span>: <span class="number">3306</span>,</span><br><span class="line">      <span class="attr">username</span>: <span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">      <span class="attr">password</span>: <span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">      <span class="attr">database</span>: <span class="string">&#x27;test&#x27;</span>,</span><br><span class="line">      <span class="attr">entities</span>: [],</span><br><span class="line">      <span class="attr">synchronize</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;)</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">controllers</span>: [<span class="title class_">AppController</span>],</span><br><span class="line">  <span class="attr">providers</span>: [<span class="title class_">AppService</span>],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AppModule</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="如何配置MySQL的参数（比如连接的数据库地址、用户名、密码、数据库）"><a href="#如何配置MySQL的参数（比如连接的数据库地址、用户名、密码、数据库）" class="headerlink" title="如何配置MySQL的参数（比如连接的数据库地址、用户名、密码、数据库）"></a>如何配置MySQL的参数（比如连接的数据库地址、用户名、密码、数据库）</h3><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Module</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">TypeOrmModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/typeorm&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AppController</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.controller&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AppService</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.service&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Module</span>(&#123;</span><br><span class="line">  <span class="attr">imports</span>: [</span><br><span class="line">    <span class="title class_">TypeOrmModule</span>.<span class="title function_">forRoot</span>(&#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="string">&#x27;mysql&#x27;</span>,</span><br><span class="line">      <span class="attr">host</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,</span><br><span class="line">      <span class="attr">port</span>: <span class="number">3306</span>,</span><br><span class="line">      <span class="attr">username</span>: <span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">      <span class="attr">password</span>: <span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">      <span class="attr">database</span>: <span class="string">&#x27;test&#x27;</span>,</span><br><span class="line">      <span class="attr">entities</span>: [],</span><br><span class="line">      <span class="attr">synchronize</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;)</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">controllers</span>: [<span class="title class_">AppController</span>],</span><br><span class="line">  <span class="attr">providers</span>: [<span class="title class_">AppService</span>],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AppModule</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
 <p>forRoot方法提供了所有的配置参数给TypeORM包的createConnection方法，除此之外，还有其他的一些配置参数的属性如下</p>
 <ul>
 <li>retryAttempts：默认10，尝试连接数据库的次数</li>
@@ -498,27 +593,35 @@
 <p>数据库配置连接正常之后，就可以正常使用了</p>
 <p>app.module.ts完整代码如下</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Module</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">TypeOrmModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/typeorm&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AppController</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.controller&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AppService</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.service&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Connection</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;typeorm&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Module</span>(&#123;</span><br><span class="line">  <span class="attr">imports</span>: [</span><br><span class="line">    <span class="title class_">TypeOrmModule</span>.<span class="title function_">forRoot</span>(&#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="string">&#x27;mysql&#x27;</span>,</span><br><span class="line">      <span class="attr">host</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,</span><br><span class="line">      <span class="attr">port</span>: <span class="number">3306</span>,</span><br><span class="line">      <span class="attr">username</span>: <span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">      <span class="attr">password</span>: <span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">      <span class="attr">database</span>: <span class="string">&#x27;test&#x27;</span>,</span><br><span class="line">      <span class="attr">entities</span>: [],</span><br><span class="line">      <span class="attr">synchronize</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">logging</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">controllers</span>: [<span class="title class_">AppController</span>],</span><br><span class="line">  <span class="attr">providers</span>: [<span class="title class_">AppService</span>],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AppModule</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"><span class="keyword">private</span> <span class="attr">connection</span>: <span class="title class_">Connection</span></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>如何连接数据库进行查询和添加</p>
 <p>创建Entity</p>
-<p>cats/cats.entities.ts代码如下</p>
+<p>cats&#x2F;cats.entities.ts代码如下</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Entity</span>, <span class="title class_">Column</span>, <span class="title class_">PrimaryGeneratedColumn</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;typeorm&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entity</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;cats&#x27;</span> &#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">Cats</span> &#123;</span><br><span class="line">  <span class="meta">@PrimaryGeneratedColumn</span>()</span><br><span class="line">  <span class="attr">id</span>: <span class="built_in">number</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Column</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;first_name&#x27;</span> &#125;)</span><br><span class="line">  <span class="attr">firstName</span>: <span class="built_in">string</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Column</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;last_name&#x27;</span> &#125;)</span><br><span class="line">  <span class="attr">lastName</span>: <span class="built_in">string</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Column</span>(&#123; <span class="attr">name</span>: <span class="string">&#x27;is_active&#x27;</span>, <span class="attr">default</span>: <span class="literal">true</span> &#125;)</span><br><span class="line">  <span class="attr">isActive</span>: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>创建Service</p>
-<p>cats/cats.service.ts代码如下</p>
+<p>cats&#x2F;cats.service.ts代码如下</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Injectable</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">InjectRepository</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/typeorm&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Repository</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;typeorm&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Cats</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./cats.entity&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Injectable</span>()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">CatsService</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"></span></span><br><span class="line"><span class="params">    <span class="meta">@InjectRepository</span>(Cats)</span></span><br><span class="line"><span class="params">    <span class="keyword">private</span> <span class="attr">catsRepository</span>: <span class="title class_">Repository</span>&lt;<span class="title class_">Cats</span>&gt;,</span></span><br><span class="line"><span class="params">  </span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">findAll</span>(): <span class="title class_">Promise</span>&lt;<span class="title class_">Cats</span>[]&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">catsRepository</span>.<span class="title function_">find</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="title function_">findOne</span>(<span class="attr">id</span>: <span class="built_in">number</span>): <span class="title class_">Promise</span>&lt;<span class="title class_">Cats</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">catsRepository</span>.<span class="title function_">findOne</span>(id);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">remove</span>(<span class="attr">id</span>: <span class="built_in">number</span>): <span class="title class_">Promise</span>&lt;<span class="built_in">void</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">catsRepository</span>.<span class="title function_">delete</span>(id);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">create</span>(<span class="attr">cats</span>: <span class="title class_">Cats</span>): <span class="title class_">Promise</span>&lt;<span class="built_in">void</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">catsRepository</span>.<span class="title function_">save</span>(cats);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>创建Controller</p>
-<p>cats/cats.controller.ts</p>
+<p>cats&#x2F;cats.controller.ts</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Body</span>, <span class="title class_">Controller</span>, <span class="title class_">Get</span>, <span class="title class_">Post</span>, <span class="title class_">Res</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Response</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;express&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Cats</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./cats.entity&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">CatsService</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./cats.service&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Controller</span>(<span class="string">&#x27;cats&#x27;</span>)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">CatsController</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"><span class="keyword">private</span> <span class="keyword">readonly</span> <span class="attr">catsService</span>: <span class="title class_">CatsService</span></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Get</span>(<span class="string">&#x27;/index&#x27;</span>)</span><br><span class="line">  <span class="title function_">index</span>(<span class="meta">@Res</span>() <span class="attr">res</span>: <span class="title class_">Response</span>): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">catsService</span>.<span class="title function_">findAll</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> <span class="attr">cats</span>: <span class="title class_">Promise</span>&lt;<span class="title class_">Cats</span>[]&gt; = <span class="variable language_">this</span>.<span class="property">catsService</span>.<span class="title function_">findAll</span>();</span><br><span class="line"></span><br><span class="line">    cats</span><br><span class="line">      .<span class="title function_">then</span>(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> res.<span class="title function_">render</span>(<span class="string">&#x27;cats/index&#x27;</span>, &#123;</span><br><span class="line">          <span class="attr">message</span>: <span class="string">&#x27;Cats&#x27;</span>,</span><br><span class="line">          <span class="attr">data</span>: data,</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;)</span><br><span class="line">      .<span class="title function_">catch</span>(<span class="function">(<span class="params">error</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(error);</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Post</span>(<span class="string">&#x27;/create&#x27;</span>)</span><br><span class="line">  <span class="keyword">async</span> <span class="title function_">create</span>(<span class="params"><span class="meta">@Body</span>() <span class="attr">catsParam</span>: &#123; firstName: <span class="built_in">string</span>; lastName: <span class="built_in">string</span> &#125;</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> cats = <span class="keyword">new</span> <span class="title class_">Cats</span>();</span><br><span class="line">    cats.<span class="property">firstName</span> = catsParam.<span class="property">firstName</span>;</span><br><span class="line">    cats.<span class="property">lastName</span> = catsParam.<span class="property">lastName</span>;</span><br><span class="line">    cats.<span class="property">isActive</span> = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">await</span> <span class="variable language_">this</span>.<span class="property">catsService</span>.<span class="title function_">create</span>(cats);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>创建Module</p>
-<p>cats/cats.module.ts</p>
+<p>cats&#x2F;cats.module.ts</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Module</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">TypeOrmModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/typeorm&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">CatsController</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./cats.controller&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Cats</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./cats.entity&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">CatsService</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./cats.service&#x27;</span>;</span><br><span class="line"></span><br><span class="line">@<span class="title class_">Module</span>(&#123;</span><br><span class="line">  <span class="attr">imports</span>: [<span class="title class_">TypeOrmModule</span>.<span class="title function_">forFeature</span>([<span class="title class_">Cats</span>])],</span><br><span class="line">  <span class="attr">controllers</span>: [<span class="title class_">CatsController</span>],</span><br><span class="line">  <span class="attr">providers</span>: [<span class="title class_">CatsService</span>],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">CatsModule</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
 <p>修改AppModule</p>
 <p>app.module.ts</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Module</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/common&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">TypeOrmModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;@nestjs/typeorm&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AppController</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.controller&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">AppService</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./app.service&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">CatsModule</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./cats/cats.module&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Connection</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;typeorm&#x27;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; <span class="title class_">Cats</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;./cats/cats.entity&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Module</span>(&#123;</span><br><span class="line">  <span class="attr">imports</span>: [</span><br><span class="line">    <span class="title class_">TypeOrmModule</span>.<span class="title function_">forRoot</span>(&#123;</span><br><span class="line">      <span class="attr">type</span>: <span class="string">&#x27;mysql&#x27;</span>,</span><br><span class="line">      <span class="attr">host</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,</span><br><span class="line">      <span class="attr">port</span>: <span class="number">3306</span>,</span><br><span class="line">      <span class="attr">username</span>: <span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">      <span class="attr">password</span>: <span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">      <span class="attr">database</span>: <span class="string">&#x27;test&#x27;</span>,</span><br><span class="line">      <span class="attr">entities</span>: [<span class="title class_">Cats</span>],</span><br><span class="line">      <span class="attr">synchronize</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">logging</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">    <span class="title class_">CatsModule</span>,</span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">controllers</span>: [<span class="title class_">AppController</span>],</span><br><span class="line">  <span class="attr">providers</span>: [<span class="title class_">AppService</span>],</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">AppModule</span> &#123;</span><br><span class="line">  <span class="title function_">constructor</span>(<span class="params"><span class="keyword">private</span> <span class="attr">connection</span>: <span class="title class_">Connection</span></span>) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>运行项目</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run start:dev</span><br></pre></td></tr></table></figure>
+
 <p>启动后如果表不存在的话会自动创建表cats</p>
 <p>正常启动没有问题之后，先创建一个数据</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -d <span class="string">&#x27;firstName=cats&amp;lastName=1&#x27;</span> <span class="string">&#x27;http://localhost:3000/cats/create&#x27;</span></span><br></pre></td></tr></table></figure>
+
 <p>然后访问<span class="exturl" data-url="aHR0cDovL2xvY2FsaG9zdDozMDAwL2NhdHMvaW5kZXg=">http://localhost:3000/cats/index<i class="fa fa-external-link-alt"></i></span></p>
 <p>会看到创建的数据输出</p>
 
@@ -601,12 +704,16 @@
     <div class="post-body" itemprop="articleBody">
           <p>try 第一种使用方式 try do catch</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">let data: Data = <span class="built_in">Data</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    let responseJSON = <span class="keyword">try</span> JSONSerialization.<span class="built_in">jsonObject</span>(with: data, options: []) as! [[String: Any]]</span><br><span class="line">    <span class="built_in">print</span>(responseJSON)</span><br><span class="line">&#125; <span class="keyword">catch</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;something is wrong here. Try connecting to the wifi.&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>try 第二种使用方式 try?</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">let data: Data = <span class="built_in">Data</span>()</span><br><span class="line"></span><br><span class="line">let responseJSON = <span class="keyword">try</span>? JSONSerialization.<span class="built_in">jsonObject</span>(with: data, options: []) as? [[String: Any]]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> responseJSON != nil &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Yeah, We have just unwrapped responseJSON!&quot;</span>)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">print</span>(responseJSON ?? <span class="string">&quot;&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>try 第三种使用方式 guard try?</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">let data: Data = <span class="built_in">Data</span>()</span><br><span class="line"></span><br><span class="line">func <span class="built_in">getResponseJSON</span>() &#123;</span><br><span class="line">    guard let responseJSON = <span class="keyword">try</span>? (JSONSerialization.<span class="built_in">jsonObject</span>(with: data, options: []) as! [[String: Any]]) <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">print</span>(responseJSON)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>try 第四种使用方式 try!</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let data: Data = <span class="built_in">Data</span>()</span><br><span class="line"></span><br><span class="line">let responseJSON = <span class="keyword">try</span>! JSONSerialization.<span class="built_in">jsonObject</span>(with: data, options: []) as! [[String: Any]]</span><br><span class="line"><span class="built_in">print</span>(responseJSON)</span><br></pre></td></tr></table></figure>
+
 <p>总结</p>
 <p>try 需要与 do…catch配合使用，这种方式可以使用更详细的错误处理方法</p>
 <p>try? 忽略我们的错误，如果碰巧发生，会将它们设置为nil</p>
@@ -695,47 +802,44 @@
 <p>对于 正常进程：您需要对程序进行优化或者升级服务器配置。</p>
 <p>对于 异常进程：您可以手动对进程进行查杀，也可以使用第三方安全工具去查杀。</p>
 <p>当然，若您预先创建报警任务，当带宽和 CPU 跑满或跑高时，系统将自动进行报警提醒。如果云服务器 ECS Linux 系统的 CPU 持续跑高，则会对系统稳定性和业务运行造成影响。本文相关配置及说明已在 CentOS 6.5 64 位操作系统中进行过测试。其它类型及版本操作系统配置可能有所差异。</p>
-<h1>CPU 跑满或跑高的问题定位</h1>
-<p>若云服务器 ECS 的 CPU 持续跑高，会对系统的稳定性和业务运行造成影响。Linux 系统下，查看进程的常用命令如下:</p>
+<h1 id="CPU-跑满或跑高的问题定位"><a href="#CPU-跑满或跑高的问题定位" class="headerlink" title="CPU 跑满或跑高的问题定位"></a>CPU 跑满或跑高的问题定位</h1><p>若云服务器 ECS 的 CPU 持续跑高，会对系统的稳定性和业务运行造成影响。Linux 系统下，查看进程的常用命令如下:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -aux ps -ef top</span><br></pre></td></tr></table></figure>
+
 <p>Linux 系统中，通常使用 top 命令来查看系统的负载问题，并定位耗用较多 CPU 资源的进程。 通过 top 命令查看系统当前的运行情况。 针对负载问题，您只需关注回显的第一行和第三行信息，详细说明如下。</p>
 <p>top 命令的第一行显示的内容 <code>17:27:13 up 27 days, 3:13, 1 user, load average: 0.02, 0.03, 0.05</code> 依次为 系统当前时间 、系统到目前为止已运行的时间、当前登录系统的用户数量、系统负载， 这与直接执行 uptime 命令查询结果一致。</p>
 <p>top 命令的第三行会显示当前 CPU 资源的总体使用情况，下方会显示各个进程的资源占用情况。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%Cpu(s): 0.3 us, 0.1 sy, 0.0 ni, 99.5 <span class="built_in">id</span>, 0.0 wa, 0.0 hi, 0.0 si, 0.1 st</span><br></pre></td></tr></table></figure>
+
 <p>通过字母键 P，可以对 CPU 使用率进行倒序排列，进而定位系统中占用 CPU 较高的进程。</p>
 <p>说明：通过字母键 M， 您可以对系统内存使用情况进行排序。如果有多核 CPU，数字键 1 可以显示每核 CPU 的负载状况。</p>
 <p>通过<code>ll /proc/PID/exe</code>可以查看每个进程 ID 对应的程序文件。</p>
-<h1>CPU 跑满或跑高的分析处理</h1>
-<p>CPU 的跑满或跑高，在确认具体的进程结果后，针对异常的进程，您需要通过 top 命令将其终止；而对于 kswapd0 进程导致的内存不足等问题，您需要对系统进行规格的升级或程序的优化。</p>
-<h2 id="使用-top-直接终止-CPU-消耗较大的进程">使用 top 直接终止 CPU 消耗较大的进程</h2>
-<p>您可以直接在 top 运行界面快速终止相应的异常进程。操作步骤如下： 若您想要终止某个进程，只需按下小写的 k 键。 输入想要终止的进程 PID （top 输出结果的第一列）。例如，若您想要终止 PID 为 86 的进程，输入 86 后按回车即可。 操作成功后，界面会出现类似 Send pid 86 signal [15/sigterm] 的提示信息。按回车确认即可。</p>
-<h2 id="kswapd0-进程占用导致-CPU-较高">kswapd0 进程占用导致 CPU 较高</h2>
-<p>操作系统都用分页机制来管理物理内存，系统会把一部分硬盘空间虚拟成内存使用。由于内存的速度要比磁盘快得多，所以系统要按照某种换页机制将不需要的页面换到磁盘中，将需要的页面调到内存中。</p>
+<h1 id="CPU-跑满或跑高的分析处理"><a href="#CPU-跑满或跑高的分析处理" class="headerlink" title="CPU 跑满或跑高的分析处理"></a>CPU 跑满或跑高的分析处理</h1><p>CPU 的跑满或跑高，在确认具体的进程结果后，针对异常的进程，您需要通过 top 命令将其终止；而对于 kswapd0 进程导致的内存不足等问题，您需要对系统进行规格的升级或程序的优化。</p>
+<h2 id="使用-top-直接终止-CPU-消耗较大的进程"><a href="#使用-top-直接终止-CPU-消耗较大的进程" class="headerlink" title="使用 top 直接终止 CPU 消耗较大的进程"></a>使用 top 直接终止 CPU 消耗较大的进程</h2><p>您可以直接在 top 运行界面快速终止相应的异常进程。操作步骤如下： 若您想要终止某个进程，只需按下小写的 k 键。 输入想要终止的进程 PID （top 输出结果的第一列）。例如，若您想要终止 PID 为 86 的进程，输入 86 后按回车即可。 操作成功后，界面会出现类似 Send pid 86 signal [15&#x2F;sigterm] 的提示信息。按回车确认即可。</p>
+<h2 id="kswapd0-进程占用导致-CPU-较高"><a href="#kswapd0-进程占用导致-CPU-较高" class="headerlink" title="kswapd0 进程占用导致 CPU 较高"></a>kswapd0 进程占用导致 CPU 较高</h2><p>操作系统都用分页机制来管理物理内存，系统会把一部分硬盘空间虚拟成内存使用。由于内存的速度要比磁盘快得多，所以系统要按照某种换页机制将不需要的页面换到磁盘中，将需要的页面调到内存中。</p>
 <p>kswapd0 是虚拟内存管理中负责换页的进程，当服务器内存不足的时候 kswapd0 会执行换页操作，这个换页操作是十分消耗主机 CPU 资源的。操作步骤如下：</p>
-<h2 id="通过-top-命令查看-kswapd0-进程。">通过 top 命令查看 kswapd0 进程。</h2>
-<p>检查该进程是否持续处于非睡眠状态，且运行时间较长。若是，可以初步判定系统在持续地进行换页操作，kswapd0 进程占用了系统大量 CPU 资源。</p>
+<h2 id="通过-top-命令查看-kswapd0-进程。"><a href="#通过-top-命令查看-kswapd0-进程。" class="headerlink" title="通过 top 命令查看 kswapd0 进程。"></a>通过 top 命令查看 kswapd0 进程。</h2><p>检查该进程是否持续处于非睡眠状态，且运行时间较长。若是，可以初步判定系统在持续地进行换页操作，kswapd0 进程占用了系统大量 CPU 资源。</p>
 <p>您可以通过 free 、ps 等指令进一步查询系统及系统内进程的内存占用情况，做进一步排查分析。 针对系统当前内存不足的问题，您可以重启 Apache，释放内存。 说明：从长远的角度来看，您需要对内存进行升级。</p>
-<h1>带宽跑满或跑高的分析处理</h1>
-<p>对于正常进程导致的带宽跑满或跑高的问题，需要对服务器的带宽进行升级。对于异常进程，有可能是由于恶意程序问题，或者是部分 IP 恶意访问导致，也可能是服务遭到了 CC 攻击。 通常情况下，您可以使用 iftop 工具或 nethogs 查看流量的占用情况，进而定位到具体的进程。</p>
-<h2 id="使用-iftop-工具排查">使用 iftop 工具排查</h2>
-<p>在服务器内部安装 iftop 流量监控工具。</p>
+<h1 id="带宽跑满或跑高的分析处理"><a href="#带宽跑满或跑高的分析处理" class="headerlink" title="带宽跑满或跑高的分析处理"></a>带宽跑满或跑高的分析处理</h1><p>对于正常进程导致的带宽跑满或跑高的问题，需要对服务器的带宽进行升级。对于异常进程，有可能是由于恶意程序问题，或者是部分 IP 恶意访问导致，也可能是服务遭到了 CC 攻击。 通常情况下，您可以使用 iftop 工具或 nethogs 查看流量的占用情况，进而定位到具体的进程。</p>
+<h2 id="使用-iftop-工具排查"><a href="#使用-iftop-工具排查" class="headerlink" title="使用 iftop 工具排查"></a>使用 iftop 工具排查</h2><p>在服务器内部安装 iftop 流量监控工具。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install iftop -y</span><br></pre></td></tr></table></figure>
+
 <p>服务器外网带宽被占满时，如果通过远程无法登陆，可通过阿里云终端管理进入到服务器内部，运行下面命令查看流量占用情况：</p>
 <p>注意：-P 参数将会显示请求端口。执行 iftop -i eth0 -P 命令，可以查看通过服务器哪个端口建立的连接，以及内网流量。举例如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iftop -i eth1 -P</span><br></pre></td></tr></table></figure>
+
 <p>在上图中，您可以查看到流量高耗的是服务器上 53139 端口和 115.205.150.235 地址建立的连接。</p>
 <p>执行 netstat 命令反查 53139 端口对应的进程。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunlp |grep 53139</span><br></pre></td></tr></table></figure>
+
 <p>经反查，服务器上 vsftpd 服务产生大量流量，您可以通过停止服务或使用 iptables 服务来对指定地址进行处理，如屏蔽 IP 地址或限速，以保证服务器带宽能够正常使用。</p>
-<h2 id="使用-nethogs-进行排查">使用 nethogs 进行排查</h2>
-<p>在服务器内部安装 nethogs 流量监控工具。</p>
+<h2 id="使用-nethogs-进行排查"><a href="#使用-nethogs-进行排查" class="headerlink" title="使用 nethogs 进行排查"></a>使用 nethogs 进行排查</h2><p>在服务器内部安装 nethogs 流量监控工具。</p>
 <p>通过 nethogs 工具来查看网卡上进程级的流量信息，若未安装可以通过 yum、apt-get 等方式安装。举例如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install nethogs -y</span><br></pre></td></tr></table></figure>
+
 <p>若 eth1 网卡跑满，执行命令 nethogs eth1。 查看每个进程的网络带宽情况以及进程对应的 PID 确定导致带宽跑满或跑高的具体进程。</p>
 <p>若进程确定是恶意程序，可以通过执行 kill -TERM 来终止程序。</p>
 <p>说明： 如果是 Web 服务程序，您可以使用 iftop 等工具来查询具体 IP 来源，然后分析 Web 访问日志是否为正常流量。日志分析可以使用 logwatch 或 awstats 等工具进行。</p>
-<h2 id="使用-Web-应用防火墙防御-CC-攻击">使用 Web 应用防火墙防御 CC 攻击</h2>
-<p>若您的服务遭受了 CC 攻击，请在 Web 应用防火墙控制台尽快开启 CC 安全防护。</p>
+<h2 id="使用-Web-应用防火墙防御-CC-攻击"><a href="#使用-Web-应用防火墙防御-CC-攻击" class="headerlink" title="使用 Web 应用防火墙防御 CC 攻击"></a>使用 Web 应用防火墙防御 CC 攻击</h2><p>若您的服务遭受了 CC 攻击，请在 Web 应用防火墙控制台尽快开启 CC 安全防护。</p>
 <p>登录 Web应用防火墙 控制台。</p>
 <p>在 CC 安全防护中，启动状态按钮，并在模式中选择 正常。</p>
 
@@ -819,25 +923,24 @@
           <p><strong>MongoDB Sort : how to fix maximum RAM exceeded error</strong></p>
 <p>针对这个问题具体的报错信息如下</p>
 <blockquote>
-<p>Error: error: {<br>
-“ok” : 0,<br>
-“errmsg” : “Executor error during find command :: caused by :: errmsg: &quot;Sort operation used more than the maximum 33554432 bytes of RAM. Add an index, or specify a smaller limit.&quot;”,<br>
-“code” : 96,<br>
-“codeName” : “OperationFailed”<br>
-}</p>
+<p>Error: error: {<br>“ok” : 0,<br>“errmsg” : “Executor error during find command :: caused by :: errmsg: &quot;Sort operation used more than the maximum 33554432 bytes of RAM. Add an index, or specify a smaller limit.&quot;“,<br>“code” : 96,<br>“codeName” : “OperationFailed”<br>}</p>
 </blockquote>
 <p>解决办法：</p>
 <p>1、加索引（这个是比较常用的方式）</p>
 <p>2、增加RAM大小</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.adminCommand(&#123;setParameter: 1, internalQueryExecMaxBlockingSortBytes: 335544320&#125;)</span><br></pre></td></tr></table></figure>
+
 <p>具体的大小可以根据具体的情况来设置</p>
 <p>查看RAM大小的话，使用下面的命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.runCommand( &#123; getParameter : 1, <span class="string">&quot;internalQueryExecMaxBlockingSortBytes&quot;</span> : 1 &#125; )</span><br></pre></td></tr></table></figure>
+
 <p>3、使用<em>aggregate</em> 命令</p>
 <p>如果用<em>aggregate</em>的话，通过设置选项allowDiskUse的值为true，允许临时将数据写到文件中，具体使用参考如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">&#x27;users&#x27;</span>).aggregate( [</span><br><span class="line">      &#123; <span class="variable">$sort</span> : &#123; age : 1&#125; &#125;</span><br><span class="line">   ],</span><br><span class="line">   &#123; allowDiskUse: <span class="literal">true</span> &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
 <p>如果在排序的时候想要得到一个好的性能，最好是创建索引</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.createIndex( &#123; age: 1 &#125; )</span><br></pre></td></tr></table></figure>
+
 <p>参考文章点<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXJzbG9nYmxvZy53b3JkcHJlc3MuY29tLzIwMTkvMTEvMjcvbW9uZ29kYi1zb3J0LWhvdy10by1maXgtbWF4aW11bS1yYW0tZXhjZWVkZWQtZXJyb3Iv">击这里<i class="fa fa-external-link-alt"></i></span></p>
 
       
@@ -925,8 +1028,10 @@
 <p>第二个问题的解决办法其实也很简单</p>
 <p>如果是80端口的话</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80 default_server<span class="comment">;</span></span><br><span class="line">    server_name _<span class="comment">;</span></span><br><span class="line">    return 500<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>如果是443端口的话</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 443 default_server<span class="comment">;</span></span><br><span class="line">    server_name _<span class="comment">;</span></span><br><span class="line">    ssl on<span class="comment">;</span></span><br><span class="line">    ssl_certificate      cert/x.xxx.xxx.pem<span class="comment">;</span></span><br><span class="line">    ssl_certificate_key  cert/x.xxx.xxxkey<span class="comment">;</span></span><br><span class="line">    return 500<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>这里强调下443端口配置的时候一定要配置证书，不然需要使用https的域名会无法访问</p>
 <p>同时注意下nginx的版本，不同nginx的版本针对ssl的配置也会有不同的语法</p>
 
@@ -1009,14 +1114,18 @@
     <div class="post-body" itemprop="articleBody">
           <p>给mongodb添加查询日志输出方法非常简单，可以像下面这样添加</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DB::<span class="title function_ invoke__">connection</span>(<span class="string">&#x27;mongodb&#x27;</span>)-&gt;<span class="title function_ invoke__">enableQueryLog</span>();</span><br><span class="line">DB::<span class="title function_ invoke__">connection</span>(<span class="string">&#x27;mongodb&#x27;</span>)-&gt;<span class="title function_ invoke__">getQueryLog</span>();</span><br></pre></td></tr></table></figure>
+
 <p>“<code>mongodb</code>”的配置是在database.php中配置的</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;mongodb&#x27;</span> =&gt; [</span><br><span class="line">    <span class="string">&#x27;driver&#x27;</span> =&gt; <span class="string">&#x27;mongodb&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;dsn&#x27;</span> =&gt; <span class="title function_ invoke__">env</span>(<span class="string">&#x27;MONGODB_DSN&#x27;</span>),</span><br><span class="line">    <span class="string">&#x27;database&#x27;</span> =&gt; <span class="title function_ invoke__">env</span>(<span class="string">&#x27;MONGODB_DATABASE&#x27;</span>),</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
 <p>为什么要加这段代码之后才会有日志输出呢</p>
 <p>原因是因为默认的情况下，laravel只针对默认的数据库配置进行日志输出</p>
 <p>可以尝试打开<code>config/database.php</code>文件，找到类似下面这行</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;default&#x27;</span> =&gt; <span class="title function_ invoke__">env</span>(<span class="string">&#x27;DB_CONNECTION&#x27;</span>, <span class="string">&#x27;mysql&#x27;</span>),</span><br></pre></td></tr></table></figure>
+
 <p>默认情况下执行的是下面的代码</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DB::<span class="title function_ invoke__">enableQueryLog</span>();</span><br><span class="line">DB::<span class="title function_ invoke__">getQueryLog</span>();</span><br></pre></td></tr></table></figure>
+
 <p>既然是默认获取的也是默认的数据库配置查询</p>
 <p>参考：<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvNTk0NzYzMDUvaG93LWNhbi1pLWdldC1tb25nb2RiLXF1ZXJ5LWxvZy1pbi1sYXJhdmVs">参考1<i class="fa fa-external-link-alt"></i></span></p>
 
@@ -1099,93 +1208,9 @@
     <div class="post-body" itemprop="articleBody">
           <p>准备一个textarea(基于vuejs)</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">textarea</span> <span class="attr">v-model</span>=<span class="string">&#x27;videoUrl&#x27;</span> <span class="attr">id</span>=<span class="string">&#x27;copy&#x27;</span> <span class="attr">style</span>=<span class="string">&quot;position:absolute;top:-99999999px&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>实现代码逻辑如下</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">copy</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (navigator.<span class="property">userAgent</span>.<span class="title function_">match</span>(<span class="regexp">/(iPhone|iPod|iPad);?/i</span>)) &#123; <span class="comment">//区分iPhone设备</span></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;ios&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">getSelection</span>().<span class="title function_">removeAllRanges</span>(); <span class="comment">//这段代码必须放在前面否则无效</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> copyNode = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;copy&quot;</span>); <span class="comment">//要复制文字的节点</span></span><br><span class="line">    <span class="keyword">var</span> editable = copyNode.<span class="property">contentEditable</span>;</span><br><span class="line">    <span class="keyword">var</span> readOnly = copyNode.<span class="property">readOnly</span>;</span><br><span class="line">    copyNode.<span class="property">contentEditable</span> = <span class="literal">true</span>;</span><br><span class="line">    copyNode.<span class="property">readOnly</span> = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> range = <span class="variable language_">document</span>.<span class="title function_">createRange</span>();</span><br><span class="line">    <span class="comment">// 选中需要复制的节点</span></span><br><span class="line">    range.<span class="title function_">selectNodeContents</span>(copyNode);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行选中元素</span></span><br><span class="line">    <span class="keyword">var</span> selection = <span class="variable language_">window</span>.<span class="title function_">getSelection</span>();</span><br><span class="line">    <span class="keyword">if</span> (selection.<span class="property">rangeCount</span> &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      selection.<span class="title function_">removeAllRanges</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    selection.<span class="title function_">addRange</span>(range);</span><br><span class="line">    copyNode.<span class="title function_">setSelectionRange</span>(<span class="number">0</span>, <span class="number">999999</span>);</span><br><span class="line">    copyNode.<span class="property">contentEditable</span> = editable;</span><br><span class="line">    copyNode.<span class="property">readOnly</span> = readOnly;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 执行 copy 操作</span></span><br><span class="line">    <span class="keyword">var</span> successful = <span class="variable language_">document</span>.<span class="title function_">execCommand</span>(<span class="string">&#x27;copy&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;successful = &#x27;</span>, successful);</span><br><span class="line">    <span class="comment">// alert(successful)</span></span><br><span class="line">    <span class="keyword">if</span> (successful) &#123;</span><br><span class="line">      layer.<span class="title function_">open</span>(&#123;</span><br><span class="line">        <span class="attr">content</span>: <span class="string">&#x27;复制成功^_^&#x27;</span>,</span><br><span class="line">        <span class="attr">btn</span>: [<span class="string">&#x27;好的&#x27;</span>],</span><br><span class="line">        <span class="attr">yes</span>: <span class="keyword">function</span> (<span class="params">index</span>) &#123;</span><br><span class="line">          layer.<span class="title function_">closeAll</span>();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 移除选中的元素</span></span><br><span class="line">    <span class="variable language_">window</span>.<span class="title function_">getSelection</span>().<span class="title function_">removeAllRanges</span>();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> text = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&quot;copy&quot;</span>).<span class="property">value</span>;</span><br><span class="line">    <span class="keyword">const</span> textarea = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&quot;textarea&quot;</span>);</span><br><span class="line">    textarea.<span class="property">style</span>.<span class="property">position</span> = <span class="string">&#x27;fixed&#x27;</span>;</span><br><span class="line">    textarea.<span class="property">style</span>.<span class="property">top</span> = <span class="number">0</span>;</span><br><span class="line">    textarea.<span class="property">style</span>.<span class="property">left</span> = <span class="number">0</span>;</span><br><span class="line">    textarea.<span class="property">style</span>.<span class="property">border</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">    textarea.<span class="property">style</span>.<span class="property">outline</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">    textarea.<span class="property">style</span>.<span class="property">resize</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">    textarea.<span class="property">style</span>.<span class="property">fontSize</span> = <span class="string">&#x27;12pt&#x27;</span>;</span><br><span class="line">    textarea.<span class="property">style</span>.<span class="property">background</span> = <span class="string">&#x27;transparent&#x27;</span>;</span><br><span class="line">    textarea.<span class="property">style</span>.<span class="property">color</span> = <span class="string">&#x27;transparent&#x27;</span>;</span><br><span class="line">    textarea.<span class="property">value</span> = text; <span class="comment">// 修改文本框的内容</span></span><br><span class="line">    <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(textarea);</span><br><span class="line">    textarea.<span class="title function_">select</span>() <span class="comment">// 选中文本</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> msg = <span class="variable language_">document</span>.<span class="title function_">execCommand</span>(<span class="string">&#x27;copy&#x27;</span>) ?</span><br><span class="line">        <span class="string">&#x27;successful&#x27;</span> : <span class="string">&#x27;unsuccessful&#x27;</span>;</span><br><span class="line">      <span class="comment">// alert(msg)</span></span><br><span class="line">      <span class="keyword">if</span> (msg == <span class="string">&#x27;successful&#x27;</span>) &#123;</span><br><span class="line">        layer.<span class="title function_">open</span>(&#123;</span><br><span class="line">          <span class="attr">content</span>: <span class="string">&#x27;复制成功^_^&#x27;</span>,</span><br><span class="line">          <span class="attr">btn</span>: [<span class="string">&#x27;好的&#x27;</span>],</span><br><span class="line">          <span class="attr">yes</span>: <span class="keyword">function</span> (<span class="params">index</span>) &#123;</span><br><span class="line">            layer.<span class="title function_">closeAll</span>();</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123; <span class="title function_">alert</span>(<span class="string">&#x27;unable to copy&#x27;</span>, err) &#125;</span><br><span class="line">    <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">removeChild</span>(textarea)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://blog.gowhich.com/2025/07/15/%E7%9F%A5%E8%AF%86%E7%82%B9%E9%B8%A1%E8%82%8B--bin-bash--bad-interpreter--No-such-file-or-directory.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.jpg">
-      <meta itemprop="name" content="durban">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Gowhich">
-      <meta itemprop="description" content="人最大的烦恼，就是记性太好">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | Gowhich">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/07/15/%E7%9F%A5%E8%AF%86%E7%82%B9%E9%B8%A1%E8%82%8B--bin-bash--bad-interpreter--No-such-file-or-directory.html" class="post-title-link" itemprop="url">知识点鸡肋 - /bin/bash^M: bad interpreter: No such file or directory</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2025-07-15 09:51:13 / 修改时间：10:01:02" itemprop="dateCreated datePublished" datetime="2025-07-15T09:51:13+08:00">2025-07-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>知识点鸡肋 - /bin/bash^M: bad interpreter: No such file or directory</p>
-<p><span class="exturl" data-url="aHR0cDovL3huLS1zdGFydC1mZzFoeWo4MjRsYjhpdGw5ZDNzcS5zaA==">执行一个脚本start.sh<i class="fa fa-external-link-alt"></i></span> 时, 一直是提示我:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-bash: ./start.sh: /bin/bash^M: bad interpreter: No such file or directory</span><br></pre></td></tr></table></figure>
-<p>出现上面错误的原因:</p>
-<p>脚本文件是DOS格式的, 即每一行的行尾以\r\n来标识, 使用vim编辑器打开脚本, 运行:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> ff?</span><br></pre></td></tr></table></figure>
-<p>可以看到DOS或UNIX的字样. 使用<code>set ff=unix</code> 或 <code>set fileformat=unix</code>把它强制为unix格式的, 然后存盘(<code>:wq</code>)退出, 即可。</p>
 
       
     </div>

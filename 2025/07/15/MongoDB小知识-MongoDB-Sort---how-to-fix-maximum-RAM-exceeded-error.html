@@ -27,12 +27,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="MongoDB Sort : how to fix maximum RAM exceeded error 针对这个问题具体的报错信息如下  Error: error: { “ok” : 0, “errmsg” : “Executor error during find command :: caused by :: errmsg: &quot;Sort operation used more th">
+    <meta name="description" content="MongoDB Sort : how to fix maximum RAM exceeded error 针对这个问题具体的报错信息如下  Error: error: {“ok” : 0,“errmsg” : “Executor error during find command :: caused by :: errmsg: &quot;Sort operation used more than">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="MongoDB小知识 - MongoDB Sort : how to fix maximum RAM exceeded error">
 <meta property="og:url" content="https://blog.gowhich.com/2025/07/15/MongoDB%E5%B0%8F%E7%9F%A5%E8%AF%86-MongoDB-Sort---how-to-fix-maximum-RAM-exceeded-error.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="MongoDB Sort : how to fix maximum RAM exceeded error 针对这个问题具体的报错信息如下  Error: error: { “ok” : 0, “errmsg” : “Executor error during find command :: caused by :: errmsg: &quot;Sort operation used more th">
+<meta property="og:description" content="MongoDB Sort : how to fix maximum RAM exceeded error 针对这个问题具体的报错信息如下  Error: error: {“ok” : 0,“errmsg” : “Executor error during find command :: caused by :: errmsg: &quot;Sort operation used more than">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-15T01:51:32.000Z">
 <meta property="article:modified_time" content="2025-07-15T01:59:07.569Z">
@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -309,25 +309,24 @@
     <div class="post-body" itemprop="articleBody"><p><strong>MongoDB Sort : how to fix maximum RAM exceeded error</strong></p>
 <p>针对这个问题具体的报错信息如下</p>
 <blockquote>
-<p>Error: error: {<br>
-“ok” : 0,<br>
-“errmsg” : “Executor error during find command :: caused by :: errmsg: &quot;Sort operation used more than the maximum 33554432 bytes of RAM. Add an index, or specify a smaller limit.&quot;”,<br>
-“code” : 96,<br>
-“codeName” : “OperationFailed”<br>
-}</p>
+<p>Error: error: {<br>“ok” : 0,<br>“errmsg” : “Executor error during find command :: caused by :: errmsg: &quot;Sort operation used more than the maximum 33554432 bytes of RAM. Add an index, or specify a smaller limit.&quot;“,<br>“code” : 96,<br>“codeName” : “OperationFailed”<br>}</p>
 </blockquote>
 <p>解决办法：</p>
 <p>1、加索引（这个是比较常用的方式）</p>
 <p>2、增加RAM大小</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.adminCommand(&#123;setParameter: 1, internalQueryExecMaxBlockingSortBytes: 335544320&#125;)</span><br></pre></td></tr></table></figure>
+
 <p>具体的大小可以根据具体的情况来设置</p>
 <p>查看RAM大小的话，使用下面的命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.runCommand( &#123; getParameter : 1, <span class="string">&quot;internalQueryExecMaxBlockingSortBytes&quot;</span> : 1 &#125; )</span><br></pre></td></tr></table></figure>
+
 <p>3、使用<em>aggregate</em> 命令</p>
 <p>如果用<em>aggregate</em>的话，通过设置选项allowDiskUse的值为true，允许临时将数据写到文件中，具体使用参考如下</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">db.getCollection(<span class="string">&#x27;users&#x27;</span>).aggregate( [</span><br><span class="line">      &#123; <span class="variable">$sort</span> : &#123; age : 1&#125; &#125;</span><br><span class="line">   ],</span><br><span class="line">   &#123; allowDiskUse: <span class="literal">true</span> &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
 <p>如果在排序的时候想要得到一个好的性能，最好是创建索引</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.createIndex( &#123; age: 1 &#125; )</span><br></pre></td></tr></table></figure>
+
 <p>参考文章点<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXJzbG9nYmxvZy53b3JkcHJlc3MuY29tLzIwMTkvMTEvMjcvbW9uZ29kYi1zb3J0LWhvdy10by1maXgtbWF4aW11bS1yYW0tZXhjZWVkZWQtZXJyb3Iv">击这里<i class="fa fa-external-link-alt"></i></span></p>
 
     </div>

@@ -27,12 +27,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="第一步就是：下载zsh源码包 安装的前提是需要安装ncurses，可以看前面的文章[Centos 之 非root情况下ncurses安装问题] 然后使用下面的命令进行安装 12LDFLAGS&#x3D;-L$HOME&#x2F;lib CPPFLAGS&#x3D;-I$HOME&#x2F;include .&#x2F;configure --prefix&#x3D;$HOME --with-tcsetpgrpmake &amp;&amp; make ins">
+    <meta name="description" content="第一步就是：下载zsh源码包 安装的前提是需要安装ncurses，可以看前面的文章[Centos 之 非root情况下ncurses安装问题]然后使用下面的命令进行安装 12LDFLAGS&#x3D;-L$HOME&#x2F;lib CPPFLAGS&#x3D;-I$HOME&#x2F;include .&#x2F;configure --prefix&#x3D;$HOME --with-tcsetpgrpmake &amp;&amp; make inst">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="CentOS 之 非root情况下zsh安装命令记录">
 <meta property="og:url" content="https://blog.gowhich.com/2025/07/03/CentOS-%E4%B9%8B-%E9%9D%9Eroot%E6%83%85%E5%86%B5%E4%B8%8Bzsh%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4%E8%AE%B0%E5%BD%95.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="第一步就是：下载zsh源码包 安装的前提是需要安装ncurses，可以看前面的文章[Centos 之 非root情况下ncurses安装问题] 然后使用下面的命令进行安装 12LDFLAGS&#x3D;-L$HOME&#x2F;lib CPPFLAGS&#x3D;-I$HOME&#x2F;include .&#x2F;configure --prefix&#x3D;$HOME --with-tcsetpgrpmake &amp;&amp; make ins">
+<meta property="og:description" content="第一步就是：下载zsh源码包 安装的前提是需要安装ncurses，可以看前面的文章[Centos 之 非root情况下ncurses安装问题]然后使用下面的命令进行安装 12LDFLAGS&#x3D;-L$HOME&#x2F;lib CPPFLAGS&#x3D;-I$HOME&#x2F;include .&#x2F;configure --prefix&#x3D;$HOME --with-tcsetpgrpmake &amp;&amp; make inst">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-03T09:37:43.000Z">
 <meta property="article:modified_time" content="2025-07-09T02:02:19.356Z">
@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -313,19 +313,22 @@
     
     
     <div class="post-body" itemprop="articleBody"><p>第一步就是：下载zsh源码包</p>
-<p>安装的前提是需要安装ncurses，可以看前面的文章[<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy84MDY=">Centos 之 非root情况下ncurses安装问题<i class="fa fa-external-link-alt"></i></span>]<br>
-然后使用下面的命令进行安装</p>
+<p>安装的前提是需要安装ncurses，可以看前面的文章[<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy84MDY=">Centos 之 非root情况下ncurses安装问题<i class="fa fa-external-link-alt"></i></span>]<br>然后使用下面的命令进行安装</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LDFLAGS=-L<span class="variable">$HOME</span>/lib CPPFLAGS=-I<span class="variable">$HOME</span>/include ./configure --prefix=<span class="variable">$HOME</span> --with-tcsetpgrp</span><br><span class="line">make &amp;&amp; make instal</span><br></pre></td></tr></table></figure>
+
 <p>运行zsh发生如下错误</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zsh --version</span><br></pre></td></tr></table></figure>
+
 <blockquote>
 <p>error while loading shared libraries: libncursesw.so.6: cannot open shared object file: No such file or directory</p>
 </blockquote>
 <p>这个问题经过网络搜索，是由于执行zsh没有加载对应的动态库，因为我们的动态库安装在了我们自己的目录下面，通知执行下面的命令，即可得到解决</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=<span class="variable">$HOME</span>/lib:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+
 <p>顺便把它加到.bash_profile里面吧，再次执行安装命令，即可安装完毕。</p>
 <p>但是安装完 运行下面的命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">exec</span> <span class="variable">$HOME</span>/bin/zsh -l </span><br></pre></td></tr></table></figure>
+
 <p>会发生一直卡住不动，暂时不知道原因，哪位高手遇到解决了，可以留言给我，一起探讨。</p>
 
     </div>

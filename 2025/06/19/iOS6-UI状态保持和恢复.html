@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -308,19 +308,20 @@
     
     <div class="post-body" itemprop="articleBody"><p>关于iOS6 UI状态保持和恢复，是最近看到几个例子，里面有这个方法<code>encodeRestorableStateWithCoder</code>和<code>decodeRestorableStateWithCoder</code>，感觉很奇怪，都怪自己知识浅薄啊</p>
 <p>其实呢使用这个是有原因的.</p>
-<p>iOS设计规范中要求，当应用退出的时候（包括被终止运行时候），画面中UI元素状态需要保持的，当再次进来的时候看状态与退出是一样的。iOS6之后苹果提供以下API使得UI状态保持和恢复变得很容易了。<br>
-在iOS6中我们可以在3地方实现状态保持和恢复：</p>
-<p>1,应用程序委托对象</p>
-<p>2,视图控制器</p>
-<p>3,自定义视图</p>
+<p>iOS设计规范中要求，当应用退出的时候（包括被终止运行时候），画面中UI元素状态需要保持的，当再次进来的时候看状态与退出是一样的。iOS6之后苹果提供以下API使得UI状态保持和恢复变得很容易了。<br>在iOS6中我们可以在3地方实现状态保持和恢复：  </p>
+<p>1,应用程序委托对象  </p>
+<p>2,视图控制器  </p>
+<p>3,自定义视图  </p>
 <p>恢复标识是iOS6为了实现UI状态保持和恢复添加的设置项目。我们需要在应用程序委托对象AppDelegate代码部分做一些修改，添加的代码如下：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">BOOL</span>) application:(<span class="built_in">UIApplication</span> *)application shouldSaveApplicationState:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">-(<span class="type">BOOL</span>) application:(<span class="built_in">UIApplication</span> *)application shouldRestoreApplicationState:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">- (<span class="type">void</span>)application:(<span class="built_in">UIApplication</span> *)application willEncodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    [coder encodeFloat:<span class="number">2.0</span> forKey:<span class="string">@&quot;Version&quot;</span>];  </span><br><span class="line">  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">- (<span class="type">void</span>)application:(<span class="built_in">UIApplication</span> *)application didDecodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">  </span><br><span class="line">    <span class="type">float</span> lastVer = [coder decodeFloatForKey:<span class="string">@&quot;Version&quot;</span>];  </span><br><span class="line">  </span><br><span class="line">    <span class="built_in">NSLog</span>(@”lastVer = %f”,lastVer);  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>其中<code>application:shouldSaveApplicationState:</code>在应用退出的时候调用，负责控制是否允许保存状态，返回YES情况是可以保存，NO是不保存。</p>
-<p><code>application:shouldRestoreApplicationState:</code>是应用启动时候调用，负责控制是否恢复上次退出的时候的状态，返回YES情况是可以恢复，NO是不恢复。</p>
-<p><code>application:willEncodeRestorableStateWithCoder:</code>方法是保存时候调用，在这个方法中实现UI状态或数据的保存，其中<code>[coder encodeFloat:2.0 forKey:@&quot;Version&quot;]</code>是保存简单数据。</p>
-<p><code>application:didDecodeRestorableStateWithCoder:</code>方法是恢复时候调用，在这个方法中实现UI状态或数据的恢复，其中<code>[coder decodeFloatForKey:@&quot;Version&quot;]</code>语句是恢复上次保存的数据。</p>
+
+<p>其中<code>application:shouldSaveApplicationState:</code>在应用退出的时候调用，负责控制是否允许保存状态，返回YES情况是可以保存，NO是不保存。  </p>
+<p><code>application:shouldRestoreApplicationState:</code>是应用启动时候调用，负责控制是否恢复上次退出的时候的状态，返回YES情况是可以恢复，NO是不恢复。  </p>
+<p><code>application:willEncodeRestorableStateWithCoder:</code>方法是保存时候调用，在这个方法中实现UI状态或数据的保存，其中<code>[coder encodeFloat:2.0 forKey:@&quot;Version&quot;]</code>是保存简单数据。  </p>
+<p><code>application:didDecodeRestorableStateWithCoder:</code>方法是恢复时候调用，在这个方法中实现UI状态或数据的恢复，其中<code>[coder decodeFloatForKey:@&quot;Version&quot;]</code>语句是恢复上次保存的数据。  </p>
 <p>要想实现具体画面中控件的保持和恢复，还需要在它视图控制器中添加一些代码，ViewController.m中添加的代码如下：</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="type">void</span>)encodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">    [<span class="variable language_">super</span> encodeRestorableStateWithCoder:coder];  </span><br><span class="line">    [coder encodeObject:<span class="keyword">self</span>.txtField.text forKey:kSaveKey];  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">-(<span class="type">void</span>)decodeRestorableStateWithCoder:(<span class="built_in">NSCoder</span> *)coder  </span><br><span class="line">&#123;  </span><br><span class="line">    [<span class="variable language_">super</span> decodeRestorableStateWithCoder:coder];  </span><br><span class="line">    <span class="keyword">self</span>.txtField.text = [coder decodeObjectForKey:kSaveKey];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>在iOS6之后视图控制器都添加了两个：<code>encodeRestorableStateWithCoder:</code>和<code>decodeRestorableStateWithCoder:</code>用来实现该控制器中的控件或数据的保存和恢复。其中<code>encodeRestorableStateWithCoder:</code> 方法是在保存时候调用，<code>[coder encodeObject:self.txtField.text forKey:kSaveKey]</code>语句是按照指定的键保存文本框的内容，<code>decodeRestorableStateWithCoder:</code>方法是在恢复时候调用，<code>[coder decodeObjectForKey:kSaveKey]</code>是恢复文本框内容时候调用，保存和恢复事实上就是向一个归档文件中编码和解码的过程。</p>
 
     </div>

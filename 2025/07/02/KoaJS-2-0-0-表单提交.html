@@ -196,7 +196,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -308,8 +308,10 @@
     
     <div class="post-body" itemprop="articleBody"><p>对于koa2.0.0的表单提交如何处理，也是费了我很久的时间，在多次尝试与研究之下，可以这样来处理：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">proxy.post(<span class="string">&#x27;/admin/:path&#x27;</span>, (ctx, next) =&gt; &#123;</span><br><span class="line">  const url = ctx.config.hostDomain + <span class="string">&#x27;/admin/&#x27;</span> +ctx.params.path;</span><br><span class="line">  const options = &#123;</span><br><span class="line">    <span class="built_in">timeout</span>: ctx.config.httpTimeout,</span><br><span class="line">    method: ctx.request.method,</span><br><span class="line">    headers: ctx.request.headers,</span><br><span class="line">    data: ctx.request.body</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="built_in">return</span> next().<span class="keyword">then</span>(() =&gt; &#123;</span><br><span class="line">    const request = urllib.request(url, options);</span><br><span class="line">    return request.then( (data) =&gt; &#123;</span><br><span class="line">      ctx.body = data.data.toString()</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;).catch((err) =&gt; &#123;</span><br><span class="line">    console.log(err);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
 <p>我这里只是做了一个接口的调用，其实最重要的是在获得request后如何去进行对应的promise的操作和获取结果，这里其实很简单的：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="title function_">next</span>().<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> request = urllib.<span class="title function_">request</span>(url, options);</span><br><span class="line">  <span class="keyword">return</span> request.<span class="title function_">then</span>( <span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">    ctx.<span class="property">body</span> = data.<span class="property">data</span>.<span class="title function_">toString</span>()</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;).<span class="title function_">catch</span>(<span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
 <p>注意这里的两个return操作，做完request的操作后，直接在开头进行一个return操作就可以了，这样body的值也回调过去了。</p>
 
     </div>

@@ -27,12 +27,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="继续上文[TypeScript基础入门之模块解析(二)] 跟踪模块解析 如前所述，编译器可以在解析模块时访问当前文件夹之外的文件。 在诊断模块未解析的原因或解析为错误定义时，这可能很难。 使用–traceResolution启用编译器模块分辨率跟踪可以深入了解模块解析过程中发生的情况。 假设我们有一个使用typescript模块的示例应用程序。 app.ts有一个导入，比如import * as">
+    <meta name="description" content="继续上文[TypeScript基础入门之模块解析(二)] 跟踪模块解析如前所述，编译器可以在解析模块时访问当前文件夹之外的文件。在诊断模块未解析的原因或解析为错误定义时，这可能很难。使用–traceResolution启用编译器模块分辨率跟踪可以深入了解模块解析过程中发生的情况。 假设我们有一个使用typescript模块的示例应用程序。app.ts有一个导入，比如import * as ts f">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="TypeScript基础入门之模块解析(三)">
 <meta property="og:url" content="https://blog.gowhich.com/2025/07/10/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90-%E4%B8%89.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="继续上文[TypeScript基础入门之模块解析(二)] 跟踪模块解析 如前所述，编译器可以在解析模块时访问当前文件夹之外的文件。 在诊断模块未解析的原因或解析为错误定义时，这可能很难。 使用–traceResolution启用编译器模块分辨率跟踪可以深入了解模块解析过程中发生的情况。 假设我们有一个使用typescript模块的示例应用程序。 app.ts有一个导入，比如import * as">
+<meta property="og:description" content="继续上文[TypeScript基础入门之模块解析(二)] 跟踪模块解析如前所述，编译器可以在解析模块时访问当前文件夹之外的文件。在诊断模块未解析的原因或解析为错误定义时，这可能很难。使用–traceResolution启用编译器模块分辨率跟踪可以深入了解模块解析过程中发生的情况。 假设我们有一个使用typescript模块的示例应用程序。app.ts有一个导入，比如import * as ts f">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-10T02:23:37.000Z">
 <meta property="article:modified_time" content="2025-07-10T02:36:00.901Z">
@@ -197,7 +197,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -208,7 +208,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -308,55 +308,52 @@
     
     
     <div class="post-body" itemprop="articleBody"><p>继续上文[<span class="exturl" data-url="aHR0cHM6Ly93d3cuZ293aGljaC5jb20vYmxvZy85NDY=">TypeScript基础入门之模块解析(二)<i class="fa fa-external-link-alt"></i></span>]</p>
-<h2 id="跟踪模块解析">跟踪模块解析</h2>
-<p>如前所述，编译器可以在解析模块时访问当前文件夹之外的文件。<br>
-在诊断模块未解析的原因或解析为错误定义时，这可能很难。<br>
-使用–traceResolution启用编译器模块分辨率跟踪可以深入了解模块解析过程中发生的情况。</p>
-<p>假设我们有一个使用typescript模块的示例应用程序。<br>
-app.ts有一个导入，比如import * as ts from “typescript”。</p>
+<h2 id="跟踪模块解析"><a href="#跟踪模块解析" class="headerlink" title="跟踪模块解析"></a>跟踪模块解析</h2><p>如前所述，编译器可以在解析模块时访问当前文件夹之外的文件。<br>在诊断模块未解析的原因或解析为错误定义时，这可能很难。<br>使用–traceResolution启用编译器模块分辨率跟踪可以深入了解模块解析过程中发生的情况。</p>
+<p>假设我们有一个使用typescript模块的示例应用程序。<br>app.ts有一个导入，比如import * as ts from “typescript”。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">│   tsconfig.json</span><br><span class="line">├───node_modules</span><br><span class="line">│   └───typescript</span><br><span class="line">│       └───lib</span><br><span class="line">│               typescript.d.ts</span><br><span class="line">└───src</span><br><span class="line">    └───app.ts</span><br></pre></td></tr></table></figure>
-<h3 id="使用–traceResolution调用编译器">使用–traceResolution调用编译器</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tsc --traceResolution</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用–traceResolution调用编译器"><a href="#使用–traceResolution调用编译器" class="headerlink" title="使用–traceResolution调用编译器"></a>使用–traceResolution调用编译器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tsc --traceResolution</span><br></pre></td></tr></table></figure>
+
 <p>输出结果如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">======== Resolving module <span class="string">&#x27;typescript&#x27;</span> from <span class="string">&#x27;src/app.ts&#x27;</span>. ========</span><br><span class="line">Module resolution kind is not specified, using <span class="string">&#x27;NodeJs&#x27;</span>.</span><br><span class="line">Loading module <span class="string">&#x27;typescript&#x27;</span> from <span class="string">&#x27;node_modules&#x27;</span> folder.</span><br><span class="line">File <span class="string">&#x27;src/node_modules/typescript.ts&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;src/node_modules/typescript.tsx&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;src/node_modules/typescript.d.ts&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;src/node_modules/typescript/package.json&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;node_modules/typescript.ts&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;node_modules/typescript.tsx&#x27;</span> does not exist.</span><br><span class="line">File <span class="string">&#x27;node_modules/typescript.d.ts&#x27;</span> does not exist.</span><br><span class="line">Found <span class="string">&#x27;package.json&#x27;</span> at <span class="string">&#x27;node_modules/typescript/package.json&#x27;</span>.</span><br><span class="line"><span class="string">&#x27;package.json&#x27;</span> has <span class="string">&#x27;types&#x27;</span> field <span class="string">&#x27;./lib/typescript.d.ts&#x27;</span> that references <span class="string">&#x27;node_modules/typescript/lib/typescript.d.ts&#x27;</span>.</span><br><span class="line">File <span class="string">&#x27;node_modules/typescript/lib/typescript.d.ts&#x27;</span> exist - use it as a module resolution result.</span><br><span class="line">======== Module name <span class="string">&#x27;typescript&#x27;</span> was successfully resolved to <span class="string">&#x27;node_modules/typescript/lib/typescript.d.ts&#x27;</span>. ========</span><br></pre></td></tr></table></figure>
+
 <p>值得关注的事情</p>
 <ol>
 <li>导入的名称和位置</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">======== Resolving module <span class="string">&#x27;typescript&#x27;</span> from <span class="string">&#x27;src/app.ts&#x27;</span>. ========</span><br></pre></td></tr></table></figure>
+
 <ol start="2">
 <li>编译器遵循的策略</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Module resolution kind is not specified, using <span class="string">&#x27;NodeJs&#x27;</span>.</span><br></pre></td></tr></table></figure>
+
 <ol start="3">
 <li>从npm包加载类型</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;package.json&#x27;</span> has <span class="string">&#x27;types&#x27;</span> field <span class="string">&#x27;./lib/typescript.d.ts&#x27;</span> that references <span class="string">&#x27;node_modules/typescript/lib/typescript.d.ts&#x27;</span>.</span><br></pre></td></tr></table></figure>
+
 <ol start="4">
 <li>最后结果</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">======== Module name ‘typescript’ was successfully resolved to ‘node_modules/typescript/lib/typescript.d.ts’. ========</span><br></pre></td></tr></table></figure>
-<h3 id="使用–noResolve">使用–noResolve</h3>
-<p>通常，编译器将在启动编译过程之前尝试解析所有模块导入。<br>
-每次成功解析导入到文件时，该文件都会添加到编译器稍后将处理的文件集中。</p>
-<p>–noResolve编译器选项指示编译器不要将任何文件&quot;add&quot;到未在命令行上传递的编译中。<br>
-它仍将尝试将模块解析为文件，但如果未指定该文件，则不会包含该文件。</p>
+
+<h3 id="使用–noResolve"><a href="#使用–noResolve" class="headerlink" title="使用–noResolve"></a>使用–noResolve</h3><p>通常，编译器将在启动编译过程之前尝试解析所有模块导入。<br>每次成功解析导入到文件时，该文件都会添加到编译器稍后将处理的文件集中。</p>
+<p>–noResolve编译器选项指示编译器不要将任何文件”add”到未在命令行上传递的编译中。<br>它仍将尝试将模块解析为文件，但如果未指定该文件，则不会包含该文件。</p>
 <p>例如:</p>
 <p>app.ts</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> A <span class="keyword">from</span> <span class="string">&quot;moduleA&quot;</span> <span class="comment">// OK, &#x27;moduleA&#x27; passed on the command-line</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> B <span class="keyword">from</span> <span class="string">&quot;moduleB&quot;</span> <span class="comment">// Error TS2307: Cannot find module &#x27;moduleB&#x27;.</span></span><br></pre></td></tr></table></figure>
+
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tsc app.ts moduleA.ts --noResolve</span><br></pre></td></tr></table></figure>
-<p>使用–noResolve编译app.ts应该导致：</p>
+
+<p>使用–noResolve编译app.ts应该导致：  </p>
 <ol>
-<li>正确查找在命令行上传递的moduleA。</li>
+<li>正确查找在命令行上传递的moduleA。  </li>
 <li>找不到未通过的moduleB时出错。</li>
 </ol>
-<h3 id="常见问题">常见问题</h3>
-<p>为什么排除列表中的模块仍然被编译器拾取？</p>
-<p>tsconfig.json将文件夹转换为&quot;project&quot;。如果不指定任何&quot;exclude&quot;或&quot;files&quot;条目，则包含tsconfig.json及其所有子目录的文件夹中的所有文件都包含在编译中。<br>
-如果要排除某些文件使用&quot;exclude&quot;，如果您希望指定所有文件而不是让编译器查找它们，请使用&quot;files&quot;。</p>
-<p>那是tsconfig.json自动包含。<br>
-这并没有嵌入上面讨论的模块解析。<br>
-如果编译器将文件标识为模块导入的目标，则无论它是否在前面的步骤中被排除，它都将包含在编译中。</p>
+<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><p>为什么排除列表中的模块仍然被编译器拾取？</p>
+<p>tsconfig.json将文件夹转换为”project”。如果不指定任何”exclude”或”files”条目，则包含tsconfig.json及其所有子目录的文件夹中的所有文件都包含在编译中。<br>如果要排除某些文件使用”exclude”，如果您希望指定所有文件而不是让编译器查找它们，请使用”files”。</p>
+<p>那是tsconfig.json自动包含。<br>这并没有嵌入上面讨论的模块解析。<br>如果编译器将文件标识为模块导入的目标，则无论它是否在前面的步骤中被排除，它都将包含在编译中。</p>
 <p>因此，要从编译中排除文件，您需要将其和所有具有import或<code>/// &lt;reference path =&quot;...&quot;/&gt;</code>指令的文件排除在外。</p>
 
     </div>

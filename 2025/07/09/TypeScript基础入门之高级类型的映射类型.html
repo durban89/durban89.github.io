@@ -27,12 +27,12 @@
      crossorigin="anonymous"></script>
 <!-- Google AdSense end -->
 
-    <meta name="description" content="高级类型 映射类型 一个常见的任务是将一个已知的类型每个属性都变为可选的： 1234interface PersonPartial &#123;    name?: string;    age?: number;&#125; 或者我们想要一个只读版本： 1234interface PersonReadonly &#123;    readonly name: string;    readonl">
+    <meta name="description" content="高级类型映射类型一个常见的任务是将一个已知的类型每个属性都变为可选的： 1234interface PersonPartial &#123;    name?: string;    age?: number;&#125;  或者我们想要一个只读版本： 1234interface PersonReadonly &#123;    readonly name: string;    readonly">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="TypeScript基础入门之高级类型的映射类型">
 <meta property="og:url" content="https://blog.gowhich.com/2025/07/09/TypeScript%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E4%B9%8B%E9%AB%98%E7%BA%A7%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%98%A0%E5%B0%84%E7%B1%BB%E5%9E%8B.html">
 <meta property="og:site_name" content="Gowhich">
-<meta property="og:description" content="高级类型 映射类型 一个常见的任务是将一个已知的类型每个属性都变为可选的： 1234interface PersonPartial &#123;    name?: string;    age?: number;&#125; 或者我们想要一个只读版本： 1234interface PersonReadonly &#123;    readonly name: string;    readonl">
+<meta property="og:description" content="高级类型映射类型一个常见的任务是将一个已知的类型每个属性都变为可选的： 1234interface PersonPartial &#123;    name?: string;    age?: number;&#125;  或者我们想要一个只读版本： 1234interface PersonReadonly &#123;    readonly name: string;    readonly">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-09T02:42:50.000Z">
 <meta property="article:modified_time" content="2025-07-09T02:55:33.621Z">
@@ -197,7 +197,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">1136</span>
+          <span class="site-state-item-count">1137</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -208,7 +208,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">188</span>
+        <span class="site-state-item-count">189</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -307,41 +307,49 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h2 id="高级类型">高级类型</h2>
-<h3 id="映射类型">映射类型</h3>
-<p>一个常见的任务是将一个已知的类型每个属性都变为可选的：</p>
+    <div class="post-body" itemprop="articleBody"><h2 id="高级类型"><a href="#高级类型" class="headerlink" title="高级类型"></a>高级类型</h2><h3 id="映射类型"><a href="#映射类型" class="headerlink" title="映射类型"></a>映射类型</h3><p>一个常见的任务是将一个已知的类型每个属性都变为可选的：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">PersonPartial</span> &#123;</span><br><span class="line">    <span class="attr">name</span>?: <span class="built_in">string</span>;</span><br><span class="line">    <span class="attr">age</span>?: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>或者我们想要一个只读版本：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">PersonReadonly</span> &#123;</span><br><span class="line">    <span class="keyword">readonly</span> <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">    <span class="keyword">readonly</span> <span class="attr">age</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>这在JavaScript里经常出现，TypeScript提供了从旧类型中创建新类型的一种方式 — 映射类型。 在映射类型里，新类型以相同的形式去转换旧类型里每个属性。 例如，你可以令每个属性成为 readonly类型或可选的。 下面是一些例子：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Readonly</span>&lt;T&gt; = &#123;</span><br><span class="line">    <span class="keyword">readonly</span> [P <span class="keyword">in</span> keyof T]: T[P];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Partial</span>&lt;T&gt; = &#123;</span><br><span class="line">    [P <span class="keyword">in</span> keyof T]?: T[P];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>像下面这样使用：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">PersonPartial</span> = <span class="title class_">Partial</span>&lt;<span class="title class_">Person</span>&gt;;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">ReadonlyPerson</span> = <span class="title class_">Readonly</span>&lt;<span class="title class_">Person</span>&gt;;</span><br></pre></td></tr></table></figure>
+
 <p>下面来看看最简单的映射类型和它的组成部分：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Keys</span> = <span class="string">&#x27;option1&#x27;</span> | <span class="string">&#x27;option2&#x27;</span>;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Flags</span> = &#123; [K <span class="keyword">in</span> <span class="title class_">Keys</span>]: <span class="built_in">boolean</span> &#125;;</span><br></pre></td></tr></table></figure>
-<p>它的语法与索引签名的语法类型，内部使用了 for … in。 具有三个部分：</p>
+
+<p>它的语法与索引签名的语法类型，内部使用了 for .. in。 具有三个部分：</p>
 <ol>
-<li>类型变量 K，它会依次绑定到每个属性。</li>
-<li>字符串字面量联合的 Keys，它包含了要迭代的属性名的集合。</li>
-<li>属性的结果类型。<br>
-在这个简单的例子里， Keys是硬编码的的属性名列表并且属性类型永远是boolean，因此这个映射类型等同于：</li>
+<li>类型变量 K，它会依次绑定到每个属性。  </li>
+<li>字符串字面量联合的 Keys，它包含了要迭代的属性名的集合。  </li>
+<li>属性的结果类型。<br>在这个简单的例子里， Keys是硬编码的的属性名列表并且属性类型永远是boolean，因此这个映射类型等同于：</li>
 </ol>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Flags</span> = &#123;</span><br><span class="line">    <span class="attr">option1</span>: <span class="built_in">boolean</span>;</span><br><span class="line">    <span class="attr">option2</span>: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>在真正的应用里，可能不同于上面的 Readonly或 Partial。 它们会基于一些已存在的类型，且按照一定的方式转换字段。 这就是 keyof和索引访问类型要做的事情：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">NullablePerson</span> = &#123; [P <span class="keyword">in</span> keyof <span class="title class_">Person</span>]: <span class="title class_">Person</span>[P] | <span class="literal">null</span> &#125;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">PartialPerson</span> = &#123; [P <span class="keyword">in</span> keyof <span class="title class_">Person</span>]?: <span class="title class_">Person</span>[P] &#125;</span><br></pre></td></tr></table></figure>
+
 <p>但它更有用的地方是可以有一些通用版本。</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Nullable</span>&lt;T&gt; = &#123; [P <span class="keyword">in</span> keyof T]: T[P] | <span class="literal">null</span> &#125;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Partial</span>&lt;T&gt; = &#123; [P <span class="keyword">in</span> keyof T]?: T[P] &#125;</span><br></pre></td></tr></table></figure>
+
 <p>在这些例子里，属性列表是 keyof T且结果类型是 T[P]的变体。 这是使用通用映射类型的一个好模版。 因为这类转换是 同态的，映射只作用于 T的属性而没有其它的。 编译器知道在添加任何新属性之前可以拷贝所有存在的属性修饰符。 例如，假设 Person.name是只读的，那么 Partial<Person>.name也将是只读的且为可选的。</p>
 <p>下面是另一个例子， T[P]被包装在 Proxy<T>类里：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Proxy</span>&lt;T&gt; = &#123;</span><br><span class="line">    <span class="title function_">get</span>(): T;</span><br><span class="line">    <span class="title function_">set</span>(<span class="attr">value</span>: T): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Proxify</span>&lt;T&gt; = &#123;</span><br><span class="line">    [P <span class="keyword">in</span> keyof T]: <span class="title class_">Proxy</span>&lt;T[P]&gt;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> proxify&lt;T&gt;(<span class="attr">o</span>: T): <span class="title class_">Proxify</span>&lt;T&gt; &#123;</span><br><span class="line">   <span class="comment">// ... wrap proxies ...</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> proxyProps = <span class="title function_">proxify</span>(props);</span><br></pre></td></tr></table></figure>
+
 <p>注意 Readonly<T>和 Partial<T>用处不小，因此它们与 Pick和 Record一同被包含进了TypeScript的标准库里：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Pick</span>&lt;T, K <span class="keyword">extends</span> keyof T&gt; = &#123;</span><br><span class="line">    [P <span class="keyword">in</span> K]: T[P];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Record</span>&lt;K <span class="keyword">extends</span> <span class="built_in">string</span>, T&gt; = &#123;</span><br><span class="line">    [P <span class="keyword">in</span> K]: T;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>Readonly， Partial和 Pick是同态的，但 Record不是。 因为 Record并不需要输入类型来拷贝属性，所以它不属于同态：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">ThreeStringProps</span> = <span class="title class_">Record</span>&lt;<span class="string">&#x27;prop1&#x27;</span> | <span class="string">&#x27;prop2&#x27;</span> | <span class="string">&#x27;prop3&#x27;</span>, <span class="built_in">string</span>&gt;</span><br></pre></td></tr></table></figure>
+
 <p>非同态类型本质上会创建新的属性，因此它们不会从它处拷贝属性修饰符。</p>
-<h3 id="由映射类型进行推断"><em>由映射类型进行推断</em></h3>
-<p>现在你了解了如何包装一个类型的属性，那么接下来就是如何拆包。 其实这也非常容易：</p>
+<h3 id="由映射类型进行推断"><a href="#由映射类型进行推断" class="headerlink" title="由映射类型进行推断"></a><em>由映射类型进行推断</em></h3><p>现在你了解了如何包装一个类型的属性，那么接下来就是如何拆包。 其实这也非常容易：</p>
 <figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> unproxify&lt;T&gt;(<span class="attr">t</span>: <span class="title class_">Proxify</span>&lt;T&gt;): T &#123;</span><br><span class="line">    <span class="keyword">let</span> result = &#123;&#125; <span class="keyword">as</span> T;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> k <span class="keyword">in</span> t) &#123;</span><br><span class="line">        result[k] = t[k].<span class="title function_">get</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> originalProps = <span class="title function_">unproxify</span>(proxyProps);</span><br></pre></td></tr></table></figure>
+
 <p>注意这个拆包推断只适用于同态的映射类型。 如果映射类型不是同态的，那么需要给拆包函数一个明确的类型参数。</p>
 
     </div>
